@@ -229,6 +229,7 @@ body.cp-help-overlay-body {
     background: transparent;
     z-index: $z-index + 1;
     position: relative;
+    height: auto;
 
     .coursepress-popup-body {
       background-color: #F2FBFF;

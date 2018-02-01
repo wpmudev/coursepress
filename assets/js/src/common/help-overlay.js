@@ -1,4 +1,4 @@
-/* global CoursePress,window */
+/* global CoursePress,window,ResizeSensor */
 
 (function () {
 	'use strict';
@@ -6,7 +6,7 @@
 	CoursePress.Define('HelpOverlay', function ($) {
 		return CoursePress.View.extend({
 			template_id: 'coursepress-help-overlay-tpl',
-            className: 'coursepress-modal cp-help-overlay-content',
+			className: 'coursepress-modal cp-help-overlay-content',
 			topPane: false,
 			rightPane: false,
 			bottomPane: false,
@@ -23,13 +23,15 @@
 				});
 				this.container = $('body');
 
-				$(window).off('resize').on('resize', _.bind(this.readjust, this));
+				var readjust = _.bind(this.readjust, this);
+				new ResizeSensor(this.container, readjust);
+				new ResizeSensor(this.targetEl, readjust);
 
 				this.render();
 			},
 
 			readjust: function () {
-				this.render();
+				this.setPaneDimensions();
 			},
 
 			render: function () {
@@ -67,10 +69,10 @@
 			removePanes: function () {
 				this.container.removeClass('cp-help-overlay-body');
 
-				this.topPane.remove();
-				this.rightPane.remove();
-				this.bottomPane.remove();
-				this.leftPane.remove();
+				this.container.find('.cp-help-overlay-top').remove();
+				this.container.find('.cp-help-overlay-right').remove();
+				this.container.find('.cp-help-overlay-bottom').remove();
+				this.container.find('.cp-help-overlay-left').remove();
 			},
 
 			createPanes: function () {
@@ -114,7 +116,8 @@
 
 			remove: function () {
 				this.removePanes();
-				$(window).off('resize');
+				ResizeSensor.detach(this.container);
+				ResizeSensor.detach(this.targetEl);
 				Backbone.View.prototype.remove.apply(this, arguments);
 			}
 		});
