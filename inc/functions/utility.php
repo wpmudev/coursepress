@@ -598,55 +598,6 @@ function coursepress_download_file( $requested_file ) {
     exit();
 }
 
-/**
- * Update last activity of the user.
- *
- * This helpfer function can be used to log the latest activity
- * of a student or even any other user.
- *
- * @param string $activity Activity.
- * @param integer $user_id User ID.
- *
- * @since 3.0
- */
-function coursepress_log_last_activity( $activity = 'unknown', $user_id = 0 ) {
-
-	// If user id is not given, get current user id.
-	$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
-	if ( empty( $user_id ) ) {
-		return;
-	}
-
-	// Save only string or numeric values.
-	if ( ! is_string( $activity ) && ! is_numeric( $activity ) ) {
-		return;
-	}
-
-	$allowed_activities = array(
-		'course_module_seen',
-		'course_seen',
-		'course_unit_seen',
-		'enrolled',
-		'login',
-		'module_answered',
-	);
-
-	/**
-	 * Filter to allow custom activities to log.
-	 *
-	 * @param array $allowed_activities
-	 */
-	$allowed_activities = apply_filters( 'coursepress_allowed_activities', $allowed_activities );
-
-	// For other activities, set as unknown.
-	if ( ! in_array( $activity, $allowed_activities ) ) {
-		$activity = 'unknown';
-	}
-
-	update_user_meta( $user_id, 'coursepress_latest_activity_time', time() );
-	update_user_meta( $user_id, 'coursepress_latest_activity', $activity );
-}
-
 function coursepress_set_cookie( $key, $value, $time ) {
 	$key = $key . '_' . COOKIEHASH;
 	setcookie( $key, $value, $time, COOKIEPATH, COOKIE_DOMAIN );
