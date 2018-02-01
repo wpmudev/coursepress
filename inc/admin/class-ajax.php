@@ -1035,8 +1035,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// Check if required values are set.
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
-			$alert_id = !empty( $request->alert_id ) ? $request->alert_id : '' ;
-			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $alert_id );
+			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
+			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
+			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $receivers, $alert_id );
 		}
 
 		// If alert inserted return success response, else fail.

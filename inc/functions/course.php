@@ -155,7 +155,7 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 
 function coursepress_get_post_statuses( $type, $current_status, $slug ) {
 	$cp_type = get_cp_type( $type );
-	$post_type = !empty( $cp_type ) ? $cp_type : $type;
+	$post_type = ! empty( $cp_type ) ? $cp_type : $type;
 	$count = wp_count_posts( $post_type );
 	$post_status = array(
 		'all' => 0,
@@ -223,7 +223,7 @@ function coursepress_status_title( $status ) {
 		'private' => __( 'Private', 'cp' ),
 		'trash'   => __( 'Trash', 'cp' ),
 	);
-	$title = !empty( $available_statuses[ $status ] ) ? $available_statuses[ $status ] : '';
+	$title = ! empty( $available_statuses[ $status ] ) ? $available_statuses[ $status ] : '';
 
 	return $title;
 }
@@ -372,10 +372,10 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		$link_text = $args['access_text'];
 		$button_option = false;
 	} else {
-		if ( $course->user_can_enroll() ) {
+		$user_can_enroll = $course->user_can_enroll();
+		if ( $user_can_enroll ) {
 			$enrollment_type = $course->__get( 'enrollment_type' );
 			$button_option = 'enroll';
-
 			$link_text = $args['enroll_text'];
 			$link_args = array(
 				'course_id' => $course_id,
@@ -446,22 +446,17 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 			}
 		}
 	}
-
 	$attr = array(
 		'class' => 'course-enroll-button ' . $args['class'],
 	);
-
 	if ( ! empty( $link ) ) {
 		$attr['href'] = $link;
 		$attr['_wpnonce'] = wp_create_nonce( 'coursepress_nonce' );
-
 		$button = coursepress_create_html( 'a', $attr, $link_text );
 	} else {
 		$button = coursepress_create_html( 'span', $attr, $link_text );
 	}
-
 	$button = apply_filters( 'coursepress_enroll_button', $button, $course_id, $user->ID, $button_option );
-
 	echo $button;
 }
 
@@ -1392,7 +1387,7 @@ function get_cp_type_title( $post_type ) {
 		'notification' => __( 'Notification', 'cp' ),
 		'discussions' => __( 'Discussion', 'cp' ),
 	);
-	$title = !empty( $titles[ $post_type ] ) ? $titles[ $post_type ] : '';
+	$title = ! empty( $titles[ $post_type ] ) ? $titles[ $post_type ] : '';
 
 	return $title;
 }
@@ -1422,7 +1417,7 @@ function get_cp_types() {
  */
 function get_cp_type( $name ) {
 	$post_types = get_cp_types();
-	$post_type = $name && !empty( $post_types[ $name ] ) ? $post_types[ $name ] : false;
+	$post_type = $name && ! empty( $post_types[ $name ] ) ? $post_types[ $name ] : false;
 
 	return $post_type;
 }
@@ -1462,7 +1457,7 @@ function coursepress_change_post( $post_id, $status, $type ) {
 	// Get author of the current post.
 	$author = get_post_field( 'post_author', $post_id );
 
-	if ( !coursepress_is_type( $post_id, $type ) ) {
+	if ( ! coursepress_is_type( $post_id, $type ) ) {
 		$capable = false;
 	} elseif ( current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
 		// If current user is capable of updating any notification statuses.
@@ -1604,12 +1599,13 @@ function coursepress_get_course_object( $post_id ) {
  * @param int $course_id Course ID.
  * @param string $title Alert title.
  * @param string $content Alert content.
+ * @param string $receivers Receivers.
  * @param string $alert_id Alert ID.
  *
  * @return int alert ID.
  */
-function coursepress_update_course_alert( $course_id, $title, $content, $alert_id ) {
-	$action = !empty( $alert_id ) ? 'update' : 'create' ;
+function coursepress_update_course_alert( $course_id, $title, $content, $receivers, $alert_id ) {
+	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
 	$capable = false;
 	// Get the course.
@@ -1646,7 +1642,7 @@ function coursepress_update_course_alert( $course_id, $title, $content, $alert_i
 		'post_status' => 'publish',
 		'post_type' => 'cp_notification',
 	);
-	if ( !empty( $alert_id ) ) {
+	if ( ! empty( $alert_id ) ) {
 		$post['ID'] = $alert_id;
 	}
 
@@ -1662,6 +1658,10 @@ function coursepress_update_course_alert( $course_id, $title, $content, $alert_i
 
 	// Set alert course id.
 	update_post_meta( $alert_id, 'alert_course', $course_id );
+	// Set alert receivers.
+	if ( ! empty( $receivers ) ) {
+		update_post_meta( $alert_id, 'receivers', $receivers );
+	}
 
 	/**
 	 * Perform actions when alert insertion was successful.
@@ -1747,7 +1747,7 @@ function coursepress_is_course( $course ) {
 	return $CoursePress_Core->course_post_type == $post_type;
 }
 
-function coursepress_discussion_module_link( $location, $comment ) {
+function coursepress_discussion_link( $location, $comment ) {
 	global $CoursePress_Core;
 	/**
 	 * Check WP_Comment class
@@ -1758,23 +1758,15 @@ function coursepress_discussion_module_link( $location, $comment ) {
 	/**
 	 * Check post type
 	 */
-	$unit_post_type = $CoursePress_Core->__get( 'step_post_type' );
+	$unit_post_type = $CoursePress_Core->discussions_post_type;
 	$post_type = get_post_type( $comment->comment_post_ID );
 	if ( $unit_post_type !== $post_type ) {
 		return $location;
 	}
-	/**
-	 * Check module type
-	 */
-	$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
-	if ( 'discussion' !== $module_type ) {
-		return $location;
-	}
-	$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-	$course_id = get_post_field( 'post_parent', $unit_id );
-	$course_link = get_permalink( $course_id );
-	$unit_slug = coursepress_get_setting( 'slugs/course', 'unit' );
-	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+	$course_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+	$course = coursepress_get_course( $course_id );
+	$discussion_url = $course->get_discussion_url();
+	$location = esc_url_raw( $discussion_url . get_post_field( 'post_name', $comment->comment_post_ID ) );
 
 	return $location;
 }
@@ -1915,20 +1907,14 @@ function coursepress_search_students( $args = array() ) {
 function coursepress_get_disscusions( $course ) {
 	$args = array(
 		'post_type' => 'discussions',
-		'meta_query' => array(
-			array(
-				'key' => 'course_id',
-				'value' => $course->ID,
-				'compare' => 'IN',
-			),
-		),
+		'post_parent' => $course->ID,
 		'post_per_page' => 20,
 	);
 	$url = $course->get_discussion_url();
 	$data = array();
 	$posts = get_posts( $args );
 	foreach ( $posts as $post ) {
-		$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+		$post->course_id = $post->post_parent;
 		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
 		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
 
@@ -1952,6 +1938,17 @@ function coursepress_get_discussion() {
 	if ( empty( $topic ) ) {
 		return array();
 	}
-	return get_page_by_path( $topic, OBJECT, 'discussions' );
+	$found_post = null;
+
+	if ( $posts = get_posts( array(
+		'name' => $topic,
+		'post_type' => 'discussions',
+		'post_status' => 'publish',
+		'posts_per_page' => 1
+	) ) ) {
+		$found_post = $posts[0];
+	}
+
+	return $found_post;
 }
 

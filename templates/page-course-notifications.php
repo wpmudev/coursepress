@@ -6,7 +6,7 @@
  * @package CoursePress
  */
 $course_id     = get_the_ID();
-$notifications = CoursePress_Data_Notification::get_notifications( array( $course_id, 'all' ) );
+$notifications = CoursePress_Data_Notification::get_notifications( $course_id );
 get_header(); ?>
 
 	<div class="coursepress-wrap">
