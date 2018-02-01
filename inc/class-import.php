@@ -13,6 +13,7 @@ class CoursePress_Import extends CoursePress_Utility
 	var $courses = array();
 	var $course_imported_id = 0;
 	var $unit_keys = array();
+	var $course;
 
 	public function __construct( $course_object, $options ) {
 		$this->setUp( $course_object );
@@ -113,6 +114,10 @@ class CoursePress_Import extends CoursePress_Utility
 					}
 				}
 			}
+			/**
+			 * revert course ID
+			 */
+			$this->course->ID = $this->course_imported_id;
 			return;
 		}
 		/**

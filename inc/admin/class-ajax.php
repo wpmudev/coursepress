@@ -512,6 +512,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			 */
 			if ( preg_match( '%.json%', $filename ) ) {
 				$courses = json_decode( $courses );
+				if ( empty( $courses ) ) {
+					wp_send_json_error();
+				}
 				$courses = get_object_vars( $courses );
 				$data['import_id'] = $import_id;
 				$data['total_courses'] = count( $courses );
@@ -527,16 +530,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function import_course( $request ) {
-
 		$import_id = $request->import_id;
 		$total_course = $request->total_courses;
-
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
 		$courses = maybe_unserialize( $courses );
-		$the_course = array_shift( $courses );
-
-		$importClass = new CoursePress_Import( $the_course, $request );
+		if ( is_array( $courses ) ) {
+			$the_course = array_shift( $courses );
+			$importClass = new CoursePress_Import( $the_course, $request );
+		}
 	}
 
 	/**
@@ -1016,7 +1018,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function get_course_alert( $request ) {
-		$data = !empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
+		$data = ! empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
 		if ( $data ) {
 			wp_send_json_success( $data );
 		}
@@ -1041,7 +1043,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If alert inserted return success response, else fail.
 		if ( $created ) {
-			if ( !empty( $alert_id ) ) {
+			if ( ! empty( $alert_id ) ) {
 				$message = __( 'Course alert updated successfully.', 'cp' );
 			} else {
 				$message = __( 'New course alert created successfully.', 'cp' );
@@ -1049,7 +1051,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$success = array( 'message' => $message );
 			wp_send_json_success( $success );
 		} else {
-			if ( !empty( $alert_id ) ) {
+			if ( ! empty( $alert_id ) ) {
 				$message = __( 'Could not update course alert.', 'cp' );
 			} else {
 				$message = __( 'Could not create new course alert.', 'cp' );
@@ -1172,7 +1174,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		$success = false;
 		// We need course id and valid email.
-		if ($request->course_id && is_email($request->email)) {
+		if ( $request->course_id && is_email( $request->email ) ) {
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
 
