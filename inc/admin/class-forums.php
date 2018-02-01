@@ -9,7 +9,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	protected $slug = 'coursepress_forum';
 	private $items;
 	private $post_type = 'discussions';
-	private $id_name = 'notification_id';
+	private $id_name = 'forum_id';
 
 	public function __construct() {
         parent::__construct();
@@ -86,9 +86,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
             if ( is_a( $post, 'WP_Post' ) ) {
                 if ( $this->post_type == $post->post_type ) {
                     $args[ $this->id_name ] = $post->ID;
+                    $args['course_id'] = $post->post_parent;
                     $args['post_title'] = $post->post_title;
                     $args['post_content'] = stripslashes( $post->post_content );
-                    $meta_keys = array( 'course_id', 'email_notification', 'unit_id', 'email_notification', 'thread_comments_depth', 'comments_per_page', 'comments_order' );
+                    $meta_keys = array( 'email_notification', 'unit_id', 'email_notification', 'thread_comments_depth', 'comments_per_page', 'comments_order' );
                     foreach( $meta_keys as $meta_key ) {
                         $meta_value = get_post_meta( $post->ID, $meta_key, true );
                         if ( ! empty( $meta_value ) ) {
@@ -146,20 +147,14 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		 */
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 		if ( ! empty( $course_id ) ) {
-			$post_args['meta_query'] = array(
-				'relation' => 'AND',
-				array(
-					'key' => 'course_id',
-					'value' => (int) $course_id,
-				)
-			);
+			$post_args['post_parent'] = (int) $course_id;
 		}
 		$wp_query = new WP_Query( $post_args );
 		$count = $wp_query->found_posts;
 		$this->items = array();
 		$base_url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
 		foreach ( $wp_query->posts as $one ) {
-			$one->course_id = get_post_meta( $one->ID, 'course_id', true );
+			$one->course_id = $one->post_parent;
 			$one->unit_id = get_post_meta( $one->ID, 'unit_id', true );
 			$one->comments_number = get_comments_number( $one->ID );
 			$one->edit_link = wp_nonce_url(
@@ -193,18 +188,18 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		/**
 		 * check nonce
 		 */
-		$nonce_action = 'coursepress-update-notifiction-'.$_POST[ $this->id_name ];
+		$nonce_action = 'coursepress-update-forum-'.$_POST[ $this->id_name ];
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_action ) ) {
 			return $forum_id;
         }
 		$postarr = array(
 			'ID' => $_POST[ $this->id_name ],
 			'post_title' => isset( $_POST['post_title'] )? $_POST['post_title']:'',
+			'post_parent' => isset( $_POST['course_id'] )? $_POST['course_id']:0,
 			'post_content' => isset( $_POST['post_content'] )? $_POST['post_content']:'',
 			'post_type' => $this->post_type,
 			'post_status' => 'publish',
 			'meta_input' => array(
-				'course_id' => isset( $_POST['course_id'] )? $_POST['course_id']:0,
 				'unit_id' => isset( $_POST['unit_id'] )? $_POST['unit_id']:'course',
 				'email_notification' => isset( $_POST['email_notification'] )? 'yes':'no',
 				'thread_comments_depth' => isset( $_POST['thread_comments_depth'] )? $_POST['thread_comments_depth']:5,

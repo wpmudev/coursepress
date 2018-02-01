@@ -28,13 +28,26 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 	}
 
 	public function prepare_items() {
-		global $post_id, $comment_status, $search, $comment_type, $CoursePress;
+		global $post_id, $comment_status, $search, $comment_type, $CoursePress_Core;
 
 		$course_id = ( isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
-		$discussions = coursepress_get_all_modules_ids_by_type( 'discussion', $course_id );
-
-		if ( empty( $discussions ) ) {
-			return;
+		if ( !empty( $course_id ) ) {
+			$discussions = get_children( array(
+				'post_parent' => $course_id,
+				'post_type' => $CoursePress_Core->discussions_post_type,
+			));
+			if ( empty( $discussions ) ) {
+				return;
+			}
+		} else {
+			$discussions = get_posts( array(
+				'fields'			=> 'ids',
+				'post_type'			=> $CoursePress_Core->discussions_post_type,
+				'posts_per_page'	=> -1
+			));
+			if ( empty( $discussions ) ) {
+				return;
+			}
 		}
 
 		$comment_status = isset( $_REQUEST['comment_status'] ) ? $_REQUEST['comment_status'] : 'all';
@@ -148,7 +161,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 				$item->time = date_i18n( $timeformatstring, $unixtimestamp );
 				$item->edit_comment_link = get_edit_comment_link( $item->comment_ID );
 				$item->status_nonce = wp_create_nonce( 'coursepress_comment_status_'.$item->comment_ID );
-				$item->in_response_to_link = coursepress_discussion_module_link( '', $item );
+				$item->in_response_to_link = coursepress_discussion_link( '', $item );
 			}
 		}
 		$total_comments = get_comments( array_merge( $args, array(
