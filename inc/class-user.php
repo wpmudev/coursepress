@@ -1022,7 +1022,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$grade     = $this->get_step_grade( $course_id, $unit_id, $step_id );
 			$step      = coursepress_get_course_step( $step_id );
 			$min_grade = $step->__get( 'minimum_grade' );
-			$pass      = $grade >= $min_grade;
+			$pass      = $grade != 'pending' && $grade >= $min_grade;
 			$status    = '';
 			if ( $pass ) {
 				$status = 'pass';
