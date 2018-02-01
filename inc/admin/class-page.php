@@ -507,6 +507,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_script( 'iris' );
 		// Sorter
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		// Include resize sensor
+		wp_enqueue_script( 'resize-sensor', $CoursePress->plugin_url . '/assets/external/js/resize-sensor.js' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
