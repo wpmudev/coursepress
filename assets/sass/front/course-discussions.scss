@@ -121,22 +121,50 @@ ul.notification-archive-list {
 	background: none;
 }
 
-.course-discussion-wrapper .course-discussion-content.new input,
-.course-discussion-wrapper .course-discussion-content.new textarea {
-	width: 100%;
+.course-discussion-wrapper {
+    .course-discussion-content {
+        &.new {
+            input,
+            textarea {
+                width: 100%;
+            }
+            textarea {
+                min-height: 400px;
+            }
+            .button-links {
+                text-align: right;
+                margin: 10px 0 0 0;
+                padding: 0;
+                a {
+                    cursor: pointer;
+                    margin-left: 20px;
+                }
+
+            }
+        }
+    }
+    .form-submit {
+        text-align: right;
+    }
+}
+.course-discussion {
+    .discussion-section {
+        padding: 1em 0;
+    }
+    .discussion-title,
+    .discussion-content {
+        margin-bottom: 1em;
+    }
+    .button-links {
+        text-align: right;
+        a {
+            &.button {
+                float: left;
+            }
+        }
+    }
+    textarea {
+        min-height: 200px;
+    }
 }
 
-.course-discussion-wrapper .course-discussion-content.new textarea {
-	min-height: 400px;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links {
-	text-align: right;
-	margin: 10px 0 0 0;
-	padding: 0;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links a {
-	cursor: pointer;
-	margin-left: 20px;
-}
