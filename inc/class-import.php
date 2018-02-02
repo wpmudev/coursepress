@@ -21,6 +21,7 @@ class CoursePress_Import extends CoursePress_Utility
 	 * default import version
 	 */
 	var $version = '2.0';
+	var $course;
 
 	public function __construct( $course_object, $options ) {
 		$this->setUp( $course_object );
@@ -128,6 +129,10 @@ class CoursePress_Import extends CoursePress_Utility
 					}
 				}
 			}
+			/**
+			 * revert course ID
+			 */
+			$this->course->ID = $this->course_imported_id;
 			return;
 		}
 		/**

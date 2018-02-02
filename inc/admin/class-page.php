@@ -242,6 +242,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'delete_courses' => __( 'Deleting selected courses will also delete all units, modules, steps and any other data associated to those courses. Are you sure you want to continue?', 'cp' ),
 				'deleting_course' => __( 'Deleting course... please wait', 'cp' ),
 				'deleting_courses' => __( 'Deleting courses... please wait', 'cp' ),
+				'importing_courses' => __( 'Importing courses... please wait', 'cp' ),
 				'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this course?', 'cp' ),
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
@@ -276,7 +277,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
-				'select_module' => __( 'Select a module', 'cp' )
+				'select_module' => __( 'Select a module', 'cp' ),
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
@@ -673,7 +674,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'select' => __( 'Selectable', 'cp' ),
 		);
 		$this->localize_array['questions'] = $question_types;
-
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps, 'course' => $course ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 

@@ -12,24 +12,22 @@
  * @return bool|string Returns CoursePress screen ID on success or false.
  */
 function coursepress_is_admin() {
-    global $CoursePress_Admin_Page;
-
+	global $CoursePress_Admin_Page;
 
 	if ( ! $CoursePress_Admin_Page instanceof CoursePress_Admin_Page ) {
 		return false;
 	}
 
-    $screen_id = get_current_screen()->id;
+	$screen_id = get_current_screen()->id;
 
-    $pattern = '%toplevel_page_|coursepress-pro_page_|coursepress-base_page_|coursepress_page%';
-    $id = preg_replace( $pattern, '', $screen_id );
-
+	$pattern = '%toplevel_page_|coursepress-pro_page_|coursepress-base_page_|coursepress_page%';
+	$id = preg_replace( $pattern, '', $screen_id );
 
 	if ( in_array( $screen_id, $CoursePress_Admin_Page->__get( 'screens' ) ) ) {
 		return $id;
 	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -38,34 +36,34 @@ function coursepress_is_admin() {
  * @return array
  */
 function coursepress_get_enrollment_types() {
-    $enrollment_types = array(
-        'manually' => __( 'Manually added', 'cp' ),
-        'registered' => __( 'Any registered users', 'cp' ),
-        'passcode' => __( 'Any registered users with a pass code', 'cp' ),
-        'prerequisite' => __( 'Registered users who completed the prerequisite course(s).', 'cp' ),
-    );
+	$enrollment_types = array(
+		'manually' => __( 'Manually added', 'cp' ),
+		'registered' => __( 'Any registered users', 'cp' ),
+		'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+		'prerequisite' => __( 'Registered users who completed the prerequisite course(s).', 'cp' ),
+	);
 
-    /**
-     * Fire to allow additional enrollment types.
-     *
-     * @since 2.0
-     */
-    $enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types );
+	/**
+	 * Fire to allow additional enrollment types.
+	 *
+	 * @since 2.0
+	 */
+	$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types );
 
-    return $enrollment_types;
+	return $enrollment_types;
 }
 
 function coursepress_get_default_enrollment_type() {
-    $default = 'registered';
+	$default = 'registered';
 
-    /**
-     * Fire to allow default enrollment type to change.
-     *
-     * @since 2.0
-     */
-    $default = apply_filters( 'coursepress_course_enrollment_type_default', $default );
+	/**
+	 * Fire to allow default enrollment type to change.
+	 *
+	 * @since 2.0
+	 */
+	$default = apply_filters( 'coursepress_course_enrollment_type_default', $default );
 
-    return $default;
+	return $default;
 }
 
 /**
@@ -74,8 +72,8 @@ function coursepress_get_default_enrollment_type() {
  * @return array
  */
 function coursepress_get_categories() {
-    $terms = get_terms( array( 'taxonomy' => 'course_category', 'hide_empty' => false ) );
-    $cats = array();
+	$terms = get_terms( array( 'taxonomy' => 'course_category', 'hide_empty' => false ) );
+	$cats = array();
 
 	if ( ! empty( $terms ) ) {
 		foreach ( $terms as $term ) {
@@ -83,7 +81,7 @@ function coursepress_get_categories() {
 		}
 	}
 
-    return $cats;
+	return $cats;
 }
 
 /**
@@ -94,22 +92,22 @@ function coursepress_get_categories() {
  * @return mixed
  */
 function coursepress_get_setting( $key = true, $default = '' ) {
-    global $CoursePress_Data_Users;
+	global $CoursePress_Data_Users;
 
-    $caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
-    $settings = coursepress_get_option( 'coursepress_settings', array() );
+	$caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
+	$settings = coursepress_get_option( 'coursepress_settings', array() );
 
-    $defaults = array(
-        'general' => array(
-        	'details_media_type' => 'default',
+	$defaults = array(
+		'general' => array(
+			'details_media_type' => 'default',
 	        'details_media_priority' => 'default',
 	        'listing_media_type' => 'default',
 	        'listing_media_priority' => 'default',
 	        'image_width' => 235,
 	        'image_height' => 235,
-        ),
-        'slugs' => array(
-        	'course' => 'courses',
+		),
+		'slugs' => array(
+			'course' => 'courses',
 	        'course_category' => 'course_category',
 	        'units' => 'units',
 	        'notifications' => 'notifications',
@@ -126,52 +124,52 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 	        	'student_dashboard' => 0,
 		        'student_settings' => 0,
 		        'login' => 0,
-	        )
-        ),
-        'emails' => array(),
-        'capabilities' => array(
-            'instructor' => $caps,
-            'facilitator'=> $caps,
-        ),
-        'basic_certificate' => array(
-            'enabled' => true,
-            'use_cp_default' => false,
-            'content' => '',
-	   'margin' => array(
+	        ),
+		),
+		'emails' => array(),
+		'capabilities' => array(
+			'instructor' => $caps,
+			'facilitator' => $caps,
+		),
+		'basic_certificate' => array(
+			'enabled' => true,
+			'use_cp_default' => false,
+			'content' => '',
+		'margin' => array(
 		   'top' => 0,
 		   'left' => 0,
 		   'right' => 0,
-	   )
-        ),
-        'extensions' => array(),
-        'marketpress' => array(
-            'enabled' => true,
-            'redirect' => true,
-            'unpaid' => 'change_status',
-            'delete' => 'change_status',
-        ),
-        'woocommerce' => array(
-            'enabled' => true,
-            'redirect' => true,
-            'unpaid' => 'change_status',
-            'delete' => 'change_status',
-        ),
-    );
+		),
+		),
+		'extensions' => array(),
+		'marketpress' => array(
+			'enabled' => true,
+			'redirect' => true,
+			'unpaid' => 'change_status',
+			'delete' => 'change_status',
+		),
+		'woocommerce' => array(
+			'enabled' => true,
+			'redirect' => true,
+			'unpaid' => 'change_status',
+			'delete' => 'change_status',
+		),
+	);
 
-    if ( ! empty( $settings ) ) {
-        // Legacy settings
-        $defaults['general']['image_width'] = coursepress_get_array_val( $settings, 'course/image_width' );
-        $defaults['general']['image_height'] = coursepress_get_array_val( $settings, 'course/image_height' );
-        $defaults['general']['details_media_type'] = coursepress_get_array_val( $settings, 'course/details_media_type' );
-        $defaults['general']['details_media_priority'] = coursepress_get_array_val( $settings, 'course/details_media_priority' );
-        $defaults['general']['listing_media_type'] = coursepress_get_array_val( $settings, 'course/listing_media_type' );
-        $defaults['general']['listing_media_priority'] = coursepress_get_array_val( $settings, 'course/listing_media_priority' );
-        $defaults['general']['order_by'] = coursepress_get_array_val( $settings, 'course/order_by' );
-        $defaults['general']['order_by_direction'] = coursepress_get_array_val( $settings, 'course/order_by_direction' );
-        $defaults['general']['instructor_show_username'] = coursepress_get_array_val( $settings, 'instructor/show_username' );
-        $defaults['general']['enrollment_type_default'] = coursepress_get_array_val( $settings, 'course/enrollment_type_default' );
-        $defaults['general']['reports_font'] = coursepress_get_array_val( $settings, 'reports/font' );
-    }
+	if ( ! empty( $settings ) ) {
+		// Legacy settings
+		$defaults['general']['image_width'] = coursepress_get_array_val( $settings, 'course/image_width' );
+		$defaults['general']['image_height'] = coursepress_get_array_val( $settings, 'course/image_height' );
+		$defaults['general']['details_media_type'] = coursepress_get_array_val( $settings, 'course/details_media_type' );
+		$defaults['general']['details_media_priority'] = coursepress_get_array_val( $settings, 'course/details_media_priority' );
+		$defaults['general']['listing_media_type'] = coursepress_get_array_val( $settings, 'course/listing_media_type' );
+		$defaults['general']['listing_media_priority'] = coursepress_get_array_val( $settings, 'course/listing_media_priority' );
+		$defaults['general']['order_by'] = coursepress_get_array_val( $settings, 'course/order_by' );
+		$defaults['general']['order_by_direction'] = coursepress_get_array_val( $settings, 'course/order_by_direction' );
+		$defaults['general']['instructor_show_username'] = coursepress_get_array_val( $settings, 'instructor/show_username' );
+		$defaults['general']['enrollment_type_default'] = coursepress_get_array_val( $settings, 'course/enrollment_type_default' );
+		$defaults['general']['reports_font'] = coursepress_get_array_val( $settings, 'reports/font' );
+	}
 
 	/**
 	 * Fire to allow setting the default settings.
@@ -185,7 +183,7 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 		$settings[ $k ] = wp_parse_args( $custom, $_default );
 	}
 
-	if ( is_bool( $key ) && TRUE === $key ) {
+	if ( is_bool( $key ) && true === $key ) {
 		return $settings;
 	}
 
@@ -201,17 +199,17 @@ function coursepress_get_setting( $key = true, $default = '' ) {
  * @return mixed
  */
 function coursepress_update_setting( $key = true, $value ) {
-    $settings = coursepress_get_setting( true );
+	$settings = coursepress_get_setting( true );
 
-    if ( ! is_bool( $key )  ) {
-        $settings = coursepress_set_array_val( $settings, $key, $value );
-    } else {
-        $settings = $value;
-    }
+	if ( ! is_bool( $key )  ) {
+		$settings = coursepress_set_array_val( $settings, $key, $value );
+	} else {
+		$settings = $value;
+	}
 
-    coursepress_update_option( 'coursepress_settings', $settings );
+	coursepress_update_option( 'coursepress_settings', $settings );
 
-    return $settings;
+	return $settings;
 }
 
 /**
@@ -257,13 +255,13 @@ function coursepress_render( $file, $args = array(), $echo = true ) {
  * @return mixed
  */
 function coursepress_get_template( $name, $slug = '' ) {
-    $template = implode( '-', array( $name, $slug ) );
+	$template = implode( '-', array( $name, $slug ) );
 
-    if ( ! locate_template( $template . '.php' ) ) {
-        coursepress_render( 'templates/' . $template );
-    }
+	if ( ! locate_template( $template . '.php' ) ) {
+		coursepress_render( 'templates/' . $template );
+	}
 
-    return null;
+	return null;
 }
 
 /**
@@ -281,8 +279,8 @@ function coursepress_get_array_val( $array, $key, $default = '' ) {
 		return null;
 	}
 
-    $keys = explode( '/', $key );
-    $last_key = array_pop( $keys );
+	$keys = explode( '/', $key );
+	$last_key = array_pop( $keys );
 
 	foreach ( $keys as $k ) {
 		if ( isset( $array[ $k ] ) ) {
@@ -294,7 +292,7 @@ function coursepress_get_array_val( $array, $key, $default = '' ) {
 		return $array[ $last_key ];
 	}
 
-    return $default;
+	return $default;
 }
 
 /**
@@ -316,7 +314,7 @@ function coursepress_set_array_val( $array, $path, $value ) {
 		$array = array();
 	}
 
-    $key = array_shift( $path );
+	$key = array_shift( $path );
 
 	if ( count( $path ) > 0 ) {
 		if ( ! isset( $array[ $key ] ) ) {
@@ -328,7 +326,7 @@ function coursepress_set_array_val( $array, $path, $value ) {
 		$array[ $key ] = $value;
 	}
 
-    return $array;
+	return $array;
 }
 
 /**
@@ -343,9 +341,9 @@ function coursepress_get_option( $key, $default = '' ) {
 		$value = get_site_option( $key, $default );
 	} else {
 	    $value = get_option( $key, $default );
-    }
+	}
 
-    return $value;
+	return $value;
 }
 
 /**
@@ -355,11 +353,11 @@ function coursepress_get_option( $key, $default = '' ) {
  * @param $value
  */
 function coursepress_update_option( $key, $value ) {
-    if ( is_multisite() ) {
-        update_site_option( $key, $value );
-    } else {
-        update_option( $key, $value );
-    }
+	if ( is_multisite() ) {
+		update_site_option( $key, $value );
+	} else {
+		update_option( $key, $value );
+	}
 }
 
 /**
@@ -368,9 +366,9 @@ function coursepress_update_option( $key, $value ) {
  * @return string
  */
 function coursepress_get_url() {
-    $slug = coursepress_get_setting( 'slugs/course', 'courses' );
+	$slug = coursepress_get_setting( 'slugs/course', 'courses' );
 
-    return trailingslashit( home_url( '/' . $slug ) );
+	return trailingslashit( home_url( '/' . $slug ) );
 }
 
 /**
@@ -382,18 +380,18 @@ function coursepress_get_url() {
  * @return bool
  */
 function coursepress_user_have_comments( $student_id, $post_id ) {
-    $args = array(
-        'post_id' => $post_id,
-        'user_id' => $student_id,
-        'order' => 'ASC',
-        'offset' => 0,
-        'number' => 1, // We only need one to verify if current user posted a comment.
-        'fields' => 'ids',
-        'status' => 'all',
-    );
-    $comments = get_comments( $args );
+	$args = array(
+		'post_id' => $post_id,
+		'user_id' => $student_id,
+		'order' => 'ASC',
+		'offset' => 0,
+		'number' => 1, // We only need one to verify if current user posted a comment.
+		'fields' => 'ids',
+		'status' => 'all',
+	);
+	$comments = get_comments( $args );
 
-    return count( $comments ) > 0;
+	return count( $comments ) > 0;
 }
 
 /**
@@ -404,45 +402,45 @@ function coursepress_user_have_comments( $student_id, $post_id ) {
  * @return string
  */
 function coursepress_progress_wheel( $attr = array() ) {
-    global $CoursePress_Core;
+	global $CoursePress_Core;
 
-    $core = $CoursePress_Core;
-    $defaults = array(
-        'class'                     => '',
-        'data-value'                 => 100,
-        'data-start-angle'           => '4.7',
-        'data-size'                  => 36,
-        'data-knob-data-height'      => 40,
-        'data-empty-fill'            => 'rgba(0, 0, 0, 0.2)',
-        'data-fill-color'            => '#24bde6',
-        'data-bg-color'              => '#e0e6eb',
-        'data-thickness'             => '6',
-        'data-format'                => true,
-        'data-style'                 => 'extended',
-        'data-animation-start-value' => '1.0',
-        'data-knob-data-thickness'   => 0.18,
-        'data-knob-text-show'        => true,
-        'data-knob-text-color'       => '#222222',
-        'data-knob-text-align'       => 'center',
-        'data-knob-text-denominator' => '4.5',
-    );
+	$core = $CoursePress_Core;
+	$defaults = array(
+		'class'                     => '',
+		'data-value'                 => 100,
+		'data-start-angle'           => '4.7',
+		'data-size'                  => 36,
+		'data-knob-data-height'      => 40,
+		'data-empty-fill'            => 'rgba(0, 0, 0, 0.2)',
+		'data-fill-color'            => '#24bde6',
+		'data-bg-color'              => '#e0e6eb',
+		'data-thickness'             => '6',
+		'data-format'                => true,
+		'data-style'                 => 'extended',
+		'data-animation-start-value' => '1.0',
+		'data-knob-data-thickness'   => 0.18,
+		'data-knob-text-show'        => true,
+		'data-knob-text-color'       => '#222222',
+		'data-knob-text-align'       => 'center',
+		'data-knob-text-denominator' => '4.5',
+	);
 
-    $attr = wp_parse_args( $attr, $defaults );
-    $class = array( 'course-progress-disc' );
+	$attr = wp_parse_args( $attr, $defaults );
+	$class = array( 'course-progress-disc' );
 
-    if ( ! empty( $attr['class'] ) ) {
-        $class[] = $attr['class'];
-    }
-    $value = $attr['data-value'];
+	if ( ! empty( $attr['class'] ) ) {
+		$class[] = $attr['class'];
+	}
+	$value = $attr['data-value'];
 
-    if ( intval( $value ) > 0 ) {
-        $value = intval( $value ) / 100;
-        $attr['data-value'] = $value;
-    }
+	if ( intval( $value ) > 0 ) {
+		$value = intval( $value ) / 100;
+		$attr['data-value'] = $value;
+	}
 
-    $attr['class'] = implode( ' ', $class );
+	$attr['class'] = implode( ' ', $class );
 
-    return $core->create_html( 'div', $attr );
+	return $core->create_html( 'div', $attr );
 }
 
 /**
@@ -451,32 +449,32 @@ function coursepress_progress_wheel( $attr = array() ) {
  * @return null
  */
 function coursepress_breadcrumb() {
-    global $CoursePress_VirtualPage;
+	global $CoursePress_VirtualPage;
 
 	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
 
-    $vp = $CoursePress_VirtualPage;
-    $items = $CoursePress_VirtualPage->__get( 'breadcrumb' );
+	$vp = $CoursePress_VirtualPage;
+	$items = $CoursePress_VirtualPage->__get( 'breadcrumb' );
 
-    if ( ! empty( $items ) ) {
-        $breadcrumb = '';
+	if ( ! empty( $items ) ) {
+		$breadcrumb = '';
 
-        // Make the last item non-clickable
-        $last_item = array_pop( $items );
+		// Make the last item non-clickable
+		$last_item = array_pop( $items );
 
-        foreach ( $items as $item ) {
-            $attr = array( 'class' => 'course-item' );
-            $breadcrumb .= $vp->create_html( 'li', $attr, $item );
-        }
+		foreach ( $items as $item ) {
+			$attr = array( 'class' => 'course-item' );
+			$breadcrumb .= $vp->create_html( 'li', $attr, $item );
+		}
 
-        $breadcrumb .= $vp->create_html( 'li', array( 'class' => 'current' ), wp_strip_all_tags( $last_item ) );
+		$breadcrumb .= $vp->create_html( 'li', array( 'class' => 'current' ), wp_strip_all_tags( $last_item ) );
 
-        echo $vp->create_html( 'ul', array( 'class' => 'course-breadcrumb' ), $breadcrumb );
-    }
+		echo $vp->create_html( 'ul', array( 'class' => 'course-breadcrumb' ), $breadcrumb );
+	}
 
-    return '';
+	return '';
 }
 
 /**
@@ -489,13 +487,13 @@ function coursepress_breadcrumb() {
  * @return null|string
  */
 function coursepress_create_html( $tag, $attributes = array(), $content = '' ) {
-    global $CoursePress_Core;
+	global $CoursePress_Core;
 
 	if ( ! $CoursePress_Core instanceof CoursePress_Core ) {
 		return null;
 	}
 
-    return $CoursePress_Core->create_html( $tag, $attributes, $content );
+	return $CoursePress_Core->create_html( $tag, $attributes, $content );
 }
 
 /**
@@ -546,105 +544,55 @@ function coursepress_alert_message( $content = '', $type = 'info' ) {
 	return $html;
 }
 
-function coursepress_convert_hex_color_to_rgb($hex_color, $default)
-{
-    $color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
-    if($color_valid)
-    {
-        $values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
-        return array_values($values);
-    }
+function coursepress_convert_hex_color_to_rgb( $hex_color, $default ) {
 
-    return $default;
+	$color_valid = (boolean) preg_match( '/^#[a-f0-9]{6}$/i', $hex_color );
+	if ( $color_valid ) {
+		$values = CP_TCPDF_COLORS::convertHTMLColorToDec( $hex_color, CP_TCPDF_COLORS::$spotcolor );
+		return array_values( $values );
+	}
+
+	return $default;
 }
 
 function coursepress_download_file( $requested_file ) {
-    global $CoursePress;
+	global $CoursePress;
 
-    ob_start();
+	ob_start();
 
-    $requested_file_obj = wp_check_filetype( $requested_file );
-    $filename = basename( $requested_file );
-
-    /**
-     * Filter used to alter header params. E.g. removing 'timeout'.
-     */
-    $force_download_parameters = apply_filters(
-        'coursepress_force_download_parameters',
-        array(
-            'timeout' => 60,
-            'user-agent' => $CoursePress->name . ' / ' . $CoursePress->version . ';',
-        )
-    );
-
-    $body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
-    if ( empty( $body ) && preg_match( '/^https/', $requested_file ) ) {
-        $requested_file = preg_replace( '/^https/', 'http', $requested_file );
-        $body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
-    }
-    if ( ! empty( $body ) ) {
-        header( 'Pragma: public' );
-        header( 'Expires: 0' );
-        header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-        header( 'Cache-Control: private', false );
-        header( 'Content-Type: ' . $requested_file_obj['type'] );
-        header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-        header( 'Content-Transfer-Encoding: binary' );
-        header( 'Connection: close' );
-        echo $body;
-    } else {
-        _e( 'Something went wrong.', 'CP_TD' );
-    }
-    exit();
-}
-
-/**
- * Update last activity of the user.
- *
- * This helpfer function can be used to log the latest activity
- * of a student or even any other user.
- *
- * @param string $activity Activity.
- * @param integer $user_id User ID.
- *
- * @since 3.0
- */
-function coursepress_log_last_activity( $activity = 'unknown', $user_id = 0 ) {
-
-	// If user id is not given, get current user id.
-	$user_id = empty( $user_id ) ? get_current_user_id() : $user_id;
-	if ( empty( $user_id ) ) {
-		return;
-	}
-
-	// Save only string or numeric values.
-	if ( ! is_string( $activity ) && ! is_numeric( $activity ) ) {
-		return;
-	}
-
-	$allowed_activities = array(
-		'course_module_seen',
-		'course_seen',
-		'course_unit_seen',
-		'enrolled',
-		'login',
-		'module_answered',
-	);
+	$requested_file_obj = wp_check_filetype( $requested_file );
+	$filename = basename( $requested_file );
 
 	/**
-	 * Filter to allow custom activities to log.
-	 *
-	 * @param array $allowed_activities
+	 * Filter used to alter header params. E.g. removing 'timeout'.
 	 */
-	$allowed_activities = apply_filters( 'coursepress_allowed_activities', $allowed_activities );
+	$force_download_parameters = apply_filters(
+		'coursepress_force_download_parameters',
+		array(
+			'timeout' => 60,
+			'user-agent' => $CoursePress->name . ' / ' . $CoursePress->version . ';',
+		)
+	);
 
-	// For other activities, set as unknown.
-	if ( ! in_array( $activity, $allowed_activities ) ) {
-		$activity = 'unknown';
+	$body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+	if ( empty( $body ) && preg_match( '/^https/', $requested_file ) ) {
+		$requested_file = preg_replace( '/^https/', 'http', $requested_file );
+		$body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 	}
-
-	update_user_meta( $user_id, 'coursepress_latest_activity_time', time() );
-	update_user_meta( $user_id, 'coursepress_latest_activity', $activity );
+	if ( ! empty( $body ) ) {
+		header( 'Pragma: public' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Cache-Control: private', false );
+		header( 'Content-Type: ' . $requested_file_obj['type'] );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Connection: close' );
+		echo $body;
+	} else {
+		_e( 'Something went wrong.', 'CP_TD' );
+	}
+	exit();
 }
 
 function coursepress_set_cookie( $key, $value, $time ) {
@@ -664,7 +612,7 @@ function coursepress_get_cookie( $key ) {
 	$key = $key . '_' . COOKIEHASH;
 
 	if ( isset( $_COOKIE[ $key ] ) ) {
-		return $_COOKIE[$key];
+		return $_COOKIE[ $key ];
 	}
 
 	return false;
@@ -700,7 +648,7 @@ function coursepress_get_student_settings_url() {
 	$student_page = coursepress_get_setting( 'slugs/pages/student_settings', false );
 	if ( ! $student_page ) {
 		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
-		$student_url = site_url( '/' ) . trailingslashit( $student_settings, 0);
+		$student_url = site_url( '/' ) . trailingslashit( $student_settings, 0 );
 	} else {
 		$student_url = get_permalink( $student_page );
 	}
@@ -716,7 +664,7 @@ function coursepress_replace_vars( $content, $vars ) {
 	}
 	$vars['COURSES_ADDRESS'] = coursepress_get_main_courses_url();
 	$vars['BLOG_ADDRESS'] = site_url();
-	$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+	$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] = get_bloginfo( 'name' );
 	$vars['LOGIN_ADDRESS'] = $login_url;
 	$vars['WEBSITE_ADDRESS'] = home_url();
 
@@ -738,7 +686,7 @@ function coursepress_html_select( $data, $echo = false ) {
 		isset( $data['id'] )? $data['id']:''
 	);
 	if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
-		foreach( $data['options'] as $one ) {
+		foreach ( $data['options'] as $one ) {
 			$content .= sprintf(
 				'<option value="%s" %s>%s</option>',
 				isset( $one['value'] )? esc_attr( $one['value'] ) : '',
@@ -750,7 +698,7 @@ function coursepress_html_select( $data, $echo = false ) {
 		return;
 	}
 	$content .= '</select>';
-	if ( !$echo ) {
+	if ( ! $echo ) {
 		return $content;
 	}
 	echo $content;
