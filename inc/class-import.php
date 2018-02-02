@@ -277,7 +277,10 @@ class CoursePress_Import extends CoursePress_Utility
 					if ( ! isset( $unit->meta_input->modules ) ) {
 						$unit->meta_input->modules = array();
 					}
-					$i = 0;
+					/**
+					 * Counter must start at 1 NOT at 0!!!
+					 */
+					$i = 1;
 					$modules = array();
 					foreach ( $unit->pages as $page ) {
 						/**
@@ -450,19 +453,18 @@ class CoursePress_Import extends CoursePress_Utility
 					break;
 				}
 				$module->meta_input->questions = array(
-				$id => array(
-					'title' => $module->post_title,
-					'question' => $module->post_content,
-					'options' => array(
-						'answers' => $answers,
-						'checked' => $checked,
+					$id => array(
+						'title' => $module->post_title,
+						'question' => $module->post_content,
+						'options' => array(
+							'answers' => $answers,
+							'checked' => $checked,
+						),
+						'type' => $step_type,
+						'order' => '0,',
 					),
-					'type' => $step_type,
-				),
 				);
 			break;
-			default:
-				l( $type );
 		}
 		return $module;
 	}
