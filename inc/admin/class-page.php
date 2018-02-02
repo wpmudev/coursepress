@@ -653,7 +653,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'select' => __( 'Selectable', 'cp' ),
 		);
 		$this->localize_array['questions'] = $question_types;
-
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps, 'course' => $course ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
