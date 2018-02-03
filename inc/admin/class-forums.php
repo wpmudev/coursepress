@@ -216,4 +216,31 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		}
 		return $forum_id;
 	}
+
+	/**
+	 * get forum list by course_ID
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @returns array Ids of forums.
+	 */
+	public function get_by_course_id( $course_id ) {
+		$is_course = coursepress_is_course( $course_id );
+		if ( false == $is_course ) {
+			return array();
+		}
+		$args = array(
+			'post_type' => $this->post_type,
+			'fields' => 'ids',
+			'nopaging' => true,
+			'post_parent' => $course_id,
+			'post_status' => 'any',
+		);
+		$wp_query = new WP_Query( $args );
+		if ( $wp_query->have_posts() ) {
+			return $wp_query->posts;
+		}
+		return array();
+	}
 }
