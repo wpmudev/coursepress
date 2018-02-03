@@ -9,6 +9,23 @@
 final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 
 	/**
+	 * Load the individual shortcode modules.
+	 * For better maintenance and performance the shortcodes are split into
+	 * multiple files instead of having one huge file.
+	 *
+	 * @since  2.0.0
+	 */
+	public function init() {
+
+		CoursePress_Data_Shortcode_Course::init();
+		CoursePress_Data_Shortcode_CourseTemplate::init();
+		CoursePress_Data_Shortcode_Instructor::init();
+		CoursePress_Data_Shortcode_Student::init();
+		CoursePress_Data_Shortcode_Template::init();
+		CoursePress_Data_Shortcode_Unit::init();
+	}
+
+	/**
 	 * Get shortcode types array.
 	 *
 	 * @since 3.0.0

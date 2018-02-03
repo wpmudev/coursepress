@@ -370,4 +370,31 @@ abstract class CoursePress_Utility {
 
 		return $result;
 	}
+
+	/**
+	 * Returns true if the WP installation allows user registration.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return bool If CoursePress allows user signup.
+	 */
+	public function users_can_register() {
+
+		if ( is_multisite() ) {
+			$allow_register = users_can_register_signup_filter();
+		} else {
+			$allow_register = get_option( 'users_can_register' );
+		}
+
+		/**
+		 * Filter the return value to allow users to manually enable
+		 * CoursePress registration only.
+		 *
+		 * @since 2.0.0
+		 * @var bool $_allow_register
+		 */
+		$allow_register = apply_filters( 'coursepress_users_can_register', $allow_register );
+
+		return $allow_register;
+	}
 }

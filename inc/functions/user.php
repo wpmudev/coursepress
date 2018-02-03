@@ -827,3 +827,38 @@ function coursepress_add_user_to_blog( $user_id, $role = 'student', $blog_id = 0
 	add_user_to_blog( $blog_id, $user_id, array( $role, 'subscriber' ) );
 }
 
+/**
+ * Get student enrolled date.
+ *
+ * @param int $course_id Course ID.
+ * @param int $student_id Student ID.
+ *
+ * @return array|bool|mixed
+ */
+function coursepress_get_student_date_enrolled( $course_id, $student_id = 0 ) {
+
+	if ( empty( $course_id ) ) {
+		return false;
+	}
+
+	$student_id = empty( $student_id ) ? get_current_user_id() : $student_id;
+
+	$date_enrolled = get_user_meta( $student_id, 'enrolled_course_date_' . $course_id );
+	if ( is_array( $date_enrolled ) ) {
+		$date_enrolled = array_pop( $date_enrolled );
+	}
+
+	return $date_enrolled;
+}
+
+function coursepress_is_student_enrolled_at( $course_id, $student_id = 0 ) {
+
+	$student_id = empty( $student_id ) ? get_current_user_id() : $student_id;
+	$student = coursepress_get_user( $student_id );
+
+	if ( is_wp_error( $student ) || empty( $course_id ) ) {
+		return false;
+	}
+
+	return $student->is_enrolled_at( $course_id );
+}

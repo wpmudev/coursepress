@@ -53,6 +53,22 @@ function coursepress_get_course( $course_id = 0, $cached = true ) {
 }
 
 /**
+ * Get current course id.
+ *
+ * @return int|bool
+ */
+function coursepress_get_course_id() {
+
+	$course = coursepress_get_course();
+
+	if ( ! is_wp_error( $course ) ) {
+		return $course->__get( 'ID' );
+	}
+
+	return false;
+}
+
+/**
  * Returns list courses.
  *
  * @param array $args  Arguments to pass to WP_Query.
@@ -1197,6 +1213,32 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
 }
 
 /**
+ * Get course setting value.
+ *
+ * @param int $course_id Course ID.
+ * @param string $key Setting key.
+ * @param bool $default Default value.
+ *
+ * @return bool
+ */
+function coursepress_course_get_setting( $course_id, $key, $default = false ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) || empty( $key ) ) {
+		return $default;
+	}
+
+	$settings = $course->get_settings();
+
+	if ( isset( $settings[ $key ] ) ) {
+		return $settings[ $key ];
+	}
+
+	return $default;
+}
+
+/**
  * Create new course category from text.
  *
  * @param string $name New category name.
@@ -1955,3 +1997,51 @@ function coursepress_get_discussion() {
 	return get_page_by_path( $topic, OBJECT, 'discussions' );
 }
 
+/**
+ * Get categories assigned to a course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+function coursepress_get_course_categories( $course_id ) {
+
+	$cats = array();
+	if ( empty( $course_id ) ) {
+		return $cats;
+	}
+
+	$course_category = wp_get_object_terms( $course_id, 'course_category' );
+	if ( ! empty( $course_category ) ) {
+		foreach ( $course_category as $term ) {
+			$cats[ $term->term_id ] = $term->name;
+		}
+	}
+
+	return $cats;
+}
+
+/**
+ * Get prerequisite of course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array|bool
+ */
+function coursepress_get_enrollment_prerequisite( $course_id ) {
+
+	if ( empty( $course_id ) ) {
+		return array();
+	}
+
+	$courses = coursepress_course_get_setting( $course_id, 'enrollment_prerequisite', array() );
+	if ( empty( $courses ) ) {
+		return array();
+	}
+
+	$courses = (array) $courses;
+
+	$courses = array_diff( $courses, array( $course_id ) );
+
+	return $courses;
+}
