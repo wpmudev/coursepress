@@ -41,6 +41,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$defaults = array(
 	        'unit_availability' => 'instant',
 	        'unit_availability_date' => '',
+	        'unit_availability_date_timestamp' => '',
 	        'unit_delay_days' => 0,
 	        'force_current_unit_completion' => false,
 	        'force_current_unit_successful_completion' => false,
@@ -50,7 +51,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	        'use_feature_image' => '',
 	        'use_description' => false,
 		);
-		$date_format = coursepress_get_option( 'date_format' );
+		$date_format = _x( 'F d, Y', 'Date format for date field. We recomend do not change this.', 'cp' );
 		$time_now = current_time( 'timestamp' );
 		foreach ( $defaults as $key => $default_value ) {
 			$value = get_post_meta( $id, $key, true );
@@ -58,14 +59,21 @@ class CoursePress_Unit extends CoursePress_Utility {
 			if ( ! $value ) {
 			    $value = $default_value;
 			}
-			if ( 'unit_availability_date' == $key && ! is_array( $value ) ) {
-				$timestamp = strtotime( $value, $time_now );
-				$value = date_i18n( $date_format, $timestamp );
-				$this->__set( 'unit_availability_date_timestamp', $timestamp );
-				$this->__set( 'unit_availability_date', $value );
-			}
-			if ( 'on' == $value || 'yes' == $value ) {
-				$value = true;
+			if ( ! empty( $value ) ) {
+				if ( 'unit_availability_date' == $key && ! is_array( $value ) ) {
+					$timestamp = strtotime( $value, $time_now );
+					$value = date_i18n( $date_format, $timestamp );
+					$this->__set( 'unit_availability_date_timestamp', $timestamp );
+					$this->__set( 'meta_unit_availability_date_timestamp', $timestamp );
+				}
+				if ( 'unit_availability_date_timestamp' == $key && ! is_array( $value ) ) {
+					$date = date_i18n( $date_format, $value );
+					$this->__set( 'unit_availability_date', $date );
+					$this->__set( 'meta_unit_availability_date', $date );
+				}
+				if ( 'on' == $value || 'yes' == $value ) {
+					$value = true;
+				}
 			}
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
@@ -77,6 +85,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$defaults = array(
 			'unit_availability' => 'instant',
 			'unit_availability_date' => '',
+			'unit_availability_date_timestamp' => '',
 			'unit_delay_days' => 0,
 			'force_current_unit_completion' => false,
 			'force_current_unit_successful_completion' => false,

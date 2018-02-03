@@ -1,8 +1,15 @@
-.course-single {
-  .course-description {
-    padding: 15px 0;
-    border: 1px solid $grey_5;
-    border-left: 0;
-    border-right: 0;
-  }
+.single-course {
+    .course-overview {
+        .course-description {
+            padding: 15px 0;
+            border: 1px solid $grey_5;
+            border-left: 0;
+            border-right: 0;
+        }
+        input {
+            &[name=course_passcode] {
+                margin-bottom: 1em;
+            }
+        }
+    }
 }

@@ -114,7 +114,11 @@
                     this.steps.$el.appendTo(this.container);
                 }
 
-                this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
+                this.$('.datepicker').datepicker({
+                    dateFormat: 'MM dd, yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true
+                });
             },
 
             toggleFeatureImage: function(ev) {

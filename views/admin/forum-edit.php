@@ -17,7 +17,7 @@
 					'class' => 'large-text',
 				),
 				'post_content' => array(
-					'id' => 'forum_post_content',
+					'id' => 'post_content',
 					'type' => 'wp_editor',
 					'value' => $post_content,
 					'options' => array(
@@ -91,7 +91,7 @@
 ?>
 <form method="post" >
 <div class="wrap coursepress-wrap coursepress-notifications" id="coursepress-notifications">
-    <h1 class="wp-heading-inline"><?php $notification_id? esc_html_e( 'Edit Forum', 'cp' ):esc_html_e( 'Create new', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php $forum_id ? esc_html_e( 'Edit Forum', 'cp' ):esc_html_e( 'Create new', 'cp' ); ?></h1>
     <div class="coursepress-page">
 <?php
 		$option_name = sprintf( 'coursepress_%s', basename( __FILE__, '.php' ) );
@@ -167,7 +167,7 @@ foreach ( $options as $option_key => $option ) {
 
     </div>
 </div>
-<?php wp_nonce_field( 'coursepress-update-notifiction-'.$notification_id ); ?>
-<input type="hidden" name="notification_id" value="<?php echo esc_attr( $notification_id ); ?>" />
+<?php wp_nonce_field( 'coursepress-update-forum-'.$forum_id ); ?>
+<input type="hidden" name="forum_id" value="<?php echo esc_attr( $forum_id ); ?>" />
 <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
 </form>

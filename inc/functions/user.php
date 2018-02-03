@@ -42,18 +42,16 @@ function coursepress_get_user( $user_id = 0 ) {
 
 	if ( $CoursePress_User instanceof  CoursePress_User
 		&& $user_id == $CoursePress_User->__get( 'ID' ) ) {
-		return $CoursePress_User; }
-
+		return $CoursePress_User;
+	}
 	if ( isset( $CoursePress_Core->users[ $user_id ] ) ) {
-		return $CoursePress_Core->users[ $user_id ]; }
-
+		return $CoursePress_Core->users[ $user_id ];
+	}
 	$user = new CoursePress_User( $user_id );
-
 	if ( is_wp_error( $user ) ) {
-		return $user->wp_error(); }
-
+		return $user->wp_error();
+	}
 	$CoursePress_Core->users[ $user_id ] = $user;
-
 	return $user;
 }
 
@@ -72,7 +70,8 @@ function coursepress_user_meta_prefix_required() {
 function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 	// Do not allow empty params!!!
 	if ( empty( $user_id ) || empty( $course_id ) ) {
-		return false; }
+		return false;
+	}
 	$user = coursepress_get_user( $user_id );
 	if ( is_wp_error( $user ) ) {
 		return false;
@@ -120,12 +119,14 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return false; }
+		return false;
+	}
 
 	$course = coursepress_get_course( $course_id );
 
 	if ( is_wp_error( $course ) ) {
-		return false; }
+		return false;
+	}
 
 	// Remove marker
 	delete_post_meta( $course_id, 'instructor', $user_id );
@@ -165,7 +166,8 @@ function coursepress_get_user_instructed_courses( $user_id = 0, $published = tru
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return null; }
+		return null;
+	}
 
 	if ( ! $user->is_instructor() ) {
 		return null; // User is not an instructor, bail!
@@ -185,7 +187,8 @@ function coursepress_get_user_instructor_profile_url( $user_id = 0 ) {
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return null; }
+		return null;
+	}
 
 	return $user->get_instructor_profile_link();
 }
@@ -248,12 +251,14 @@ function coursepress_delete_student( $user_id = 0, $course_id = 0 ) {
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return null; }
+		return null;
+	}
 
 	$course = coursepress_get_course( $course_id );
 
 	if ( is_wp_error( $course ) ) {
-		return null; }
+		return null;
+	}
 
 	if ( ! $user->is_enrolled_at( $course_id ) ) {
 		return null; // User is not enrolled? bail!
@@ -287,18 +292,21 @@ function coursepress_delete_student( $user_id = 0, $course_id = 0 ) {
  */
 function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $returnAll = true ) {
 	if ( empty( $user_id ) ) {
-		return false; }
+		return false;
+	}
 
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return false; }
+		return false;
+	}
 
 	if ( $user->is_student() ) {
 		return false; // Not a student of any course? bail!
 	}
 	if ( empty( $user_id ) ) {
-		return null; }
+		return null;
+	}
 
 	return $user->get_user_enrolled_at( $published, $returnAll );
 }
@@ -359,12 +367,14 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return false; }
+		return false;
+	}
 
 	$course = coursepress_get_course( $course_id );
 
 	if ( is_wp_error( $course ) ) {
-		return false; }
+		return false;
+	}
 
 	if ( ! $user->is_facilitator_at( $course_id ) ) {
 		return false; // Not a facilitator? bail!
@@ -395,12 +405,14 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
  */
 function coursepress_get_user_facilitated_courses( $user_id = 0, $published = true, $returnAll = false ) {
 	if ( empty( $user_id ) ) {
-		return false; }
+		return false;
+	}
 
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
-		return false; }
+		return false;
+	}
 
 	if ( ! $user->is_facilitator() ) {
 		return false; // User is not a facilitator? bail!
@@ -421,7 +433,8 @@ function coursepress_get_accessible_courses( $returnAll = true ) {
 	$user = coursepress_get_user();
 
 	if ( is_wp_error( $user ) ) {
-		return null; }
+		return null;
+	}
 
 	return $user->get_accessible_courses( false, $returnAll );
 }
@@ -775,17 +788,27 @@ function coursepress_get_user_name( $user_id, $last_first = false, $show_usernam
 	$last = (string) get_user_option( 'last_name', $user_id );
 	$first = (string) get_user_option( 'first_name', $user_id );
 	$result = '';
-
 	if ( $last_first ) {
-		if ( $last ) { $result .= $last; }
-		if ( $first && $result ) { $result .= ', '; }
-		if ( $first ) { $result .= $first; }
+		if ( $last ) {
+			$result .= $last;
+		}
+		if ( $first && $result ) {
+			$result .= ', ';
+		}
+		if ( $first ) {
+			$result .= $first;
+		}
 	} else {
-		if ( $first ) { $result .= $first; }
-		if ( $last && $result ) { $result .= ' '; }
-		if ( $last ) { $result .= $last; }
+		if ( $first ) {
+			$result .= $first;
+		}
+		if ( $last && $result ) {
+			$result .= ' ';
+		}
+		if ( $last ) {
+			$result .= $last;
+		}
 	}
-
 	if ( $display_name ) {
 		if ( $result && $show_username ) {
 			$result .= ' (' . $display_name . ')';
@@ -793,7 +816,6 @@ function coursepress_get_user_name( $user_id, $last_first = false, $show_usernam
 			$result = $display_name;
 		}
 	}
-
 	return $result;
 }
 
@@ -851,8 +873,17 @@ function coursepress_get_student_date_enrolled( $course_id, $student_id = 0 ) {
 	return $date_enrolled;
 }
 
+/**
+ * Get enrolled date of student for the given course.
+ *
+ * @param int $course_id Course ID.
+ * @param int $student_id Student ID.
+ *
+ * @return bool
+ */
 function coursepress_is_student_enrolled_at( $course_id, $student_id = 0 ) {
 
+	// If student id not given, get current user.
 	$student_id = empty( $student_id ) ? get_current_user_id() : $student_id;
 	$student = coursepress_get_user( $student_id );
 
@@ -861,4 +892,15 @@ function coursepress_is_student_enrolled_at( $course_id, $student_id = 0 ) {
 	}
 
 	return $student->is_enrolled_at( $course_id );
+}
+
+/**
+ * Save student Activity.
+ *
+ * @param string $kind Activity type.
+ * @param int $user_id User ID.
+ */
+function coursepress_log_student_activity( $kind = 'login', $user_id = null ) {
+
+	CoursePress_Data_Users::log_student_activity( $kind, $user_id );
 }

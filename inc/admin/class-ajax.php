@@ -213,14 +213,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			    	$unit_array['post_status'] = 'publish';
 			    }
 
-			    $metas = array();
+				$metas = array();
 
-			    foreach ( $unit as $key => $value ) {
-			    	if ( preg_match( '%meta_%', $key ) ) {
-					    $_key           = str_replace( 'meta_', '', $key );
-					    $metas[ $_key ] = $value;
-				    }
-			    }
+				foreach ( $unit as $key => $value ) {
+					if ( preg_match( '%meta_%', $key ) ) {
+						$_key           = str_replace( 'meta_', '', $key );
+						$metas[ $_key ] = $value;
+					}
+				}
+				/**
+				 * add unit_availability_date_timestamp
+				 */
+				if ( isset( $metas['unit_availability_date'] ) ) {
+					$metas['unit_availability_date_timestamp'] = strtotime( $metas['unit_availability_date'] );
+				}
 
 			    $unit_id = coursepress_create_unit( $unit_array, $metas );
 			    $unit_object = coursepress_get_unit( $unit_id );
@@ -512,6 +518,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			 */
 			if ( preg_match( '%.json%', $filename ) ) {
 				$courses = json_decode( $courses );
+				if ( empty( $courses ) ) {
+					wp_send_json_error();
+				}
 				$courses = get_object_vars( $courses );
 				$data['import_id'] = $import_id;
 				$data['total_courses'] = count( $courses );
@@ -527,16 +536,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function import_course( $request ) {
-
 		$import_id = $request->import_id;
 		$total_course = $request->total_courses;
-
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
 		$courses = maybe_unserialize( $courses );
-		$the_course = array_shift( $courses );
-
-		$importClass = new CoursePress_Import( $the_course, $request );
+		if ( is_array( $courses ) ) {
+			$the_course = array_shift( $courses );
+			$importClass = new CoursePress_Import( $the_course, $request );
+		}
 	}
 
 	/**
@@ -1016,7 +1024,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function get_course_alert( $request ) {
-		$data = !empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
+		$data = ! empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
 		if ( $data ) {
 			wp_send_json_success( $data );
 		}
@@ -1034,13 +1042,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// Check if required values are set.
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
-			$alert_id = !empty( $request->alert_id ) ? $request->alert_id : '' ;
-			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $alert_id );
+			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
+			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
+			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $receivers, $alert_id );
 		}
 
 		// If alert inserted return success response, else fail.
 		if ( $created ) {
-			if ( !empty( $alert_id ) ) {
+			if ( ! empty( $alert_id ) ) {
 				$message = __( 'Course alert updated successfully.', 'cp' );
 			} else {
 				$message = __( 'New course alert created successfully.', 'cp' );
@@ -1048,7 +1057,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$success = array( 'message' => $message );
 			wp_send_json_success( $success );
 		} else {
-			if ( !empty( $alert_id ) ) {
+			if ( ! empty( $alert_id ) ) {
 				$message = __( 'Could not update course alert.', 'cp' );
 			} else {
 				$message = __( 'Could not create new course alert.', 'cp' );
@@ -1171,7 +1180,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		$success = false;
 		// We need course id and valid email.
-		if ($request->course_id && is_email($request->email)) {
+		if ( $request->course_id && is_email( $request->email ) ) {
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
 

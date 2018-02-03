@@ -12,4 +12,11 @@
             padding-right: 5px;
         }
     }
+    .column-last_active {
+        .activity-kind {
+            color: $grey_1;
+            display: block;
+            font-size: .9em
+        }
+    }
 }
