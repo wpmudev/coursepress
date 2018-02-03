@@ -524,6 +524,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$courses = get_object_vars( $courses );
 				$data['import_id'] = $import_id;
 				$data['total_courses'] = count( $courses );
+				$data['courses'] = array();
 				foreach ( $courses as $course ) {
 					$importClass = new CoursePress_Import( $course, $options );
 				}

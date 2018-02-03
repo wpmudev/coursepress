@@ -11,9 +11,6 @@
 		'title' => __( 'Import', 'CoursePress' ),
 		'description' => __( 'Upload your exported courses to import here.', 'CoursePress' ),
 		'fields' => array(
-			//'import' => array(
-			//    'type' => 'file',
-			//),
 			'replace' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Replace course if exists', 'CoursePress' ),
