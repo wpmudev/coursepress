@@ -854,6 +854,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		exit;
 	}
 
+	function record_media_response($request)
+	{
+		$user_id = get_current_user_id();
+		$user = coursepress_get_user($user_id);
+		$user->record_response($request->course_id, $request->unit_id, $request->step_id, array());
+
+		return array('success' => true);
+	}
+
 	function validate_submission() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$unit_id = filter_input( INPUT_POST, 'unit_id', FILTER_VALIDATE_INT );

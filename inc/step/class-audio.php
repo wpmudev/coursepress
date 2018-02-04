@@ -24,9 +24,17 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 		$src = $this->__get( 'audio_url' );
 		$loop = $this->__get( 'loop' );
 		$autoplay = $this->__get( 'autoplay' );
+		$attempts = $this->get_user_attempts(get_current_user_id());
+		$allowed_attempts = $this->__get('retry_attempts');
 
 		$attr = array(
-			'src' => esc_url_raw( $src ),
+			'id'         => $this->__get('ID'),
+			'class'      => 'video-js vjs-default-skin',
+			'src'        => esc_url_raw($src),
+			'controls'   => true,
+			'data-setup' => $this->create_audio_js_setup_data(),
+			'data-attempts' => $attempts,
+			'data-allowed-attempts' => $allowed_attempts + 1, // +1 because this is the total number of allowed attempts not just reattempts
 		);
 
 		if ( $loop ) {
@@ -36,8 +44,16 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 			$attr['autoplay'] = true;
 		}
 
-		$audio = wp_audio_shortcode( $attr );
+		return $this->create_html( 'div', array( 'class' => 'audio-player' ), $this->create_html('audio', $attr) );
+	}
 
-		return $this->create_html( 'div', array( 'class' => 'audio-player' ), $audio );
+	private function create_audio_js_setup_data()
+	{
+		$data = array();
+		$data["aspectRatio"] = "1:0";
+		$data["fluid"] = true;
+		$data["controlBar"] = array("fullscreenToggle" => false);
+
+		return json_encode($data);
 	}
 }
