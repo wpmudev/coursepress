@@ -7,19 +7,23 @@
         var CourseImport;
 
         CourseImport = CoursePress.View.extend({
+
             events: {
                 'submit': 'uploadFile',
                 'change [name="import"]': 'validateFile',
                 'change [name]': 'updateModel'
             },
+
             initialize: function() {
                 this.uploadModel = new CoursePress.Upload();
                 this.model = new CoursePress.Request();
                 this.render();
             },
+
             render: function() {
                 this.errorContainer = this.$('.cp-alert-error');
             },
+
             uploadFile: function( ev ) {
                 var valid = this.validateFile();
                 var options = $('[type=checkbox]', $(ev.currentTarget).closest( 'form' ) );

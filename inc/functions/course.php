@@ -1267,59 +1267,62 @@ function coursepress_get_course_facilitators( $course_id ) {
 
 function coursepress_delete_course( $course_id ) {
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
 		return $course;
 	}
-
+	/**
+	 * delete forums
+	 */
+	$forums = new CoursePress_Admin_Forums();
+	$forums_ids = $forums->get_by_course_id( $course_id );
+	if ( is_array( $forums_ids ) ) {
+		foreach ( $forums_ids as $forum_id ) {
+			wp_delete_post( $forum_id, true );
+		}
+	}
+	/**
+	 * Delete units
+	 */
 	$units = $course->get_units( false );
-
 	if ( $units ) {
 		foreach ( $units as $unit ) {
 			$unit_id = $unit->__get( 'ID' );
-
 			// Delete all steps
 			$steps = $unit->get_steps( false );
-
 			foreach ( $steps as $step ) {
 				$step_id = $step->__get( 'ID' );
-
 				if ( $step_id > 0 ) {
 					wp_delete_post( $step_id, true );
 				}
 			}
-
 			wp_delete_post( $unit_id );
 		}
 	}
-
-	// Remove students of this course
+	/**
+	 * Remove students of this course
+	 */
 	$students = $course->get_students();
-
 	if ( $students ) {
 		foreach ( $students as $student ) {
 			// Remove user from deleted course
 			$student->remove_course_student( $course_id );
 		}
 	}
-
-	// Delete course instructors
+	/**
+	 * Delete course instructors
+	 */
 	$instructors = $course->get_instructors();
-
 	if ( $instructors ) {
 		foreach ( $instructors as $instructor ) {
 			coursepress_delete_course_instructor( $instructor->ID, $course_id );
 		}
 	}
-
 	/**
 	 * Update course numbers
 	 */
 	$course->save_course_number( $course_id, $course->post_title, array( $course_id ) );
-
 	// Now delete the course
 	wp_delete_post( $course_id );
-
 	/**
 	 * Fired whenever a course is deleted.
 	 */
@@ -1944,7 +1947,7 @@ function coursepress_get_discussion() {
 		'name' => $topic,
 		'post_type' => 'discussions',
 		'post_status' => 'publish',
-		'posts_per_page' => 1
+		'posts_per_page' => 1,
 	) ) ) {
 		$found_post = $posts[0];
 	}

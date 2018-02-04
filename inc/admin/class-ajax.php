@@ -213,14 +213,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			    	$unit_array['post_status'] = 'publish';
 			    }
 
-			    $metas = array();
+				$metas = array();
 
-			    foreach ( $unit as $key => $value ) {
-			    	if ( preg_match( '%meta_%', $key ) ) {
-					    $_key           = str_replace( 'meta_', '', $key );
-					    $metas[ $_key ] = $value;
-				    }
-			    }
+				foreach ( $unit as $key => $value ) {
+					if ( preg_match( '%meta_%', $key ) ) {
+						$_key           = str_replace( 'meta_', '', $key );
+						$metas[ $_key ] = $value;
+					}
+				}
+				/**
+				 * add unit_availability_date_timestamp
+				 */
+				if ( isset( $metas['unit_availability_date'] ) ) {
+					$metas['unit_availability_date_timestamp'] = strtotime( $metas['unit_availability_date'] );
+				}
 
 			    $unit_id = coursepress_create_unit( $unit_array, $metas );
 			    $unit_object = coursepress_get_unit( $unit_id );
@@ -518,6 +524,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$courses = get_object_vars( $courses );
 				$data['import_id'] = $import_id;
 				$data['total_courses'] = count( $courses );
+				$data['courses'] = array();
 				foreach ( $courses as $course ) {
 					$importClass = new CoursePress_Import( $course, $options );
 				}

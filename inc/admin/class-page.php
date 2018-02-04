@@ -281,17 +281,26 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
-
-		// External scripts
-		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js' );
-
-		// General admin js
-		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
-		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' ); // Change to .min
-
+		/**
+		 * External scripts: select2
+		 */
+		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js', array( 'jquery' ), '4.0.3' );
+		/**
+		 * Add min if not debug!
+		 */
+		$min = defined( 'WP_DEBUG' ) && WP_DEBUG? '':'.min';
+		/**
+		 * General admin js
+		 */
+		$src = 'assets/js/admin-general'.$min.'.js';
+		$this->enqueue_script( 'coursepress-admin-general', $src, array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ) );
+		/**
+		 * page related JS
+		 */
+		$src = 'assets/js/'.$coursepress_pagenow.$min.'.js';
+		$this->enqueue_script( $coursepress_pagenow, $src ); // Change to .min
 		// Set local vars
 		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );
-
 		/**
 		 * get extensions
 		 */
@@ -299,17 +308,29 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_localize_script( 'coursepress-admin-general', '_coursepress', $localize_array );
 	}
 
-	function enqueue_script( $id, $src ) {
+	/**
+	 * Enqueue script wrapper
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $handle Name of the script. Should be unique.
+	 * @param string $src Path of the script.
+	 * @param array $deps An array of registered script handles this script depends on. Default value: array()
+	 * @param string $ver String specifying script version number, if empty it will be CP version. Default value: false
+	 */
+	public function enqueue_script( $handle, $src, $deps = array(), $version = false ) {
 		global $CoursePress;
-
-		wp_enqueue_script( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version, true );
+		if ( empty( $version ) ) {
+			$version = $CoursePress->version;
+		}
+		$src = sprintf( '%s%s', $CoursePress->plugin_url, $src );
+		wp_enqueue_script( $handle, $src, $deps, $version, true );
 	}
 
 	function add_coursepress_class( $class ) {
 	    if ( coursepress_is_admin() ) {
 	        $class .= ' coursepress';
 		}
-
 		return $class;
 	}
 
@@ -653,7 +674,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'select' => __( 'Selectable', 'cp' ),
 		);
 		$this->localize_array['questions'] = $question_types;
-
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps, 'course' => $course ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
