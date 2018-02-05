@@ -43,9 +43,7 @@
 				<h3 class="label"><?php _e( 'Email subject', 'cp' ); ?></h3>
 			</div>
 		</div>
-		<div class="box-inner-content">
-			<input type="text" class="widefat" name="notification_title" id="notification-title" required="required">
-		</div>
+		<input type="text" class="widefat" name="notification_title" id="notification-title" required="required">
 	</div>
 
 	<div class="cp-box-content">
@@ -54,10 +52,8 @@
 				<h3 class="label"><?php _e( 'Email body', 'cp' ); ?></h3>
 			</div>
 		</div>
-		<div class="box-inner-content">
-			<?php echo coursepress_alert_message( $tokens ); ?>
-			<?php coursepress_teeny_editor( '', 'notification_content', array( 'textarea_name' => 'notification_content', 'textarea_rows' => 5 ) ); ?>
-		</div>
+		<?php echo coursepress_alert_message( $tokens ); ?>
+		<?php coursepress_teeny_editor( '', 'notification_content', array( 'textarea_name' => 'notification_content', 'textarea_rows' => 5 ) ); ?>
 	</div>
 
 	<div class="course-footer">

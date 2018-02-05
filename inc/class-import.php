@@ -13,12 +13,26 @@ class CoursePress_Import extends CoursePress_Utility
 	var $courses = array();
 	var $course_imported_id = 0;
 	var $unit_keys = array();
+	/**
+	 * CP 2 legacy
+	 */
+	var $visible = array();
+	/**
+	 * default import version
+	 */
+	var $version = '2.0';
 	var $course;
 
 	public function __construct( $course_object, $options ) {
 		$this->setUp( $course_object );
 		if ( ! empty( $options ) ) {
 			$this->setUp( $options );
+		}
+		/**
+		 * check imported version
+		 */
+		if ( isset( $this->course->coursepress_version ) ) {
+			$this->version = $course_object->course->coursepress_version;
 		}
 		// Add course author as user
 		if ( ! empty( $this->author ) ) {
@@ -86,7 +100,7 @@ class CoursePress_Import extends CoursePress_Utility
 		$the_course = get_object_vars( $this->course );
 		$the_course['post_type'] = $CoursePress_Core->__get( 'course_post_type' );
 		/**
-		 * TODO sanitize
+		 * TODO: sanitize
 		 */
 		/**
 		 * replace existed course?
@@ -103,6 +117,7 @@ class CoursePress_Import extends CoursePress_Utility
 					$course = wp_parse_args( $the_course, $course );
 					$this->course->ID = wp_update_post( $course );
 					$this->courses[] = $this->course->ID;
+					$this->import_course_categories( $this->course->ID, $course );
 					// Delete units of this course
 					$course_data = coursepress_get_course( $course_id );
 					$units = $course_data->get_units();
@@ -125,15 +140,89 @@ class CoursePress_Import extends CoursePress_Utility
 		 */
 		$this->course->ID = wp_insert_post( $the_course );
 		$this->courses[] = $this->course->ID;
+		$this->import_course_categories( $this->course->ID, $the_course );
+		/**
+		 * CP 2 import
+		 */
+		if ( isset( $this->meta ) ) {
+			/**
+			 * Visibility
+			 */
+			$visible_keys = array(
+				'units',
+				'pages',
+				'modules',
+			);
+			foreach ( $visible_keys as $key ) {
+				$key = 'cp_structure_visible_'.$key;
+				$visible[ $key ] = array();
+				if (
+					isset( $this->meta->$key )
+					&& is_array( $this->meta->$key )
+					&& ! empty( $this->meta->$key )
+				) {
+					$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
+				}
+			}
+		}
 	}
 
-	public function import_course_units() {
+	/**
+	 * Course Categories
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @param array $course Imported course data.
+	 */
+	private function import_course_categories( $course_id, $course ) {
+		global $CoursePress_Core;
+		$category_type = $CoursePress_Core->__get( 'category_type' );
+		$terms = array();
+		if ( isset( $course['course_categories'] ) ) {
+			foreach ( $course['course_categories'] as $slug => $name ) {
+				/**
+				 * Try to get course category by slug
+				 */
+				$term = get_term_by( 'slug', $slug, $category_type );
+				/**
+				 * Try to get course category by name
+				 */
+				if ( ! is_a( $term, 'WP_Term' ) ) {
+					$term = get_term_by( 'name', $name, $category_type );
+				}
+				/**
+				 * add new
+				 */
+				if ( ! is_a( $term, 'WP_Term' ) ) {
+					wp_insert_term( $name, $category_type, array( 'slug' => $slug ) );
+					$term = get_term_by( 'name', $name, $category_type );
+				}
+				$terms[] = $term->slug;
+			}
+		}
+		if ( ! empty( $terms ) ) {
+			wp_set_object_terms( $course_id, $terms, $category_type );
+		}
+	}
+
+	private function import_course_units() {
 		global $CoursePress_Core;
 		if ( ! empty( $this->units ) ) {
 			foreach ( $this->units as $unit ) {
 				$the_unit = $unit;
 				if ( isset( $unit->unit ) ) {
 					$the_unit = get_object_vars( $unit->unit );
+				}
+				if ( isset( $unit->meta ) ) {
+					if ( is_object( $the_unit ) ) {
+						$the_unit->meta_input = $this->convert_meta( $unit->meta );
+					} else {
+						$the_unit['meta_input'] = $this->convert_meta( $unit->meta );
+					}
+				}
+				if ( is_array( $the_unit ) ) {
+					$the_unit = json_decode( json_encode( $the_unit ) );
 				}
 				if ( ! isset( $the_unit->ID ) ) {
 					continue;
@@ -144,9 +233,87 @@ class CoursePress_Import extends CoursePress_Utility
 				foreach ( $this->courses as $course_id ) {
 					$unit->post_parent = $course_id;
 				}
+				$the_unit->post_parent = $this->course->ID;
 				$the_unit->post_type = $CoursePress_Core->__get( 'unit_post_type' );
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
+				/**
+				 * CP3 Import Modules
+				 */
+				if ( isset( $unit->modules ) ) {
+					foreach ( $unit->modules as $module ) {
+						if ( isset( $module->steps ) ) {
+							foreach ( $module->steps as $step ) {
+								$data = array(
+									'post_type' => $CoursePress_Core->step_post_type,
+									'post_title' => $step->post_title,
+									'post_excerpt' => $step->post_excerpt,
+									'post_content' => $step->post_content,
+									'post_parent' => $unit_id,
+									'menu_order' => $step->menu_order,
+									'meta_input' => array(
+										'course_id' => $course_id,
+										'unit_id' => $unit_id,
+									),
+								);
+								foreach ( $step as $key => $value ) {
+									if ( preg_match( '/^meta_(.+)$/', $key, $matches ) ) {
+										$data['meta_input'][ $matches[1] ] = $value;
+									}
+								}
+								$data['meta_input']['module_order'] = $step->menu_order;
+								wp_insert_post( $data );
+							}
+						}
+					}
+				}
+				/**
+				 * CP 2 import
+				 */
+				if ( isset( $unit->pages ) ) {
+					if ( ! isset( $unit->meta_input ) ) {
+						$unit->meta_input = new stdClass();
+					}
+					if ( ! isset( $unit->meta_input->modules ) ) {
+						$unit->meta_input->modules = array();
+					}
+					/**
+					 * Counter must start at 1 NOT at 0!!!
+					 */
+					$i = 1;
+					$modules = array();
+					foreach ( $unit->pages as $page ) {
+						/**
+						 * preview
+						 */
+						$preview = false;
+						$old_page_id = sprintf( '%d_%d', $old_unit_id, $i + 1 );
+						if ( isset( $this->visible['cp_structure_visible_pages'][ $old_page_id ] ) ) {
+							$preview = $this->visible['cp_structure_visible_pages'][ $old_page_id ];
+						}
+						$modules[ $i ] = array(
+							'title' => $page->title,
+							'description' => htmlspecialchars_decode( $page->description ),
+							'show_description' => ! empty( $page->description ),
+							'preview' => $preview,
+						);
+						if ( ! isset( $page->modules ) || empty( $page->modules ) ) {
+							continue;
+						}
+						foreach ( $page->modules as $module ) {
+							$module->post_parent = $unit_id;
+							$module->meta_input = $this->convert_meta( $module->meta );
+							$module->meta_input->course_id = $this->course->ID;
+							$module->meta_input->unit_id = $unit_id;
+							$module->meta_input->module_page = $i;
+							$module = $this->maybe_convert_module( $module );
+							unset( $module->ID );
+							wp_insert_post( $module );
+						}
+						$i++;
+					}
+					update_post_meta( $unit_id, 'course_modules', $modules );
+				}
 			}
 		}
 	}
@@ -183,7 +350,7 @@ class CoursePress_Import extends CoursePress_Utility
 		$this->insert_meta( $this->course->ID, $meta );
 	}
 
-	public function import_course_instructors() {
+	private function import_course_instructors() {
 		if ( ! empty( $this->instructors ) ) {
 			foreach ( $this->instructors as $instructor ) {
 				$instructor_id = $this->maybe_add_user( $instructor, 'instructor' );
@@ -194,7 +361,7 @@ class CoursePress_Import extends CoursePress_Utility
 		}
 	}
 
-	public function import_course_facilitators() {
+	private function import_course_facilitators() {
 		if ( ! empty( $this->facilitators ) ) {
 			foreach ( $this->facilitators as $facilitator ) {
 				$facilitator_id = $this->maybe_add_user( $facilitator, 'facilitator' );
@@ -211,7 +378,7 @@ class CoursePress_Import extends CoursePress_Utility
 	 * @param (array|object) $metas The metadata to insert.
 	 * @return void
 	 **/
-	public function insert_meta( $post_id, $metas = array() ) {
+	private function insert_meta( $post_id, $metas = array() ) {
 		$metas = $this->to_array( $metas );
 		foreach ( $metas as  $key => $values ) {
 			$values = array_map( 'maybe_unserialize', $values );
@@ -252,5 +419,68 @@ class CoursePress_Import extends CoursePress_Utility
 		$course_id = array_pop( $this->courses );
 		$course = coursepress_get_course( $course_id );
 		return $course;
+	}
+
+	/**
+	 * Convert legacy modules.
+	 *
+	 * @since 3.0.0
+	 */
+	private function maybe_convert_module( $module ) {
+		$type = $module->meta_input->module_type;
+		switch ( $type ) {
+			case 'input-radio':
+			case 'input-checkbox':
+			case 'input-select':
+				$module->meta_input->module_type = 'input-quiz';
+				$id = sprintf( 'view%d', $module->ID );
+				$answers = maybe_unserialize( $module->meta_input->answers );
+				$checked = array();
+				$max = count( $answers );
+				for ( $i = 0; $i < $max; $i++ ) {
+					$checked[] = $i === intval( $module->meta_input->answers_selected );
+				}
+				$step_type = 'unknown';
+				switch ( $type ) {
+					case 'input-radio':
+						$step_type = 'single';
+					break;
+					case 'input-checkbox':
+						$step_type = 'multi';
+					break;
+					case 'input-select':
+						$step_type = 'select';
+					break;
+				}
+				$module->meta_input->questions = array(
+					$id => array(
+						'title' => $module->post_title,
+						'question' => $module->post_content,
+						'options' => array(
+							'answers' => $answers,
+							'checked' => $checked,
+						),
+						'type' => $step_type,
+						'order' => '0,',
+					),
+				);
+			break;
+		}
+		return $module;
+	}
+
+	/**
+	 * Convert imeta to proper construction
+	 *
+	 * @since 3.0.0
+	 */
+	private function convert_meta( $meta ) {
+		$meta_input = new stdClass();
+		foreach ( $meta as $key => $value ) {
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				$meta_input->$key = maybe_unserialize( array_shift( $value ) );
+			}
+		}
+		return $meta_input;
 	}
 }
