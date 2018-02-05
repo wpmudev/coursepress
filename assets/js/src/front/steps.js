@@ -17,33 +17,53 @@
             question_box.slideDown();
         };
 
-        $('.video-js').each(function () {
-            var mediaEl, media, attempts, allowedAttempts;
+		$('.video-js').each(function () {
+			var mediaEl, media, attempts, allowedAttempts, stopIfAttemptsConsumed, stopIfAttemptsConsumedDeBounced, updateAttempts, updateAttemptsDeBounced, onTimeUpdate;
 
-            mediaEl = $(this);
-            attempts = mediaEl.data('attempts') || 0;
-            allowedAttempts = mediaEl.data('allowedAttempts');
-            media = videojs(mediaEl.get(0));
-            media.on('play', function () {
-                if (attempts >= allowedAttempts) {
-                    media.pause();
-                }
-            });
+			mediaEl = $(this);
+			attempts = mediaEl.data('attempts') || 0;
+			allowedAttempts = mediaEl.data('allowedAttempts');
+			media = videojs(mediaEl.get(0));
+			stopIfAttemptsConsumed = function () {
+				if (attempts >= allowedAttempts) {
+					media.pause();
+				}
+				//win.console.log('Attempts: ' + attempts);
+				//win.console.log('Allowed attempts: ' + allowedAttempts);
+			};
+			stopIfAttemptsConsumedDeBounced = _.debounce(stopIfAttemptsConsumed, 1000);
+			updateAttempts = function (event) {
+				var form, request, formValues = {};
+				attempts++;
+				form = $(event.target).closest('form');
+				$.each(form.serializeArray(), function (i, field) {
+					formValues[field.name] = field.value || '';
+				});
 
-            media.on('ended', function (event) {
-                var form, request, formValues = {};
+				request = new CoursePress.Request();
+				request.set(_.extend({'action': 'record_media_response'}, formValues));
+				request.save();
+				//win.console.log('Attempts updated to: ' + attempts);
+			};
+			updateAttemptsDeBounced = _.debounce(updateAttempts, 1000);
+			onTimeUpdate = function (event) {
+				if (parseInt(media.currentTime()) === 0) {
+					stopIfAttemptsConsumedDeBounced(event);
+				}
 
-                attempts++;
-                form = $(event.target).closest('form');
-                $.each(form.serializeArray(), function (i, field) {
-                    formValues[field.name] = field.value || '';
-                });
+				if (parseInt(media.remainingTime()) === 0) {
+					updateAttemptsDeBounced(event);
+				}
+			};
 
-                request = new CoursePress.Request();
-                request.set(_.extend({'action': 'record_media_response'}, formValues));
-                request.save();
-            });
-        });
+			media.on('play', stopIfAttemptsConsumed);
+			if (media.loop()) {
+				media.on('timeupdate', onTimeUpdate);
+			}
+			else {
+				media.on('ended', updateAttempts);
+			}
+		});
 
         $(doc).on( 'click', '.cp-button-retry', Steps.toggleRetry );
     });
