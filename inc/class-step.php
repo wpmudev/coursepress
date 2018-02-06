@@ -231,7 +231,16 @@ class CoursePress_Step extends CoursePress_Unit {
 		$course = $unit->get_course();
 		$response = $user->get_response( $course->ID, $unit->ID, $this->__get( 'ID' ) );
 
-		return ! empty( $response ) ? $response['response'] : false;
+		return ! empty( $response['response'] ) ? $response['response'] : false;
+	}
+
+	function get_user_attempts( $user_id = 0 ) {
+		$user = coursepress_get_user( $user_id );
+		$unit = $this->get_unit();
+		$course = $unit->get_course();
+		$response = $user->get_response( $course->ID, $unit->ID, $this->__get( 'ID' ) );
+
+		return ! empty( $response['attempts'] ) ? $response['attempts'] : 0;
 	}
 
 	function get_previous_step() {
@@ -322,8 +331,10 @@ class CoursePress_Step extends CoursePress_Unit {
 			}
 
 			$allow_retries = $this->__get( 'allow_retries' );
+			$retry_attempts = $this->__get( 'retry_attempts' );
+			$total_allowed_attempts = $retry_attempts + 1;
 
-			if ( 'pass' !== $status && $allow_retries ) {
+			if ( 'pass' !== $status && $allow_retries && ($this->get_user_attempts() < $total_allowed_attempts || $retry_attempts == 0) ) {
 				$template .= coursepress_create_html(
 					'button',
 					array(
