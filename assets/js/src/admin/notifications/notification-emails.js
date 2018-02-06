@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, tinyMCE */
 
 (function() {
 	'use strict';
@@ -17,15 +17,11 @@
 
 			// Initialize.
 			initialize: function() {
-
 				this.request = new CoursePress.Request();
-
 				this.on( 'view_rendered', this.setUpUI, this );
-
 				// Update units and students based on selections.
 				this.request.on( 'coursepress:success_get_notification_units_students', this.updateUnitsStudents, this );
 				this.request.on( 'coursepress:success_get_notification_students', this.updateStudents, this );
-
 				this.render();
 			},
 
@@ -40,6 +36,11 @@
 					width: '100%',
 					data: []
 				});
+                win.setTimeout( function() {
+                    if ( tinyMCE.get( 'notification_content' ) ) {
+                        this.contentEditor = tinyMCE.get( 'notification_content' );
+                    }
+                }, 1000 );
 			},
 
 			// Get units and students on course selection.

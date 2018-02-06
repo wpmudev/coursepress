@@ -46,14 +46,15 @@
 		<input type="text" class="widefat" name="notification_title" id="notification-title" required="required">
 	</div>
 
+	<?php echo coursepress_alert_message( $tokens ); ?>
 	<div class="cp-box-content">
 		<div class="box-label-area">
 			<div class="cp-div">
 				<h3 class="label"><?php _e( 'Email body', 'cp' ); ?></h3>
 			</div>
 		</div>
-		<?php echo coursepress_alert_message( $tokens ); ?>
 		<?php coursepress_teeny_editor( '', 'notification_content', array( 'textarea_name' => 'notification_content', 'textarea_rows' => 5 ) ); ?>
+        <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
 	</div>
 
 	<div class="course-footer">
