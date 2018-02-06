@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Steps', function( $, doc ) {
+    CoursePress.Define( 'Steps', function( $, doc, win ) {
         var Steps = {};
 
         Steps.toggleRetry = function( ev ) {
@@ -18,15 +18,20 @@
         };
 
 		$('.video-js').each(function () {
-			var mediaEl, media, attempts, allowedAttempts, stopIfAttemptsConsumed, stopIfAttemptsConsumedDeBounced, updateAttempts, updateAttemptsDeBounced, onTimeUpdate;
+			var mediaEl, media, attempts, allowedAttempts, stopIfAttemptsConsumed, stopIfAttemptsConsumedDeBounced, updateAttempts, updateAttemptsDeBounced, onTimeUpdate, showError;
 
 			mediaEl = $(this);
 			attempts = mediaEl.data('attempts') || 0;
 			allowedAttempts = mediaEl.data('allowedAttempts');
 			media = videojs(mediaEl.get(0));
+			showError = function () {
+				$('.cp-error').remove();
+				$('<p></p>').addClass('error cp-error').html(win._coursepress.text.attempts_consumed).prependTo('.course-module-step-template');
+			};
 			stopIfAttemptsConsumed = function () {
 				if (attempts >= allowedAttempts) {
 					media.pause();
+					showError();
 				}
 				//win.console.log('Attempts: ' + attempts);
 				//win.console.log('Allowed attempts: ' + allowedAttempts);
