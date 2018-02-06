@@ -1267,59 +1267,62 @@ function coursepress_get_course_facilitators( $course_id ) {
 
 function coursepress_delete_course( $course_id ) {
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
 		return $course;
 	}
-
+	/**
+	 * delete forums
+	 */
+	$forums = new CoursePress_Admin_Forums();
+	$forums_ids = $forums->get_by_course_id( $course_id );
+	if ( is_array( $forums_ids ) ) {
+		foreach ( $forums_ids as $forum_id ) {
+			wp_delete_post( $forum_id, true );
+		}
+	}
+	/**
+	 * Delete units
+	 */
 	$units = $course->get_units( false );
-
 	if ( $units ) {
 		foreach ( $units as $unit ) {
 			$unit_id = $unit->__get( 'ID' );
-
 			// Delete all steps
 			$steps = $unit->get_steps( false );
-
 			foreach ( $steps as $step ) {
 				$step_id = $step->__get( 'ID' );
-
 				if ( $step_id > 0 ) {
 					wp_delete_post( $step_id, true );
 				}
 			}
-
 			wp_delete_post( $unit_id );
 		}
 	}
-
-	// Remove students of this course
+	/**
+	 * Remove students of this course
+	 */
 	$students = $course->get_students();
-
 	if ( $students ) {
 		foreach ( $students as $student ) {
 			// Remove user from deleted course
 			$student->remove_course_student( $course_id );
 		}
 	}
-
-	// Delete course instructors
+	/**
+	 * Delete course instructors
+	 */
 	$instructors = $course->get_instructors();
-
 	if ( $instructors ) {
 		foreach ( $instructors as $instructor ) {
 			coursepress_delete_course_instructor( $instructor->ID, $course_id );
 		}
 	}
-
 	/**
 	 * Update course numbers
 	 */
 	$course->save_course_number( $course_id, $course->post_title, array( $course_id ) );
-
 	// Now delete the course
 	wp_delete_post( $course_id );
-
 	/**
 	 * Fired whenever a course is deleted.
 	 */
@@ -1599,11 +1602,12 @@ function coursepress_get_course_object( $post_id ) {
  * @param int $course_id Course ID.
  * @param string $title Alert title.
  * @param string $content Alert content.
+ * @param string $receivers Receivers.
  * @param string $alert_id Alert ID.
  *
  * @return int alert ID.
  */
-function coursepress_update_course_alert( $course_id, $title, $content, $alert_id ) {
+function coursepress_update_course_alert( $course_id, $title, $content, $receivers, $alert_id ) {
 	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
 	$capable = false;
@@ -1657,6 +1661,10 @@ function coursepress_update_course_alert( $course_id, $title, $content, $alert_i
 
 	// Set alert course id.
 	update_post_meta( $alert_id, 'alert_course', $course_id );
+	// Set alert receivers.
+	if ( ! empty( $receivers ) ) {
+		update_post_meta( $alert_id, 'receivers', $receivers );
+	}
 
 	/**
 	 * Perform actions when alert insertion was successful.
@@ -1742,7 +1750,7 @@ function coursepress_is_course( $course ) {
 	return $CoursePress_Core->course_post_type == $post_type;
 }
 
-function coursepress_discussion_module_link( $location, $comment ) {
+function coursepress_discussion_link( $location, $comment ) {
 	global $CoursePress_Core;
 	/**
 	 * Check WP_Comment class
@@ -1753,23 +1761,15 @@ function coursepress_discussion_module_link( $location, $comment ) {
 	/**
 	 * Check post type
 	 */
-	$unit_post_type = $CoursePress_Core->__get( 'step_post_type' );
+	$unit_post_type = $CoursePress_Core->discussions_post_type;
 	$post_type = get_post_type( $comment->comment_post_ID );
 	if ( $unit_post_type !== $post_type ) {
 		return $location;
 	}
-	/**
-	 * Check module type
-	 */
-	$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
-	if ( 'discussion' !== $module_type ) {
-		return $location;
-	}
-	$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-	$course_id = get_post_field( 'post_parent', $unit_id );
-	$course_link = get_permalink( $course_id );
-	$unit_slug = coursepress_get_setting( 'slugs/course', 'unit' );
-	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+	$course_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+	$course = coursepress_get_course( $course_id );
+	$discussion_url = $course->get_discussion_url();
+	$location = esc_url_raw( $discussion_url . get_post_field( 'post_name', $comment->comment_post_ID ) );
 
 	return $location;
 }
@@ -1910,20 +1910,14 @@ function coursepress_search_students( $args = array() ) {
 function coursepress_get_disscusions( $course ) {
 	$args = array(
 		'post_type' => 'discussions',
-		'meta_query' => array(
-			array(
-				'key' => 'course_id',
-				'value' => $course->ID,
-				'compare' => 'IN',
-			),
-		),
+		'post_parent' => $course->ID,
 		'post_per_page' => 20,
 	);
 	$url = $course->get_discussion_url();
 	$data = array();
 	$posts = get_posts( $args );
 	foreach ( $posts as $post ) {
-		$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+		$post->course_id = $post->post_parent;
 		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
 		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
 
@@ -1947,6 +1941,17 @@ function coursepress_get_discussion() {
 	if ( empty( $topic ) ) {
 		return array();
 	}
-	return get_page_by_path( $topic, OBJECT, 'discussions' );
+	$found_post = null;
+
+	if ( $posts = get_posts( array(
+		'name' => $topic,
+		'post_type' => 'discussions',
+		'post_status' => 'publish',
+		'posts_per_page' => 1,
+	) ) ) {
+		$found_post = $posts[0];
+	}
+
+	return $found_post;
 }
 

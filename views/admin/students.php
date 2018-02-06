@@ -40,7 +40,7 @@
             </div>
         </form>
 
-        <table class="coursepress-table" cellspacing="0">
+        <table class="coursepress-table cp-user" cellspacing="0">
             <thead>
             <tr>
                 <?php foreach ( $columns as $column_id => $column_label ) : ?>
@@ -51,12 +51,15 @@
             </tr>
             </thead>
             <tbody>
-            <?php $odd = true; ?>
-            <?php if ( ! empty( $students ) ) : ?>
-                <?php foreach ( $students as $student ) : ?>
-                    <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
+            <?php
+								$odd = true;
+			if ( ! empty( $students ) ) {
+				$last_active_format = get_option( 'date_format' ).' '.get_option( 'time_format' );
+				foreach ( $students as $student ) {
+?>
+<tr class="<?php echo esc_attr( $odd ? 'odd' : 'even' ); ?>" data-studetnt-id="<?php echo esc_attr( $student->ID ); ?>">
 
-                        <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
+	<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
                                 <?php
 								switch ( $column_id ) :
@@ -79,7 +82,15 @@
 									case 'last_active' :
 										// Last activity time.
 										$last_active = $student->get_last_activity_time();
-										echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+										if ( $last_active ) {
+											echo date_i18n( $last_active_format, $last_active );
+											$kind = $student->get_last_activity_kind();
+											if ( ! empty( $kind ) ) {
+												printf( '<span class="activity-kind">%s</span>', $kind );
+											}
+										} else {
+											echo '--';
+										}
 										break;
 									case 'number_of_courses' :
 										echo count( $student->get_enrolled_courses_ids() );
@@ -100,14 +111,14 @@
                         <?php endforeach; ?>
                     </tr>
                     <?php $odd = $odd ? false : true; ?>
-                <?php endforeach; ?>
-            <?php else : ?>
+                <?php } ?>
+            <?php } else { ?>
                 <tr class="odd">
                     <td colspan="<?php echo count( $columns ); ?>">
                         <?php _e( 'No students found.', 'cp' ); ?>
                     </td>
                 </tr>
-            <?php endif; ?>
+            <?php } ?>
             </tbody>
         </table>
         <?php if ( ! empty( $list_table ) ) : ?>

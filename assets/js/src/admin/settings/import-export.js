@@ -7,33 +7,64 @@
         var CourseImport;
 
         CourseImport = CoursePress.View.extend({
+
             events: {
                 'submit': 'uploadFile',
                 'change [name="import"]': 'validateFile',
                 'change [name]': 'updateModel'
             },
+
             initialize: function() {
                 this.uploadModel = new CoursePress.Upload();
                 this.model = new CoursePress.Request();
                 this.render();
             },
+
             render: function() {
                 this.errorContainer = this.$('.cp-alert-error');
             },
+
             uploadFile: function( ev ) {
                 var valid = this.validateFile();
                 var options = $('[type=checkbox]', $(ev.currentTarget).closest( 'form' ) );
                 var uploadModel = this.uploadModel;
                 if ( valid ) {
+                    /**
+                     * Show popup
+                     */
+                    new CoursePress.PopUp({
+                        type: 'info',
+                        message: win._coursepress.text.importing_courses
+                    });
+                    /**
+                     * Import options
+                     */
                     options.each( function() {
                         uploadModel.set( $(this).attr('name'), $(this).is( ':checked' ) );
                     });
                     uploadModel.set( 'type', 'import_file' );
                     uploadModel.off( 'coursepress:success_import_file' );
-                    uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
+                    uploadModel.once( 'success', this.uploadCourseSuccess, this );
+                    uploadModel.once( 'error', this.uploadCourseError, this );
                     uploadModel.upload();
                 }
                 return false;
+            },
+
+            uploadCourseSuccess: function() {
+                /**
+                 * reset form
+                 */
+                $('#form-import input[type=checkbox]').removeAttr('checked');
+                $('#form-import input[type=file]').val('');
+                /**
+                 * remove popup
+                 */
+                $('.coursepress-popup').detach();
+            },
+
+            uploadCourseError: function() {
+                this.uploadCourseSuccess();
             },
 
             uploadCourse: function( data ) {
@@ -41,7 +72,9 @@
                 this.model.set( data );
                 this.model.off( 'coursepress:success_import_course' );
                 this.model.on( 'coursepress:successs_import_course', this.maybeContinue, this );
-                this.model.save();
+                this.model.save({
+                    wait: true
+                });
             },
 
             maybeContinue: function() {

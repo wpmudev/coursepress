@@ -65,10 +65,12 @@
             },
 
             setUI: function() {
-                this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
-
+                this.$('.datepicker').datepicker({
+                    dateFormat: 'MM dd, yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true
+                });
                 if ( this.model.get( 'payment_paid_course') ) {
-
                     this.$('[name="meta_payment_paid_course"]').trigger( 'change' );
                 }
             },

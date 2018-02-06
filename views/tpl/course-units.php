@@ -58,10 +58,11 @@
                 <div class="cp-box cp-on_date {{'on_date' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Unit availability date', 'cp' ); ?></label>
                     <input type="text" name="meta_unit_availability_date" value="{{typeof meta_unit_availability_date !== 'undefined' && meta_unit_availability_date ? meta_unit_availability_date : ''}}" class="datepicker" />
+                    <i class="fa fa-calendar"></i>
                 </div>
                 <div class="cp-box cp-after_delay {{'after_delay' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Number of days', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_delay_days" value="{{typeof meta_unit_delay_days !== 'undefined' && meta_unit_delay_days ? meta_unit_delay_days : ''}}" />
+                    <input type="number" min="1" name="meta_unit_delay_days" value="{{typeof meta_unit_delay_days !== 'undefined' && meta_unit_delay_days ? meta_unit_delay_days : ''}}" />
                     <p class="description"><?php _e( 'Unit will be available on X days after the course becomes available.', 'cp' ); ?></p>
                 </div>
             </div>
@@ -109,11 +110,11 @@
 <script type="text/template" id="coursepress-move-to-module-popup-tpl">
     <div class="coursepress-popup-body popup-warning">
         <div class="coursepress-popup-heading">
-            <h3><?php esc_html_e('Select a Module', 'cp'); ?></h3>
+            <h3><?php esc_html_e( 'Select a Module', 'cp' ); ?></h3>
         </div>
         <div class="coursepress-popup-content">
             <# if(_.size(modules)) { #>
-                <?php esc_html_e('Please select the module where you would like this step to be moved.', 'cp'); ?>
+                <?php esc_html_e( 'Please select the module where you would like this step to be moved.', 'cp' ); ?>
                 <p>
                     <label>
                         <select name="target_module">
@@ -125,11 +126,11 @@
                     </label>
                 </p>
             <# } else { #>
-                <?php esc_html_e('There are no other modules. Please add a new module and try again.', 'cp'); ?>
+                <?php esc_html_e( 'There are no other modules. Please add a new module and try again.', 'cp' ); ?>
             <# } #>
         </div>
         <div class="coursepress-popup-footer">
-            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e('Cancel', 'cp'); ?></button>
+            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
             <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
         </div>
     </div>

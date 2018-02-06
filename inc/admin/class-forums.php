@@ -9,10 +9,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	protected $slug = 'coursepress_forum';
 	private $items;
 	private $post_type = 'discussions';
-	private $id_name = 'notification_id';
+	private $id_name = 'forum_id';
 
 	public function __construct() {
-        parent::__construct();
+		parent::__construct();
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
 	}
 
@@ -61,54 +61,58 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		coursepress_render( 'views/tpl/common' );
 	}
 
-    private function get_page_edit( $forum_id ) {
-        $args = array(
-            'page' => $this->slug,
-            'post_title' => '',
-            'post_content' => '',
-            'course_id' => 0,
-            $this->id_name => 0,
-            'unit_id' => 'course',
-            'email_notification' => 'yes',
-            'thread_comments_depth' => 5,
-            'comments_per_page' => 50,
-            'comments_order' => 'newer',
-            'courses' => array(),
-            'units' => array(
-                'course' => __( 'All units', 'cp' ),
-            ),
-        );
-        if ( isset( $forum_id ) ) {
-            if ( ! empty( $forum_id ) || 0 === $forum_id ) {
-                $forum_id = $this->update( $forum_id );
-            }
-            $post = get_post( $forum_id );
-            if ( is_a( $post, 'WP_Post' ) ) {
-                if ( $this->post_type == $post->post_type ) {
-                    $args[ $this->id_name ] = $post->ID;
-                    $args['post_title'] = $post->post_title;
-                    $args['post_content'] = stripslashes( $post->post_content );
-                    $meta_keys = array( 'course_id', 'email_notification', 'unit_id', 'email_notification', 'thread_comments_depth', 'comments_per_page', 'comments_order' );
-                    foreach( $meta_keys as $meta_key ) {
-                        $meta_value = get_post_meta( $post->ID, $meta_key, true );
-                        if ( ! empty( $meta_value ) ) {
-                            $args[$meta_key] = $meta_value;
-                        }
-                    }
-                    $course = get_post( $args['course_id'] );
-                    if ( is_a( $course, 'WP_Post' ) ) {
-                        $args['courses'][$course->ID] = $course->post_title;
-                        $course = new CoursePress_Course( $course );
-                        $units = $course->get_units();
-                        foreach( $units as $unit ) {
-                            $args['units'][$unit->ID] = $unit->post_title;
-                        }
-                    }
-                }
-            }
-        }
-        coursepress_render( 'views/admin/forum-edit', $args );
-    }
+	private function get_page_edit( $forum_id ) {
+		$args = array(
+			'page' => $this->slug,
+			'post_title' => '',
+			'post_content' => '',
+			'course_id' => 0,
+			$this->id_name => 0,
+			'unit_id' => 'course',
+			'email_notification' => 'yes',
+			'thread_comments_depth' => 5,
+			'comments_per_page' => 50,
+			'comments_order' => 'newer',
+			'courses' => array(),
+			'units' => array(
+				'course' => __( 'All units', 'cp' ),
+			),
+		);
+		if ( isset( $forum_id ) ) {
+			if ( ! empty( $forum_id ) || 0 === $forum_id ) {
+				$forum_id = $this->update( $forum_id );
+			}
+			$post = get_post( $forum_id );
+			if ( is_a( $post, 'WP_Post' ) ) {
+				if ( $this->post_type == $post->post_type ) {
+					$args[ $this->id_name ] = $post->ID;
+					$args['course_id'] = $post->post_parent;
+					$args['post_title'] = $post->post_title;
+					$args['post_content'] = stripslashes( $post->post_content );
+					$meta_keys = array( 'email_notification', 'unit_id', 'email_notification', 'thread_comments_depth', 'comments_per_page', 'comments_order' );
+					foreach ( $meta_keys as $meta_key ) {
+						$meta_value = get_post_meta( $post->ID, $meta_key, true );
+						if ( ! empty( $meta_value ) ) {
+							$args[ $meta_key ] = $meta_value;
+						}
+					}
+					$course = get_post( $args['course_id'] );
+					if ( is_a( $course, 'WP_Post' ) ) {
+						$args['courses'][ $course->ID ] = $course->post_title;
+						$course = new CoursePress_Course( $course );
+						$units = $course->get_units();
+						foreach ( $units as $unit ) {
+							$args['units'][ $unit->ID ] = $unit->post_title;
+						}
+					}
+				}
+			}
+		}
+		if ( 'yes' == $args['email_notification'] ) {
+			$args['email_notification'] = true;
+		}
+		coursepress_render( 'views/admin/forum-edit', $args );
+	}
 
 	public function get_page() {
 		$forum_id = filter_input( INPUT_GET, $this->id_name, FILTER_VALIDATE_INT );
@@ -146,20 +150,14 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		 */
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 		if ( ! empty( $course_id ) ) {
-			$post_args['meta_query'] = array(
-				'relation' => 'AND',
-				array(
-					'key' => 'course_id',
-					'value' => (int) $course_id,
-				)
-			);
+			$post_args['post_parent'] = (int) $course_id;
 		}
 		$wp_query = new WP_Query( $post_args );
 		$count = $wp_query->found_posts;
 		$this->items = array();
 		$base_url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
 		foreach ( $wp_query->posts as $one ) {
-			$one->course_id = get_post_meta( $one->ID, 'course_id', true );
+			$one->course_id = $one->post_parent;
 			$one->unit_id = get_post_meta( $one->ID, 'unit_id', true );
 			$one->comments_number = get_comments_number( $one->ID );
 			$one->edit_link = wp_nonce_url(
@@ -193,18 +191,18 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		/**
 		 * check nonce
 		 */
-		$nonce_action = 'coursepress-update-notifiction-'.$_POST[ $this->id_name ];
+		$nonce_action = 'coursepress-update-forum-'.$_POST[ $this->id_name ];
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_action ) ) {
 			return $forum_id;
-        }
+		}
 		$postarr = array(
 			'ID' => $_POST[ $this->id_name ],
 			'post_title' => isset( $_POST['post_title'] )? $_POST['post_title']:'',
+			'post_parent' => isset( $_POST['course_id'] )? $_POST['course_id']:0,
 			'post_content' => isset( $_POST['post_content'] )? $_POST['post_content']:'',
 			'post_type' => $this->post_type,
 			'post_status' => 'publish',
 			'meta_input' => array(
-				'course_id' => isset( $_POST['course_id'] )? $_POST['course_id']:0,
 				'unit_id' => isset( $_POST['unit_id'] )? $_POST['unit_id']:'course',
 				'email_notification' => isset( $_POST['email_notification'] )? 'yes':'no',
 				'thread_comments_depth' => isset( $_POST['thread_comments_depth'] )? $_POST['thread_comments_depth']:5,
@@ -217,5 +215,32 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			return $post_id;
 		}
 		return $forum_id;
+	}
+
+	/**
+	 * get forum list by course_ID
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @returns array Ids of forums.
+	 */
+	public function get_by_course_id( $course_id ) {
+		$is_course = coursepress_is_course( $course_id );
+		if ( false == $is_course ) {
+			return array();
+		}
+		$args = array(
+			'post_type' => $this->post_type,
+			'fields' => 'ids',
+			'nopaging' => true,
+			'post_parent' => $course_id,
+			'post_status' => 'any',
+		);
+		$wp_query = new WP_Query( $args );
+		if ( $wp_query->have_posts() ) {
+			return $wp_query->posts;
+		}
+		return array();
 	}
 }

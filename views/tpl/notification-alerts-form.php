@@ -17,6 +17,17 @@
 		</div>
 	</div>
 
+	<div class="cp-flex cp-box">
+		<div class="cp-div inactive" id="cp-receivers-div">
+			<label class="label label-small"><?php _e( 'Receivers', 'cp' ); ?></label>
+			<select name="receivers" id="cp-alert-receivers">
+				<option value="enrolled"><?php _e( 'Enrolled students of this course', 'cp' ); ?></option>
+				<option value="passed"><?php _e( 'All students who pass this course', 'cp' ); ?></option>
+				<option value="failed"><?php _e( 'All students who failed this course', 'cp' ); ?></option>
+			</select>
+		</div>
+	</div>
+
 	<div class="cp-box-content">
 		<div class="box-label-area">
 			<div class="cp-div">

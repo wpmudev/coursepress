@@ -131,7 +131,10 @@ class CoursePress_Export extends CoursePress_Utility {
 			// Get module meta.
 			$module_meta = get_post_meta( $module_id );
 			$module['meta'] = $module_meta;
-			$this->data['units'][ $unit_id ]->modules = array( $module_id => $module );
+			if ( ! isset( $this->data['units'][ $unit_id ]->modules ) ) {
+				$this->data['units'][ $unit_id ]->modules = array();
+			}
+			$this->data['units'][ $unit_id ]->modules[ $module_id ] = $module;
 			/**
 			 * Filter hook to include/exclude comments from export.
 			 *

@@ -57,6 +57,12 @@ class CoursePress_User extends CoursePress_Utility {
 		$this->__set( 'last_name', get_user_meta( $user->ID, 'last_name', true ) );
 		$this->__set( 'description', get_user_meta( $user->ID, 'description', true ) );
 		/**
+		 * latest activity
+		 */
+		$this->__set( 'latest_activity', get_user_meta( $user->ID, 'latest_activity', true ) );
+		$this->__set( 'latest_activity_kind', get_user_meta( $user->ID, 'latest_activity_kind', true ) );
+		$this->__set( 'latest_activity_id', get_user_meta( $user->ID, 'latest_activity_id', true ) );
+		/**
 		 * clear student data after delete student
 		 */
 		add_action( 'deleted_user', array( $this, 'clear_student_data' ) );
@@ -1044,6 +1050,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$progress = $this->get_completion_data( $course_id );
 		$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/' . $step_id, $response );
 		$this->add_student_progress( $course_id, $progress );
+		do_action( 'coursepress_record_response', $step_id );
 	}
 
 	/*******************************************
@@ -1100,20 +1107,50 @@ class CoursePress_User extends CoursePress_Utility {
 	/**
 	 * Get last activity of the user.
 	 *
-	 * @return string|bool
+	 * @return string
 	 */
 	public function get_last_activity_time() {
-		$id = $this->__get( 'ID' );
-		// False if id not set.
-		if ( empty( $id ) ) {
-			return false;
+		return $this->latest_activity;
+	}
+
+	/**
+	 * Get last activity of the user.
+	 *
+	 * @return string|bool
+	 */
+	public function get_last_activity_kind() {
+		$message = __( 'Unknown.', 'cp' );
+		$kind = $this->latest_activity_kind;
+		switch ( $kind ) {
+			case 'course_module_seen':
+			return __( 'Module seen', 'cp' );
+			break;
+
+			case 'course_seen':
+			return __( 'Course seen', 'cp' );
+			break;
+
+			case 'course_unit_seen':
+			return __( 'Unit seen', 'cp' );
+			break;
+
+			case 'course_step_seen':
+			return __( 'Step seen', 'cp' );
+			break;
+
+			case 'enrolled':
+			return __( 'Enrolled to course', 'cp' );
+			break;
+
+			case 'login':
+			return __( 'Login', 'cp' );
+			break;
+
+			case 'module_answered':
+			return __( 'Module answered', 'cp' );
+			break;
 		}
-		// Get last activity time of the user.
-		$last_seen = get_user_meta( $id, 'coursepress_latest_activity_time', true );
-		if ( ! empty( $last_seen ) ) {
-			return $last_seen;
-		}
-		return false;
+		return apply_filters( 'coursepress_ get_last_activity_kind', $message, $kind );
 	}
 
 	/**
