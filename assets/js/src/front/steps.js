@@ -18,18 +18,27 @@
         };
 
 		$('.video-js').each(function () {
-			var mediaEl, media, attempts, allowedAttempts, stopIfAttemptsConsumed, stopIfAttemptsConsumedDeBounced, updateAttempts, updateAttemptsDeBounced, onTimeUpdate, showError;
+			var mediaEl, media, totalAttemptsConsumed, retries, totalAttemptsAllowed, retriesAllowed, unlimitedAttemptsAllowed, stopIfAttemptsConsumed, stopIfAttemptsConsumedDeBounced, updateAttempts, updateAttemptsDeBounced, onTimeUpdate, showError;
 
 			mediaEl = $(this);
-			attempts = mediaEl.data('attempts') || 0;
-			allowedAttempts = mediaEl.data('allowedAttempts');
+			totalAttemptsConsumed = mediaEl.data('attempts') || 0;
+			retries = mediaEl.data('retries') || 0;
+			retriesAllowed = mediaEl.data('retriesAllowed');
+			unlimitedAttemptsAllowed = retries === 0;
+			totalAttemptsAllowed = retries + 1;
 			media = videojs(mediaEl.get(0));
 			showError = function () {
 				$('.cp-error').remove();
 				$('<p></p>').addClass('error cp-error').html(win._coursepress.text.attempts_consumed).prependTo('.course-module-step-template');
 			};
 			stopIfAttemptsConsumed = function () {
-				if (attempts >= allowedAttempts) {
+				if (retriesAllowed) {
+					if (!unlimitedAttemptsAllowed && totalAttemptsConsumed >= totalAttemptsAllowed) {
+						media.pause();
+						showError();
+					}
+				}
+				else if (totalAttemptsConsumed >= 1) {
 					media.pause();
 					showError();
 				}
@@ -39,7 +48,7 @@
 			stopIfAttemptsConsumedDeBounced = _.debounce(stopIfAttemptsConsumed, 1000);
 			updateAttempts = function (event) {
 				var form, request, formValues = {};
-				attempts++;
+				totalAttemptsConsumed++;
 				form = $(event.target).closest('form');
 				$.each(form.serializeArray(), function (i, field) {
 					formValues[field.name] = field.value || '';

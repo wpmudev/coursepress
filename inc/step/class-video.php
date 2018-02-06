@@ -32,7 +32,7 @@ class CoursePress_Step_Video extends CoursePress_Step {
 		$hide_related_video = $this->__get( 'hide_related_video' );
 		$width = $this->__get( 'video_player_width' );
 		$attempts = $this->get_user_attempts(get_current_user_id());
-		$allowed_attempts = $this->__get('retry_attempts');
+		$retries_allowed = $this->__get('allow_retries');
 
 		$attr = array(
 			'id' => $this->__get( 'ID' ),
@@ -40,8 +40,9 @@ class CoursePress_Step_Video extends CoursePress_Step {
 			'width' => $width,
 			'height' => $this->__get( 'video_player_height' ),
 			'src' => $src,
+			'data-retries-allowed' => $retries_allowed ? 'true' : 'false',
 			'data-attempts' => $attempts,
-			'data-allowed-attempts' => $allowed_attempts + 1, // +1 because this is the total number of allowed attempts not just reattempts
+			'data-retries' => $this->__get('retry_attempts'),
 			'data-setup' => $this->create_video_js_setup_data( $src, $hide_related_video, $width )
 		);
 

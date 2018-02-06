@@ -25,7 +25,7 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 		$loop = $this->__get( 'loop' );
 		$autoplay = $this->__get( 'autoplay' );
 		$attempts = $this->get_user_attempts(get_current_user_id());
-		$allowed_attempts = $this->__get('retry_attempts');
+		$retries_allowed = $this->__get('allow_retries');
 
 		$attr = array(
 			'id'         => $this->__get('ID'),
@@ -33,8 +33,9 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 			'src'        => esc_url_raw($src),
 			'controls'   => true,
 			'data-setup' => $this->create_audio_js_setup_data(),
+			'data-retries-allowed' => $retries_allowed ? 'true' : 'false',
 			'data-attempts' => $attempts,
-			'data-allowed-attempts' => $allowed_attempts + 1, // +1 because this is the total number of allowed attempts not just reattempts
+			'data-retries' => $this->__get('retry_attempts'),
 		);
 
 		if ( $loop ) {
