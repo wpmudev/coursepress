@@ -185,3 +185,21 @@ function coursepress_delete_step( $step_id = 0 ) {
 		do_action( 'coursepress_step_deleted', $step_id );
 	}
 }
+
+/**
+ * Returns the unit's URL structure.
+ *
+ * @param int $unit_id
+ *
+ * @return string
+ */
+function coursepress_get_unit_permalink( $unit_id = 0 ) {
+
+	$unit = coursepress_get_unit( $unit_id );
+
+	if ( is_wp_error( $unit ) ) {
+		return null;
+	}
+
+	return $unit->get_permalink();
+}

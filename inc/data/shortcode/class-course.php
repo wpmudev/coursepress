@@ -314,48 +314,39 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_start( $atts ) {
 
 		$atts = shortcode_atts( array(
-			'course_id' => coursepress_get_course_id(),
-			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Start Date', 'cp' ),
+			'course_id' => get_the_ID(),
+			'label' => __( 'Start Date', 'cp' ),
+			'label_delimiter' => ':',
 			'label_tag' => 'strong',
-			'label_delimeter' => ': ',
+			'date_format' => coursepress_get_option( 'date_format' ),
 			'class' => '',
 		), $atts, 'course_start' );
 
-		$course_id = (int) $atts['course_id'];
-		if ( empty( $course_id ) ) {
-			return '';
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+		$template = '';
+
+		if ( ! empty( $atts['label'] ) ) {
+			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
 		}
 
-		$date_format = apply_filters( 'coursepress_course_courses_list_date_format', sanitize_text_field( $atts['date_format'] ) );
-		$time_format = apply_filters( 'coursepress_course_courses_list_time_format', get_option( 'time_format' ) );
-		$label = sanitize_text_field( $atts['label'] );
-		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_text_field( $atts['label_delimeter'] );
-		$class = sanitize_html_class( $atts['class'] );
-
-		$start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
-		$open_ended = coursepress_course_get_setting( $course_id, 'course_open_ended' );
-
-		$class = 'course-start-date course-start-date-' . $course_id . ' ' . $class;
-		$content = '';
-
-		if ( ! empty( $label ) ) {
-			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
-		}
-
-		if ( $open_ended || empty( $start_date ) ) {
-			$content .= __( 'already started', 'cp' );
+		if ( $course->course_open_ended ) {
+			$template .= __( 'Already started', 'cp' );
 		} else {
-			$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, $this->strtotime( $start_date ) ) );
-			// Add time if different to '00:00:00'
-			$content .= ( date( 'H:i:s', $this->strtotime( $start_date ) ) != '00:00:00' ) ? str_replace( ' ', '&nbsp;', ' / ' . date_i18n( $time_format , $this->strtotime( $start_date ) ) ) : '';
+			$template .= $course->course_start_date;
 		}
 
-		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
+		$class = 'course-start-date';
+		if ( ! empty( $atts['class'] ) ) {
+			$class .= ' ' . $atts['class'];
+		}
 
-		// Return the html in the buffer.
-		return $content;
+		$template = $this->create_html( 'span', array( 'class' => $class ), $template );
+
+		return $template;
 	}
 
 	/**

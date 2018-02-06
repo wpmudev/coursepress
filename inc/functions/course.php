@@ -55,11 +55,13 @@ function coursepress_get_course( $course_id = 0, $cached = true ) {
 /**
  * Get current course id.
  *
+ * @param int|object Course object or id.
+ *
  * @return int|bool
  */
-function coursepress_get_course_id() {
+function coursepress_get_course_id( $course = 0 ) {
 
-	$course = coursepress_get_course();
+	$course = coursepress_get_course( $course );
 
 	if ( ! is_wp_error( $course ) ) {
 		return $course->__get( 'ID' );

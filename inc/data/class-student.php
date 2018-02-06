@@ -14,10 +14,10 @@ class CoursePress_Data_Student {
 	 *
 	 * @since 2.0.5
 	 *
-	 * @param (int) $course_id
-	 * @param (int) $unit_id
-	 * @param (int) $page_number
-	 * @param (int) $module_id
+	 * @param int $course_id
+	 * @param int $unit_id
+	 * @param int $page_number
+	 * @param int $module_id
 	 **/
 	public static function log_visited_course( $course_id, $unit_id = 0, $page_number = 1, $module_id = 0 ) {
 		/**
@@ -93,5 +93,229 @@ class CoursePress_Data_Student {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Check if a section is seen.
+	 *
+	 * @since 2.0
+	 *
+	 * @param int $course_id
+	 * @param int $unit_id
+	 * @param int $page The page/section number
+	 * @param int $student_id Optional. Will use current user ID if empty.
+	 *
+	 * @return bool Returns true if all modules are seen, answered and completed otherwise false.
+	 **/
+	public static function is_section_seen( $course_id, $unit_id, $page, $student_id = 0 ) {
+
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
+		$student = coursepress_get_user( $student_id );
+
+		$page = 0 == (int) $page ? 1 : $page;
+
+		// Check if student is enrolled
+		$is_enrolled = is_wp_error( $student ) ? false : $student->is_enrolled_at( $course_id );
+
+		if ( ! $is_enrolled ) {
+			return false;
+		}
+
+		$student_progress = $student->get_completion_data( $course_id );
+		$is_unit_visited = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/visited_pages/' . $page );
+		$completed = ! empty( $is_unit_visited );
+
+		if ( ! $completed ) {
+			// Check if one of the modules was visited.
+			$modules = CoursePress_Data_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => $page ) );
+
+			if ( count( $modules ) > 0 ) {
+				foreach ( $modules as $module_id ) {
+					$is_module_seen = coursepress_get_array_val( $student_progress, 'completion/' . $unit_id . '/modules_seen/' . $module_id );
+					if ( ! empty( $is_module_seen ) ) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return $completed;
+	}
+
+	/**
+	 * Get the IDs of enrolled courses.
+	 *
+	 * @param  int $student_id WP User ID.
+	 *
+	 * @uses Student::get_course_enrollment_meta()
+	 *
+	 * @return array Contains enrolled course IDs.
+	 */
+	public static function get_enrolled_courses_ids( $student_id ) {
+
+		$student = coursepress_get_user( $student_id );
+
+		if ( is_wp_error( $student ) ) {
+			return array();
+		}
+
+		return $student->get_enrolled_courses_ids();
+	}
+
+	/**
+	 * Return course stats.
+	 *
+	 * @param boolean $return_human_readable_label @since 2.0.3 return label instad "row" status - default true.
+	 *
+	 * @return string
+	 */
+	public static function get_course_status( $course_id, $student_id = 0, $return_human_readable_label = true ) {
+
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
+		$student = coursepress_get_user( $student_id );
+
+		$student_progress = $student->get_completion_data( $course_id );
+
+		$completed = coursepress_get_array_val( $student_progress, 'completion/completed' );
+		$is_completed = ! empty( $completed );
+
+		$labels = array(
+			'certified' => __( 'Certified', 'cp' ),
+			'failed' => __( 'Failed', 'cp' ),
+			'awaiting-review' => __( 'Awaiting Review', 'cp' ),
+			'ongoing' => __( 'Ongoing', 'cp' ),
+			'incomplete' => __( 'Incomplete', 'cp' ),
+		);
+
+		if ( $is_completed ) {
+			$return = 'certified';
+		} else {
+			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
+			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
+
+			if ( 100 == $course_progress ) {
+				$failed = coursepress_get_array_val( $student_progress, 'completion/failed' );
+
+				if ( ! empty( $failed ) ) {
+					$return = 'failed';
+				} else {
+					$return = 'awaiting-review';
+				}
+			} else {
+				if ( 'open' == $course_status ) {
+					$return = 'ongoing';
+				} else {
+					$return = 'incomplete';
+				}
+			}
+		}
+
+		if ( $return_human_readable_label ) {
+			return $labels[ $return ];
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Get courses of a student.
+	 *
+	 * @param int $student_id
+	 * @param array $courses
+	 *
+	 * @return array|void
+	 */
+	public static function my_courses( $student_id = 0, $courses = array() ) {
+
+		global $CoursePress_Core;
+
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
+		$student = coursepress_get_user( $student_id );
+
+		if ( empty( $courses ) ) {
+			$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+			$courses = array_map( 'get_post', $course_ids );
+		}
+
+		$courses = array_filter( $courses );
+
+		if ( empty( $courses ) ) {
+			return;
+		}
+
+		$found_courses = array(
+			'current' => array(),
+			'completed' => array(),
+			'incomplete' => array(),
+			'future' => array(),
+			'past' => array(),
+		);
+
+		$now = $CoursePress_Core->date_time_now();
+
+		foreach ( $courses as $course ) {
+			$course_id = $course->ID;
+			$start_date = coursepress_course_get_setting( $course_id, 'course_start_date', 0 );
+			$start_date = empty( $start_date ) ? $start_date : $CoursePress_Core->strtotime( $start_date );
+			$end_date = coursepress_course_get_setting( $course_id, 'course_start_date', 0 );
+			$end_date = empty( $end_date ) ? $end_date : $CoursePress_Core->strtotime( $end_date );
+			$open_date = coursepress_course_get_setting( $course_id, 'course_open_ended', 0 );
+			$is_open_ended = ! empty( $open_date );
+
+			$completed = $student->is_course_completed( $course_id );
+
+			if ( $completed ) {
+				$found_courses['completed'][] = $course;
+				$found_courses['past'][] = $course;
+			} else {
+				if ( $start_date <= $now ) {
+					$ended = empty( $is_open_ended ) && $end_date <= $now;
+
+					if ( $ended ) {
+						// For ended courses, marked incomplete
+						$found_courses['incomplete'][] = $course;
+						$found_courses['past'][] = $course;
+					} else {
+						$found_courses['current'][] = $course;
+					}
+				} else {
+					// Future courses
+					$found_courses['future'][] = $course;
+				}
+			}
+		}
+
+		return $found_courses;
+	}
+
+	/**
+	 * Returns the user response.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $step_id
+	 * @param bool $progress
+	 *
+	 * @return array|mixed|null|string
+	 */
+	public static function average_course_responses( $student_id, $course_id, $data = false ) {
+
+		if ( false === $data ) {
+			$student = coursepress_get_user( $student_id );
+			$data = $student->get_completion_data( $course_id );
+		}
+
+		$average = coursepress_get_array_val( $data, 'completion/average' );
+
+		return (int) $average;
 	}
 }

@@ -17,12 +17,12 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 	 */
 	public function init() {
 
-		CoursePress_Data_Shortcode_Course::init();
-		CoursePress_Data_Shortcode_CourseTemplate::init();
-		CoursePress_Data_Shortcode_Instructor::init();
-		CoursePress_Data_Shortcode_Student::init();
-		CoursePress_Data_Shortcode_Template::init();
-		CoursePress_Data_Shortcode_Unit::init();
+		( new CoursePress_Data_Shortcode_Course() )->init();
+		( new CoursePress_Data_Shortcode_CourseTemplate() )->init();
+		//( new CoursePress_Data_Shortcode_Instructor() )->init();
+		//( new CoursePress_Data_Shortcode_Student() )->init();
+		//( new CoursePress_Data_Shortcode_Template() )->init();
+		//( new CoursePress_Data_Shortcode_Unit() )->init();
 	}
 
 	/**

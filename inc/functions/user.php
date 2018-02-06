@@ -55,6 +55,29 @@ function coursepress_get_user( $user_id = 0 ) {
 	return $user;
 }
 
+/**
+ * Get user id of user.
+ *
+ * This function validates if given object is
+ * actual user object, or if int, it will check
+ * if it is actual user id. If not arg passed,
+ * it will return current user id.
+ *
+ * @param int|object User object or user id.
+ *
+ * @return bool|null
+ */
+function coursepress_get_user_id( $user = 0 ) {
+
+	$user = coursepress_get_user( $user );
+
+	if ( ! is_wp_error( $user ) ) {
+		return $user->__get( 'ID' );
+	}
+
+	return false;
+}
+
 function coursepress_user_meta_prefix_required() {
 	return is_multisite() && ! is_main_site();
 }

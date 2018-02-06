@@ -41,212 +41,76 @@ class CoursePress_Data_Shortcode_Instructor {
 	 * @param  array $atts Shortcode attributes.
 	 * @return string Shortcode output.
 	 */
-	public function course_instructors( $atts ) {
+	function get_course_instructors( $atts ) {
 
-		global $wp_query;
-
-		$instructor_profile_slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
-
-		extract( shortcode_atts( array(
+		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
-			'label' => __( 'Instructor', 'cp' ),
-			'label_plural' => __( 'Instructors', 'cp' ),
-			'label_delimeter' => ':&nbsp;',
-			'label_tag' => '',
-			'count' => false,
-			'list' => false,
-			'link' => false,
-			'link_text' => __( 'View Full Profile', 'cp' ),
-			'show_label' => 'no', // Yes, no.
-			'summary_length' => 50,
-			'style' => 'block', // List, list-flat, block, count.
-			'list_separator' => ', ',
-			'avatar_size' => 80,
-			'avatar_position' => 'bottom',
+			'avatar_size' => 42,
 			'default_avatar' => '',
-			'show_divider' => 'yes',
-			'link_all' => 'no',
-			'class' => '',
-		), $atts, 'course_instructors' ) );
+			'label' => __( 'Instructor', 'cp' ),
+			'label_delimiter' => ':',
+			'label_plural' => __( 'Instructors', 'cp' ),
+			'label_tag' => 'h3',
+			'link_all' => false,
+			'link_text' => __( 'View Profile', 'cp' ),
+			'list_separator' => ', ',
+			'show_divider' => true,
+			'style' => 'block',
+			'summary_length' => 50,
+		), $atts, 'course_instructors' );
 
-		$course_id = (int) $course_id;
+		$course = $this->get_course_class( $atts['course_id'] );
 
-		$label = sanitize_text_field( $label );
-		$label_plural = sanitize_text_field( $label_plural );
-		$label_delimeter = sanitize_text_field( $label_delimeter );
-		$label_tag = sanitize_html_class( $label_tag );
-		$link = coursepress_is_true( sanitize_text_field( $link ) );
-		$link_text = sanitize_text_field( $link_text );
-		$show_label = coursepress_is_true( sanitize_text_field( $show_label ) );
-		$summary_length = (int) $summary_length;
-		$style = sanitize_html_class( $style );
-		$avatar_size = (int) $avatar_size;
-		$avatar_position = sanitize_text_field( $avatar_position );
-		$show_divider = coursepress_is_true( sanitize_html_class( $show_divider ) );
-		$link_all = coursepress_is_true( sanitize_html_class( $link_all ) );
-		$class = sanitize_html_class( $class );
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
 
-		// Support deprecated arguments.
-		$count = coursepress_is_true( sanitize_html_class( $count ) );
-		$list = coursepress_is_true( sanitize_html_class( $list ) );
-		$style = $count ? 'count' : $style;
-		$style = $list ? 'list-flat' : $style;
+		$instructors = $course->get_instructors();
+		$count = count( $instructors );
 
-		$show_label = 'list-flat' === $style && ! $show_label ? 'yes' : $show_label;
+		if ( 0 == $count )
+			return '';
 
-		if ( empty( $course_id ) ) {
-			$instructors = get_users( array( 'meta_value' => 'instructor' ) );
-		} else {
-			$instructors = coursepress_get_course_instructors( $course_id );
-		}
+		$class = array( 'course-instructors', $atts['style'] );
+		$link_all = 'yes' == $atts['link_all'];
+		$templates = '';
 
-		$list = array();
-		$content = '';
+		if ( ! empty( $atts['label'] ) )
+			$templates .= $this->create_html(
+				$atts['label_tag'],
+				array( 'class' => 'label' ),
+				_n( $atts['label'], $atts['label_plural'], $count ) . $atts['label_delimiter']
+			);
 
-		if ( 0 < count( $instructors ) && $show_label ) {
-			if ( ! empty( $label_tag ) ) {
-				$content .= '<' . $label_tag . '>';
+		$instructors_template = array();
+
+		foreach ( $instructors as $instructor ) {
+			/**
+			 * @var $instructor CoursePress_User
+			 */
+			$template = '';
+
+			if ( 'block' == $atts['style'] ) {
+				$template .= $instructor->get_avatar( $atts['avatar_size'] );
 			}
 
-			if ( count( $instructors ) > 1 ) {
-				$content .= $label_plural . $label_delimeter;
+			$link = $instructor->get_instructor_profile_link();
+
+			if ( ! $link_all ) {
+				$attr = array( 'href'  => esc_url_raw( $link ), 'class' => 'fn instructor' );
+				$template .= $this->create_html( 'a', $attr, $instructor->get_name() );
 			} else {
-				$content .= $label . $label_delimeter;
+				$template .= $instructor->get_name();
 			}
 
-			if ( ! empty( $label_tag ) ) {
-				$content .= '</' . $label_tag . '>';
-			}
+			$instructors_template[] = $template;
 		}
 
-		if ( 'count' != $style ) {
-			if ( ! empty( $instructors ) ) {
-				foreach ( $instructors as $instructor ) {
-					$profile_href = trailingslashit( home_url() ) . trailingslashit( $instructor_profile_slug );
-					$hash = md5( $instructor->user_login );
-					$instructor_hash = '';
+		if ( 'flat' == $atts['style'] )
+			$templates .= ' ';
 
-					if ( empty( $instructor_hash ) ) {
-						//CoursePress_Data_Instructor::create_hash( $instructor );
-					}
+		$templates .= implode( $atts['list_separator'], $instructors_template );
 
-					$show_username = coursepress_is_true( coursepress_get_setting( 'instructor/show_username', true ) );
-					$profile_href .= $show_username ? trailingslashit( $instructor->user_login ) : trailingslashit( $hash );
-
-					$display_name = ' ' . apply_filters(
-						'coursepress_schema',
-						esc_html( coursepress_get_user_name( $instructor->ID, false, false ) ),
-						'title'
-					);
-
-					switch ( $style ) {
-						case 'block':
-							/**
-							 * schema.org
-							 */
-							$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
-
-							$content .= '<div class="instructor-profile ' . $class . '"'.$schema.'>';
-
-							if ( $link_all ) {
-								$content .= '<a href="' . esc_url_raw( $profile_href ) . '">';
-							}
-
-							if ( 'bottom' == $avatar_position ) {
-								$content .= '<div class="profile-name">' . $display_name . '</div>';
-							}
-
-							/**
-							 * schema.org
-							 */
-							$schema = apply_filters( 'coursepress_schema', '', 'image' );
-
-							$content .= '<div class="profile-avatar"'.$schema.'>';
-							$content .= get_avatar(
-								$instructor->ID,
-								$avatar_size,
-								'',
-								$instructor->display_name,
-								array( 'force_display' => true )
-							);
-							$content .= '</div>';
-
-							if ( 'top' == $avatar_position ) {
-								$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
-								$content .= sprintf(
-									'<div class="profile-name" %s>%s</div>',
-									$schema,
-									$display_name
-								);
-							}
-
-							if ( $link_all ) {
-								$content .= '</a>';
-							}
-
-							if ( ! empty( $summary_length ) ) {
-								$content .= '<div class="profile-description">' . $instructor->get_description() . '</div>';
-							}
-
-							if ( ! empty( $link_text ) ) {
-								$content .= '<div class="profile-link">';
-								$content .= ! $link_all ? '<a href="' . esc_url_raw( $profile_href ) . '">' : '';
-								$content .= $link_text;
-								$content .= ! $link_all ? '</a>' : '';
-								$content .= '</div>';
-							}
-
-							$content .= '</div>';
-							break;
-
-						case 'link':
-						case 'list':
-						case 'list-flat':
-							if ( $link ) {
-								$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
-								$list[] = sprintf(
-									'<a href="%s" %s>%s</a>',
-									esc_url_raw( $profile_href ),
-									$schema,
-									$display_name
-								);
-							} else {
-								$list[] = $display_name;
-							}
-							break;
-					}
-				}
-			}
-		}
-
-		switch ( $style ) {
-			case 'block':
-				$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
-				if ( $show_divider && ( 0 < count( $instructors ) ) ) {
-					$content .= '<div class="divider"></div>';
-				}
-				break;
-
-			case 'list-flat':
-				$content .= implode( $list_separator, $list );
-				$content = '<div class="instructor-list instructor-list-flat ' . $class . '">' . $content . '</div>';
-				break;
-
-			case 'list':
-				$content .= '<ul>';
-				foreach ( $list as $instructor ) {
-					$content .= '<li>' . $instructor . '</li>';
-				}
-				$content .= '</ul>';
-				$content = '<div class="instructor-list ' . $class . '">' . $content . '</div>';
-				break;
-
-			case 'count':
-				$content = count( $instructors );
-				break;
-		}
-
-		return $content;
+		return $this->create_html( 'div', array( 'class' => implode( ' ', $class ) ), $templates );
 	}
 
 	/**
