@@ -1,4 +1,4 @@
-/* global CoursePress,window,ResizeSensor */
+/* global CoursePress,ResizeSensor */
 
 (function () {
 	'use strict';
