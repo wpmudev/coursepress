@@ -334,7 +334,7 @@ class CoursePress_Step extends CoursePress_Unit {
 			$retry_attempts = $this->__get( 'retry_attempts' );
 			$total_allowed_attempts = $retry_attempts + 1;
 
-			if ( 'pass' !== $status && $allow_retries && $this->get_user_attempts() < $total_allowed_attempts) {
+			if ( 'pass' !== $status && $allow_retries && ($this->get_user_attempts() < $total_allowed_attempts || $retry_attempts == 0) ) {
 				$template .= coursepress_create_html(
 					'button',
 					array(
