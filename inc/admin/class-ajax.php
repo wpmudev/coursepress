@@ -1285,12 +1285,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request.
 	 */
 	public function duplicate_course( $request ) {
-
 		// We need course id.
 		if ( ! isset( $request->course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );;
 		}
-
 		// Continue only if valid course.
 		$course = coursepress_get_course( $request->course_id );
 		if ( ! is_wp_error( $course ) ) {
@@ -1299,8 +1297,47 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				wp_send_json_success();
 			}
 		}
-
 		// Send error if failed.
 		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
+	}
+
+	/**
+	 * Activate plugin.
+	 *
+	 * @since 3.0
+	 *
+	 * @param object $request Request.
+	 */
+	public function activate_plugin( $request ) {
+		if ( isset( $request->extension ) && isset( $request->nonce ) ) {
+			$extensions = new CoursePress_Extension();
+			$result = $extensions->activate( $request->extension, $request->nonce );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			} else {
+				wp_send_json_success( $result );
+			}
+		}
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not activate plugin.', 'cp' ) ) );
+	}
+
+	/**
+	 * Deactivate plugin.
+	 *
+	 * @since 3.0
+	 *
+	 * @param object $request Request.
+	 */
+	public function deactivate_plugin( $request ) {
+		if ( isset( $request->extension ) && isset( $request->nonce ) ) {
+			$extensions = new CoursePress_Extension();
+			$result = $extensions->deactivate( $request->extension, $request->nonce );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			} else {
+				wp_send_json_success( $result );
+			}
+		}
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
 	}
 }

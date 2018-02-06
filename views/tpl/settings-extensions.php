@@ -9,20 +9,23 @@
                 <tr>
                     <th><?php _e( 'Extension', 'cp' ); ?></th>
                     <th><?php _e( 'Source', 'cp' ); ?></th>
-                    <th><?php _e( 'Active?', 'cp' ); ?></th>
+                    <th><?php _e( 'Action', 'cp' ); ?></th>
+                    <th><?php _e( 'Use to sell courses', 'cp' ); ?></th>
                 </tr>
             </thead>
             <tbody>
-
-            <?php foreach ( $extensions as $id => $extension ) : ?>
-                <tr>
+            <?php foreach ( $extensions as $id => $extension ) { ?>
+                <tr id="extension-row-<?php echo esc_attr( $id ); ?>">
                     <td><?php echo $extension['name']; ?></td>
                     <td><?php echo $extension['source_info']; ?></td>
-                    <td>
+                    <td class="action"
+data-extension="<?php echo esc_attr( $id ); ?>"
+data-active="<?php echo esc_attr( $extension['is_active']? 'yes':'no' ); ?>"
+data-installed="<?php echo esc_attr( $extension['is_installed']? 'yes':'no' ); ?>"
+data-nonce="<?php echo esc_attr( $extension['nonce'] ); ?>"
+>
 	                    <?php if ( $extension['is_active'] ) : ?>
-                            <label>
-                                <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
-                            </label>
+                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-btn-active"><?php _e( 'Deactivate', 'cp' ); ?></a>
 	                    <?php elseif ( $extension['is_installed'] ) : ?>
                             <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Activate', 'cp' ); ?></a>
 	                    <?php elseif ( ! $extension['is_installed'] && $id === 'marketpress' ) : ?>
@@ -33,8 +36,13 @@
                             </label>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <label>
+                        <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                        </label>
+                    </td<
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
             </tbody>
         </table>
     </div>
