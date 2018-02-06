@@ -336,6 +336,12 @@
                     <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
                 </label>
             </div>
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
+                </label>
+            </div>
         </div>
         <div class="cp-flex">
             <div class="cp-box">
