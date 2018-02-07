@@ -234,13 +234,36 @@ body.cp-help-overlay-body {
     .coursepress-popup-body {
       background-color: #F2FBFF;
       margin: 0;
+      position: relative;
+
+      &::before {
+        content: "";
+        background: url('../images/arrow-blue.png') no-repeat;
+        position: absolute;
+      }
     
       &.position-bottom {
         margin: 30px auto;
+
+        &::before {
+          height: 50px;
+          top: -10px;
+          left: -70px;
+          width: 120px;
+          background-size: 120px;
+          transform: rotate(260deg) scaleX(-1);
+        }
       }
-      
+
       &.position-right {
-        margin-left: 30px;
+        margin-left: 60px;
+
+        &::before {
+          height: 60px;
+          top: -30px;
+          left: -80px;
+          width: 160px;
+        }
       }
 
       .cp-close {

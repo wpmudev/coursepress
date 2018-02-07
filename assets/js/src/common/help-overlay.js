@@ -32,6 +32,7 @@
 
 			readjust: function () {
 				this.setPaneDimensions();
+				this.displayPopup();
 			},
 
 			render: function () {
