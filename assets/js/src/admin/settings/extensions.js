@@ -28,7 +28,6 @@
                 } else {
                     value = input.val();
                 }
-
                 this.model[this.type][name] = value;
                 // var c = this.controller.setting.model.get(this.type);
                 this.controller.setting.model.set( this.type, this.model[this.type] );
@@ -42,10 +41,13 @@
             el: $( '#coursepress-setting-extensions' ),
             extensions: {},
             events: {
-                'click .coursepress-extension-table a': 'handleExtensionButton'
+                'click .coursepress-extension-table .action a': 'handleExtensionButton',
+                'change #coursepress-setting-extensions input[name=enabled]': 'toggleExtension'
             },
             setting: false,
             initialize: function( extensions, settingObject ) {
+
+
                 this.model = {extensions: extensions};
                 this.setting = settingObject;
                 this.render();
@@ -102,9 +104,14 @@
                     this.extensions[value].remove();
                     delete this.extensions[value];
                 }
+                this.model.extensions = _.without( this.model.extensions, value );
             },
             getModel: function() {
                 var extensions = this.model.extensions;
+
+window.console.log('getModel', extensions);
+
+
                 // MP and woo should not be activated at the same time
                 if ( _.contains( extensions, 'marketpress') &&
                     _.contains( extensions, 'woocommerce' ) ) {
@@ -133,6 +140,10 @@
                 var active = button.closest('td').data('active');
                 var nonce = button.closest('td').data('nonce');
                 var model = new CoursePress.Request( this.getModel() );
+
+window.console.log(button);
+
+
                 if ( 'no' === installed ) {
                     var data = {
                         message: win._coursepress.text.extensions.not_instaled
@@ -161,12 +172,14 @@
                 this.showPopUo( data, 'info' );
                 button.addClass( 'cp-btn-active').removeClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.deactivate );
                 button.closest('td').data('active', 'yes' );
+                this.showExtension( data.extension );
             },
             deactivatedPluginSuccess: function( data ) {
                 var button = $('#extension-row-'+data.extension+' .action a');
                 this.showPopUo( data, 'info' );
                 button.removeClass( 'cp-btn-active').addClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.activate );
                 button.closest('td').data('active', 'no' );
+                this.hideExtension( data.extension );
             },
             showPopUo: function( data, type ) {
                 $('.coursepress-popup').detach();
@@ -177,6 +190,10 @@
                     type: type,
                     message: data.message
                 });
+            },
+            toggleExtension: function(ev) {
+                var extension = $(ev.currentTarget);
+window.console.log( 'toggleExtension', extension );                
             }
         });
     });

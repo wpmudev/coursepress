@@ -76,6 +76,9 @@ class CoursePress_Extension_MarketPress {
 
 		// Check if extension is enabled in settings.
 		$settings = coursepress_get_setting( 'marketpress' );
+
+		l( $settings );
+
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
 			return true;
 		}
@@ -231,7 +234,7 @@ class CoursePress_Extension_MarketPress {
 
 		// Update featured image
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
-			set_post_thumbnail($product_id, $settings['listing_image_thumbnail_id']);
+			set_post_thumbnail( $product_id, $settings['listing_image_thumbnail_id'] );
 		}
 
 		// Update the meta
@@ -538,7 +541,7 @@ class CoursePress_Extension_MarketPress {
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
 		} elseif ( 'change_status' == $delete_action ) {
-			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft', ) );
+			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}
@@ -582,7 +585,7 @@ class CoursePress_Extension_MarketPress {
 			$course->update_setting( 'mp_product_id', false );
 
 		} elseif ( 'change_status' == $delete_action ) {
-			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft', ) );
+			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}

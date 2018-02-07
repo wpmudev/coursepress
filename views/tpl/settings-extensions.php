@@ -10,37 +10,56 @@
                     <th><?php _e( 'Extension', 'cp' ); ?></th>
                     <th><?php _e( 'Source', 'cp' ); ?></th>
                     <th><?php _e( 'Action', 'cp' ); ?></th>
-                    <th><?php _e( 'Use to sell courses', 'cp' ); ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ( $extensions as $id => $extension ) { ?>
                 <tr id="extension-row-<?php echo esc_attr( $id ); ?>">
-                    <td><?php echo $extension['name']; ?></td>
-                    <td><?php echo $extension['source_info']; ?></td>
+                    <td><?php
+					echo $extension['name'];
+?></td>
+    <td><?php
+	if ( isset( $extension['wpmu'] ) && $extension['wpmu'] && isset( $extension['soruce_link'] ) ) {
+		printf(
+			'<a href="%s" target="_blank">%s</a>',
+			esc_url( $extension['soruce_link'] ),
+			$extension['source_info']
+		);
+	} else {
+		echo $extension['source_info'];
+	}
+?></td>
                     <td class="action"
 data-extension="<?php echo esc_attr( $id ); ?>"
 data-active="<?php echo esc_attr( $extension['is_active']? 'yes':'no' ); ?>"
 data-installed="<?php echo esc_attr( $extension['is_installed']? 'yes':'no' ); ?>"
 data-nonce="<?php echo esc_attr( $extension['nonce'] ); ?>"
 >
-	                    <?php if ( $extension['is_active'] ) : ?>
-                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-btn-active"><?php _e( 'Deactivate', 'cp' ); ?></a>
-	                    <?php elseif ( $extension['is_installed'] ) : ?>
-                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Activate', 'cp' ); ?></a>
-	                    <?php elseif ( ! $extension['is_installed'] && $id === 'marketpress' ) : ?>
-                            <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Install', 'cp' ); ?></a>
-                        <?php else : ?>
-                            <label>
-                                <?php _e( 'Not installed', 'cp' ); ?>
-                            </label>
-                        <?php endif; ?>
+                        <?php if ( $extension['is_active'] ) {
+							$aria = sprintf(
+								_x( 'Deactivate %s', 'deactivate extension (plugin name in placeholder)', 'cp' ),
+								$extension['name']
+							);
+?>
+                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-btn-active" aria-label="<?php echo esc_attr( $aria ); ?>"><?php _e( 'Deactivate', 'cp' ); ?></a>
+                        <?php } elseif ( $extension['is_installed'] ) {
+						$aria = sprintf(
+							_x( 'Activate %s', 'activate extension (plugin name in placeholder)', 'cp' ),
+							$extension['name']
+						);
+	?>
+                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-bordered-btn" aria-label="<?php echo esc_attr( $aria ); ?>"><?php _e( 'Activate', 'cp' ); ?></a>
+                        <?php } elseif ( ! $extension['is_installed'] && isset( $extension['wpmu'] ) && $extension['wpmu'] ) {
+						$aria = sprintf(
+							_x( 'Install %s', 'install extension (plugin name in placeholder)', 'cp' ),
+							$extension['name']
+						);
+?>
+                            <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn" aria-label="<?php echo esc_attr( $aria ); ?>"><?php _e( 'Install', 'cp' ); ?></a>
+                        <?php } else { ?>
+                            <label><?php _e( 'Not installed', 'cp' ); ?></label>
+                        <?php } ?>
                     </td>
-                    <td>
-                        <label>
-                        <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
-                        </label>
-                    </td<
                 </tr>
             <?php } ?>
             </tbody>

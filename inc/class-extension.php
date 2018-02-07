@@ -28,7 +28,7 @@ class CoursePress_Extension {
 			'not_installed' => __( 'This extension is not installed.', 'cp' ),
 			'buttons' => array(
 				'activate' => __( 'Activate', 'cp' ),
-				'deactivate' => __( 'Dectivate', 'cp' ),
+				'deactivate' => __( 'Deactivate', 'cp' ),
 			),
 			'activating_plugin' => __( 'Try to active plugin... Please wait.', 'cp' ),
 			'deactivating_plugin' => __( 'Try to deactive plugin... Please wait.', 'cp' ),
@@ -95,6 +95,7 @@ class CoursePress_Extension {
 					'version' => $plugin['Version'],
 					'type' => 'commerce',
 					'is_installed' => true,
+					'wpmu' => true,
 					);
 				break;
 				case 'WooCommerce':
@@ -127,6 +128,7 @@ class CoursePress_Extension {
 				'version' => '',
 				'type' => 'commerce',
 				'is_installed' => false,
+				'wpmu' => true,
 			);
 		}
 		/**

@@ -124,16 +124,17 @@
                 paid = this.$(ev.currentTarget).is(':checked');
                 settings = win._coursepress.settings;
 
-                $('.cp-box-marketpress, .cp-box-woocommerce').addClass( 'hidden' );
+                $('.cp-box-marketpress, .cp-box-woocommerce, .cp-box-payment').addClass( 'hidden' );
 
                 if ( paid ) {
                     if ( _.contains(settings.extensions, 'marketpress' ) &&
                         settings.marketpress && settings.marketpress.enabled ) {
                         $('.cp-box-marketpress').removeClass('hidden');
-                    }
-                    if( _.contains( settings.extensions, 'woocommerce') &&
+                    } else if( _.contains( settings.extensions, 'woocommerce') &&
                         settings.woocommerce && settings.woocommerce.enabled ) {
                         $('.cp-box-woocommerce').removeClass('hidden');
+                    } else {
+                        $('.cp-box-payment').removeClass('hidden');
                     }
                 }
             },

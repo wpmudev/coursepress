@@ -402,7 +402,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	function activate_marketpress() {
 		global $CoursePress_Extension;
-
 		if ( ! $CoursePress_Extension->is_plugin_installed( 'marketpress' ) ) {
 			// Install MP then activate
 		} elseif ( ! $CoursePress_Extension->is_plugin_active( 'marketpress/marketpress.php' ) ) {
@@ -861,13 +860,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		exit;
 	}
 
-	function record_media_response($request)
-	{
-		$user_id = get_current_user_id();
-		$user = coursepress_get_user($user_id);
-		$user->record_response($request->course_id, $request->unit_id, $request->step_id, array());
+	function record_media_response( $request ) {
 
-		return array('success' => true);
+		$user_id = get_current_user_id();
+		$user = coursepress_get_user( $user_id );
+		$user->record_response( $request->course_id, $request->unit_id, $request->step_id, array() );
+
+		return array( 'success' => true );
 	}
 
 	function validate_submission() {
