@@ -370,7 +370,10 @@
         <div class="coursepress-popup-content">
             <p>{{popup_content}}</p>
         </div>
-    </div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
+        </div>
+    </div> 
 </script>
 
 <script type="text/template" id="coursepress-unit-help-4-tpl">

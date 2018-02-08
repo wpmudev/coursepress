@@ -14,6 +14,9 @@
 			targetEl: false,
 			container: false,
 			options: false,
+			events: {
+                'click .btn-ok': 'Ok'
+            },
 
 			initialize: function (targetEl, model, options) {
 				this.targetEl = targetEl;
@@ -120,7 +123,15 @@
 				ResizeSensor.detach(this.container);
 				ResizeSensor.detach(this.targetEl);
 				Backbone.View.prototype.remove.apply(this, arguments);
-			}
+			},
+
+            Ok: function() {
+                /**
+                 * Trigger whenever OK button is clicked.
+                 */
+                this.trigger( 'coursepress:popup_ok', this );
+                this.remove();
+            }
 		});
 	});
 })();
