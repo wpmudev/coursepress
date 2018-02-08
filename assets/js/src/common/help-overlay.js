@@ -126,11 +126,11 @@
 			},
 
             Ok: function() {
+	            this.remove();
                 /**
                  * Trigger whenever OK button is clicked.
                  */
                 this.trigger( 'coursepress:popup_ok', this );
-                this.remove();
             }
 		});
 	});
