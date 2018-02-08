@@ -31,7 +31,6 @@ class CoursePress_Template_Course {
 
 		if ( ! empty( $courses ) ) {
 			$date_format = get_option( 'date_format' );
-			$time_format = get_option( 'time_format' );
 
 			$table_header = '';
 			$table_body = '';

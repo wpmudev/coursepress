@@ -865,11 +865,15 @@ class CoursePress_User extends CoursePress_Utility {
 	 *
 	 * @param $course_id
 	 * @param $unit_id
+	 * @param $progress
 	 *
 	 * @return mixed|null|string
 	 */
-	public function get_unit_progress( $course_id, $unit_id ) {
-		$progress = $this->get_completion_data( $course_id );
+	public function get_unit_progress( $course_id, $unit_id, $progress = false ) {
+		if ( false === $progress ) {
+			$progress = $this->get_completion_data( $course_id );
+		}
+
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
 	}
 
@@ -1051,6 +1055,35 @@ class CoursePress_User extends CoursePress_Utility {
 		$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/' . $step_id, $response );
 		$this->add_student_progress( $course_id, $progress );
 		do_action( 'coursepress_record_response', $step_id );
+	}
+
+	/**
+	 * Get an instructor feedback.
+	 *
+	 * @param int $course_id The course ID.
+	 * @param int $unit_id The unit ID the module belongs to.
+	 * @param int $module_id The module ID the feedback belongs to.
+	 * @param int $feedback_index The array key position of the feedback in the feedback list.
+	 * @param array $data Optional. An array of previously fetch course completion data.
+	 *
+	 * @return Returns the feedback given if not empty, otherwise false.
+	 **/
+	public function get_instructor_feedback( $course_id, $unit_id, $module_id, $feedback_index = false, $progress = false ) {
+
+		if ( false === $progress ) {
+			$progress = $this->get_completion_data( $course_id );
+		}
+
+		$response = $this->get_response( $course_id, $unit_id, $module_id, $progress );
+
+		$feedback = isset( $response['feedback'] ) ? $response['feedback'] : array();
+
+		// Get last grade
+		if ( ! $feedback_index ) {
+			$feedback_index = ( count( $feedback ) - 1 );
+		}
+
+		return ! empty( $feedback ) && isset( $feedback[ $feedback_index ] ) ? $feedback[ $feedback_index ] : false;
 	}
 
 	/*******************************************

@@ -69,12 +69,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 */
 	private function get_course_class( $course_id ) {
 
-		if ( empty( $this->courses[ $course_id ] ) ) {
-			$course = new CoursePress_Course( $course_id );
-			$this->courses[ $course_id ] = $course;
-		}
-
-		return $this->courses[ $course_id ];
+		return coursepress_get_course( $course_id );
 	}
 
 	/**
@@ -106,10 +101,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$template = '';
 
 		if ( 'yes' == $atts['show_title'] )
-			$template .= '[course_title]';
+			$template .= '[course_title course_id="' . $atts['course_id'] . '"]';
 
 		foreach ( $shows as $show ) {
-			$template = '[course_' . $show . ']';
+			$template = '[course_' . $show . ' course_id="' . $atts['course_id'] . '"]';
 		}
 
 		return $this->create_html( 'div', array( 'class' => 'course-overview' ), do_shortcode( $template ) );

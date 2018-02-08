@@ -19,10 +19,10 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 
 		( new CoursePress_Data_Shortcode_Course() )->init();
 		( new CoursePress_Data_Shortcode_CourseTemplate() )->init();
-		//( new CoursePress_Data_Shortcode_Instructor() )->init();
-		//( new CoursePress_Data_Shortcode_Student() )->init();
-		//( new CoursePress_Data_Shortcode_Template() )->init();
-		//( new CoursePress_Data_Shortcode_Unit() )->init();
+		( new CoursePress_Data_Shortcode_Instructor() )->init();
+		( new CoursePress_Data_Shortcode_Student() )->init();
+		( new CoursePress_Data_Shortcode_Template() )->init();
+		( new CoursePress_Data_Shortcode_Unit() )->init();
 	}
 
 	/**

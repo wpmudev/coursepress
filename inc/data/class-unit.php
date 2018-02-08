@@ -2,12 +2,6 @@
 
 class CoursePress_Data_Unit {
 
-
-	public static function get_post_type_name() {
-
-		return CoursePress_Data_PostFormat::prefix( self::$post_type );
-	}
-
 	/**
 	 * Get time to end tasks.
 	 *
@@ -311,5 +305,305 @@ class CoursePress_Data_Unit {
 		}
 
 		return $previous_unit ? $previous_unit->ID : false;
+	}
+
+	/**
+	 * Number of required modules.
+	 *
+	 * Return number of required modules based on unit id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $unit_id Unit id.
+	 *
+	 * @return integer Number of required modules.
+	 */
+	public static function get_number_of_mandatory( $unit_id ) {
+
+		$modules = CoursePress_Data_Course::get_unit_modules( $unit_id );
+		$found = 0;
+
+		if ( $modules ) {
+			foreach ( $modules as $module ) {
+				$module_id = $module->ID;
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+
+				if ( ! empty( $attributes['mandatory'] ) ) {
+					$found++;
+				}
+			}
+		}
+
+		return $found;
+	}
+
+	/**
+	 * @param $course
+	 * @param $unit
+	 * @param int $previous_unit
+	 *
+	 * @return array
+	 */
+	public static function get_unit_availability_status( $course, $unit, $previous_unit = 0 ) {
+
+		$status = array(
+			'mandatory_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
+			'completion_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
+			'passed_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
+		);
+
+		if ( ! is_object( $unit ) ) {
+			$unit = get_post( $unit );
+		}
+
+		// Check it... is a post at all?
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			return $status;
+		}
+
+		$course_id = is_object( $course ) ? $course->ID : (int) $course;
+
+		$unit_id = $unit->ID;
+		$previous_unit_id = false;
+		if ( $previous_unit ) {
+			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
+		}
+
+		$student = coursepress_get_user();
+		$student_id = $student->__get( 'ID' );
+		$is_student = $student->is_enrolled_at( $course_id );
+		$due_date = self::get_unit_availability_date( $unit_id, $course_id );
+		$is_available = empty( $due_date ) || ( 'expired' === $due_date && $is_student );
+
+		// Check if previous has conditions.
+		$force_current_unit_completion = false;
+		$force_current_unit_successful_completion = false;
+
+		if ( $previous_unit_id ) {
+			$force_current_unit_completion = coursepress_is_true( get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) );
+			$force_current_unit_successful_completion = coursepress_is_true( get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) );
+		}
+
+		/**
+		 * If there is NO MANDATORY modules, then this parameter can not be
+		 * true!
+		 */
+		if ( $previous_unit_id && $force_current_unit_completion ) {
+			$number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
+
+			if ( 0 == $number_of_mandatory ) {
+				$force_current_unit_completion = false;
+				$force_current_unit_successful_completion = false;
+			}
+		}
+
+		if ( $previous_unit_id && $is_available ) {
+			$student_progress = $student->get_completion_data( $course_id );
+			$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $previous_unit_id, $student_progress );
+
+			$unit_completed = CoursePress_Data_Student::is_unit_complete(
+				$student_id, $course_id, $previous_unit_id, $student_progress
+			);
+
+			$status = CoursePress_Helper_Utility::set_array_value(
+				$status, 'mandatory_required/enabled', $force_current_unit_completion
+			);
+			$status = CoursePress_Helper_Utility::set_array_value(
+				$status, 'mandatory_required/result', $mandatory_done
+			);
+
+			$status = CoursePress_Helper_Utility::set_array_value(
+				$status, 'completion_required/enabled', $force_current_unit_successful_completion
+			);
+			$status = CoursePress_Helper_Utility::set_array_value(
+				$status, 'completion_required/result', $unit_completed
+			);
+
+			if ( $status['completion_required']['enabled'] ) {
+				$is_available = $status['completion_required']['result'];
+			} elseif ( $status['mandatory_required']['enabled'] ) {
+				$is_available = $status['mandatory_required']['result'];
+			}
+
+			/**
+			 * User also needs to pass all required assessments
+			 *
+			 * @since 2.0.6
+			 */
+			if ( $is_available && $force_current_unit_successful_completion ) {
+				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/enabled', true );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/result', $is_available );
+			}
+		}
+
+		/**
+		 * Perform action if unit is available.
+		 *
+		 * @since 1.2.2
+		 * */
+		do_action( 'coursepress_unit_availble', $is_available, $unit_id );
+
+		/**
+		 * Return filtered value.
+		 *
+		 * Can be used by other plugins to filter unit availability.
+		 *
+		 * @since 1.2.2
+		 * */
+		$is_available = apply_filters(
+			'coursepress_filter_unit_availability',
+			$is_available,
+			$unit_id
+		);
+		$status['available'] = $is_available;
+
+		return $status;
+	}
+
+	/**
+	 * Get unit id from name.
+	 *
+	 * @param string $slug
+	 * @param int $id_only
+	 * @param string $post_parent
+	 *
+	 * @return array|bool|int|null|WP_Post
+	 */
+	public static function by_name( $slug, $id_only, $post_parent = '' ) {
+
+		$res = false;
+
+		// First try to fetch the unit by the slug (name).
+		$args = array(
+			'name' => $slug,
+			'post_type' => 'unit',
+			'post_status' => 'any',
+			'posts_per_page' => 1,
+		);
+
+		if ( $id_only ) {
+			$args['fields'] = 'ids';
+		}
+
+		if ( $post_parent ) {
+			$args['post_parent'] = (int) $post_parent;
+		}
+
+		$post = get_posts( $args );
+
+		if ( $post ) {
+			$res = $post[0];
+		} else {
+			// If we did not find a unit by name, try to fetch it via ID.
+			$post = get_post( $slug );
+			// Check it... is a post at all?
+			if ( ! is_a( $post, 'WP_Post' ) ) {
+				return $res;
+			}
+			if ( 'unit' == $post->post_type ) {
+				if ( $id_only ) {
+					$res = $post->ID;
+				} else {
+					$res = $post;
+				}
+			}
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Get course page meta.
+	 *
+	 * @param int $unit_id Unit ID.
+	 * @param int $item_id Item ID.
+	 *
+	 * @return array
+	 */
+	public static function get_page_meta( $unit_id, $item_id ) {
+
+		if ( empty( $item_id ) || empty( $unit_id ) ) {
+			return array(
+				'title' => '',
+				'description' => '',
+				'feature_image' => '',
+				'visible' => false,
+			);
+		}
+
+		$unit_id = is_object( $unit_id ) ? $unit_id->ID : (int) $unit_id;
+
+		$meta = get_post_meta( $unit_id );
+		$titles = isset( $meta['page_title'] ) && ! empty( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
+		$descriptions = isset( $meta['page_description'] ) && ! empty( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
+		$images = isset( $meta['page_feature_image'] ) && ! empty( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
+		$visibilities = isset( $meta['show_page_title'] ) && ! empty( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
+
+		$return = array(
+			'title' => $titles[ 'page_' . $item_id ],
+			'description' => isset( $descriptions[ 'page_' . $item_id ] ) ? $descriptions[ 'page_' . $item_id ] : '',
+			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
+		);
+
+		if ( isset( $visibilities[ ( $item_id - 1 ) ] ) ) {
+			$return['visible'] = $visibilities[ ( $item_id - 1 ) ];
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Get course ID by unit
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/WP_Post $unit unit ID or unit WP_Post object.
+	 *
+	 * @return integer Returns course id.
+	 */
+	public static function get_course_id_by_unit( $unit ) {
+
+		if ( ! is_object( $unit ) && preg_match( '/^\d+$/', $unit ) ) {
+			$unit = get_post( $unit );
+		}
+
+		// Check it... is a post at all?
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			return 0;
+		}
+
+		if ( $unit->post_type == 'unit' ) {
+			return $unit->post_parent;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Check if
+	 * @param $course
+	 * @param $unit
+	 * @param $previous_unit
+	 * @param bool $status
+	 *
+	 * @return bool|mixed
+	 */
+	public static function is_unit_available( $course, $unit, $previous_unit, $status = false ) {
+
+		if ( ! $status ) {
+			$status = self::get_unit_availability_status( $course, $unit, $previous_unit );
+		}
+
+		return isset( $status['available'] )? $status['available'] : false;
 	}
 }

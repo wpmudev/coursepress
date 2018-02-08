@@ -318,4 +318,94 @@ class CoursePress_Data_Student {
 
 		return (int) $average;
 	}
+
+	/**
+	 * Get mandatory completion details.
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $course_id Course ID.
+	 * @param int $unit_id Unit ID.
+	 * @param bool|array $data
+	 *
+	 * @return array
+	 */
+	public static function get_mandatory_completion( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$student = coursepress_get_user( $student_id );
+			$data = $student->get_completion_data( $course_id );
+		}
+
+		$completed = '';
+		// Sanitize $unit_id.
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' );
+		}
+
+		return array(
+			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
+			'completed' => $completed,
+		);
+	}
+
+	/**
+	 * Check unit for mantadory.
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $course_id Course ID.
+	 * @param int $unit_id Unit ID.
+	 * @param bool|array $data
+	 *
+	 * @return array
+	 */
+	public static function is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$student = coursepress_get_user( $student_id );
+			$data = $student->get_completion_data( $course_id );
+		}
+
+		// Sanitize $unit_id.
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+
+			$all_mandatory = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/all_mandatory' );
+			if ( $all_mandatory ) {
+				$required_steps = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/required_steps' );
+				$completed = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' );
+
+				return (int) $completed == (int) $required_steps;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Send email about successful account creation.
+	 * The email contains several links but no login name or password.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param  int $student_id The newly created WP User ID.
+	 *
+	 * @return bool True on success.
+	 */
+	public static function send_registration( $student_id, $user_data = array() ) {
+
+		$student_data = get_userdata( $student_id );
+
+		$email_args = array();
+		$email_args['email'] = $student_data->user_email;
+		$email_args['first_name'] = empty( $student_data->first_name ) && empty( $student_data->last_name ) ? $student_data->display_name : $student_data->first_name;
+		$email_args['last_name'] = $student_data->last_name;
+		$email_args['fields'] = array();
+		$email_args['fields']['student_id'] = $student_id;
+		$email_args['fields']['student_username'] = $student_data->user_login;
+		$email_args['fields']['student_password'] = $student_data->user_pass;
+		$email_args['fields']['password'] = ! empty( $user_data['password_txt'] ) ? $user_data['password_txt'] : '';
+
+		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::REGISTRATION, $email_args );
+
+		return $sent;
+	}
 }

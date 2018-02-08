@@ -4,7 +4,7 @@
  *
  * @since 2.0.5
  **/
-$singup_tag = 'h3';
+$signup_tag = 'h3';
 $signup_title = __( 'Register', 'cp' );
 $form_message = '';
 $form_message_class = '';
@@ -13,6 +13,7 @@ $redirect_url = coursepress_get_dashboard_url();
 $first_name = $last_name = $username = $email = '';
 $submit_button = __( 'Create an Account', 'cp' );
 $action_url = admin_url( 'admin-ajax.php?action=coursepress_register' );
+$login_url = coursepress_get_student_login_url();
 
 if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) {
     $form_message = __( 'Mismatch password!', 'cp' );

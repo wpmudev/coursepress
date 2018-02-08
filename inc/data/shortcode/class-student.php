@@ -8,7 +8,8 @@
 /**
  * Student-related shortcodes.
  */
-class CoursePress_Data_Shortcode_Student {
+class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
+
 	private static $templates_was_already_loaded = false;
 
 	/**
@@ -16,194 +17,161 @@ class CoursePress_Data_Shortcode_Student {
 	 *
 	 * @since  2.0.0
 	 */
-	public static function init() {
-		add_shortcode(
+	public function init() {
+
+		$shortcodes = array(
 			'courses_student_dashboard',
-			array( __CLASS__, 'courses_student_dashboard' )
-		);
-
-		add_shortcode(
 			'courses_student_settings',
-			array( __CLASS__, 'courses_student_settings' )
-		);
-
-		add_shortcode(
+			'student_registration_form',
+			'student_workbook_table',
 			'coursepress_enrollment_templates',
-			array( __CLASS__, 'coursepress_enrollment_templates' )
+			'course_progress',
+			'course_unit_progress',
+			'student_grades_table',
+			'course_mandatory_message',
+			'course_unit_percent',
 		);
 
-		if ( ! CP_IS_CAMPUS ) {
-			add_shortcode(
-				'student_registration_form',
-				array( __CLASS__, 'student_registration_form' )
-			);
+		foreach ( $shortcodes as $shortcode ) {
+			$method = 'get_' . $shortcode;
+
+			if ( method_exists( $this, $method ) ) {
+				add_shortcode( $shortcode, array( $this, $method ) );
+			}
 		}
 
-		add_shortcode(
-			'student_workbook_table',
-			array( __CLASS__, 'student_workbook_table' )
-		);
-
-		add_shortcode(
-			'student_grades_table',
-			array( __CLASS__, 'student_grades_table' )
-		);
-
-		// -- Course-progress.
-		add_shortcode(
-			'course_progress',
-			array( __CLASS__, 'course_progress' )
-		);
-		add_shortcode(
-			'course_unit_progress',
-			array( __CLASS__, 'course_unit_progress' )
-		);
-		add_shortcode(
-			'course_mandatory_message',
-			array( __CLASS__, 'course_mandatory_message' )
-		);
-		add_shortcode(
-			'course_unit_percent',
-			array( __CLASS__, 'course_unit_percent' )
-		);
-
-		/**
-		 * Log student visit to the course **/
-		add_action( 'coursepress_focus_item_preload', array( __CLASS__, 'log_student_visit' ) );
-		add_action( 'coursepress_normal_items_loaded', array( __CLASS__, 'log_normal_student_visit' ), 10, 3 );
+		// Log student visit to the course.
+		add_action( 'coursepress_focus_item_preload', array( $this, 'log_student_visit' ) );
+		add_action( 'coursepress_normal_items_loaded', array( $this, 'log_normal_student_visit' ), 10, 3 );
 	}
 
-	public static function courses_student_dashboard( $atts ) {
-		$content = CoursePress_Template_Student::dashboard();
+	/**
+	 * Display student dashboard.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_courses_student_dashboard() {
+
+		ob_start();
+		// My courses template
+		coursepress_get_template( 'content', 'my-courses' );
+		// Instructed courses
+		coursepress_get_template( 'content', 'instructed-courses' );
+		// Facilitated courses
+		coursepress_get_template( 'content', 'facilitated-courses' );
+
+		$content = ob_get_clean();
 
 		return $content;
 	}
 
-	public static function courses_student_settings( $atts ) {
-		$content = CoursePress_Template_Student::student_settings();
+	/**
+	 * Display student settings.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_courses_student_settings() {
+
+		ob_start();
+
+		coursepress_get_template( 'registration', 'form' );
+
+		$content = ob_get_clean();
 
 		return $content;
 	}
 
-	public static function student_registration_form() {
-		$content = CoursePress_Template_Student::registration_form();
+	/**
+	 * Display student registration form.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_student_registration_form() {
+
+		ob_start();
+
+		coursepress_get_template( 'registration', 'form' );
+
+		$content = ob_get_clean();
 
 		return $content;
 	}
 
-	public static function student_workbook_table( $args ) {
+	/**
+	 * Display student workbook table.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_student_workbook_table( $args ) {
 
-		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$course_id = coursepress_get_course_id();
 
-		$workbook_is_active = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) );
+		$workbook_is_active = coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_workbook', false ) );
 
 		if ( false == $workbook_is_active ) {
 			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'cp' ) );
 			return $content;
 		}
 
-		$args = shortcode_atts(
-			array(
-				'course_id' => $course_id,
-				'unit_id' => false,
-				'module_column_title' => __( 'Element', 'cp' ),
-				'title_column_title' => __( 'Module', 'cp' ),
-				'submission_date_column_title' => __( 'Submitted', 'cp' ),
-				'response_column_title' => __( 'Answer', 'cp' ),
-				'grade_column_title' => __( 'Grade', 'cp' ),
-				'comment_column_title' => __( 'Feedback', 'cp' ),
-				'module_response_description_label' => __( 'Description', 'cp' ),
-				'comment_label' => __( 'Comment', 'cp' ),
-				'view_link_label' => __( 'View', 'cp' ),
-				'view_link_class' => 'assessment-view-response-link button button-units',
-				'comment_link_class' => 'assessment-view-response-link button button-units',
-				'pending_grade_label' => __( 'Pending', 'cp' ),
-				'unit_unread_label' => __( 'Unit Unread', 'cp' ),
-				'unit_read_label' => __( 'Unit Read', 'cp' ),
-				'single_correct_label' => __( 'Correct', 'cp' ),
-				'single_incorrect_label' => __( 'Incorrect', 'cp' ),
-				'no_content_label' => __( 'This unit has no activities.', 'cp' ),
-				'non_assessable_label' => __( '**' ),
-				'table_class' => 'widefat shadow-table assessment-archive-table workbook-table',
-				'table_labels_th_class' => 'manage-column',
-				'show_page' => false,
-				'show_course_progress' => true,
-			)
-			,
-			$args,
-			'student_workbook_table'
-		);
+		$args = shortcode_atts( array(
+			'course_id' => $course_id,
+			'unit_id' => false,
+			'comment_column_title' => __( 'Feedback', 'cp' ),
+			'pending_grade_label' => __( 'Pending', 'cp' ),
+			'table_class' => 'widefat shadow-table assessment-archive-table workbook-table',
+			'show_page' => false,
+			'show_course_progress' => true,
+		), $args, 'student_workbook_table' );
+
+		$content = coursepress_render( 'templates/content-workbook', $args, false );
 
 		$course_id = (int) $args['course_id'];
 		$unit_id = (int) $args['unit_id'];
 		$student_id = get_current_user_id();
+		$student = coursepress_get_user();
 
 		if ( empty( $course_id ) || empty( $student_id ) ) {
 			return '';
 		}
 
-		$module_column_title = sanitize_text_field( $args['module_column_title'] );
-		$title_column_title = sanitize_text_field( $args['title_column_title'] );
-		$submission_date_column_title = sanitize_text_field( $args['submission_date_column_title'] );
-		$response_column_title = sanitize_text_field( $args['response_column_title'] );
-		$grade_column_title = sanitize_text_field( $args['grade_column_title'] );
-		$comment_column_title = sanitize_text_field( $args['comment_column_title'] );
-		$module_response_description_label = sanitize_text_field( $args['module_response_description_label'] );
-		$comment_label = sanitize_text_field( $args['comment_label'] );
-		$view_link_label = sanitize_text_field( $args['view_link_label'] );
-		$view_link_class = sanitize_text_field( $args['view_link_class'] );
-		$comment_link_class = sanitize_text_field( $args['comment_link_class'] );
 		$pending_grade_label = sanitize_text_field( $args['pending_grade_label'] );
-		$unit_unread_label = sanitize_text_field( $args['unit_unread_label'] );
-		$unit_read_label = sanitize_text_field( $args['unit_read_label'] );
-		$non_assessable_label = sanitize_text_field( $args['non_assessable_label'] );
-		$no_content_label = sanitize_text_field( $args['no_content_label'] );
 		$table_class = sanitize_text_field( $args['table_class'] );
-		$table_labels_th_class = sanitize_text_field( $args['table_labels_th_class'] );
-		$single_correct_label = sanitize_text_field( $args['single_correct_label'] );
-		$single_incorrect_label = sanitize_text_field( $args['single_incorrect_label'] );
-		$show_page = cp_is_true( $args['show_page'] );
-		$show_course_progress = cp_is_true( $args['show_course_progress'] );
+		$show_page = coursepress_is_true( $args['show_page'] );
+		$show_course_progress = coursepress_is_true( $args['show_course_progress'] );
+		$comment_column_title = sanitize_text_field( $args['comment_column_title'] );
 
-		$columns = array(
-			'title' => $title_column_title,
-			'submission_date' => $submission_date_column_title,
-			'response' => $response_column_title,
-			'grade' => $grade_column_title,
-			'comment' => $comment_column_title,
-		);
+		$student_progress = $student->get_completion_data( $course_id );
 
-		$col_sizes = array(
-			'45',
-			'15',
-			'12',
-			'13',
-			'15',
-		);
-
-		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-
-		$content = '';
 		$unit_list = CoursePress_Data_Course::get_units_with_modules( $course_id );
-		$unit_list = CoursePress_Helper_Utility::sort_on_key( $unit_list, 'order' );
+		$unit_list = $this->sort_on_key( $unit_list, 'order' );
 
 		if ( ! empty( $unit_id ) && array_key_exists( $unit_id, $unit_list ) ) {
 			$unit_list = array( $unit_list[ $unit_id ] );
 		}
 
 		if ( $show_course_progress && empty( $unit_id ) ) {
-			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'cp' ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
+			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'cp' ) . '<small>' . $student->get_course_progress( $course_id ) . '%</small>' . '</h3>';
 		}
 
 		$content .= '<div class="workbook">';
-		$content .= '<table class="workbook-table">';
+		$content .= '<table class="workbook-table ' . $table_class . '">';
 
 		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
 		foreach ( $unit_list as $unit_id => $unit ) {
 			if ( ! array_key_exists( $unit_id, $student_progress_units ) ) {
 				continue;
 			}
-			$progress = CoursePress_Data_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
+			$progress = $student->get_unit_progress( $course_id, $unit_id );
 			$format = '<tr class="row-unit"><th colspan="2" class="workbook-unit unit-%s">%s</th><th class="td-right">%s: %s</th></tr>';
 			$content .= sprintf( $format, $unit_id, $unit['unit']->post_title, __( 'Progress', 'cp' ), $progress . '%' );
 
@@ -224,28 +192,16 @@ class CoursePress_Data_Shortcode_Student {
 						}
 
 						$module_count += 1;
-						$module_type = $attributes['module_type'];
 
 						$title = empty( $module->post_title ) ? $module->post_content : $module->post_title;
-						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$response = $student->get_response( $course_id, $unit_id, $module_id, $student_progress );
 
-						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$feedback = $student->get_instructor_feedback( $course_id, $unit_id, $module_id, $student_progress );
 
 						// Check if the grade came from an instructor
-						$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-						$graded_by = CoursePress_Helper_Utility::get_array_val(
-							$grades,
-							'graded_by'
-						);
-						$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
+						$grade = $student->get_step_grade( $course_id, $unit_id, $module_id );
 
-						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
-
-						if ( in_array( $module_type, $excluded_modules ) ) {
-							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
-								$grade = __( 'Pending', 'cp' );
-							}
-						}
+						$grade = empty( $grade ) ? 0 : (int) $grade;
 
 						$response_display = $response['response'];
 
@@ -278,16 +234,16 @@ class CoursePress_Data_Shortcode_Student {
 									$url = $response['response']['url'];
 
 									$file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
-									$file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
+									$file_size = $file_size ? $this->format_file_size( $file_size ) : '';
 									$file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
 
 									$file_name = explode( '/', $url );
 									$file_name = array_pop( $file_name );
 
-									$url = CoursePress_Helper_Utility::encode( $url );
+									$url = $this->encode( $url );
 									$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
 
-									$response_display = '<a href="' . esc_url( $url ) . '" class="button button-download">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
+									$response_display = '<a href="' . esc_url( $url ) . '" class="button button-download">' . esc_html( $file_name ) . ' ' . $this->filter_content( $file_size ) . '</a>';
 								} else {
 									$response_display = '';
 								}
@@ -300,7 +256,6 @@ class CoursePress_Data_Shortcode_Student {
 									$options = (array) $question['options'];
 									$checked = (array) $options['checked'];
 									$checked = array_filter( $checked );
-									$student_response = $response_display[ $q_index ];
 
 									$display .= sprintf( '<p class="question">%s</p>', $question['question'] );
 
@@ -310,10 +265,7 @@ class CoursePress_Data_Shortcode_Student {
 
 										foreach ( $answers as $a_index => $answer ) {
 											if ( ! empty( $answer ) ) {
-												$the_answer = CoursePress_Helper_Utility::get_array_val(
-													$attributes,
-													'questions/' . $q_index . '/options/answers/' . $a_index
-												);
+												$the_answer = coursepress_get_array_val( $attributes, 'questions/' . $q_index . '/options/answers/' . $a_index );
 												$correct = ! empty( $checked[ $a_index ] );
 												$class = $correct ? 'chosen-correct' : 'chosen-incorrect';
 
@@ -345,7 +297,6 @@ class CoursePress_Data_Shortcode_Student {
 								break;
 							case 'input-text': case 'input-textarea':
 									$response_display = empty( $response_display ) ? __( 'No answer!', 'cp' ) : $response_display;
-									$display = sprintf( '<p>%s</p>', $response_display );
 								break;
 
 							case 'input-form':
@@ -384,14 +335,8 @@ class CoursePress_Data_Shortcode_Student {
 								break;
 						}
 
-						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), CoursePress_Data_Course::strtotime( $response['date'] ) );
-						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-flag mandatory"></span>' : '';
-						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
-
-						$extra = $mandatory . $non_assessable;
-
 						$feedback_by = ( ! is_null( $feedback ) && isset( $feedback['feedback_by'] ) ) ? (int) $feedback['feedback_by'] : 0;
-						$first_last = CoursePress_Helper_Utility::get_user_name( $feedback_by );
+						$first_last = $this->get_user_name( $feedback_by );
 
 						$feedback_display = ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
 
@@ -402,7 +347,7 @@ class CoursePress_Data_Shortcode_Student {
 						}
 
 						if ( 'Pending' === $grade_display && false === $is_assessable ) {
-							$grade_display = __( 'Non-gradable', 'cp' );
+							$grade_display = $pending_grade_label;
 						}
 
 						$content .= '<tr class="row-module">';
@@ -413,7 +358,7 @@ class CoursePress_Data_Shortcode_Student {
 
 						if ( '' !== $feedback_display ) {
 							$content .= '<tr>';
-							$content .= '<td class="column-title">Feedback:</td>';
+							$content .= '<td class="column-title">' . $comment_column_title . ':</td>';
 							$content .= sprintf( '<td colspan="2">%s</td>', $feedback_display );
 							$content .= '</tr>';
 						}
@@ -424,42 +369,48 @@ class CoursePress_Data_Shortcode_Student {
 				$content .= sprintf( '<tr><td colspan="3" class="non-gradable">%s</td></tr>', __( 'No gradable modules under this unit.', 'cp' ) );
 			}
 		}
+
 		$content .= '</table></div>';
 
 		return $content;
 	}
 
-	public static function coursepress_enrollment_templates( $atts ) {
-		/**
-		 * Avoid to load templates twice...
-		 */
+	/**
+	 * Display coursepress enrollment templates.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_coursepress_enrollment_templates( $atts ) {
+
+		// Avoid to load templates twice...
 		global $post;
 
+		$course_id = 0;
+
 		if ( ! is_object( $post ) ) {
-			$course_id = CoursePress_Helper_Utility::the_course( true );
+			$course_id = coursepress_get_course_id();
 			$post = get_post( $course_id );
 			if ( ! is_a( $post, 'WP_Post' ) ) {
 				return;
 			}
 		}
-		if (
-			isset( $post->coursepress_enrollment_templates_was_already_loaded )
+
+		if ( isset( $post->coursepress_enrollment_templates_was_already_loaded )
 			&& $post->coursepress_enrollment_templates_was_already_loaded
 		) {
 			return;
 		}
 		$post->coursepress_enrollment_templates_was_already_loaded = true;
+
 		self::$templates_was_already_loaded = true;
-		/**
-		 * proceder shortcode
-		 */
-		$atts = shortcode_atts(
-			array(
-				'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			),
-			$atts,
-			'course_page'
-		);
+
+		$atts = shortcode_atts( array(
+			'course_id' => coursepress_get_course_id( $course_id ),
+		), $atts, 'coursepress_enrollment_templates' );
 
 		$course_id = (int) $atts['course_id'];
 
@@ -467,107 +418,13 @@ class CoursePress_Data_Shortcode_Student {
 			return '';
 		}
 
-		$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
+		$data['nonce'] = wp_create_nonce( 'coursepress_enrollment_action' );
 
-		$scode_1 = '[course_signup_form login_link_id="step2" show_submit="no"]';
-		$scode_2 = '[course_signup_form signup_link_id="step1" show_submit="no" page="login"]';
+		$data['scode_1'] = '[course_signup_form login_link_id="step2" show_submit="no"]';
+		$data['scode_2'] = '[course_signup_form signup_link_id="step1" show_submit="no" page="login"]';
 
-		/**
-		 * The filters below can be used to customize the output of the
-		 * registration process.
-		 */
-		ob_start();
-		?>
-		<script type="text/template" id="modal-template">
-			<div class="enrollment-modal-container"
-				data-nonce="<?php echo esc_attr( $nonce ); ?>"
-				data-course="<?php echo esc_attr( $course_id ); ?>"
-				data-course-is-paid="<?php esc_html_e( intval( CoursePress_Data_Course::is_paid_course( $course_id ) ) ); ?>"
-			></div>
-		</script>
-
-		<?php if ( apply_filters( 'coursepress_registration_form_step-1', true ) ) : ?>
-		<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
-			<div class="bbm-modal-nonce signup" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_signup' ); ?>"></div>
-			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Create new account', 'cp' ); ?>
-				</h3>
-				<span id="error-messages"></span>
-			</div>
-			<div class="bbm-modal__section">
-				<div class="modal-nav-link">
-				<?php echo do_shortcode( $scode_1 ); ?>
-				</div>
-			</div>
-			<div class="bbm-modal__bottombar">
-			<input type="hidden" name="course_id" value="<?php esc_attr_e( $course_id ); ?>" />
-			<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'cp' ); ?>" />
-			<a href="#" class="cancel-link">
-				<?php esc_html_e( 'Cancel', 'cp' ); ?>
-			</a>
-			</div>
-		</script>
-		<?php endif; ?>
-
-		<?php if ( apply_filters( 'coursepress_registration_form_step-2', true ) ) : ?>
-		<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
-			<div class="bbm-modal-nonce login" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_login' ); ?>"></div>
-			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Login to your account', 'cp' ); ?>
-				</h3>
-				<span id="error-messages"></span>
-			</div>
-			<div class="bbm-modal__section">
-				<div class="modal-nav-link">
-				<?php echo do_shortcode( $scode_2 ); ?>
-				</div>
-			</div>
-			<div class="bbm-modal__bottombar">
-			<input type="submit" class="bbm-button done login button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
-			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
-			</div>
-		</script>
-		<?php endif; ?>
-
-		<?php if ( apply_filters( 'coursepress_registration_form_step-3', true ) ) : ?>
-		<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
-			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Successfully enrolled.', 'cp' ); ?>
-				</h3>
-			</div>
-			<div class="bbm-modal__section">
-				<p>
-					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'cp' ); ?>
-				</p>
-				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Start Learning', 'cp' ); ?></a>
-			</div>
-			<div class="bbm-modal__bottombar">
-			</div>
-		</script>
-		<?php endif; ?>
-
-		<?php if ( apply_filters( 'coursepress_registration_form_step-4', true ) ) : ?>
-		<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="passcode">
-			<div class="bbm-modal__topbar">
-                <h3 class="bbm-modal__title"><?php esc_html_e( 'Could not enroll at this time.', 'cp' ); ?>
-				</h3>
-			</div>
-            <div class="bbm-modal__section"><?php
-			printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to back to course.', 'cp' ) );
-?>
-                    <a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Go back to course!', 'cp' ); ?></a>
-			</div>
-			<div class="bbm-modal__bottombar">
-			</div>
-		</script>
-		<?php endif; ?>
-
-		<?php
-		do_action( 'coursepress_registration_form_end', $atts );
-		$content = ob_get_clean();
+		// The filters below can be used to customize the output of the registration process.
+		$content = coursepress_render( 'views/front/course-enrollment', $data, false );
 
 		return $content;
 	}
@@ -576,64 +433,262 @@ class CoursePress_Data_Shortcode_Student {
 	 * Course Progress.
 	 *
 	 * @since 1.0.0
-	 * @param  array $atts Shortcode attributes.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
 	 * @return string Shortcode output.
 	 */
-	public static function course_progress( $atts ) {
-		extract(
-			shortcode_atts(
-				array(
-					'course_id' => CoursePress_Helper_Utility::the_course( true ),
-					'decimal_places' => '0',
-				),
-				$atts,
-				'course_progress'
-			)
-		);
+	public function get_course_progress( $atts ) {
 
-		if ( $course_id  ) { $course_id = (int) $course_id; }
-		$decimal_places = (int) $decimal_places ;
+		$atts = shortcode_atts( array(
+			'course_id' => coursepress_get_course_id(),
+			'decimal_places' => '0',
+		), $atts, 'course_progress' );
 
-		return number_format_i18n(
-			CoursePress_Data_Student::get_course_progress(
-				get_current_user_id(),
-				$course_id
-			),
-			$decimal_places
-		);
+		if ( ! empty( $atts['course_id'] ) ) {
+			$course_id = (int) $atts['course_id'];
+		}
+
+		$user = coursepress_get_user();
+
+		$decimal_places = (int) $atts['decimal_places'];
+
+		$progress = $user->get_course_progress( $course_id );
+
+		return number_format_i18n( $progress, $decimal_places );
 	}
 
 	/**
 	 * Course Unit Progress
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param  array $atts Shortcode attributes.
+	 *
 	 * @return string Shortcode output.
 	 */
-	public static function course_unit_progress( $atts ) {
-		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
+	public static function get_course_unit_progress( $atts ) {
+
+		$atts = shortcode_atts( array(
+			'course_id' => coursepress_get_course_id(),
 			'unit_id' => false,
 			'decimal_places' => '0',
-		), $atts, 'course_unit_progress' ) );
+		), $atts, 'course_unit_progress' );
 
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
+		if ( ! empty( $atts['course_id'] ) ) {
+			$course_id = (int) $atts['course_id'];
 		}
-		$unit_id = (int) $unit_id;
 
-		$decimal_places = sanitize_text_field( $decimal_places );
+		$user = coursepress_get_user();
 
-		$progress = number_format_i18n(
-			CoursePress_Data_Student::get_unit_progress(
-				get_current_user_id(),
-				$course_id,
-				$unit_id
-			),
-			$decimal_places
-		);
+		$unit_id = (int) $atts['unit_id'];
 
-		return $progress;
+		$decimal_places = sanitize_text_field( $atts['decimal_places'] );
+
+		$progress = $user->get_unit_progress( $course_id, $unit_id );
+
+		return number_format_i18n( $progress, $decimal_places );
+	}
+
+	/**
+	 * Course Grades table.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
+	 * @return string Shortcode output.
+	 */
+	public function get_student_grades_table( $args ) {
+
+		$course_id = coursepress_get_course_id();
+
+		$workbook_is_active = coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_workbook', false ) );
+
+		if ( false == $workbook_is_active ) {
+			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'cp' ) );
+			return $content;
+		}
+
+		$args = shortcode_atts( array(
+			'course_id' => $course_id,
+		), $args, 'student_workbook_table' );
+
+		$course_id = (int) $args['course_id'];
+		$student_id = get_current_user_id();
+		$user = coursepress_get_user();
+
+		if ( empty( $course_id ) || empty( $student_id ) ) {
+			return '';
+		}
+
+		$student_progress = $user->get_completion_data( $course_id );
+
+		$content = '';
+		$unit_list = CoursePress_Data_Course::get_units_with_modules( $course_id );
+		$unit_list = $this->sort_on_key( $unit_list, 'order' );
+
+		$content .= '<div class="grades">';
+		$content .= '<table class="grades-table">';
+
+		foreach ( $unit_list as $unit_id => $unit ) {
+			$progress = $user->get_unit_progress( $course_id, $unit_id, $student_progress );
+			$content .= '<tbody>';
+			$content .= '<tr class="row-unit">';
+			$content .= sprintf( '<td class="workbook-unit unit-%s">%s</td>', esc_attr( $unit_id ), $unit['unit']->post_title );
+			$content .= sprintf( '<td class="td-right">%s: %d%%</td>', __( 'Progress', 'cp' ), $progress );
+			$content .= '</tr>';
+
+			$module_count = 0;
+			$module_done = 0;
+			if ( isset( $unit['pages'] ) ) {
+				foreach ( $unit['pages'] as $page ) {
+					foreach ( $page['modules'] as $module_id => $module ) {
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
+						$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] );
+						if ( 'output' === $attributes['mode'] ) {
+							continue;
+						}
+						$module_count += 1;
+						$module_type = $attributes['module_type'];
+
+						$response = $user->get_response( $student_id, $course_id, $unit_id, $module_id, $student_progress );
+
+						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
+
+						$auto_grade = true;
+						if ( in_array( $module_type, $excluded_modules ) ) {
+							$graded_by = coursepress_get_array_val( $response, 'graded_by' );
+							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
+								$auto_grade = false;
+							}
+						}
+
+						$response_display = $response['response'];
+
+						switch ( $attributes['module_type'] ) {
+
+							case 'input-checkbox': case 'input-radio': case 'input-select':
+							$answers = $attributes['answers'];
+							$selected = (array) $attributes['answers_selected'];
+							if ( empty( $response ) ) {
+								$response_display = '&ndash;';
+							} else {
+								$add = false;
+								foreach ( $answers as $key => $answer ) {
+									$the_answer = in_array( $key, $selected );
+									$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+									if ( 'input-radio' === $attributes['module_type'] ) {
+										$student_answer = $response_display == $key;
+									}
+									if ( $student_answer && $the_answer ) {
+										$add = true;
+									}
+								}
+								if ( $add && $auto_grade ) {
+									$module_done++;
+								}
+							}
+							break;
+
+							case 'input-upload':
+								if ( $response && $auto_grade ) {
+									$module_done++;
+								}
+								break;
+							case 'input-quiz':
+								$questions = $attributes['questions'];
+								$add = false;
+								foreach ( $questions as $q_index => $question ) {
+									$options = (array) $question['options'];
+									if ( ! empty( $response_display[ $q_index ] ) ) {
+										$answers = $response_display[ $q_index ];
+										foreach ( $answers as $a_index => $answer ) {
+											if ( ! empty( $answer ) ) {
+												if ( $correct ) {
+													$add = true;
+												}
+											}
+										}
+									}
+								}
+								if ( $add && $auto_grade ) {
+									$module_done++;
+								}
+								break;
+
+							case 'input-form':
+								$questions = $attributes['questions'];
+								if ( $response_display ) {
+									$add = false;
+									foreach ( $questions as $q_index => $question ) {
+										$answer = $response_display[ $q_index ];
+										if ( $answer ) {
+											$add = true;
+										}
+									}
+								}
+								if ( $add && $auto_grade ) {
+									$module_done++;
+								}
+								break;
+
+							case 'input-text': case 'input-textarea':
+							if ( ! empty( $response_display ) && $auto_grade ) {
+								$module_done++;
+							}
+							break;
+
+							case 'input-form':
+								$response = $response_display;
+								$response_display = '';
+
+								if ( ! empty( $attributes['questions'] ) ) {
+									$questions = $attributes['questions'];
+									$add = false;
+									foreach ( $questions as $q_index => $question ) {
+										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+										if ( $student_response  ) {
+											if ( 'selectable' == $question['type'] ) {
+												$options = $question['options']['answers'];
+												$checked = $question['options']['checked'];
+												foreach ( $options as $ai => $answer ) {
+													if ( $student_response == $ai ) {
+														$the_answer = ! empty( $checked[ $ai ] );
+
+														if ( $the_answer === $student_response ) {
+															$add = true;
+														}
+													}
+												}
+											} else {
+												$add = true;
+											}
+										}
+									}
+									if ( $add && $auto_grade ) {
+										$module_done++;
+									}
+								}
+								break;
+						}
+					}
+				}
+			}
+			$grade_display = __( 'No gradable modules under this unit.', 'cp' );
+			if ( 0 != $module_count ) {
+				$grade_display = __( '%d of %d elements completed.', 'cp' );
+				$grade_display = sprintf( $grade_display, $module_done, $module_count );
+			}
+			$content .= '<tr class="row-elements">';
+			$content .= sprintf( '<td colspan="2" >%s</td>', $grade_display );
+			$content .= '</tr>';
+			$content .= '</tbody>';
+		}
+
+		$content .= '</table></div>';
+
+		return $content;
 	}
 
 	/**
@@ -642,62 +697,62 @@ class CoursePress_Data_Shortcode_Student {
 	 * Text: "x of y required elements completed".
 	 *
 	 * @since 1.0.0
-	 * @param  array $atts Shortcode attributes.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
 	 * @return string Shortcode output.
 	 */
-	public static function course_mandatory_message( $atts ) {
-		extract(
-			shortcode_atts(
-				array(
-					'course_id' => CoursePress_Helper_Utility::the_course( true ),
-					'unit_id' => CoursePress_Helper_Utility::the_post( true ),
-					'message' => __( '%d of %d required elements completed.', 'cp' ),
-				),
-				$atts,
-				'course_mandatory_message'
-			)
-		);
+	public function get_course_mandatory_message( $atts ) {
 
-		$course_id = (int) $course_id;
-		if ( empty( $course_id ) ) { return ''; }
+		$atts = shortcode_atts( array(
+			'course_id' => coursepress_get_course_id(),
+			'unit_id' => coursepress_get_unit_id(),
+			'message' => __( '%d of %d required elements completed.', 'cp' ),
+		), $atts, 'course_mandatory_message' );
 
-		$unit_id = (int) $unit_id;
-		if ( empty( $unit_id ) ) { return ''; }
+		$course_id = (int) $atts['course_id'];
+		if ( empty( $course_id ) ) {
+			return '';
+		}
+
+		$unit_id = (int) $atts['unit_id'];
+		if ( empty( $unit_id ) ) {
+			return '';
+		}
 
 		$student_id = get_current_user_id();
-		if ( empty( $student_id ) ) { return ''; }
+		if ( empty( $student_id ) ) {
+			return '';
+		}
 
-		$mandatory = CoursePress_Data_Student::get_mandatory_completion(
-			$student_id,
-			$course_id,
-			$unit_id
-		);
-		if ( empty( $mandatory['required'] ) ) { return ''; }
+		$mandatory = CoursePress_Data_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
+		if ( empty( $mandatory['required'] ) ) {
+			return '';
+		}
 
-		$message = sanitize_text_field( $message );
+		$message = sanitize_text_field( $atts['message'] );
 		$mandatory_required = (int) $mandatory['required'];
 		if ( empty( $mandatory_required ) ) {
 			return '';
 		}
 
-		return sprintf(
-			$message,
-			(int) $mandatory['completed'],
-			$mandatory_required
-		);
+		return sprintf( $message, (int) $mandatory['completed'], $mandatory_required );
 	}
 
 	/**
 	 * Display percentage of unit completion.
 	 *
 	 * @since  1.0.0
+	 *
 	 * @param  array $atts Shortcode attributes.
+	 *
 	 * @return string Shortcode output.
 	 */
-	public static function course_unit_percent( $atts ) {
-		$shortcode_atts = shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
+	public function course_unit_percent( $atts ) {
+
+		$atts = shortcode_atts( array(
+			'course_id' => coursepress_get_course_id(),
+			'unit_id' => coursepress_get_unit_id(),
 			'format' => false,
 			'style' => 'flat',
 			'tooltip_alt' => __( 'Percent of the unit completion', 'cp' ),
@@ -715,29 +770,25 @@ class CoursePress_Data_Shortcode_Student {
 			'knob_text_prepend' => false,
 		), $atts, 'course_unit_percent' );
 
-		/**
-		 * Filter progress_wheel attributes.
-		 **/
-		$shortcode_atts = apply_filters( 'coursepress_unit_progress_wheel_atts', $shortcode_atts );
+		// Filter progress_wheel attributes.
+		$atts = apply_filters( 'coursepress_unit_progress_wheel_atts', $atts );
 
-		extract( $shortcode_atts );
-
-		$course_id = (int) $course_id;
-		$unit_id = (int) $unit_id;
+		$course_id = (int) $atts['course_id'];
+		$unit_id = (int) $atts['unit_id'];
 
 		if ( empty( $course_id ) || empty( $unit_id ) ) {
 			return 0;
 		}
 
-		$format = cp_is_true( $format );
-		$style = sanitize_text_field( $style );
-		$tooltip_alt = sanitize_text_field( $tooltip_alt );
-		$knob_fg_color = sanitize_text_field( $knob_fg_color );
-		$knob_bg_color = sanitize_text_field( $knob_bg_color );
-		$knob_text_color = sanitize_text_field( $knob_text_color );
-		$knob_data_thickness = sanitize_text_field( $knob_data_thickness );
-		$knob_data_width = (int) $knob_data_width;
-		$knob_data_height = (int) $knob_data_height;
+		$format = coursepress_is_true( $atts['format'] );
+		$style = sanitize_text_field( $atts['style'] );
+		$tooltip_alt = sanitize_text_field( $atts['tooltip_alt'] );
+		$knob_fg_color = sanitize_text_field( $atts['knob_fg_color'] );
+		$knob_bg_color = sanitize_text_field( $atts['knob_bg_color'] );
+		$knob_text_color = sanitize_text_field( $atts['knob_text_color'] );
+		$knob_data_thickness = sanitize_text_field( $atts['knob_data_thickness'] );
+		$knob_data_width = (int) $atts['knob_data_width'];
+		$knob_data_height = (int) $atts['knob_data_height'];
 
 		if ( empty( $knob_data_width ) && ! empty( $knob_data_height ) ) {
 			$knob_data_width = $knob_data_height;
@@ -745,14 +796,15 @@ class CoursePress_Data_Shortcode_Student {
 
 		$knob_data_thickness = $knob_data_width * $knob_data_thickness;
 
-		$percent_value = (int) CoursePress_Data_Student::get_unit_progress( get_current_user_id(), $course_id, $unit_id );
+		$user = coursepress_get_user();
+		$unit = coursepress_get_unit( $unit_id );
+
+		$percent_value = $user->get_unit_progress( $course_id, $unit_id );
 
 		$content = '';
 
-		/**
-		 * check is unit available?
-		 */
-		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null );
+		// Check is unit available?
+		$is_unit_available = $unit->is_available();
 
 		if ( $is_unit_available ) {
 			if ( 'flat' == $style ) {
@@ -762,11 +814,9 @@ class CoursePress_Data_Shortcode_Student {
 			} else {
 				$data_value = $percent_value / 100;
 				$content = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '">';
-				/**
-				 * Knob settings as date fields
-				 */
+				// Knob settings as date fields.
 				$knob_settings = array();
-				foreach ( $shortcode_atts as $key => $value ) {
+				foreach ( $atts as $key => $value ) {
 					if ( ! preg_match( '/^knob_/', $key ) ) {
 						continue;
 					}
@@ -806,231 +856,12 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	/**
-	 * Course Grades
-	 *
-	 * @since 2.0.5
-	 */
-	public static function student_grades_table( $args ) {
-
-		$course_id = CoursePress_Helper_Utility::the_course( true );
-
-		$workbook_is_active = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) );
-
-		if ( false == $workbook_is_active ) {
-			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'cp' ) );
-			return $content;
-		}
-
-		$args = shortcode_atts(
-			array(
-				'course_id' => $course_id,
-			)
-			,
-			$args,
-			'student_workbook_table'
-		);
-
-		$course_id = (int) $args['course_id'];
-		$student_id = get_current_user_id();
-
-		if ( empty( $course_id ) || empty( $student_id ) ) {
-			return '';
-		}
-		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-
-		$content = '';
-		$unit_list = CoursePress_Data_Course::get_units_with_modules( $course_id );
-		$unit_list = CoursePress_Helper_Utility::sort_on_key( $unit_list, 'order' );
-
-		$content .= '<div class="grades">';
-		$content .= '<table class="grades-table">';
-
-		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
-		foreach ( $unit_list as $unit_id => $unit ) {
-			$progress = CoursePress_Data_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
-			$content .= '<tbody>';
-			$content .= '<tr class="row-unit">';
-			$content .= sprintf( '<td class="workbook-unit unit-%s">%s</td>', esc_attr( $unit_id ), $unit['unit']->post_title );
-			$content .= sprintf( '<td class="td-right">%s: %d%%</td>', __( 'Progress', 'cp' ), $progress );
-			$content .= '</tr>';
-
-			$module_count = 0;
-			$module_done = 0;
-			if ( isset( $unit['pages'] ) ) {
-				foreach ( $unit['pages'] as $page ) {
-					foreach ( $page['modules'] as $module_id => $module ) {
-						$attributes = CoursePress_Data_Module::attributes( $module_id );
-						$is_assessable = ! empty( $attributes['assessable'] );
-						$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] );
-						if ( 'output' === $attributes['mode'] ) {
-							continue;
-						}
-						$module_count += 1;
-						$module_type = $attributes['module_type'];
-
-						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-
-						// Check if the grade came from an instructor
-						$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-						$graded_by = CoursePress_Helper_Utility::get_array_val(
-							$grades,
-							'graded_by'
-						);
-						$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
-
-						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
-
-						$auto_grade = true;
-						if ( in_array( $module_type, $excluded_modules ) ) {
-							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
-								$auto_grade = false;
-							}
-						}
-
-						$response_display = $response['response'];
-
-						switch ( $attributes['module_type'] ) {
-
-							case 'input-checkbox': case 'input-radio': case 'input-select':
-										$answers = $attributes['answers'];
-										$selected = (array) $attributes['answers_selected'];
-										if ( empty( $response ) ) {
-											$response_display = '&ndash;';
-										} else {
-											$add = false;
-											foreach ( $answers as $key => $answer ) {
-												$the_answer = in_array( $key, $selected );
-												$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
-												if ( 'input-radio' === $attributes['module_type'] ) {
-													$student_answer = $response_display == $key;
-												}
-												if ( $student_answer && $the_answer ) {
-													$add = true;
-												}
-											}
-											if ( $add && $auto_grade ) {
-												$module_done++;
-											}
-										}
-							break;
-
-							case 'input-upload':
-								if ( $response && $auto_grade ) {
-									$module_done++;
-								}
-							break;
-							case 'input-quiz':
-								$questions = $attributes['questions'];
-								$add = false;
-								foreach ( $questions as $q_index => $question ) {
-									$options = (array) $question['options'];
-									$checked = (array) $options['checked'];
-									$checked = array_filter( $checked );
-									$student_response = $response_display[ $q_index ];
-									if ( ! empty( $response_display[ $q_index ] ) ) {
-										$answers = $response_display[ $q_index ];
-										foreach ( $answers as $a_index => $answer ) {
-											if ( ! empty( $answer ) ) {
-												$the_answer = CoursePress_Helper_Utility::get_array_val(
-													$attributes,
-													'questions/' . $q_index . '/options/answers/' . $a_index
-												);
-
-												if ( $correct ) {
-													$add = true;
-												}
-											}
-										}
-									}
-								}
-								if ( $add && $auto_grade ) {
-									$module_done++;
-								}
-							break;
-
-							case 'input-form':
-								$questions = $attributes['questions'];
-								if ( $response_display ) {
-									$add = false;
-									foreach ( $questions as $q_index => $question ) {
-										$answer = $response_display[ $q_index ];
-										if ( $answer ) {
-											$add = true;
-										}
-									}
-								}
-								if ( $add && $auto_grade ) {
-									$module_done++;
-								}
-							break;
-
-							case 'input-text': case 'input-textarea':
-									if ( ! empty( $response_display ) && $auto_grade ) {
-										$module_done++;
-									}
-							break;
-
-							case 'input-form':
-								$response = $response_display;
-								$response_display = '';
-
-								if ( ! empty( $attributes['questions'] ) ) {
-									$questions = $attributes['questions'];
-									$add = false;
-									foreach ( $questions as $q_index => $question ) {
-										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
-										if ( $student_response  ) {
-											if ( 'selectable' == $question['type'] ) {
-												$options = $question['options']['answers'];
-												$checked = $question['options']['checked'];
-												foreach ( $options as $ai => $answer ) {
-													if ( $student_response == $ai ) {
-														$the_answer = ! empty( $checked[ $ai ] );
-
-														if ( $the_answer === $student_response ) {
-															$add = true;
-														}
-													}
-												}
-											} else {
-												$add = true;
-											}
-										}
-									}
-									if ( $add && $auto_grade ) {
-										$module_done++;
-									}
-								}
-							break;
-						}
-						$grade_display = 0 === $grade || 0 < (int) $grade ? $grade . '%' : $grade;
-						if ( $require_instructor_assessment ) {
-							$is_assessable = true;
-						}
-					}
-				}
-			}
-			$grade_display = __( 'No gradable modules under this unit.', 'cp' );
-			if ( 0 != $module_count ) {
-				$grade_display = __( '%d of %d elements completed.', 'cp' );
-				$grade_display = sprintf( $grade_display, $module_done, $module_count );
-			}
-			$content .= '<tr class="row-elements">';
-			$content .= sprintf( '<td colspan="2" >%s</td>', $grade_display );
-			$content .= '</tr>';
-			$content .= '</tbody>';
-		}
-		$content .= '</table></div>';
-		return $content;
-	}
-
-	/**
 	 * Helper function to log student visit to the course in focus view mode.
 	 *
-	 * @param (array) $array
-	 **/
-	public static function log_student_visit( array $array ) {
+	 * @param array $array
+	 */
+	public function log_student_visit( array $array ) {
+
 		$course_id = $array['course'];
 		$unit_id = $array['unit'];
 		$page_number = 1;
@@ -1039,10 +870,9 @@ class CoursePress_Data_Shortcode_Student {
 
 		if ( 'section' == $type ) {
 			$page_number = $array['item_id'];
-		}
-		elseif ( 'module' == $type ) {
+		} elseif ( 'module' == $type ) {
 			$module_id = $array['item_id'];
-			$page_number = CoursePress_Data_Shortcode_Template::get_module_page( $course_id, $unit_id, $module_id );
+			$page_number = ( new CoursePress_Data_Shortcode_Template() )->get_module_page( $course_id, $unit_id, $module_id );
 		}
 
 		CoursePress_Data_Student::log_visited_course( $course_id, $unit_id, $page_number, $module_id );
@@ -1050,8 +880,13 @@ class CoursePress_Data_Shortcode_Student {
 
 	/**
 	 * Helper function to log student visit to a course in normal mode.
-	 **/
-	public static function log_normal_student_visit( $course_id, $unit_id, $page_number ) {
+	 *
+	 * @param int $course_id
+	 * @param int $unit_id
+	 * @param int $page_number
+	 */
+	public function log_normal_student_visit( $course_id, $unit_id, $page_number ) {
+
 		CoursePress_Data_Student::log_visited_course( $course_id, $unit_id, $page_number );
 	}
 }

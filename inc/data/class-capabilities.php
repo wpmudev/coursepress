@@ -1911,4 +1911,30 @@ class CoursePress_Data_Capabilities {
 		}
 		return $role_name;
 	}
+
+	/**
+	 * Check user can see draft units.
+	 *
+	 * @since 2.0
+	 *
+	 * @param integer $course_id The course ID.
+	 *
+	 * @return bool
+	 */
+	public static function can_see_unit_draft() {
+
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		}
+
+		if ( current_user_can( 'coursepress_create_course_unit_cap' ) ) {
+			return true;
+		}
+
+		return false;
+	}
 }
