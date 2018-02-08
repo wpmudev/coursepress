@@ -103,7 +103,7 @@
             },
 
             getExtensionsView: function() {
-                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions'), this );
+                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions_available'), this );
             },
 
             getImportExportView: function() {

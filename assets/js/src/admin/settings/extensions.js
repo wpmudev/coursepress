@@ -63,7 +63,7 @@
                     value = target.val(),
                     is_checked = target.is(':checked'),
                     extensions = this.model.extensions;
-
+window.console.log( 'updateModel' );
                 if ( is_checked ) {
                     if ( 'woocommerce' === value && _.contains( extensions, 'marketpress') ||
                         'marketpress' === value && _.contains( extensions, 'woocommerce' ) ) {
@@ -97,6 +97,12 @@
                         type: value,
                         controller: this
                     });
+                    /**
+                     * Add to model
+                     */
+                    if ( ! _.contains( this.model.extensions, value ) ) {
+                        this.model.extensions.push( value );
+                    }
                 }
             },
             hideExtension: function( value ) {
@@ -107,32 +113,17 @@
                 this.model.extensions = _.without( this.model.extensions, value );
             },
             getModel: function() {
-                var extensions = this.model.extensions;
-
-window.console.log('getModel', extensions);
-
-
+                var enabled = $('input.extension-commerce-enable');
                 // MP and woo should not be activated at the same time
-                if ( _.contains( extensions, 'marketpress') &&
-                    _.contains( extensions, 'woocommerce' ) ) {
+                if ( 1 < enabled.length ) {
                     this.popup = new CoursePress.PopUp({
                         type: 'error',
                         message: win._coursepress.messages.no_mp_woo
                     });
                     return false;
-
-                } else if ( _.contains( extensions, 'marketpress' ) ) {
-                    // Extract and activate MP
-                    Post.set( 'action', 'activate_marketpress' );
-                    Post.off( 'coursepress:success_activate_marketpress' );
-                    Post.on( 'coursepress:success_activate_marketpress', this.MPActivated, this );
-                    Post.save();
-                } else if ( _.contains( extensions, 'woocommerce' ) ) {
-                    // Check WooCommerce and activae woo
                 }
-                return extensions;
+                return enabled;
             },
-            MPActivated: function() {},
             handleExtensionButton: function( ev) {
                 var button = $(ev.currentTarget);
                 var extension = button.closest('td').data('extension');
@@ -172,6 +163,9 @@ window.console.log(button);
                 this.showPopUo( data, 'info' );
                 button.addClass( 'cp-btn-active').removeClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.deactivate );
                 button.closest('td').data('active', 'yes' );
+
+
+window.console.log( 'activatedPluginSuccess', data );
                 this.showExtension( data.extension );
             },
             deactivatedPluginSuccess: function( data ) {

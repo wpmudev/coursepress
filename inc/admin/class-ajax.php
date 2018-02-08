@@ -393,7 +393,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request ) {
 			$request = get_object_vars( $request );
 			$request = array_map( array( $this, 'to_array' ), $request );
-		}
+        }
+
+        /**
+         * remove some keys
+         */
+        $keys_to_remove = array( 'extensions_available' );
+        foreach( $keys_to_remove as $key ) {
+            if ( isset( $request[$key] ) ) {
+                unset( $request[$key] );
+            }
+        }
+
+        /**
+         * check extensions settings
+         */
+        global $CoursePress_Extension;
+        l($CoursePress_Extension->active_extensions() );
+
 
 		coursepress_update_setting( true, $request );
 
