@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'UnitsWithModuleList', function($) {
+    CoursePress.Define( 'UnitsWithModuleList', function($, doc, win) {
         var UnitView;
 
         UnitView = CoursePress.View.extend({
@@ -223,8 +223,35 @@
                     var self = this;
                     _.delay(function () {
                         self.editCourse.unitList.$('.new-unit').trigger('click');
+                        self.showUnitHelpOverlays();
                     }, 100);
                 }
+            },
+
+            showUnitHelpOverlays: function () {
+                var unitsMenuOverlay, unitTitleOverlay, stepsOverlay;
+
+                unitsMenuOverlay = new CoursePress.HelpOverlay($('.step-course-units'), {
+                    popup_title: win._coursepress.text.units_menu_help_overlay.title,
+                    popup_content: win._coursepress.text.units_menu_help_overlay.content
+                });
+                unitsMenuOverlay.on('coursepress:popup_ok', function () {
+                    setTimeout(function () {
+                        unitTitleOverlay = new CoursePress.HelpOverlay($('.cp-unit-title-box'), {
+                            popup_title: win._coursepress.text.unit_title_help_overlay.title,
+                            popup_content: win._coursepress.text.unit_title_help_overlay.content
+                        });
+
+                        unitTitleOverlay.on('coursepress:popup_ok', function () {
+                            setTimeout(function () {
+                                stepsOverlay = new CoursePress.HelpOverlay($('.unit-steps-tools'), {
+                                    popup_title: win._coursepress.text.unit_steps_help_overlay.title,
+                                    popup_content: win._coursepress.text.unit_steps_help_overlay.content
+                                });
+                            });
+                        });
+                    });
+                });
             },
 
             setUI: function() {

@@ -278,6 +278,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 				),
 				'select_module' => __( 'Select a module', 'cp' ),
+				'units_menu_help_overlay' => array(
+					'title'   => __('Create Your First Unit', 'cp'),
+					'content' => __('Welcome! This wizard will help you set up your course content. First up, let’s create your first unit! Go ahead and click Add Unit to get started.', 'cp')
+				),
+				'unit_title_help_overlay' => array(
+					'title'   => __('Type Unit Title', 'cp'),
+					'content' => __('Great start, you have now created your first unit. Give it a name above and hit return.', 'cp')
+				),
+				'unit_steps_help_overlay' => array(
+					'title'   => __('Add Step to Unit', 'cp'),
+					'content' => __('Doing great, lets set up the first step in your unit. You can have as few or as many steps as you like, and you can change their order later on.', 'cp')
+				)
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );

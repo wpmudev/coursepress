@@ -18,7 +18,7 @@
                         <span class="label"><?php _e( 'Publish', 'cp' ); ?></span>
                     </label>
                 </div>
-                <div class="cp-box">
+                <div class="cp-box cp-unit-title-box">
                     <label class="label"><?php _e( 'Unit Title', 'cp' ); ?></label>
                     <input type="text" name="post_title" class="widefat unit-title-input" value="{{post_title}}" />
                 </div>
