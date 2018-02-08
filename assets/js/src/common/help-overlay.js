@@ -15,7 +15,8 @@
 			container: false,
 			options: false,
 			events: {
-                'click .btn-ok': 'Ok'
+                'click .btn-ok': 'Ok',
+				'click .cp-modal-close': 'dismiss'
             },
 
 			initialize: function (targetEl, model, options) {
@@ -131,7 +132,17 @@
                  * Trigger whenever OK button is clicked.
                  */
                 this.trigger( 'coursepress:popup_ok', this );
-            }
+            },
+
+			dismiss: function () {
+				var request;
+
+				this.remove();
+
+				request = new CoursePress.Request();
+				request.set({'action': 'dismiss_unit_help'});
+				request.save();
+			}
 		});
 	});
 })();

@@ -231,6 +231,10 @@
 	        showUnitHelpOverlays: function () {
 		        var unitsMenuOverlay, unitTitleOverlay;
 
+		        if (win._coursepress.unit_help_dismissed) {
+			        return;
+		        }
+
 		        unitsMenuOverlay = new CoursePress.HelpOverlay($('.step-course-units'), {
 			        popup_title: win._coursepress.text.units_menu_help_overlay.title,
 			        popup_content: win._coursepress.text.units_menu_help_overlay.content

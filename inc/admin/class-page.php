@@ -660,6 +660,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'cert_tokens' => $cert_tokens,
 		);
 		$this->localize_array['completion_pages'] = $completion_pages;
+		$this->localize_array['unit_help_dismissed'] = (bool)get_user_meta(get_current_user_id(), 'unit_help_dismissed', true);
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 
