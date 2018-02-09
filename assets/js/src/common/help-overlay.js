@@ -90,7 +90,7 @@
 			},
 
 			setPaneDimensions: function () {
-				var topPaneHeight, leftPaneWidth, targetElWidth, targetElHeight, padding = this.options.padding;
+				var topPaneHeight, leftPaneWidth, targetElWidth, targetElHeight, containerDimensions, padding = this.options.padding;
 
 				topPaneHeight = this.targetEl.offset().top;
 				leftPaneWidth = this.targetEl.offset().left;
@@ -99,16 +99,17 @@
 
 				// Adjust top pane height for admin bar
 				topPaneHeight = topPaneHeight - $('#wpadminbar').height();
+				containerDimensions = this.container.get(0).getBoundingClientRect();
 
 				this.topPane.css('width', targetElWidth + padding + padding);
 				this.topPane.css('left', leftPaneWidth - padding);
 				this.topPane.css('height', topPaneHeight - padding);
 
-				this.rightPane.css('width', this.container.width() - (leftPaneWidth + targetElWidth) - padding);
+				this.rightPane.css('width', containerDimensions.width - (leftPaneWidth + targetElWidth) - padding);
 
 				this.bottomPane.css('width', targetElWidth + padding + padding);
 				this.bottomPane.css('left', leftPaneWidth - padding);
-				this.bottomPane.css('height', this.container.height() - (topPaneHeight + targetElHeight) - padding);
+				this.bottomPane.css('height', containerDimensions.height - (topPaneHeight + targetElHeight) - padding);
 
 				this.leftPane.css('width', leftPaneWidth - padding);
 			},
