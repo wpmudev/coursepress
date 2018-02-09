@@ -488,7 +488,7 @@ module.exports = function(grunt) {
 			sniff: {
 				src: conf.php_files,
 				options: {
-					bin: '../../../../../phpcs/scripts/phpcs',
+					bin: '/usr/bin/phpcs',
 					standard: 'WordPress-Core',
 					verbose: true
 				}
@@ -498,7 +498,7 @@ module.exports = function(grunt) {
 		phpcbf: {
 			options: {
 				noPatch: true,
-				bin: '../../../../../phpcs/scripts/phpcs',
+				bin: '/usr/bin/phpcs',
 				standard: 'WordPress-Core'
 			},
 			main: conf.php_files
@@ -641,12 +641,11 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
-	grunt.registerTask( 'assets', ['js', 'css'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
-	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
+	grunt.registerTask( 'default', [ 'js', 'css'] );
 
 	// Adapted from https://github.com/MicheleBertoli/grunt-po2mo
 	grunt.registerMultiTask('wpmu_pot2mo', 'Compile .pot files into binary .mo files with msgfmt.', function() {
