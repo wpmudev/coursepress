@@ -1363,6 +1363,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				wp_send_json_success( $result );
 			}
 		}
-		wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
+        wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
+    }
+	public function dismiss_unit_help() {
+		update_user_meta(get_current_user_id(), 'unit_help_dismissed', true);
+		wp_send_json_success();
 	}
 }

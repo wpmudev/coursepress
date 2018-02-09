@@ -41,7 +41,8 @@ module.exports = function(grunt) {
                 'assets/js/src/common/popup.js',
                 'assets/js/src/common/upload.js',
                 'assets/js/src/common/add-media.js',
-                'assets/js/src/cp-search-form.js'
+                'assets/js/src/cp-search-form.js',
+                'assets/js/src/common/help-overlay.js'
 				// assets/js/src/admin/general/....
 			],
 			'assets/js/coursepress.js': [
