@@ -112,7 +112,7 @@
 		            <span class="label"><?php _e( 'Enable modules for this course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'The setting can be changed after the course has been set-up.', 'cp' ); ?></p>
-                <p class="description"><a href=""><?php _e( 'Learn more', 'cp' ); ?></a></p>
+                <p class="description"><a class="cp-course-modules-help" href="#"><?php _e( 'Learn more', 'cp' ); ?></a></p>
             </div>
         </div>
     </div>
