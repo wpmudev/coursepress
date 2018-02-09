@@ -22,7 +22,6 @@
                 <input type="checkbox" name="meta_show_title" value="1" class="cp-toggle-input" {{_.checked(true, show_title)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Show module title in unit view', 'cp' ); ?></span>
             </label>
-            <a href="" class="cp-btn cp-btn-xs cp-bordered-btn cp-preview"><?php _e( 'Preview', 'cp' ); ?></a>
         </div>
     </div>
     <input type="hidden" data-cid="{{cid}}" name="menu_order" value="{{menu_order}}" />
@@ -334,6 +333,12 @@
                 <label>
                     <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_assessable)}} /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
+                </label>
+            </div>
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
                 </label>
             </div>
         </div>

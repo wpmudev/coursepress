@@ -86,7 +86,7 @@
 
                 if ( title ) {
                     title = title.toLowerCase().replace( / /g, '-' );
-                    title = title.toLowerCase().replace( /[^a-z09\-]/g, '-' );
+                    title = title.toLowerCase().replace( /[^a-z0-9\-]/g, '-' );
                     title = title.toLowerCase().replace( /\-+/g, '-' );
                     title = title.toLowerCase().replace( /^\-+/g, '' );
                     title = title.toLowerCase().replace( /\-+$/g, '' );

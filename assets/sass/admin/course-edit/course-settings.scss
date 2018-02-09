@@ -1,75 +1,82 @@
 #course-edit-template {
-  .cp-course-video {
-    .cp-div-flex {
-      padding-right: 15px;
-    }
-  }
-  .cp-course-categories {
-    .cp-categories-selector {
-      width: 100%;
-      padding-right: 15px;
-      select {
-        display: block;
-        width: 100%;
-      }
-    }
-    .cp-categories-button {
-      width: 25%;
-      text-align: right;
-    }
-    .cp-div-flex-2 {
-      padding-right: 0;
-    }
-    .cp-div-flex {
-      text-align: right;
-    }
-    #cp-create-cat {
-      display: inline-block;
-    }
-  }
-  #cp-instructors-box,
-  #cp-facilitators-box {
-    position: relative;
-    min-height: 130px;
-    border: 2px solid $grey_5;
-    background-color: $grey_6;
-    @include radius(6px);
-    margin-bottom: 5px;
-    text-align: center;
-
-    .description {
-      position: absolute;
-      top: 40%;
-      width: 100%;
-    }
-
-    ul.cp-tagged-list {
-      margin: 5px 3px;
-
-      li {
-        float: left;
-        width: auto;
-        padding: 5px 8px;
-        margin: 0 2px;
-        border-radius: 6px;
-        background: $grey_4;
-        color: $white;
-        &:after {
-          @include icon('\f00d');
-          margin-left: 5px;
-          cursor: pointer;
+    .cp-course-video {
+        .cp-div-flex {
+            padding-right: 15px;
         }
-      }
     }
-  }
-  .cp-users-box {
-    @include clearfix;
-    margin-bottom: 25px;
+    .cp-course-categories {
+        .cp-categories-selector {
+            width: 100%;
+            padding-right: 15px;
+            select {
+                display: block;
+                width: 100%;
+            }
+            .select2-search--inline {
+                min-width: 200px;
+                input {
+                    width: 100%;
+                    padding: 2px 5px;
+                }
+            }
+        }
+        .cp-categories-button {
+            width: 25%;
+            text-align: right;
+        }
+        .cp-div-flex-2 {
+            padding-right: 0;
+        }
+        .cp-div-flex {
+            text-align: right;
+        }
+        #cp-create-cat {
+            display: inline-block;
+        }
+    }
+    #cp-instructors-box,
+    #cp-facilitators-box {
+        position: relative;
+        min-height: 130px;
+        border: 2px solid $grey_5;
+        background-color: $grey_6;
+        @include radius(6px);
+        margin-bottom: 5px;
+        text-align: center;
 
-    .cp-bordered-btn {
-      float: right;
-      text-transform: uppercase;
+        .description {
+            position: absolute;
+            top: 40%;
+            width: 100%;
+        }
+
+        ul.cp-tagged-list {
+            margin: 5px 3px;
+
+            li {
+                float: left;
+                width: auto;
+                padding: 5px 8px;
+                margin: 0 2px;
+                border-radius: 6px;
+                background: $grey_4;
+                color: $white;
+                &:after {
+                    @include icon('\f00d');
+                    margin-left: 5px;
+                    cursor: pointer;
+                }
+            }
+        }
     }
-  }
+    .cp-users-box {
+        @include clearfix;
+        margin-bottom: 25px;
+
+        .cp-bordered-btn {
+            float: right;
+            text-transform: uppercase;
+        }
+    }
 
 }

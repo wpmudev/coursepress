@@ -144,7 +144,11 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 
 	private function set_local_vars() {
 		$localize_vars = array(
-			'_wpnonce' => wp_create_nonce( 'coursepress-nonce' ),
+			'_wpnonce' => wp_create_nonce('coursepress_nonce'),
+			'ajaxurl'  => admin_url('admin-ajax.php'),
+			'text' => array(
+				'attempts_consumed' => __('You can no longer play this media because you have run out of attempts.')
+			)
 		);
 
 		/**

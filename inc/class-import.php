@@ -165,6 +165,11 @@ class CoursePress_Import extends CoursePress_Utility
 				}
 			}
 		}
+		/**
+		 * check course title and add number for duplicates
+		 */
+		$course = new CoursePress_Course( $this->course );
+		$course->save_course_number( $this->course->ID, $the_course['post_title'] );
 	}
 
 	/**
