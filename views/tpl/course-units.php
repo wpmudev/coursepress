@@ -18,7 +18,7 @@
                         <span class="label"><?php _e( 'Publish', 'cp' ); ?></span>
                     </label>
                 </div>
-                <div class="cp-box">
+                <div class="cp-box cp-unit-title-box">
                     <label class="label"><?php _e( 'Unit Title', 'cp' ); ?></label>
                     <input type="text" name="post_title" class="widefat unit-title-input" value="{{post_title}}" />
                 </div>
@@ -358,6 +358,22 @@
             <p><?php printf( __( 'Welcome! This wizard will help you set up your course content. First up, let\'s create your first unit! Go ahead and click %1$sAdd Unit%2$s to get started.', 'cp' ), '<strong>', '</strong>' ); ?></p>
         </div>
     </div>
+</script>
+<script type="text/template" id="coursepress-help-overlay-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3>{{popup_title}}</h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e('Skip Help', 'cp'); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p>{{popup_content}}</p>
+        </div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
+        </div>
+    </div> 
 </script>
 
 <script type="text/template" id="coursepress-unit-help-4-tpl">

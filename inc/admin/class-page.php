@@ -278,6 +278,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 				),
 				'select_module' => __( 'Select a module', 'cp' ),
+				'units_menu_help_overlay' => array(
+					'title'   => __('Create Your First Unit', 'cp'),
+					'content' => __('Welcome! This wizard will help you set up your course content. First up, you can click Add Unit to create new units. We have created one for you!', 'cp')
+				),
+				'unit_title_help_overlay' => array(
+					'title'   => __('Type Unit Title', 'cp'),
+					'content' => __('Great start, you now have a unit. Now give it a name above.', 'cp')
+				),
+				'unit_steps_help_overlay' => array(
+					'title'   => __('Add Step to Unit', 'cp'),
+					'content' => __('Doing great, lets set up the first step in your unit. You can have as few or as many steps as you like, and you can change their order later on.', 'cp')
+				)
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
@@ -529,6 +541,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_script( 'iris' );
 		// Sorter
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		// Include resize sensor
+		wp_enqueue_script( 'resize-sensor', $CoursePress->plugin_url . '/assets/external/js/resize-sensor.js' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
@@ -646,6 +660,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'cert_tokens' => $cert_tokens,
 		);
 		$this->localize_array['completion_pages'] = $completion_pages;
+		$this->localize_array['unit_help_dismissed'] = (bool)get_user_meta(get_current_user_id(), 'unit_help_dismissed', true);
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 

@@ -1312,4 +1312,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// Send error if failed.
 		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
 	}
+
+	public function dismiss_unit_help()
+	{
+		update_user_meta(get_current_user_id(), 'unit_help_dismissed', true);
+		wp_send_json_success();
+	}
 }
