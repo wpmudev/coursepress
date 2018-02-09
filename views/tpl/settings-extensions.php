@@ -67,8 +67,6 @@ data-nonce="<?php echo esc_attr( $extension['nonce'] ); ?>"
     </div>
 
     <?php foreach ( $extensions as $id => $extension ) : ?>
-        <?php if ( $extension['is_active'] ) : ?>
-            <div id="extension-<?php echo $id; ?>" class="cp-box-content"></div>
-        <?php endif; ?>
+        <div id="extension-<?php echo $id; ?>" class="cp-box-content <?php echo esc_attr( $extension['is_active']? '':'hidden' ); ?>" data-loaded="no"></div>
     <?php endforeach; ?>
 </script>

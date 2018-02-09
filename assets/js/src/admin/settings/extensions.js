@@ -46,8 +46,6 @@
             },
             setting: false,
             initialize: function( extensions, settingObject ) {
-
-
                 this.model = {extensions: extensions};
                 this.setting = settingObject;
                 this.render();
@@ -63,7 +61,6 @@
                     value = target.val(),
                     is_checked = target.is(':checked'),
                     extensions = this.model.extensions;
-window.console.log( 'updateModel' );
                 if ( is_checked ) {
                     if ( 'woocommerce' === value && _.contains( extensions, 'marketpress') ||
                         'marketpress' === value && _.contains( extensions, 'woocommerce' ) ) {
@@ -84,32 +81,30 @@ window.console.log( 'updateModel' );
                 }
             },
             showExtension: function( value ) {
-                if ( ! this.extensions[value] ) {
+                var target = $('#extension-' + value);
+
+                if ( 'no' === target.data( 'loaded' ) ) {
                     var tpl = $('#coursepress-' + value + '-tpl' );
-
-                    if ( ! tpl.length ) {
-                        return;
+                    if ( tpl.length ) {
+                        // Initialize extension settings
+                        this.extensions[value] = new Extension( this.setting.model.get(value), {
+                            template_id: 'coursepress-' + value + '-tpl',
+                            type: value,
+                            controller: this
+                        });
                     }
-
-                    // Initialize extension settings
-                    this.extensions[value] = new Extension( this.setting.model.get(value), {
-                        template_id: 'coursepress-' + value + '-tpl',
-                        type: value,
-                        controller: this
-                    });
-                    /**
-                     * Add to model
-                     */
-                    if ( ! _.contains( this.model.extensions, value ) ) {
-                        this.model.extensions.push( value );
-                    }
+                    target.data( 'loaded', 'yes' );
                 }
+                /**
+                 * Add to model
+                 */
+                if ( ! _.contains( this.model.extensions, value ) ) {
+                    this.model.extensions.push( value );
+                }
+                target.show();
             },
             hideExtension: function( value ) {
-                if ( this.extensions[value] ) {
-                    this.extensions[value].remove();
-                    delete this.extensions[value];
-                }
+                $('#extension-'+value).hide();
                 this.model.extensions = _.without( this.model.extensions, value );
             },
             getModel: function() {
@@ -118,7 +113,7 @@ window.console.log( 'updateModel' );
                 if ( 1 < enabled.length ) {
                     this.popup = new CoursePress.PopUp({
                         type: 'error',
-                        message: win._coursepress.messages.no_mp_woo
+                        message: 'a' + win._coursepress.messages.no_mp_woo
                     });
                     return false;
                 }
@@ -160,13 +155,13 @@ window.console.log(button);
             },
             activatedPluginSuccess: function( data ) {
                 var button = $('#extension-row-'+data.extension+' .action a');
-                this.showPopUo( data, 'info' );
                 button.addClass( 'cp-btn-active').removeClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.deactivate );
                 button.closest('td').data('active', 'yes' );
 
 
-window.console.log( 'activatedPluginSuccess', data );
                 this.showExtension( data.extension );
+                this.showPopUo( data, 'info' );
+window.console.log( 'activatedPluginSuccess', data );
             },
             deactivatedPluginSuccess: function( data ) {
                 var button = $('#extension-row-'+data.extension+' .action a');
@@ -187,7 +182,7 @@ window.console.log( 'activatedPluginSuccess', data );
             },
             toggleExtension: function(ev) {
                 var extension = $(ev.currentTarget);
-window.console.log( 'toggleExtension', extension );                
+window.console.log( 'toggleExtension', extension );
             }
         });
     });

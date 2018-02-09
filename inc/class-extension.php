@@ -15,14 +15,14 @@ class CoursePress_Extension {
 		add_filter( 'coursepress_extensions', array( $this, 'set_extensions' ) );
 		// Check for active extensions.
 	    $this->active_extensions();
-        add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
-        add_filter( 'coursepress_default_settings', array( $this, 'add_extensions_to_settings' ) );
-    }
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
+		add_filter( 'coursepress_default_settings', array( $this, 'add_extensions_to_settings' ) );
+	}
 
-    public function add_extensions_to_settings( $settings ) {
-        $settings['extensions_available'] = array( 'marketpress', 'woocommerce' );
-        return $settings;
-    }
+	public function add_extensions_to_settings( $settings ) {
+		$settings['extensions_available'] = array( 'marketpress', 'woocommerce' );
+		return $settings;
+	}
 
 	/**
 	 * Add CoursePress Extensions JS strings.
@@ -218,6 +218,12 @@ class CoursePress_Extension {
 			if ( is_wp_error( $result ) ) {
 				return $result;
 			} else {
+				/**
+				 * remove class
+				 */
+				if ( isset( $plugin['class_name'] ) ) {
+					unset( $plugin['class_name'] );
+				}
 				$args = array(
 					'message' => __( 'Plugin was successfully activated!', 'cp' ),
 					'plugin' => $plugin,

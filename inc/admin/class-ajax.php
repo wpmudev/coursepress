@@ -393,37 +393,27 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request ) {
 			$request = get_object_vars( $request );
 			$request = array_map( array( $this, 'to_array' ), $request );
-        }
+		}
 
-        /**
-         * remove some keys
-         */
-        $keys_to_remove = array( 'extensions_available' );
-        foreach( $keys_to_remove as $key ) {
-            if ( isset( $request[$key] ) ) {
-                unset( $request[$key] );
-            }
-        }
+		/**
+		 * remove some keys
+		 */
+		$keys_to_remove = array( 'extensions_available' );
+		foreach ( $keys_to_remove as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				unset( $request[ $key ] );
+			}
+		}
 
-        /**
-         * check extensions settings
-         */
-        global $CoursePress_Extension;
-        l($CoursePress_Extension->active_extensions() );
-
+		/**
+		 * check extensions settings
+		 */
+		global $CoursePress_Extension;
+		l( $CoursePress_Extension->active_extensions() );
 
 		coursepress_update_setting( true, $request );
 
 		return array( 'success' => true );
-	}
-
-	function activate_marketpress() {
-		global $CoursePress_Extension;
-		if ( ! $CoursePress_Extension->is_plugin_installed( 'marketpress' ) ) {
-			// Install MP then activate
-		} elseif ( ! $CoursePress_Extension->is_plugin_active( 'marketpress/marketpress.php' ) ) {
-			// Activate plugin
-		}
 	}
 
 	/**
@@ -1363,10 +1353,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				wp_send_json_success( $result );
 			}
 		}
-        wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
-    }
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
+	}
 	public function dismiss_unit_help() {
-		update_user_meta(get_current_user_id(), 'unit_help_dismissed', true);
+		update_user_meta( get_current_user_id(), 'unit_help_dismissed', true );
 		wp_send_json_success();
 	}
 }
