@@ -51,10 +51,15 @@
                 this.render();
             },
             render: function() {
-                CoursePress.View.prototype.render.apply( this );
+                var rendered_object = this;
+                CoursePress.View.prototype.render.apply( rendered_object );
                 _.each( this.model.extensions, function( ext ) {
-                    this.showExtension(ext);
-                }, this );
+                    _.each( $('td.action' ), function( td ) {
+                        if ( $(td).data('extension') === ext && 'yes' === $(td).data('active' ) ) {
+                            rendered_object.showExtension(ext);
+                        }
+                    });
+                }, rendered_object );
             },
             updateModel: function(ev) {
                 var target = this.$(ev.currentTarget),
@@ -108,12 +113,12 @@
                 this.model.extensions = _.without( this.model.extensions, value );
             },
             getModel: function() {
-                var enabled = $('input.extension-commerce-enable');
+                var enabled = $('input.extension-commerce-enable:checked');
                 // MP and woo should not be activated at the same time
                 if ( 1 < enabled.length ) {
                     this.popup = new CoursePress.PopUp({
                         type: 'error',
-                        message: 'a' + win._coursepress.messages.no_mp_woo
+                        message: win._coursepress.messages.no_mp_woo
                     });
                     return false;
                 }

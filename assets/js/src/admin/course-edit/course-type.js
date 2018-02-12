@@ -120,18 +120,13 @@
 
             changeCoursePaid: function(ev) {
                 var paid, settings;
-
                 paid = this.$(ev.currentTarget).is(':checked');
                 settings = win._coursepress.settings;
-
                 $('.cp-box-marketpress, .cp-box-woocommerce, .cp-box-payment').addClass( 'hidden' );
-
                 if ( paid ) {
-                    if ( _.contains(settings.extensions, 'marketpress' ) &&
-                        settings.marketpress && settings.marketpress.enabled ) {
+                    if ( settings.marketpress && ( settings.marketpress.enabled || '1' === settings.marketpress.enabled)) {
                         $('.cp-box-marketpress').removeClass('hidden');
-                    } else if( _.contains( settings.extensions, 'woocommerce') &&
-                        settings.woocommerce && settings.woocommerce.enabled ) {
+                    } else if ( settings.woocommerce && ( settings.woocommerce.enabled || '1' === settings.woocommerce.enabled)) {
                         $('.cp-box-woocommerce').removeClass('hidden');
                     } else {
                         $('.cp-box-payment').removeClass('hidden');
