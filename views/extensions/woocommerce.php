@@ -7,7 +7,7 @@
     <div class="box-inner-content">
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="enabled" value="1" class="cp-toggle-input" autocomplete="off" {{_.checked(true, woocommerce.enabled)}} /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="enabled" value="1" class="cp-toggle-input extension-commerce-enable" autocomplete="off" {{_.checked(true, woocommerce.enabled)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( sprintf( 'Use %s to sell courses.', 'WooCommerce' ), 'cp' ); ?></span>
             </label>
             <p class="description"><?php _e( sprintf('When checked, %s will be use to sell courses.', 'WooCommerce' ), 'cp' ); ?></p>

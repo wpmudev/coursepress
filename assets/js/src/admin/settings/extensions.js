@@ -15,24 +15,19 @@
             },
             render: function() {
                 CoursePress.View.prototype.render.apply( this );
-
                 this.$el.appendTo( '#extension-' + this.type );
-
                 return this;
             },
             updateModel: function( ev ) {
                 var input, name, type, value;
-
                 input = $(ev.currentTarget);
                 name = input.attr('name');
-
                 if ( ( type = input.attr('type') ) &&
                     _.contains(['checkbox', 'radio'], type ) ) {
                     value = input.is(':checked') ? input.val() : false;
                 } else {
                     value = input.val();
                 }
-
                 this.model[this.type][name] = value;
                 // var c = this.controller.setting.model.get(this.type);
                 this.controller.setting.model.set( this.type, this.model[this.type] );
@@ -45,26 +40,32 @@
             template_id: 'coursepress-extensions-setting-tpl',
             el: $( '#coursepress-setting-extensions' ),
             extensions: {},
+            events: {
+                'click .coursepress-extension-table .action a': 'handleExtensionButton',
+                'change #coursepress-setting-extensions input[name=enabled]': 'toggleExtension'
+            },
             setting: false,
             initialize: function( extensions, settingObject ) {
                 this.model = {extensions: extensions};
                 this.setting = settingObject;
-
                 this.render();
             },
             render: function() {
-                CoursePress.View.prototype.render.apply( this );
-
+                var rendered_object = this;
+                CoursePress.View.prototype.render.apply( rendered_object );
                 _.each( this.model.extensions, function( ext ) {
-                    this.showExtension(ext);
-                }, this );
+                    _.each( $('td.action' ), function( td ) {
+                        if ( $(td).data('extension') === ext && 'yes' === $(td).data('active' ) ) {
+                            rendered_object.showExtension(ext);
+                        }
+                    });
+                }, rendered_object );
             },
             updateModel: function(ev) {
                 var target = this.$(ev.currentTarget),
                     value = target.val(),
                     is_checked = target.is(':checked'),
                     extensions = this.model.extensions;
-
                 if ( is_checked ) {
                     if ( 'woocommerce' === value && _.contains( extensions, 'marketpress') ||
                         'marketpress' === value && _.contains( extensions, 'woocommerce' ) ) {
@@ -72,14 +73,11 @@
                             type: 'error',
                             message: win._coursepress.messages.no_mp_woo
                         });
-
                         target.prop( 'checked', false );
                         return false;
                     }
                 }
-
                 this.model.extensions = _.without( this.model.extensions, value );
-
                 if ( is_checked ) {
                     this.model.extensions.push( value );
                     this.showExtension(value);
@@ -88,52 +86,109 @@
                 }
             },
             showExtension: function( value ) {
-                if ( ! this.extensions[value] ) {
+                var target = $('#extension-' + value);
+
+                if ( 'no' === target.data( 'loaded' ) ) {
                     var tpl = $('#coursepress-' + value + '-tpl' );
-
-                    if ( ! tpl.length ) {
-                        return;
+                    if ( tpl.length ) {
+                        // Initialize extension settings
+                        this.extensions[value] = new Extension( this.setting.model.get(value), {
+                            template_id: 'coursepress-' + value + '-tpl',
+                            type: value,
+                            controller: this
+                        });
                     }
-
-                    // Initialize extension settings
-                    this.extensions[value] = new Extension( this.setting.model.get(value), {
-                        template_id: 'coursepress-' + value + '-tpl',
-                        type: value,
-                        controller: this
-                    });
+                    target.data( 'loaded', 'yes' );
                 }
+                /**
+                 * Add to model
+                 */
+                if ( ! _.contains( this.model.extensions, value ) ) {
+                    this.model.extensions.push( value );
+                }
+                target.show();
             },
             hideExtension: function( value ) {
-                if ( this.extensions[value] ) {
-                    this.extensions[value].remove();
-                    delete this.extensions[value];
-                }
+                $('#extension-'+value).hide();
+                this.model.extensions = _.without( this.model.extensions, value );
             },
             getModel: function() {
-                var extensions = this.model.extensions;
-
+                var enabled = $('input.extension-commerce-enable:checked');
                 // MP and woo should not be activated at the same time
-                if ( _.contains( extensions, 'marketpress') &&
-                    _.contains( extensions, 'woocommerce' ) ) {
+                if ( 1 < enabled.length ) {
                     this.popup = new CoursePress.PopUp({
                         type: 'error',
                         message: win._coursepress.messages.no_mp_woo
                     });
                     return false;
-
-                } else if ( _.contains( extensions, 'marketpress' ) ) {
-                    // Extract and activate MP
-                    Post.set( 'action', 'activate_marketpress' );
-                    Post.off( 'coursepress:success_activate_marketpress' );
-                    Post.on( 'coursepress:success_activate_marketpress', this.MPActivated, this );
-                    Post.save();
-                } else if ( _.contains( extensions, 'woocommerce' ) ) {
-                    // Check WooCommerce and activae woo
                 }
-
-                return extensions;
+                return enabled;
             },
-            MPActivated: function() {}
+            handleExtensionButton: function( ev) {
+                var button = $(ev.currentTarget);
+                var extension = button.closest('td').data('extension');
+                var installed = button.closest('td').data('installed');
+                var active = button.closest('td').data('active');
+                var nonce = button.closest('td').data('nonce');
+                var model = new CoursePress.Request( this.getModel() );
+
+window.console.log(button);
+
+
+                if ( 'no' === installed ) {
+                    var data = {
+                        message: win._coursepress.text.extensions.not_instaled
+                    };
+                    this.showPopUo( data, 'info' );
+                    return false;
+                }
+                model.set( 'nonce', nonce );
+                model.set( 'extension', extension );
+                model.on( 'coursepress:success_activate_plugin', this.activatedPluginSuccess, this);
+                model.on( 'coursepress:error_activate_plugin', this.showPopUo, this, 'error' );
+                model.on( 'coursepress:success_deactivate_plugin', this.deactivatedPluginSuccess, this );
+                model.on( 'coursepress:error_deactivate_plugin', this.showPopUo, this, 'error' );
+                if ( 'no' === active ) {
+                    this.showPopUo( { message: win._coursepress.text.extensions.activating_plugin }, 'info' );
+                    model.set( 'action', 'activate_plugin' );
+                } else {
+                    this.showPopUo( { message: win._coursepress.text.extensions.deactivating_plugin }, 'info' );
+                    model.set( 'action', 'deactivate_plugin' );
+                }
+                model.save();
+                return false;
+            },
+            activatedPluginSuccess: function( data ) {
+                var button = $('#extension-row-'+data.extension+' .action a');
+                button.addClass( 'cp-btn-active').removeClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.deactivate );
+                button.closest('td').data('active', 'yes' );
+
+
+                this.showExtension( data.extension );
+                this.showPopUo( data, 'info' );
+window.console.log( 'activatedPluginSuccess', data );
+            },
+            deactivatedPluginSuccess: function( data ) {
+                var button = $('#extension-row-'+data.extension+' .action a');
+                this.showPopUo( data, 'info' );
+                button.removeClass( 'cp-btn-active').addClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.activate );
+                button.closest('td').data('active', 'no' );
+                this.hideExtension( data.extension );
+            },
+            showPopUo: function( data, type ) {
+                $('.coursepress-popup').detach();
+                /**
+                 * Show popup
+                 */
+                new CoursePress.PopUp({
+                    type: type,
+                    message: data.message
+                });
+            },
+            toggleExtension: function(ev) {
+                var extension = $(ev.currentTarget);
+window.console.log( 'toggleExtension', extension );
+            }
         });
     });
 

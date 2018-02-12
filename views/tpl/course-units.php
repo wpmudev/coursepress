@@ -365,7 +365,7 @@
             <div class="coursepress-popup-title">
                 <h3>{{popup_title}}</h3>
             </div>
-            <span class="cp-modal-close cp-close"><?php _e('Skip Help', 'cp'); ?></span>
+            <span class="cp-modal-close cp-close"><?php _e( 'Skip Help', 'cp' ); ?></span>
         </div>
         <div class="coursepress-popup-content">
             <p>{{popup_content}}</p>
