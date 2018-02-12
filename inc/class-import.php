@@ -346,8 +346,8 @@ class CoursePress_Import extends CoursePress_Utility
 			if ( ! empty( $settings[ $structure ] ) ) {
 				foreach ( $settings[ $structure ] as $key => $value ) {
 					$new_key = str_replace( $this->course_imported_id, $this->course->ID, $key );
-					unset( $settings[ $key ] );
-					$settings[ $new_key ] = $value;
+					unset( $settings[ $structure ][ $key ] );
+					$settings[ $structure ][ $new_key ] = $value;
 				}
 			}
 		}
