@@ -549,7 +549,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$courses = maybe_unserialize( $courses );
 		if ( is_array( $courses ) ) {
 			$the_course = array_shift( $courses );
-			$importClass = new CoursePress_Import( $the_course, $request );
+			$import_options = wp_parse_args(
+				(array)$request,
+				array(
+					'author' => wp_get_current_user()
+				)
+			);
+			$importClass = new CoursePress_Import( $the_course, $import_options );
 			coursepress_delete_course($request->old_course_id);
 			wp_send_json_success(array(
 				'course' => $importClass->get_course()
