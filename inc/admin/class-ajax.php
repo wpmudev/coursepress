@@ -544,13 +544,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	function import_course( $request ) {
 		$import_id = $request->import_id;
-		$total_course = $request->total_courses;
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
 		$courses = maybe_unserialize( $courses );
 		if ( is_array( $courses ) ) {
 			$the_course = array_shift( $courses );
 			$importClass = new CoursePress_Import( $the_course, $request );
+			coursepress_delete_course($request->old_course_id);
+			wp_send_json_success(array(
+				'course' => $importClass->get_course()
+			));
 		}
 	}
 
