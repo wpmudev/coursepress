@@ -85,14 +85,22 @@
 			},
 
 			// After creating new alert.
-			showSuccess: function () {
+			showSuccess: function ( data ) {
+				new CoursePress.PopUp({
+					type: 'info',
+					message: data.message
+				});
 				// Hide progress icon.
 				this.$('.cp-alert-submit').removeClass('cp-progress');
 				this.clearForm();
 			},
 
 			// After new alert failed.
-			showError: function () {
+			showError: function ( data ) {
+				new CoursePress.PopUp({
+					type: 'error',
+					message: data.message
+				});
 				// Hide progress icon.
 				this.$('.cp-alert-submit').removeClass('cp-progress');
 			},
