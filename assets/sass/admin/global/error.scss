@@ -1,23 +1,26 @@
 .coursepress-wrap {
-  .cp-box {
-    &.cp-error {
-      position: relative;
+    .cp-box {
+        &.cp-error {
+            position: relative;
+            &:after {
+                content: '\f06a';
+                font-family: 'FontAwesome';
+                position: absolute;
+                bottom: 10px;
+                left: 5px;
+                color: red;
+            }
 
-      &:after {
-        content: '\f06a';
-        font-family: 'FontAwesome';
-        position: absolute;
-        bottom: 10px;
-        left: 5px;
-        color: red;
-      }
-
-      input,
-      textarea,
-      select {
-        border-color: red;
-        background-color: rgba(255, 0, 0, 0.02);
-      }
+            input,
+            textarea,
+            select {
+                border-color: red;
+                background-color: rgba(255, 0, 0, 0.02);
+            }
+        }
+        &.cp-box-error {
+            border-left: 4px solid $red;
+            padding-left: 12px;
+        }
     }
-  }
 }
