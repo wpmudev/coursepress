@@ -386,7 +386,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			 * Trigger to allow changes on course cost
 			 */
 			$price_html = apply_filters( 'coursepress_course_cost', $price_html, $price, $this );
-			l( $price_html );
 		}
 		return $price_html;
 	}
