@@ -31,7 +31,7 @@ class CoursePress_Extension_MarketPress {
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function __construct() {
 		// No need if plugin not enabled.
 		if ( ! $this->is_enabled() ) {
 			return;

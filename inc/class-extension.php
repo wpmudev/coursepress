@@ -7,6 +7,8 @@
  */
 class CoursePress_Extension {
 
+	private $extensions_available = array( 'marketpress', 'woocommerce' );
+
 	/**
 	 * CoursePress_Extension constructor.
 	 */
@@ -20,7 +22,7 @@ class CoursePress_Extension {
 	}
 
 	public function add_extensions_to_settings( $settings ) {
-		$settings['extensions_available'] = array( 'marketpress', 'woocommerce' );
+		$settings['extensions_available'] = $this->extensions_available;
 		return $settings;
 	}
 
@@ -49,24 +51,25 @@ class CoursePress_Extension {
 	 */
 	function active_extensions() {
 		global $CoursePress;
-		$extensions = coursepress_get_setting( 'extensions' );
 		$active = array(
 			'commerce' => false,
 		);
-		if ( ! empty( $extensions ) ) {
-			foreach ( $extensions as $extension ) {
-				switch ( $extension ) {
-					case 'marketpress':
-						$CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
-					break;
-					case 'woocommerce':
-						$CoursePress->get_class( 'CoursePress_Extension_WooCommerce' );
-					break;
-				}
-				// Set extension type to active
-				if ( isset( $extension['type'] ) ) {
-					$active[ $extension['type'] ] = true;
-				}
+		foreach ( $this->extensions_available as $extension ) {
+			$settings = coursepress_get_setting( $extension );
+			if ( ! isset( $settings['enabled'] ) || empty( $settings['enabled'] ) ) {
+				continue;
+			}
+			switch ( $extension ) {
+				case 'marketpress':
+					$CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
+				break;
+				case 'woocommerce':
+					$CoursePress->get_class( 'CoursePress_Extension_WooCommerce' );
+				break;
+			}
+			// Set extension type to active
+			if ( isset( $settings['type'] ) ) {
+				$active[ $settings['type'] ] = true;
 			}
 		}
 		// Load some code for missing extensions - like fix missing
@@ -246,6 +249,7 @@ class CoursePress_Extension {
 				if ( is_wp_error( $result ) ) {
 					return $result;
 				} else {
+					coursepress_update_setting( $extension, array( 'enabled' => false ) );
 					$args = array(
 						'message' => __( 'Plugin was successfully deactivated!', 'cp' ),
 						'plugin' => $plugin,
