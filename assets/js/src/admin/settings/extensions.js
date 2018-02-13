@@ -41,8 +41,7 @@
             el: $( '#coursepress-setting-extensions' ),
             extensions: {},
             events: {
-                'click .coursepress-extension-table .action a': 'handleExtensionButton',
-                'change #coursepress-setting-extensions input[name=enabled]': 'toggleExtension'
+                'click .coursepress-extension-table .action a': 'handleExtensionButton'
             },
             setting: false,
             initialize: function( extensions, settingObject ) {
@@ -131,10 +130,6 @@
                 var active = button.closest('td').data('active');
                 var nonce = button.closest('td').data('nonce');
                 var model = new CoursePress.Request( this.getModel() );
-
-window.console.log(button);
-
-
                 if ( 'no' === installed ) {
                     var data = {
                         message: win._coursepress.text.extensions.not_instaled
@@ -162,11 +157,8 @@ window.console.log(button);
                 var button = $('#extension-row-'+data.extension+' .action a');
                 button.addClass( 'cp-btn-active').removeClass( 'cp-bordered-btn' ).html( win._coursepress.text.extensions.buttons.deactivate );
                 button.closest('td').data('active', 'yes' );
-
-
                 this.showExtension( data.extension );
                 this.showPopUo( data, 'info' );
-window.console.log( 'activatedPluginSuccess', data );
             },
             deactivatedPluginSuccess: function( data ) {
                 var button = $('#extension-row-'+data.extension+' .action a');
@@ -184,10 +176,6 @@ window.console.log( 'activatedPluginSuccess', data );
                     type: type,
                     message: data.message
                 });
-            },
-            toggleExtension: function(ev) {
-                var extension = $(ev.currentTarget);
-window.console.log( 'toggleExtension', extension );
             }
         });
     });

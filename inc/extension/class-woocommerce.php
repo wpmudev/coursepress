@@ -21,7 +21,7 @@ class CoursePress_Extension_WooCommerce {
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function __construct() {
 
 		// Do not continue if Woocommerce is not enabled.
 		if ( ! $this->is_enabled() ) {
