@@ -176,13 +176,16 @@
                 model = new CoursePress.Request(this.model.toJSON());
                 model.set('action', 'preview_certificate');
                 model.on('coursepress:success_preview_certificate', function (data) {
-                    if (data.pdf) {
-                        this.preview = new CertificatePreview(data);
-                    } else {
-                        // @todo: show friendly error
-                    }
+                    this.preview = new CertificatePreview(data);
                     previewButton.prop('disabled', false);
                 }, this);
+                model.on('coursepress:error_preview_certificate', function (data) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                    previewButton.prop('disabled', false);
+                });
                 model.save();
             }
         });

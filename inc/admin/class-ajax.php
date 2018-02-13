@@ -478,12 +478,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 		);
 
-		$pdf->make_pdf( $content, $args );
+		$error = '';
+		try {
+			$pdf->make_pdf( $content, $args );
+		}
+		catch(Exception $exception) {
+			$error = $exception->getMessage();
+		}
 
-		return array(
-			'success' => true,
-			'pdf' => $pdf->cache_url() . $filename,
-		);
+		if ($error) {
+			wp_send_json_error(array('message' => $error));
+		} else {
+			wp_send_json_success(array(
+				'pdf' => $pdf->cache_url() . $filename,
+			));
+		}
 	}
 
 	function upload_file() {
