@@ -122,6 +122,7 @@
                 model.set( 'action', 'preview_certificate' );
                 model.on('coursepress:success_preview_certificate', function (data) {
                     this.preview = new CertificatePreview(data);
+                    previewButton.prop('disabled', false);
                 }, this);
                 model.on('coursepress:error_preview_certificate', function (data) {
                     new CoursePress.PopUp({
