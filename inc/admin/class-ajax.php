@@ -409,7 +409,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		 * check extensions settings
 		 */
 		global $CoursePress_Extension;
-		l( $CoursePress_Extension->active_extensions() );
+		$CoursePress_Extension->active_extensions();
 
 		coursepress_update_setting( true, $request );
 
