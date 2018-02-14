@@ -7,7 +7,7 @@
         var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
-           var sender = $(ev.currentTarget);
+           var sender = $(ev.target);
 
            if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
                iris.iris('hide');
@@ -78,7 +78,7 @@
                 this.model.content = this.contentEditor.getContent();
             },
             showColorPicker: function() {
-                if ( this.color ) {
+                if ( !iris && this.color ) {
                     this.color.iris('show');
                     iris = this.color;
                 }
