@@ -51,7 +51,7 @@ final class CoursePress {
 	/**
 	 * @var string Current version number.
 	 */
-	var $version = 'PLUGIN_VERSION';
+	var $version = '3';
 
 	/**
 	 * @var string Plugin name, it will be replaced by grunt build command.
@@ -139,23 +139,19 @@ final class CoursePress {
 		//wp_schedule_single_event( time(), $legacy_key );
 		/*********************************************************/
 		/**
-		 * Install on multisite too.
+		 * Install new tables.
 		 */
-        if ( is_multisite() ) {
-            if ( ! is_main_site() ) {
-                if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-                    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-                }
-                $plugin_file = basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ );
-                if ( is_plugin_active_for_network( $plugin_file ) ) {
-                    $install = new CoursePress_Admin_Install( $this );
-                    $install->install_tables();
-                }
-            }
-        } else {
-            $version = get_site_option( 'coursepress_version' );
-            l($version);
-        }
+		$install = new CoursePress_Admin_Install( $this );
+		$install->install_tables();
+		/**
+		 * upgrade site data
+		 */
+		$cp_db_version = get_option( 'coursepress_version', '0' );
+		if ( 0 > version_compare( $cp_db_version, $this->version ) ) {
+			update_option( 'coursepress_upgrade', 'need to be upgraded' );
+
+			//            update_option( 'coursepress_version', $this->version );
+		}
 	}
 
 	private function class_loader( $class_name ) {
@@ -223,6 +219,12 @@ final class CoursePress {
 			false, // Deprecated. Set to false.
 			$this->plugin_path. '/languages'
 		);
+		/**
+		 * need to be upgraded?
+		 */
+		if ( is_admin() ) {
+			new CoursePress_Admin_Upgrade( $this );
+		}
 	}
 
 	function set_current_user() {
