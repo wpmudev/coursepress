@@ -46,7 +46,8 @@
                 var self = this;
 
                 this.$('select').select2();
-                this.certBG = new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
+                new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
+                new CoursePress.AddImage( this.$('#coursepress-logo-img' ) );
                 this.color = this.$('[name="cert_text_color"]');
 
                 this.color.iris({
