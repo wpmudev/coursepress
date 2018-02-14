@@ -15,7 +15,7 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.1.2';
+	public static $version = '2.1.4';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
@@ -81,6 +81,14 @@ class CoursePress {
 
 		if ( file_exists( self::$path . '/campus/init.php' ) ) {
 			include_once self::$path . '/campus/init.php';
+		}
+
+		/**
+		 * update plugin if needed
+		 */
+		$db_version = get_site_option( 'coursepress_version', '0.0.0' );
+		if ( 0 > version_compare( $db_version, self::$version ) ) {
+			update_site_option( 'coursepress_version', self::$version );
 		}
 
 		/**
