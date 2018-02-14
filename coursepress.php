@@ -141,16 +141,21 @@ final class CoursePress {
 		/**
 		 * Install on multisite too.
 		 */
-		if ( is_multisite() && ! is_main_site() ) {
-			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-			}
-			$plugin_file = basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ );
-			if ( is_plugin_active_for_network( $plugin_file ) ) {
-				$install = new CoursePress_Admin_Install( $this );
-				$install->install_tables();
-			}
-		}
+        if ( is_multisite() ) {
+            if ( ! is_main_site() ) {
+                if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+                    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+                }
+                $plugin_file = basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ );
+                if ( is_plugin_active_for_network( $plugin_file ) ) {
+                    $install = new CoursePress_Admin_Install( $this );
+                    $install->install_tables();
+                }
+            }
+        } else {
+            $version = get_site_option( 'coursepress_version' );
+            l($version);
+        }
 	}
 
 	private function class_loader( $class_name ) {
