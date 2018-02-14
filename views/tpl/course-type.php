@@ -152,14 +152,13 @@
                     <span class="label"><?php _e( 'This is a paid course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>
-            </div>
-
-            <div class="cp-box cp-box-off{{  true === meta_payment_paid_course? '':' hidden' }}">
-                <div class="payment-message">
-                    <h3><?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?></h3>
-                    <p><?php _e( 'To start selling your course, please install and activate MarketPress or contact your administrator to enable MarketPress for your site.', 'cp' ); ?></p>
-                    <p><?php _e( 'Other supported plugins: WooCommerce', 'cp' ); ?></p>
-                </div>
+    <div class="cp-box cp-box-error cp-box-payment{{  "1" === meta_payment_paid_course? '':' hidden' }}">
+        <div class="payment-message">
+            <h3><?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?></h3>
+            <p><?php _e( 'To start selling your course, please install and activate MarketPress or contact your administrator to enable MarketPress for your site.', 'cp' ); ?></p>
+            <p><?php _e( 'Other supported plugins: WooCommerce', 'cp' ); ?></p>
+        </div>
+    </div>
             </div>
         </div>
     </div>

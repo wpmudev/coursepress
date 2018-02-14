@@ -7,7 +7,7 @@
         var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
-           var sender = $(ev.currentTarget);
+           var sender = $(ev.target);
 
            if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
                iris.iris('hide');
@@ -78,7 +78,7 @@
                 this.model.content = this.contentEditor.getContent();
             },
             showColorPicker: function() {
-                if ( this.color ) {
+                if ( !iris && this.color ) {
                     this.color.iris('show');
                     iris = this.color;
                 }
@@ -115,18 +115,22 @@
                 var use_cp_default = this.$('input[name=use_cp_default]', this.$('.cp-box-certificate-options' )).is(':checked');
                 boxes[ ( enable && ! use_cp_default ) ? 'slideDown' : 'slideUp' ]();
             },
-            previewCertificate: function() {
-                var model = new CoursePress.Request( this.getModel() );
+            previewCertificate: function(ev) {
+                var previewButton, model = new CoursePress.Request( this.getModel() );
+                previewButton = this.$(ev.currentTarget);
+                previewButton.prop('disabled', true);
                 model.set( 'action', 'preview_certificate' );
-                model.on( 'coursepress:success_preview_certificate', this.openPreview, this );
-                model.save();
-            },
-            openPreview: function( data ) {
-                if ( data.pdf ) {
+                model.on('coursepress:success_preview_certificate', function (data) {
                     this.preview = new CertificatePreview(data);
-                } else {
-                    // @todo: show friendly error
-                }
+                }, this);
+                model.on('coursepress:error_preview_certificate', function (data) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                    previewButton.prop('disabled', false);
+                });
+                model.save();
             }
         });
     });

@@ -395,19 +395,25 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$request = array_map( array( $this, 'to_array' ), $request );
 		}
 
+		/**
+		 * remove some keys
+		 */
+		$keys_to_remove = array( 'extensions_available' );
+		foreach ( $keys_to_remove as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				unset( $request[ $key ] );
+			}
+		}
+
+		/**
+		 * check extensions settings
+		 */
+		global $CoursePress_Extension;
+		l( $CoursePress_Extension->active_extensions() );
+
 		coursepress_update_setting( true, $request );
 
 		return array( 'success' => true );
-	}
-
-	function activate_marketpress() {
-		global $CoursePress_Extension;
-
-		if ( ! $CoursePress_Extension->is_plugin_installed( 'marketpress' ) ) {
-			// Install MP then activate
-		} elseif ( ! $CoursePress_Extension->is_plugin_active( 'marketpress/marketpress.php' ) ) {
-			// Activate plugin
-		}
 	}
 
 	/**
@@ -472,12 +478,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 		);
 
-		$pdf->make_pdf( $content, $args );
+		$error = '';
+		try {
+			$pdf->make_pdf( $content, $args );
+		}
+		catch(Exception $exception) {
+			$error = $exception->getMessage();
+		}
 
-		return array(
-			'success' => true,
-			'pdf' => $pdf->cache_url() . $filename,
-		);
+		if ($error) {
+			wp_send_json_error(array('message' => $error));
+		} else {
+			wp_send_json_success(array(
+				'pdf' => $pdf->cache_url() . $filename,
+			));
+		}
 	}
 
 	function upload_file() {
@@ -538,13 +553,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	function import_course( $request ) {
 		$import_id = $request->import_id;
-		$total_course = $request->total_courses;
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
 		$courses = maybe_unserialize( $courses );
 		if ( is_array( $courses ) ) {
 			$the_course = array_shift( $courses );
-			$importClass = new CoursePress_Import( $the_course, $request );
+			$import_options = wp_parse_args(
+				(array)$request,
+				array(
+					'author' => wp_get_current_user()
+				)
+			);
+			$importClass = new CoursePress_Import( $the_course, $import_options );
+			coursepress_delete_course($request->old_course_id);
+			wp_send_json_success(array(
+				'course' => $importClass->get_course()
+			));
 		}
 	}
 
@@ -861,13 +885,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		exit;
 	}
 
-	function record_media_response($request)
-	{
-		$user_id = get_current_user_id();
-		$user = coursepress_get_user($user_id);
-		$user->record_response($request->course_id, $request->unit_id, $request->step_id, array());
+	function record_media_response( $request ) {
 
-		return array('success' => true);
+		$user_id = get_current_user_id();
+		$user = coursepress_get_user( $user_id );
+		$user->record_response( $request->course_id, $request->unit_id, $request->step_id, array() );
+
+		return array( 'success' => true );
 	}
 
 	function validate_submission() {
@@ -1294,12 +1318,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request.
 	 */
 	public function duplicate_course( $request ) {
-
 		// We need course id.
 		if ( ! isset( $request->course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );;
 		}
-
 		// Continue only if valid course.
 		$course = coursepress_get_course( $request->course_id );
 		if ( ! is_wp_error( $course ) ) {
@@ -1308,8 +1330,51 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				wp_send_json_success();
 			}
 		}
-
 		// Send error if failed.
 		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
+	}
+
+	/**
+	 * Activate plugin.
+	 *
+	 * @since 3.0
+	 *
+	 * @param object $request Request.
+	 */
+	public function activate_plugin( $request ) {
+		if ( isset( $request->extension ) && isset( $request->nonce ) ) {
+			$extensions = new CoursePress_Extension();
+			$result = $extensions->activate( $request->extension, $request->nonce );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			} else {
+				wp_send_json_success( $result );
+			}
+		}
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not activate plugin.', 'cp' ) ) );
+	}
+
+	/**
+	 * Deactivate plugin.
+	 *
+	 * @since 3.0
+	 *
+	 * @param object $request Request.
+	 */
+	public function deactivate_plugin( $request ) {
+		if ( isset( $request->extension ) && isset( $request->nonce ) ) {
+			$extensions = new CoursePress_Extension();
+			$result = $extensions->deactivate( $request->extension, $request->nonce );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			} else {
+				wp_send_json_success( $result );
+			}
+		}
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not deativate plugin.', 'cp' ) ) );
+	}
+	public function dismiss_unit_help() {
+		update_user_meta( get_current_user_id(), 'unit_help_dismissed', true );
+		wp_send_json_success();
 	}
 }

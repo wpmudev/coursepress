@@ -1,36 +1,36 @@
 .course-unit {
-  .page-header {
-    position: relative;
-    margin: 0;
-  }
-  .course-unit-progress {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
+    .page-header {
+        position: relative;
+        margin: 0;
+    }
+    .course-unit-progress {
+        position: absolute;
+        top: 10px;
+        right: 0;
+    }
 }
 
 .course-content-template {
-  display: block;
-  margin: 25px 0;
-  @include clearfix;
+    display: block;
+    margin: 25px 0;
+    @include clearfix;
 
-  .course-structure-nav {
-    display: none;
-  }
-
-  @media screen {
-    @media (min-width: 800px) {
-      display: flex;
-
-      .course-structure-nav {
-        display: block;
-        width: 25%;
-      }
-      .course-content {
-        width: 75%;
-        padding-left: 25px;
-      }
+    .course-structure-nav {
+        display: none;
     }
-  }
+
+    @media screen {
+        @media (min-width: 800px) {
+            display: flex;
+
+            .course-structure-nav {
+                display: block;
+                width: 25%;
+            }
+            .course-content {
+                width: 75%;
+                padding-left: 25px;
+            }
+        }
+    }
 }

@@ -61,14 +61,17 @@ class CoursePress_Import extends CoursePress_Utility
 		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
 			$user = get_user_by( 'email', $user_data->user_email );
 		}
-		if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
+		else if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
 			$user = get_user_by( 'login', $user_data->user_login );
 		}
 		/**
 		 * user exist
 		 */
-		if ( ! empty( $user ) ) {
-			coursepress_add_user_to_blog( $user->ID, $role );
+		if (!empty($user)) {
+			if (is_multisite()) {
+				coursepress_add_user_to_blog($user->ID, $role);
+			}
+			return $user->ID;
 		}
 		/**
 		 *  User doesn't exist, insert
@@ -78,7 +81,9 @@ class CoursePress_Import extends CoursePress_Utility
 		unset( $user_data->ID );
 		$user_id = wp_insert_user( $user_data );
 		if ( ! is_wp_error( $user_id ) ) {
-			coursepress_add_user_to_blog( $user_id, $role );
+			if (is_multisite()) {
+				coursepress_add_user_to_blog($user_id, $role);
+			}
 			return $user_id;
 		}
 		/**
@@ -346,8 +351,8 @@ class CoursePress_Import extends CoursePress_Utility
 			if ( ! empty( $settings[ $structure ] ) ) {
 				foreach ( $settings[ $structure ] as $key => $value ) {
 					$new_key = str_replace( $this->course_imported_id, $this->course->ID, $key );
-					unset( $settings[ $key ] );
-					$settings[ $new_key ] = $value;
+					unset( $settings[ $structure ][ $key ] );
+					$settings[ $structure ][ $new_key ] = $value;
 				}
 			}
 		}

@@ -39,6 +39,8 @@
 
             getSampleCourse: function() {
                 this.model.save();
+
+                this.$el.find('.cp-btn-active').attr('disabled', true);
             },
 
             setSelected: function( data ) {
@@ -47,6 +49,7 @@
                         replace: false,
                         with_students: false,
                         with_comments: false,
+                        old_course_id: this.setupModel.model.get('ID'),
                         action: 'import_course'
                     }, data );
 

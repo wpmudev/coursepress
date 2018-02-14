@@ -10,7 +10,7 @@
             className: 'coursepress-modal unit-help',
             current: 1,
             events: {
-                'click .cp-close': 'goToNext',
+                'click .cp-close': 'remove',
                 'click .cp-btn-got-it-1': 'goToNext',
                 'click .cp-btn-got-it-2': 'hideHelpTab'
             },

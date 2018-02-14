@@ -143,16 +143,18 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 		),
 		'extensions' => array(),
 		'marketpress' => array(
-			'enabled' => true,
+			'enabled' => false,
 			'redirect' => true,
 			'unpaid' => 'change_status',
 			'delete' => 'change_status',
+			'type' => 'commerce',
 		),
 		'woocommerce' => array(
-			'enabled' => true,
+			'enabled' => false,
 			'redirect' => true,
 			'unpaid' => 'change_status',
 			'delete' => 'change_status',
+			'type' => 'commerce',
 		),
 	);
 

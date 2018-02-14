@@ -202,12 +202,10 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				} else {
 					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
 				}
-				if ( $with_modules ) {
-					$step = $this->__get( 'step' );
-				} else {
+				$step = $this->__get( 'step' );
+				if ( !$with_modules ) {
 					$this->__set( 'type', 'step' );
 					$_coursepress_type_now = 'step';
-					$step = $this->__get( 'module' );
 				}
 				$step_id = null;
 				if ( ! empty( $step ) ) {

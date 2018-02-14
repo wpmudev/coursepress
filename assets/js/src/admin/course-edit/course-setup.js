@@ -22,7 +22,8 @@
                 'click .step-save': 'saveCourse',
                 'click .step-cancel': 'returnToMainPage',
                 'click .step-icon-bars': 'toggleStepList',
-                'change [name]': 'updateModel'
+                'change [name]': 'updateModel',
+                'click .cp-course-modules-help': 'showModuleHelp'
             },
 
             initialize: function(model) {
@@ -48,6 +49,12 @@
 
                 // Load templates
                 this.render();
+            },
+            
+            showModuleHelp: function(ev) {
+                ev.preventDefault();
+
+                new CoursePress.UnitHelp();
             },
 
 	        updateModelValues: function (ev) {
