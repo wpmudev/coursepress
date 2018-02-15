@@ -85,6 +85,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Add preload callback
 		add_action( 'load-' . $screen_id, array( $this, 'process_courselist_page' ) );
 
+		/**
+		 * Allow to add page to CoursePress screens.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array $this->screens Array of CoursePress pages hooks.
+		 */
+		$this->screens = apply_filters( 'coursepress_admin_menu_screens', $this->screens );
+
 		// Set course edit page
 		$edit_label = __( 'New Course', 'cp' );
 		$this->add_submenu( $edit_label, 'coursepress_create_course_cap', 'coursepress_course', 'get_course_edit_page' );
@@ -92,7 +101,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
 		$student_screen_id = $this->add_submenu( $student_label, 'coursepress_students_cap', 'coursepress_students', 'get_students_page' );
-		array_unshift( $this->screens, $student_screen_id );
 		// Add preload callback
 		add_action( 'load-' . $student_screen_id, array( $this, 'process_studentlist_page' ) );
 
@@ -103,7 +111,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Set assessment page
 		$assessment_label = __( 'Assessments', 'cp' );
 		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
-		array_unshift( $this->screens, $assesment_screen_id );
 		// Add preload callback
 		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assesments_page' ) );
 
@@ -118,12 +125,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Set reports page
 		$label = __( 'Reports', 'cp' );
 		$screen_id = $this->add_submenu( $label, 'coursepress_settings_cap', 'coursepress_reports', 'get_report_page' );
-		array_unshift( $this->screens, $screen_id );
 
 		// Set Notification page
 		$notification_label = __( 'Notifications', 'cp' );
 		$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
-		array_unshift( $this->screens, $notifications_screen_id );
 		// Add preload callback
 		add_action( 'load-' . $notifications_screen_id, array( $this, 'process_notifications_list_page' ) );
 
