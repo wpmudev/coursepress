@@ -136,6 +136,11 @@ module.exports = function(grunt) {
 				'assets/js/src/admin/settings/import-export.js',
 				'assets/js/src/admin/settings/settings.js'
 			],
+			'assets/js/coursepress_upgrade.js': [
+				// Add JS that will be loaded at upgrade page
+				// assets/js/src/admin/upgrade/...
+				'assets/js/src/admin/upgrade/upgrade.js'
+			],
 			'assets/js/coursepress-front.js': [
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
