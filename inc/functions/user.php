@@ -134,7 +134,6 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	$add_site_prefix = coursepress_user_meta_prefix_required();
 	// Remove user marker
 	delete_user_option( $user_id, 'course_' . $course_id, ! $add_site_prefix );
-	delete_user_option( $user_id, 'roles_in' . $course_id, ! $add_site_prefix );
 
 	// Reduce instructor count.
 	$count = get_user_meta( $user_id, 'cp_instructor_course_count', true );
