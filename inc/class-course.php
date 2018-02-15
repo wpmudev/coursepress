@@ -556,7 +556,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	/**
 	 * Get course instructors.
 	 *
-	 * @return array An array of WP_User object on success.
+	 * @return WP_User[] An array of WP_User object on success.
 	 */
 	public function get_instructors() {
 		$ids = $this->_get_instructors();
@@ -971,6 +971,13 @@ class CoursePress_Course extends CoursePress_Utility {
 				foreach ( $units as $unit ) {
 					$unit = new CoursePress_Unit( $unit );
 					$unit->duplicate_unit( $new_course_id );
+				}
+			}
+
+			$instructors = $this->get_instructors();
+			if (!empty($instructors)) {
+				foreach ($instructors as $instructor) {
+					coursepress_add_course_instructor($instructor->__get('ID'), $new_course_id);
 				}
 			}
 			/**
