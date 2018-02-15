@@ -154,6 +154,8 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		if ( count( $course_ids ) <= 0 ) {
 			$user = get_userdata( $user_id );
 			$user->remove_role( 'coursepress_instructor' );
+
+			delete_user_option($user_id, 'role_ins', !coursepress_user_meta_prefix_required());
 		}
 	}
 
