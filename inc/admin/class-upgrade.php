@@ -5,9 +5,11 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Admin_Upgrade {
+class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
+
 	protected $cp;
 	private $status;
+	private $count = 0;
 
 	public function __construct( CoursePress $cp ) {
 		$this->status = get_option( 'coursepress_upgrade', 'no upgrade required' );
@@ -15,27 +17,60 @@ class CoursePress_Admin_Upgrade {
 		if ( 'need to be upgraded' !== $this->status ) {
 			return;
 		}
-		$count = $this->count_courses();
-
+		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
 		add_action( 'admin_notices', array( $this, 'upgrade_is_needed_notice' ) );
+		add_filter( 'coursepress_admin_menu_screens', array( $this, 'add_admin_submenu' ), 11 );
 	}
 
-	private function count_courses() {
+	public function add_admin_submenu( $screens ) {
+		$menu = $this->add_submenu(
+			__( 'Upgrade courses', 'cp' ),
+			'coursepress_create_course_cap',
+			'coursepress_upgrade',
+			'get_upgrade_page'
+		);
+		array_unshift( $screens, $menu );
+		return $screens;
+	}
+
+	public function process_page() {
+	}
+
+	public function get_upgrade_page() {
+		$args = array();
+		coursepress_render( 'views/admin/upgrade', $args );
+	}
+
+	public function count_courses() {
 		global $CoursePress_Core;
 		$post_type = $CoursePress_Core->__get( 'course_post_type' );
-		l( $post_type );
 		$count = wp_count_posts( 'course' );
-		l( $count );
-		$count = wp_count_posts( 'post' );
-		l( $count );
+		$this->count = 0;
+		foreach ( $count as $type => $number ) {
+			$this->count += $number;
+		}
 	}
 
 	public function upgrade_is_needed_notice() {
+		if ( 1 > $this->count ) {
+			return;
+		}
+		$screen_id = get_current_screen()->id;
+		if ( preg_match( '/page_coursepress_upgrade$/', $screen_id ) ) {
+			return;
+		}
+
 		$class = 'notice notice-error';
-		$message = __( 'Irks! An error has occurred.', 'sample-text-domain' );
-
-		l( 'a' );
-
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		$message = esc_html( sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $this->count, 'cp' ), $this->count ) );
+		$message .= PHP_EOL.PHP_EOL;
+		$message .= sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( add_query_arg( 'page', 'coursepress_upgrade', admin_url( 'admin.php' ) ) ),
+			esc_html__( 'Go to CoursePress Upgrade page.', 'cp' )
+		);
+		printf( '<div class="%s">', esc_attr( $class ) );
+		printf( '<h2>%s</h2>', esc_html__( 'CoursePress Upgrade', 'cp' ) );
+		echo wpautop( $message );
+		echo '</div>';
 	}
 }
