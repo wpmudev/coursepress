@@ -943,7 +943,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			return false;
 		}
 		// Copy of current course object.
-		$new_course = $this;
+		$new_course = clone $this;
 		// Unset old ID, otherwise it will update the existing course.
 		unset( $new_course->ID );
 		// Set basic details.
