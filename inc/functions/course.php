@@ -1733,6 +1733,7 @@ function coursepress_get_units( $course_id ) {
 		'post_parent' => $course_id,
 		'nopaging' => true,
 		'fields' => 'ids',
+		'order' => 'ASC',
 	);
 	$items = new WP_Query( $args );
 	return $items->posts;
