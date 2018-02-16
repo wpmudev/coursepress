@@ -41,16 +41,11 @@
         $token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 
         $config['custom-certificate'] = array(
-            'title' => __( 'Custom Certificate', 'CoursePress' ),
+            'title'  => __('Custom Certificate', 'CoursePress'),
             'fields' => array(
                 'content' => array(
-                    'type' => 'wp_editor',
-                    'id' => 'content_certificate',
-                    'value' => $content,
-                    'field_options' => array(
-                        'editor_height' => 300,
-                    ),
-                    'before' => sprintf( '<div class="cp-alert cp-alert-info">%s</div>', $token_info ),
+                    'type'          => 'div',
+                    'wrapper_class' => 'content_certificate_editor'
                 ),
             ),
         );
