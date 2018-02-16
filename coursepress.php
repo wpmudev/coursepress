@@ -148,10 +148,22 @@ final class CoursePress {
 		 */
 		$cp_db_version = get_option( 'coursepress_version', '0' );
 		if ( 0 > version_compare( $cp_db_version, $this->version ) ) {
-			update_option( 'coursepress_upgrade', 'need to be upgraded' );
-
-			//            update_option( 'coursepress_version', $this->version );
+			if ( 0 > version_compare( $cp_db_version, '3.0.0' ) ) {
+				update_option( 'coursepress_upgrade', 'need to be upgraded' );
+			}
+			add_action( 'init', array( $this, 'upgrade_flush_rewrite_rules' ) );
+			update_option( 'coursepress_version', $this->version );
 		}
+	}
+
+	/**
+	 * Do not use this so often! This should be use onlt when we upgrade the
+	 * plugin.
+	 *
+	 * @since 3.0.0
+	 */
+	public function upgrade_flush_rewrite_rules() {
+		flush_rewrite_rules();
 	}
 
 	private function class_loader( $class_name ) {

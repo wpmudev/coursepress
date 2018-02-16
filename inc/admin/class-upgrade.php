@@ -37,7 +37,11 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	}
 
 	public function get_upgrade_page() {
-		$args = array();
+		$args = array(
+			'count' => $this->count,
+			'courses' => coursepress_get_accessible_courses( false ),
+			'nonce' => wp_create_nonce( __CLASS__ ),
+		);
 		coursepress_render( 'views/admin/upgrade', $args );
 	}
 
