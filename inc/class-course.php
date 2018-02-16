@@ -914,6 +914,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool Success?
 	 */
 	public function duplicate_course() {
+		global $CoursePress_Core;
+
 		// Course ID is set when this class is instantiated.
 		$course_id = $this->__get( 'ID' );
 		// If in case course post object is not and ID not found, bail.
@@ -980,6 +982,14 @@ class CoursePress_Course extends CoursePress_Utility {
 					coursepress_add_course_instructor($instructor->__get('ID'), $new_course_id);
 				}
 			}
+
+			$category_type = $CoursePress_Core->__get( 'category_type' );
+			$categories = $this->get_category();
+			if ( empty( $categories ) ) {
+				$categories = array();
+			}
+			wp_set_object_terms( $new_course_id, $categories, $category_type );
+
 			/**
 			 * save course number
 			 */
