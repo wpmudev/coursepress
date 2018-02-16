@@ -1,4 +1,4 @@
-/* global CoursePress, _, tinyMCE */
+/* global CoursePress, _ */
 
 (function() {
     'use strict';
@@ -59,15 +59,13 @@
                     }
                 });
 
-                this.$('#content_certificate').val( this.model.content );
-                this.$('.switch-tmce').trigger('click');
-
-                if ( tinyMCE.get( 'content_certificate' ) ) {
-                    this.contentEditor = tinyMCE.get( 'content_certificate' );
-                    this.contentEditor.on( 'change', function() {
-                        self.updateCertificateContent();
-                    }, this );
-                }
+	            this.visualEditor({
+		            container: this.$('.content_certificate_editor'),
+		            content: this.model.content,
+		            callback: function (content) {
+			            self.model.content = content;
+		            }
+	            });
 
                 this.certBox = this.$('.box-cert-settings' );
 
