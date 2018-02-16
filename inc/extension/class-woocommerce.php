@@ -722,7 +722,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( 'product' != $post->post_type ) {
+		if ( !$post || 'product' != $post->post_type ) {
 			return;
 		}
 		/**
