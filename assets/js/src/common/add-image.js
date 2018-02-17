@@ -17,7 +17,8 @@
                 'change .cp-image-url': 'updateInput',
                 'click .cp-btn-browse': 'selectImage',
                 'click .cp-btn-clear': 'clearSelection',
-                'focus .cp-image-url': 'removeErrorMarker'
+                'focus .cp-image-url': 'removeErrorMarker',
+                'input .cp-image-url': 'updatePreview'
             },
             data: {
                 size: 'thumbnail',
@@ -102,6 +103,12 @@
             },
             openMediaFrame: function() {
             },
+	        updatePreview: function (ev) {
+		        var sender;
+
+		        sender = this.$(ev.target);
+		        this.setThumbnail(sender.val());
+	        },
             setSelectedImage: function() {
                 var selected, thumbnail, id, url;
 
@@ -136,8 +143,14 @@
             },
             clearSelection: function() {
                 this.image_id_input.val('');
+                this.image_id_input.trigger('change');
+
                 this.image_url_input.val('');
+                this.image_url_input.trigger('change');
+
                 this.input.val('');
+                this.input.trigger('change');
+
                 this.thumbnail_box.css('background-image', '');
             }
         });

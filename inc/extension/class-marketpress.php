@@ -420,7 +420,7 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function redirect_to_product() {
 		global $post, $wp_query;
-		if ( self::$product_ctp != $post->post_type ) {
+		if ( !$post || self::$product_ctp != $post->post_type ) {
 			return;
 		}
 		if ( ! $wp_query->is_single || ! $wp_query->is_singular ) {

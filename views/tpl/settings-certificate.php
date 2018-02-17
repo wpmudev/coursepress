@@ -41,16 +41,11 @@
         $token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 
         $config['custom-certificate'] = array(
-            'title' => __( 'Custom Certificate', 'CoursePress' ),
+            'title'  => __('Custom Certificate', 'CoursePress'),
             'fields' => array(
                 'content' => array(
-                    'type' => 'wp_editor',
-                    'id' => 'content_certificate',
-                    'value' => $content,
-                    'field_options' => array(
-                        'editor_height' => 300,
-                    ),
-                    'before' => sprintf( '<div class="cp-alert cp-alert-info">%s</div>', $token_info ),
+                    'type'          => 'div',
+                    'wrapper_class' => 'content_certificate_editor'
                 ),
             ),
         );
@@ -94,6 +89,49 @@
                     'label' => __( 'Right', 'CoursePress' ),
                     'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
                     'flex' => true,
+                ),
+            ),
+        );
+        /**
+         * Logo Image
+         */
+        $config['certificate_logo'] = array(
+            'title'  => __('Logo Image', 'cp'),
+            'fields' => array(
+                'certificate_logo' => array(
+                    'type'  => 'text',
+                    'class' => 'cp-add-image-input',
+                    'id'    => 'coursepress-logo-img',
+                    'value' => coursepress_get_setting('basic_certificate/certificate_logo'),
+                    'data'  => array(
+                        'title'     => __('Select Logo Image', 'cp'),
+                        'thumbnail' => coursepress_get_setting('basic_certificate/certificate_logo_thumbnail_id'),
+                    ),
+                ),
+            ),
+        );
+
+        $config['certificate_logo_position'] = array(
+            'title'       => __('Logo Position', 'cp'),
+            'description' => __('', 'cp'),
+            'fields'      => array(
+                'certificate_logo_position.x' => array(
+                    'type'  => 'number',
+                    'label' => __('X', 'cp'),
+                    'value' => coursepress_get_setting('basic_certificate/certificate_logo_position/x', 0),
+                    'flex'  => true,
+                ),
+                'certificate_logo_position.y' => array(
+                    'type'  => 'number',
+                    'label' => __('Y', 'cp'),
+                    'value' => coursepress_get_setting('basic_certificate/certificate_logo_position/y', 0),
+                    'flex'  => true,
+                ),
+                'certificate_logo_position.w' => array(
+                    'type'  => 'number',
+                    'label' => __('Width', 'cp'),
+                    'value' => coursepress_get_setting('basic_certificate/certificate_logo_position/w', 0),
+                    'flex'  => true,
                 ),
             ),
         );

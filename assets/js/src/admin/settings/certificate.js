@@ -1,4 +1,4 @@
-/* global CoursePress, _, tinyMCE */
+/* global CoursePress, _ */
 
 (function() {
     'use strict';
@@ -46,7 +46,8 @@
                 var self = this;
 
                 this.$('select').select2();
-                this.certBG = new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
+                new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
+                new CoursePress.AddImage( this.$('#coursepress-logo-img' ) );
                 this.color = this.$('[name="cert_text_color"]');
 
                 this.color.iris({
@@ -58,15 +59,13 @@
                     }
                 });
 
-                this.$('#content_certificate').val( this.model.content );
-                this.$('.switch-tmce').trigger('click');
-
-                if ( tinyMCE.get( 'content_certificate' ) ) {
-                    this.contentEditor = tinyMCE.get( 'content_certificate' );
-                    this.contentEditor.on( 'change', function() {
-                        self.updateCertificateContent();
-                    }, this );
-                }
+	            this.visualEditor({
+		            container: this.$('.content_certificate_editor'),
+		            content: this.model.content,
+		            callback: function (content) {
+			            self.model.content = content;
+		            }
+	            });
 
                 this.certBox = this.$('.box-cert-settings' );
 
@@ -122,6 +121,7 @@
                 model.set( 'action', 'preview_certificate' );
                 model.on('coursepress:success_preview_certificate', function (data) {
                     this.preview = new CertificatePreview(data);
+                    previewButton.prop('disabled', false);
                 }, this);
                 model.on('coursepress:error_preview_certificate', function (data) {
                     new CoursePress.PopUp({

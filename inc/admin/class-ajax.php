@@ -409,7 +409,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		 * check extensions settings
 		 */
 		global $CoursePress_Extension;
-		l( $CoursePress_Extension->active_extensions() );
+		$CoursePress_Extension->active_extensions();
 
 		coursepress_update_setting( true, $request );
 
@@ -451,7 +451,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			array( 'file' => $logo_image ),
 			$logo_positions
 		);
-		$filename = 'cert-preview-' . $course_id . '.pdf';
 		$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 		$content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
 
@@ -470,13 +469,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'title' => __( 'Course Completion Certificate', 'CP_TD' ),
 			'orientation' => $orientation,
 			'image' => $background,
-			'filename' => $filename,
+			'pdf_content' => $content,
 			'format' => 'F',
 			'uid' => '12345',
 			'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
 			'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
 			'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 		);
+		$cache_buster = md5(serialize($args));
+		$filename = sprintf('cert-preview-%s-%s.pdf', $course_id, $cache_buster);
+		$args['filename'] = $filename;
 
 		$error = '';
 		try {

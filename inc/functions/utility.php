@@ -132,14 +132,20 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 			'facilitator' => $caps,
 		),
 		'basic_certificate' => array(
-			'enabled' => true,
-			'use_cp_default' => false,
-			'content' => '',
-		'margin' => array(
-		   'top' => 0,
-		   'left' => 0,
-		   'right' => 0,
-		),
+			'enabled'                   => true,
+			'use_cp_default'            => false,
+			'content'                   => '',
+			'orientation'               => 'L',
+			'margin'                    => array(
+				'top'   => 0,
+				'left'  => 0,
+				'right' => 0,
+			),
+			'certificate_logo_position' => array(
+				'x' => 0,
+				'y' => 0,
+				'w' => 0,
+			)
 		),
 		'extensions' => array(),
 		'marketpress' => array(
