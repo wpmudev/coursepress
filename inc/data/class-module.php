@@ -450,6 +450,47 @@ class CoursePress_Data_Module {
 			'attributes' => $attributes,
 			'message' => $message,
 		);
+	}
+
+	/**
+	 * Get time estimate.
+	 *
+	 * @param int $module_id
+	 * @param string $default
+	 * @param bool $formatted
+	 *
+	 * @return mixed|string
+	 */
+	public static function get_time_estimation( $module_id, $default = '1:00', $formatted = false ) {
+
+		$module_type = get_post_meta( $module_id, 'module_type', true );
+
+		if ( ! preg_match( '/^input-/', $module_type ) ) {
+			return '';
+		}
+
+		$user_timer = get_post_meta( $module_id, 'use_timer', true );
+		$user_timer = coursepress_is_true( $user_timer );
+		if ( ! $user_timer ) {
+			return '';
+		}
+
+		$estimation = get_post_meta( $module_id, 'duration', true );
+		$estimation = empty( $estimation ) ? $default : $estimation;
+		if ( ! $formatted ) {
+			return empty( $estimation ) ? $default : $estimation;
+		} else {
+			$parts = explode( ':', $estimation );
+			$seconds = (int) array_pop( $parts );
+			$minutes = (int) array_pop( $parts );
+			if ( ! empty( $parts ) ) {
+				$hours = (int) array_pop( $parts );
+			} else {
+				$hours = 0;
+			}
+
+			return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+		}
 
 	}
 }

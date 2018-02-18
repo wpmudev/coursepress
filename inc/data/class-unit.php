@@ -13,6 +13,8 @@ class CoursePress_Data_Unit {
 	 */
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
 
+		global $CoursePress_Core;
+
 		$estimations = array();
 		if ( ! isset( $data[ $unit_id ]['pages'] ) ) {
 			$data[ $unit_id ]['pages'] = array();
@@ -31,13 +33,13 @@ class CoursePress_Data_Unit {
 				if ( ! empty( $parts ) ) {
 					$hours = (int) array_pop( $parts );
 				}
-				$time = CoursePress_Helper_Utility::get_time( $seconds, $minutes, $hours );
+				$time = $CoursePress_Core->get_time( $seconds, $minutes, $hours );
 				// Increase page time.
 				$page_seconds += $time['total_seconds'];
 			}
 
 			// Page time.
-			$time = CoursePress_Helper_Utility::get_time( $page_seconds );
+			$time = $CoursePress_Core->get_time( $page_seconds );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
@@ -47,7 +49,7 @@ class CoursePress_Data_Unit {
 		}
 
 		// Unit time.
-		$time = CoursePress_Helper_Utility::get_time( $unit_seconds );
+		$time = $CoursePress_Core->get_time( $unit_seconds );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/estimation', $time['time'] );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/components/hours', $time['hours'] );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/components/minutes', $time['minutes'] );

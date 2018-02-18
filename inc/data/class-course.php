@@ -1391,4 +1391,43 @@ final class CoursePress_Data_Course {
 
 		return $pages;
 	}
+
+	/**
+	 * Get course time estimate.
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return string
+	 */
+	public static function get_time_estimation( $course_id ) {
+
+		$units = self::get_units_with_modules( $course_id );
+
+		$seconds = 0;
+		$minutes = 0;
+		$hours = 0;
+
+		foreach ( $units as $unit ) {
+			$estimations = CoursePress_Data_Unit::get_time_estimation( $unit['unit']->ID, $units );
+			$components = explode( ':', $estimations['unit']['estimation'] );
+
+			$part = array_pop( $components );
+			$seconds += ! empty( $part ) ? (int) $part : 0;
+			$part = count( $components > 0 ) ? array_pop( $components ) : 0;
+			$minutes += ! empty( $part ) ? (int) $part : 0;
+			$part = count( $components > 0 ) ? array_pop( $components ) : 0;
+			$hours += ! empty( $part ) ? (int) $part : 0;
+		}
+
+		$total_seconds = $seconds + ( $minutes * 60 ) + ( $hours * 3600 );
+
+		$hours = floor( $total_seconds / 3600 );
+		$total_seconds = $total_seconds % 3600;
+		$minutes = floor( $total_seconds / 60 );
+		$seconds = $total_seconds % 60;
+
+		$estimation = sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+
+		return $estimation;
+	}
 }

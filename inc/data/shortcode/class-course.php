@@ -726,6 +726,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
 
+			$content = '';
+
 			$class = 'course-class-size course-class-size-' . $course_id . ' ' . $class;
 			if ( ! empty( $label ) ) {
 				$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
@@ -788,6 +790,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
+
+			$content = '';
 
 			$class = 'course-cost course-cost-' . $course_id . ' ' . $class;
 			if ( ! empty( $label ) ) {
@@ -891,6 +895,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 
 		$display_content = $content;
+
+		$content = '';
 
 		$class = 'course-category course-category-' . $course_id . ' ' . $class;
 		if ( ! empty( $label ) ) {
@@ -1221,8 +1227,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$course_video = coursepress_course_get_setting( $course_id, 'featured_video' );
 		$course_image = coursepress_course_get_setting( $course_id, 'listing_image' );
 
-		$content = '';
-
 		if ( 'thumbnail' == $type ) {
 			$type = 'image';
 			$priority = 'image';
@@ -1408,7 +1412,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$content .= $this->create_html( $label_tag, array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
 
-		$content .= '';
+		$content .= CoursePress_Data_Course::get_time_estimation( $course_id );
 
 		if ( $wrapper ) {
 			$class = 'course-time-estimate course-time-estimate-' . $course_id . ' ' . $class;
