@@ -158,7 +158,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$content = $this->get_course( $args );
 
-		coursepress_log_last_activity( 'course_seen' );
+		coursepress_log_student_activity( 'course_seen' );
 
 		return $content;
 	}
