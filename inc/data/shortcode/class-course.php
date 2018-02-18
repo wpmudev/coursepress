@@ -693,6 +693,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			return '';
 		}
 
+		$course = coursepress_get_course( $course_id );
+
 		$show_no_limit = sanitize_html_class( $atts['show_no_limit'] );
 		$show_remaining = sanitize_html_class( $atts['show_remaining'] );
 		$label = sanitize_text_field( $atts['label'] );
@@ -712,7 +714,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $is_limited ) {
 			$content .= $this->create_html( 'span', array( 'class' => 'total' ), $class_size );
 			if ( $show_remaining ) {
-				$remaining = $class_size - (int) CoursePress_Data_Course::count_students( $course_id );
+				$remaining = $class_size - (int) $course->count_students();
 				$content .= $this->create_html( 'span', array( 'class' => 'remaining' ), sprintf( $remaining_text, $remaining ) );
 			}
 		} else {
