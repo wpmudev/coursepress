@@ -1373,4 +1373,22 @@ final class CoursePress_Data_Course {
 
 		return $tmp_unread_message_count;
 	}
+
+	/**
+	 * Check if pages are allowed.
+	 *
+	 * @param int $course_id
+	 *
+	 * @return array
+	 */
+	public static function allow_pages( $course_id ) {
+
+		$pages = array(
+			'course_discussion' => coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_discussion', true ) ),
+			'workbook' => coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_workbook', true ) ),
+			'grades' => coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_grades', true ) ),
+		);
+
+		return $pages;
+	}
 }

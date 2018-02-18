@@ -57,7 +57,7 @@ function coursepress_get_unit_id( $unit = 0 ) {
  */
 function coursepress_get_unit_title( $unit_id = 0 ) {
 	$unit = coursepress_get_unit( $unit_id );
-	if ( is_wp_error( $unit ) ) {
+	if ( is_wp_error( $unit ) || empty( $unit ) ) {
 		return null;
 	}
 	return $unit->get_the_title();

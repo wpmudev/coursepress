@@ -579,19 +579,21 @@ function coursepress_get_course_submenu() {
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
 			'url' => coursepress_get_course_units_archive_url( $course_id ),
+			'classes' => array( 'submenu-units' ),
 		),
 	);
-	if ( 'unit-archive' == $current ) {
-		$menus['units']['classes'] = array( 'current-menu-item' );
+	if ( 'unit-archive' == $current || 'step' == $current ) {
+		$menus['units']['classes'][] = 'current-menu-item';
 	}
 
 	// Course Notifications.
 	$menus['notifications'] = array(
 		'label' => __( 'Notifications', 'cp' ),
 		'url' => esc_url_raw( $course->get_notifications_url() ),
+		'classes' => array( 'submenu-notifications' ),
 	);
 	if ( 'notifications' == $current ) {
-		$menus['notifications']['classes'] = array( 'current-menu-item' );
+		$menus['notifications']['classes'][] = 'current-menu-item';
 	}
 
 	/**
@@ -601,9 +603,10 @@ function coursepress_get_course_submenu() {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
 			'url' => esc_url_raw( $course->get_discussion_url() ),
+			'classes' => array( 'submenu-discussions' ),
 		);
 		if ( 'forum' == $current ) {
-			$menus['discussions']['classes'] = array( 'current-menu-item' );
+			$menus['discussions']['classes'][] = 'current-menu-item';
 		}
 	}
 	/**
@@ -613,9 +616,10 @@ function coursepress_get_course_submenu() {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
 			'url' => esc_url_raw( $course->get_workbook_url() ),
+			'classes' => array( 'submenu-workbook' ),
 		);
 		if ( 'workbook' == $current ) {
-			$menus['workbook']['classes'] = array( 'current-menu-item' );
+			$menus['workbook']['classes'][] = 'current-menu-item';
 		}
 	}
 	/**
@@ -625,15 +629,17 @@ function coursepress_get_course_submenu() {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
 			'url' => esc_url_raw( $course->get_grades_url() ),
+			'classes' => array( 'submenu-grades' ),
 		);
 		if ( 'grades' == $current ) {
-			$menus['grades']['classes'] = array( 'current-menu-item' );
+			$menus['grades']['classes'][] = 'current-menu-item';
 		}
 	}
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
 		'url' => esc_url_raw( $course->get_permalink() ),
+		'classes' => array( 'submenu-info' ),
 	);
 	/**
 	 * fill class if empty

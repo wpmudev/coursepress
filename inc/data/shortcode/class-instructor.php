@@ -8,7 +8,7 @@
 /**
  * Instructor-related shortcodes.
  */
-class CoursePress_Data_Shortcode_Instructor {
+class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 
 	/**
 	 * Register the shortcodes.
