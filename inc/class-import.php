@@ -250,32 +250,14 @@ class CoursePress_Import extends CoursePress_Utility
 				/**
 				 * CP3 Import Modules
 				 */
-				if ( isset( $unit->modules ) ) {
-					foreach ( $unit->modules as $module ) {
-						if ( isset( $module->steps ) ) {
-							foreach ( $module->steps as $step ) {
-								$data = array(
-									'post_type' => $CoursePress_Core->step_post_type,
-									'post_title' => $step->post_title,
-									'post_excerpt' => $step->post_excerpt,
-									'post_content' => $step->post_content,
-									'post_parent' => $unit_id,
-									'menu_order' => $step->menu_order,
-									'meta_input' => array(
-										'course_id' => $course_id,
-										'unit_id' => $unit_id,
-									),
-								);
-								foreach ( $step as $key => $value ) {
-									if ( preg_match( '/^meta_(.+)$/', $key, $matches ) ) {
-										$data['meta_input'][ $matches[1] ] = $value;
-									}
-								}
-								$data['meta_input']['module_order'] = $step->menu_order;
-								wp_insert_post( $data );
-							}
+				if (isset($unit->modules)) {
+					foreach ($unit->modules as $module) {
+						if (isset($module->steps)) {
+							$this->import_steps($course_id, $unit_id, $module->steps);
 						}
 					}
+				} else if (isset($unit->steps)) {
+					$this->import_steps($course_id, $unit_id, $unit->steps);
 				}
 				/**
 				 * CP 2 import
@@ -492,5 +474,38 @@ class CoursePress_Import extends CoursePress_Utility
 			}
 		}
 		return $meta_input;
+	}
+
+	/**
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $steps
+	 */
+	private function import_steps($course_id, $unit_id, $steps)
+	{
+		global $CoursePress_Core;
+		$step_post_type = $CoursePress_Core->step_post_type;
+		$matches = array();
+		foreach ($steps as $step) {
+			$data = array(
+				'post_type'    => $step_post_type,
+				'post_title'   => $step->post_title,
+				'post_excerpt' => $step->post_excerpt,
+				'post_content' => $step->post_content,
+				'post_parent'  => $unit_id,
+				'menu_order'   => $step->menu_order,
+				'meta_input'   => array(
+					'course_id' => $course_id,
+					'unit_id'   => $unit_id,
+				),
+			);
+			foreach ($step as $key => $value) {
+				if (preg_match('/^meta_(.+)$/', $key, $matches)) {
+					$data['meta_input'][ $matches[1] ] = $value;
+				}
+			}
+			$data['meta_input']['module_order'] = $step->menu_order;
+			wp_insert_post($data);
+		}
 	}
 }
