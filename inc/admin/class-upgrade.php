@@ -43,6 +43,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			'nonce' => wp_create_nonce( __CLASS__ ),
 		);
 		coursepress_render( 'views/admin/upgrade', $args );
+		coursepress_render( 'views/tpl/common' );
 	}
 
 	public function count_courses() {
@@ -76,5 +77,55 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		printf( '<h2>%s</h2>', esc_html__( 'CoursePress Upgrade', 'cp' ) );
 		echo wpautop( $message );
 		echo '</div>';
+	}
+
+	public function upgrade_course_by_id( $course_id ) {
+		$meta = get_post_meta( $course_id );
+		//        l($meta);
+		$result = array(
+			'students' => array(
+				'total' => 0,
+				'added' => 0,
+			),
+			'course_id' => $course_id,
+			'message' => __( 'Course was upgraded successfully.', 'cp' ),
+		);
+		/**
+		 * course_enrolled_student_id
+		 */
+		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
+		//        l($students);
+		if ( ! empty( $students ) && is_array( $students ) ) {
+			$result['students']['total'] = count( $students );
+			foreach ( $students as $student_id ) {
+				$student = new CoursePress_User( $student_id );
+				l( $student );
+				if ( $student->add_course_student( $course_id ) ) {
+					$result['students']['added']++;
+				}
+			}
+		}
+		return $result;
+
+		/**
+		 * Visibility
+		 */
+		$visible_keys = array(
+			'units',
+			'pages',
+			'modules',
+		);
+		foreach ( $visible_keys as $key ) {
+			$key = 'cp_structure_visible_'.$key;
+			$visible[ $key ] = array();
+			if (
+				isset( $this->meta->$key )
+				&& is_array( $this->meta->$key )
+				&& ! empty( $this->meta->$key )
+			) {
+				$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
+			}
+		}
+
 	}
 }

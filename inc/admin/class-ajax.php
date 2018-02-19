@@ -476,20 +476,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
 			'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 		);
-		$cache_buster = md5(serialize($args));
-		$filename = sprintf('cert-preview-%s-%s.pdf', $course_id, $cache_buster);
+		$cache_buster = md5( serialize( $args ) );
+		$filename = sprintf( 'cert-preview-%s-%s.pdf', $course_id, $cache_buster );
 		$args['filename'] = $filename;
 
 		$error = '';
 		try {
 			$pdf->make_pdf( $content, $args );
-		}
-		catch(Exception $exception) {
+		} catch (Exception $exception) {
 			$error = $exception->getMessage();
 		}
 
-		if ($error) {
-			wp_send_json_error(array('message' => $error));
+		if ( $error ) {
+			wp_send_json_error( array( 'message' => $error ) );
 		} else {
 			wp_send_json_success(array(
 				'pdf' => $pdf->cache_url() . $filename,
@@ -561,15 +560,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( is_array( $courses ) ) {
 			$the_course = array_shift( $courses );
 			$import_options = wp_parse_args(
-				(array)$request,
+				(array) $request,
 				array(
-					'author' => wp_get_current_user()
+					'author' => wp_get_current_user(),
 				)
 			);
 			$importClass = new CoursePress_Import( $the_course, $import_options );
-			coursepress_delete_course($request->old_course_id);
+			coursepress_delete_course( $request->old_course_id );
 			wp_send_json_success(array(
-				'course' => $importClass->get_course()
+				'course' => $importClass->get_course(),
 			));
 		}
 	}
@@ -1339,7 +1338,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	/**
 	 * Activate plugin.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param object $request Request.
 	 */
@@ -1359,7 +1358,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	/**
 	 * Deactivate plugin.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 *
 	 * @param object $request Request.
 	 */
@@ -1378,5 +1377,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function dismiss_unit_help() {
 		update_user_meta( get_current_user_id(), 'unit_help_dismissed', true );
 		wp_send_json_success();
+	}
+
+	/**
+	 * Upgrade course.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $request Request.
+	 */
+	public function upgrade_course( $request ) {
+		global $CoursePress;
+		if ( isset( $request->course_id ) ) {
+			$upggrade = new CoursePress_Admin_Upgrade( $CoursePress );
+			$result = $upggrade->upgrade_course_by_id( $request->course_id );
+			if ( is_array( $result ) ) {
+				wp_send_json_success( $result );
+			}
+		}
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not upgrade any course.', 'cp' ) ) );
 	}
 }
