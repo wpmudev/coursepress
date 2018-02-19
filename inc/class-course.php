@@ -656,6 +656,27 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	/**
+	 * Check if allowed students limit reached.
+	 *
+	 * @return int
+	 */
+	public function is_students_full() {
+
+		$course_id = $this->__get( 'ID' );
+
+		$limited = coursepress_is_true( coursepress_course_get_setting( $course_id, 'class_limited' ) );
+
+		if ( $limited ) {
+			$limit = coursepress_course_get_setting( $course_id, 'class_size' );
+			$students = $this->count_students();
+
+			return $limit <= $students;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Count the total number of certified students in the course.
 	 *
 	 * @return int
@@ -914,6 +935,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool Success?
 	 */
 	public function duplicate_course() {
+		global $CoursePress_Core;
+
 		// Course ID is set when this class is instantiated.
 		$course_id = $this->__get( 'ID' );
 		// If in case course post object is not and ID not found, bail.
@@ -980,6 +1003,14 @@ class CoursePress_Course extends CoursePress_Utility {
 					coursepress_add_course_instructor($instructor->__get('ID'), $new_course_id);
 				}
 			}
+
+			$category_type = $CoursePress_Core->__get( 'category_type' );
+			$categories = $this->get_category();
+			if ( empty( $categories ) ) {
+				$categories = array();
+			}
+			wp_set_object_terms( $new_course_id, $categories, $category_type );
+
 			/**
 			 * save course number
 			 */

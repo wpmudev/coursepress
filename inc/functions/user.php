@@ -55,6 +55,29 @@ function coursepress_get_user( $user_id = 0 ) {
 	return $user;
 }
 
+/**
+ * Get user id of user.
+ *
+ * This function validates if given object is
+ * actual user object, or if int, it will check
+ * if it is actual user id. If not arg passed,
+ * it will return current user id.
+ *
+ * @param int|object User object or user id.
+ *
+ * @return bool|null
+ */
+function coursepress_get_user_id( $user = 0 ) {
+
+	$user = coursepress_get_user( $user );
+
+	if ( ! is_wp_error( $user ) ) {
+		return $user->__get( 'ID' );
+	}
+
+	return false;
+}
+
 function coursepress_user_meta_prefix_required() {
 	return is_multisite() && ! is_main_site();
 }
@@ -850,12 +873,57 @@ function coursepress_add_user_to_blog( $user_id, $role = 'student', $blog_id = 0
 }
 
 /**
- * Save student Activity
+ * Get student enrolled date.
+ *
+ * @param int $course_id Course ID.
+ * @param int $student_id Student ID.
+ *
+ * @return array|bool|mixed
  */
-function coursepress_log_student_activity( $kind = 'login', $user_id = null ) {
-	CoursePress_Data_Users::log_student_activity( $kind, $user_id );
+function coursepress_get_student_date_enrolled( $course_id, $student_id = 0 ) {
+
+	if ( empty( $course_id ) ) {
+		return false;
+	}
+
+	$student_id = empty( $student_id ) ? get_current_user_id() : $student_id;
+
+	$date_enrolled = get_user_meta( $student_id, 'enrolled_course_date_' . $course_id );
+	if ( is_array( $date_enrolled ) ) {
+		$date_enrolled = array_pop( $date_enrolled );
+	}
+
+	return $date_enrolled;
 }
 
+/**
+ * Get enrolled date of student for the given course.
+ *
+ * @param int $course_id Course ID.
+ * @param int $student_id Student ID.
+ *
+ * @return bool
+ */
+function coursepress_is_student_enrolled_at( $course_id, $student_id = 0 ) {
 
+	// If student id not given, get current user.
+	$student_id = empty( $student_id ) ? get_current_user_id() : $student_id;
+	$student = coursepress_get_user( $student_id );
 
+	if ( is_wp_error( $student ) || empty( $course_id ) ) {
+		return false;
+	}
 
+	return $student->is_enrolled_at( $course_id );
+}
+
+/**
+ * Save student Activity.
+ *
+ * @param string $kind Activity type.
+ * @param int $user_id User ID.
+ */
+function coursepress_log_student_activity( $kind = 'login', $user_id = null ) {
+
+	CoursePress_Data_Users::log_student_activity( $kind, $user_id );
+}

@@ -6,6 +6,10 @@
  * @package CoursePress
  */
 abstract class CoursePress_Utility {
+
+	// Used by the array uasort() callbacks.
+	private $sort_key;
+
 	public function __set( $name, $value ) {
 		$this->{$name} = $value;
 	}
@@ -63,6 +67,35 @@ abstract class CoursePress_Utility {
 	}
 
 	/**
+	 * Get total secounds.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $secounds Number of secounds.
+	 * @param integer $hours Number of hours.
+	 * @param integer $minutes Number of minutes.
+	 * @return array {
+	 *      @type string Time in format hh:mm:ss
+	 *      @type integer Number of hours.
+	 *      @type integer Number of minutes.
+	 *      @type integer Number of seconds.
+	 * }
+	 * internet Total number of seconds.
+	 */
+	public function get_time( $seconds = 0, $minutes = 0, $hours = 0 ) {
+
+		$time = (int) $seconds + (int) $minutes * MINUTE_IN_SECONDS + (int) $hours * HOUR_IN_SECONDS;
+
+		return array(
+			'total_seconds' => $time,
+			'time' => date( 'H:i:s', $time ),
+			'hours' => date( 'H', $time ),
+			'minutes' => date( 'i', $time ),
+			'seconds' => date( 's', $time ),
+		);
+	}
+
+	/**
 	 * get date in WP format
 	 *
 	 * @since 3.0.0
@@ -116,6 +149,31 @@ abstract class CoursePress_Utility {
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Convert an associative array to html params.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param array $array
+	 *
+	 * @return string
+	 */
+	public function convert_array_to_params( $array ) {
+
+		$content = '';
+		if ( is_array( $array ) ) {
+			foreach ( $array as $key => $value ) {
+				if ( preg_match( '/^\d+$/', $key ) ) {
+					continue;
+				}
+
+				$content .= sprintf( ' %s="%s"', $key, esc_attr( $value ) );
+			}
+		}
+
+		return $content;
 	}
 
 	/**
@@ -369,5 +427,338 @@ abstract class CoursePress_Utility {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Returns true if the WP installation allows user registration.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return bool If CoursePress allows user signup.
+	 */
+	public function users_can_register() {
+
+		if ( is_multisite() ) {
+			$allow_register = users_can_register_signup_filter();
+		} else {
+			$allow_register = get_option( 'users_can_register' );
+		}
+
+		/**
+		 * Filter the return value to allow users to manually enable
+		 * CoursePress registration only.
+		 *
+		 * @since 2.0.0
+		 * @var bool $_allow_register
+		 */
+		$allow_register = apply_filters( 'coursepress_users_can_register', $allow_register );
+
+		return $allow_register;
+	}
+
+	/**
+	 * Sort multi-dimension arrays on 'order' value.
+	 *
+	 * @param $array
+	 * @param $sort_key
+	 * @param bool $sort_asc
+	 *
+	 * @return mixed
+	 */
+	public function sort_on_key( $array, $sort_key, $sort_asc = true ) {
+
+		$this->sort_key = $sort_key;
+
+		if ( ! $sort_asc ) {
+			uasort( $array, array( $this, 'sort_desc' ) );
+		} else {
+			uasort( $array, array( $this, 'sort_asc' ) );
+		}
+
+		return $array;
+	}
+
+	/**
+	 * uasort callback to sort ascending.
+	 *
+	 * @param $x
+	 * @param $y
+	 *
+	 * @return int
+	 */
+	public function sort_asc( $x, $y ) {
+
+		if ( $x[ $this->sort_key ] == $y[ $this->sort_key ] ) {
+			return 0;
+		} else if ( $x[ $this->sort_key ] < $y[ $this->sort_key ] ) {
+			return - 1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * uasort callback to sort descending.
+	 *
+	 * @param $x
+	 * @param $y
+	 *
+	 * @return int
+	 */
+	public function sort_desc( $x, $y ) {
+
+		if ( $x[ $this->sort_key ] == $y[ $this->sort_key ] ) {
+			return 0;
+		} else if ( $x[ $this->sort_key ] > $y[ $this->sort_key ] ) {
+			return - 1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * Sanitize data array.
+	 *
+	 * @param $mixed
+	 *
+	 * @return array|string
+	 */
+	public function sanitize_recursive( $mixed ) {
+
+		if ( is_array( $mixed ) ) {
+			foreach ( $mixed as $key => $value ) {
+				$mixed[ $key ] = $this->sanitize_recursive( $value );
+			}
+		} else {
+			if ( is_string( $mixed ) ) {
+				return $this->filter_content( $mixed );
+			}
+		}
+
+		return $mixed;
+	}
+
+	/**
+	 * Encode a string.
+	 *
+	 * @param string $value
+	 *
+	 * @return bool|string
+	 */
+	public function encode( $value ) {
+
+		if ( ! $value ) {
+			return false;
+		}
+
+		if ( ! extension_loaded( 'mcrypt' ) ) {
+			return $value;
+		}
+
+		if ( ! function_exists( 'mcrypt_module_open' ) ) {
+			return $value;
+		}
+
+		$security_key = $this->get_security_key();
+		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+		$crypttext = mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $security_key, $value, MCRYPT_MODE_ECB, $iv );
+
+		return trim( $this->safe_b64encode( $crypttext ) );
+	}
+
+	/**
+	 * Decode encoded strings.
+	 *
+	 * @param string $value
+	 *
+	 * @return bool|string
+	 */
+	public function decode( $value ) {
+
+		if ( ! $value ) {
+			return false;
+		}
+
+		if ( ! extension_loaded( 'mcrypt' ) ) {
+			return $value;
+		}
+
+		if ( ! function_exists( 'mcrypt_module_open' ) ) {
+			return $value;
+		}
+
+		$security_key = $this->get_security_key();
+		$crypttext = $this->safe_b64decode( $value );
+
+		if ( ! $crypttext ) { return false; }
+
+		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+		$decrypttext = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $security_key, $crypttext, MCRYPT_MODE_ECB, $iv );
+
+		return trim( $decrypttext );
+	}
+
+	/**
+	 * Encode string using base64.
+	 *
+	 * @param int $string
+	 *
+	 * @return mixed|string
+	 */
+	public function safe_b64encode( $string ) {
+
+		$data = base64_encode( $string );
+		$data = str_replace( array( '+', '/', '=' ), array( '-', '_', '' ), $data );
+
+		return $data;
+	}
+
+	/**
+	 * Decode base64 string.
+	 *
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	public function safe_b64decode( $string ) {
+
+		$data = str_replace( array( '-', '_' ), array( '+', '/' ), $string );
+		$mod4 = strlen( $data ) % 4;
+		if ( $mod4 ) {
+			$data .= substr( '====', $mod4 );
+		}
+
+		return base64_decode( $data );
+	}
+
+	/**
+	 * Get $security_key - get key as substring of NONCE_KEY, but check
+	 * length.
+	 *
+	 * @since 2.0.3
+	 *
+	 * @return string
+	 */
+	private static function get_security_key() {
+
+		$available_lengths = array( 32, 24, 16 );
+		$security_key = NONCE_KEY;
+		foreach ( $available_lengths as $key_length ) {
+			if ( function_exists( 'mb_substr' ) ) {
+				$security_key = mb_substr( $security_key, 0, $key_length );
+			} else {
+				$security_key = substr( $security_key, 0, $key_length );
+			}
+			if ( $key_length == strlen( $security_key ) ) {
+				return $security_key;
+			}
+		}
+
+		// md5 has always 16 characters length.
+		$security_key = md5( NONCE_KEY );
+
+		return $security_key;
+	}
+
+	/**
+	 * Format file size.
+	 *
+	 * @param $bytes
+	 *
+	 * @return int|string
+	 */
+	public function format_file_size( $bytes ) {
+
+		$bytes = (int) $bytes;
+
+		if ( $bytes >= 1073741824 ) {
+			$bytes = number_format( $bytes / 1073741824, 2 ) . ' GB';
+		} elseif ( $bytes >= 1048576 ) {
+			$bytes = number_format( $bytes / 1048576, 2 ) . ' MB';
+		} elseif ( $bytes >= 1024 ) {
+			$bytes = number_format( $bytes / 1024, 2 ) . ' KB';
+		} elseif ( $bytes > 1 ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( 1 == $bytes ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0 bytes';
+		}
+
+		return $bytes;
+	}
+
+	/**
+	 * Get appropriate AJAX URL.
+	 *
+	 * @return string
+	 */
+	public function get_ajax_url() {
+
+		return set_url_scheme( admin_url( 'admin-ajax.php' ) );
+	}
+
+	/**
+	 * Get message if module is REQUIRED.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $error_message First line of message.
+	 *
+	 * @return string Error message.
+	 */
+	public function get_message_required_modules( $error_message ) {
+
+		$error_message .= PHP_EOL;
+		$error_message .= PHP_EOL;
+		$error_message .= __( 'Please press the Prev button on the left to continue.', 'cp' );
+
+		return wpautop( $error_message );
+	}
+
+	/**
+	 * Returns the minimum password length to use for validation when the strength meter is disabled.
+	 *
+	 * @return int
+	 */
+	public function get_minimum_password_length() {
+
+		return apply_filters('coursepress_min_password_length', 6 );
+	}
+
+	/**
+	 * If the strength meter is enabled, this method checks a hidden field to make sure that the password is strong enough.
+	 *
+	 * If the strength meter is disabled then this method makes sure that the password meets the minimum length requirement and has the required characters.
+	 *
+	 * @return string
+	 */
+	public function is_password_strong() {
+
+		$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+		$min_password_length = self::get_minimum_password_length();
+
+		if (self::is_password_strength_meter_enabled()) {
+			$password_strength = isset($_POST['password_strength_level']) ? intval($_POST['password_strength_level']) : 0;
+
+			return $confirm_weak_password || $password_strength >= 3;
+		} else {
+			$password = isset($_POST['password']) ? $_POST['password'] : '';
+			$password_strong = strlen($password) >= $min_password_length && preg_match('#[0-9a-z]+#i', $password);
+
+			return $confirm_weak_password || $password_strong;
+		}
+	}
+
+	/**
+	 * Checks if password strength meter is enabled.
+	 *
+	 * @return bool
+	 */
+	public function is_password_strength_meter_enabled() {
+
+		return (boolean) apply_filters('coursepress_display_password_strength_meter', true );
 	}
 }

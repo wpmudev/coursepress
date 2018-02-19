@@ -14,6 +14,8 @@ class CoursePress_Export extends CoursePress_Utility {
 	 */
 	private $data = array();
 
+	private $is_with_modules = true;
+
 	/**
 	 * CoursePress_Export constructor.
 	 *
@@ -43,6 +45,7 @@ class CoursePress_Export extends CoursePress_Utility {
 		if ( is_wp_error( $course ) || empty( $course ) ) {
 			return false;
 		}
+		$this->is_with_modules = $course->is_with_modules();
 		// Set the couse data.
 		$this->data['course'] = $post;
 		// Course author user.
@@ -109,14 +112,14 @@ class CoursePress_Export extends CoursePress_Utility {
 	/**
 	 * Get unit sub items and other data.
 	 *
-	 * @param object $unit Unit object.
+	 * @param CoursePress_Unit $unit Unit object.
 	 *
 	 * @return array Unit data.
 	 */
 	private function _set_unit_data( $unit ) {
 		// Do not continue if unit exists.
 		if ( empty( $unit->ID ) ) {
-			return array();
+			return;
 		}
 		$unit_id = $unit->ID;
 		// Get unit meta values.
@@ -126,31 +129,36 @@ class CoursePress_Export extends CoursePress_Utility {
 			$this->data['units'][ $unit_id ]->meta = $meta;
 		}
 		// Get unit modules.
-		$modules = $unit->get_modules_with_steps( false );
-		foreach ( $modules as $module_id => $module ) {
-			// Get module meta.
-			$module_meta = get_post_meta( $module_id );
-			$module['meta'] = $module_meta;
-			if ( ! isset( $this->data['units'][ $unit_id ]->modules ) ) {
-				$this->data['units'][ $unit_id ]->modules = array();
-			}
-			$this->data['units'][ $unit_id ]->modules[ $module_id ] = $module;
-			/**
-			 * Filter hook to include/exclude comments from export.
-			 *
-			 * @param bool
-			 * @param $module_id Module ID.
-			 */
-			if ( apply_filters( 'coursepress_export_course_include_module_comments', true, $module_id ) ) {
-				// Get module comments
-				$comments = get_comments( 'post_id=' . $module_id );
-				foreach ( $comments as $comment_id => $comment ) {
-					$comment->user = coursepress_get_user( $comment->user_id );
-					$comment->unit_id = $unit_id;
-					$comment->module_id = $module_id;
-					$this->data['comments']['modules'][ $module_id ][] = $comment;
+		if($this->is_with_modules) {
+			$modules = $unit->get_modules_with_steps( false );
+			foreach ( $modules as $module_id => $module ) {
+				// Get module meta.
+				$module_meta = get_post_meta( $module_id );
+				$module['meta'] = $module_meta;
+				if ( ! isset( $this->data['units'][ $unit_id ]->modules ) ) {
+					$this->data['units'][ $unit_id ]->modules = array();
+				}
+				$this->data['units'][ $unit_id ]->modules[ $module_id ] = $module;
+				/**
+				 * Filter hook to include/exclude comments from export.
+				 *
+				 * @param bool
+				 * @param $module_id Module ID.
+				 */
+				if ( apply_filters( 'coursepress_export_course_include_module_comments', true, $module_id ) ) {
+					// Get module comments
+					$comments = get_comments( 'post_id=' . $module_id );
+					foreach ( $comments as $comment_id => $comment ) {
+						$comment->user = coursepress_get_user( $comment->user_id );
+						$comment->unit_id = $unit_id;
+						$comment->module_id = $module_id;
+						$this->data['comments']['modules'][ $module_id ][] = $comment;
+					}
 				}
 			}
+		}
+		else {
+			$this->data['units'][ $unit_id ]->steps = $unit->get_steps(false);
 		}
 	}
 

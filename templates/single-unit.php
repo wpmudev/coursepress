@@ -18,11 +18,21 @@ get_header(); ?>
             <div class="content-area">
                 <header class="page-header">
                     <h1 class="page-title"><?php echo coursepress_get_course_title(); ?></h1>
+
+                    <?php
+                    /**
+                     * To override course submenu template to your theme or a child-theme,
+                     * create a template `course-submenu.php` and it will be loaded instead.
+                     *
+                     * @since 3.0
+                     */
+                    coursepress_get_template( 'course', 'submenu' );
+                    ?>
+
                     <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
 
                     <div class="course-unit-progress">
-                        <?php
-                        echo coursepress_progress_wheel( array(
+                        <?php echo coursepress_progress_wheel( array(
                                 'class' => 'per-unit-progress',
                                 'data-value' => $unit_progress,
                                 'data-size' => 62,

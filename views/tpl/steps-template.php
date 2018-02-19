@@ -39,7 +39,7 @@
         </label>
     </div>
     <div class="cp-box image-custom-caption {{meta_show_media_caption?'':'inactive'}}">
-        <div class="cp-toggle-box">
+        <div class="cp-box cp-toggle-box">
             <label>
                 <input type="radio" name="meta_caption_field" value="media" {{_.checked('media', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Use media caption', 'cp' ); ?></span>
