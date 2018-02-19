@@ -28,12 +28,12 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 	$course_id = intval( $args['course_id'] );
 
 	// Create new invite code and hash.
-	$invite_data = CoursePress_Data_Courses::create_invite_code_hash( $email );
+	$invite_data = CoursePress_Data_Course::create_invite_code_hash( $email );
 	$args['invite_code'] = $invite_data['code'];
 	$args['invite_hash'] = $invite_data['hash'];
 
 	// Get existing invites for the instructors.
-	$invites = CoursePress_Data_Courses::get_invitations_by_course_id( $course_id, $type );
+	$invites = CoursePress_Data_Course::get_invitations_by_course_id( $course_id, $type );
 	$invite_exists = false;
 
 	// Check to see if this invite is already there.

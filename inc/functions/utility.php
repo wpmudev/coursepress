@@ -249,7 +249,7 @@ function coursepress_render( $file, $args = array(), $echo = true ) {
 		return true;
 	}
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		error_log( sprintf( 'CoursePress, missing temlate: %s', $file ) );
+		error_log( sprintf( 'CoursePress, missing template: %s', $file ) );
 	}
 	return false;
 }
@@ -746,4 +746,54 @@ function coursepress_is_true( $value ) {
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Check user access to course.
+ *
+ * @since 2.0.0
+ *
+ * @param integer $course_id Course ID
+ * @return boolean User can or can not.
+ */
+function coursepress_can_access_course( $course_id ) {
+
+	if ( empty( $course_id ) ) {
+		$course_id = coursepress_get_course_id();
+
+		if ( empty( $course_id ) ) {
+			return; // Simply return to avoid fatal error
+		}
+	}
+
+	$course = coursepress_get_course();
+
+	if ( ! is_user_logged_in() ) {
+		wp_safe_redirect( $course->get_permalink() );
+		exit;
+	}
+
+	$user = coursepress_get_user();
+
+	if ( current_user_can( 'manage_options' ) ) {
+		return true;
+	}
+
+	/**
+	 * check student
+	 */
+	if ( $user->is_enrolled_at( $course_id ) ) {
+		return true;
+	}
+
+	/**
+	 * check instructor
+	 */
+	if ( $user->is_instructor_at( $course_id ) ) {
+		return true;
+	}
+
+	wp_safe_redirect( $course->get_permalink() );
+	exit;
+
 }

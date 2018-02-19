@@ -53,6 +53,24 @@ function coursepress_get_course( $course_id = 0, $cached = true ) {
 }
 
 /**
+ * Get current course id.
+ *
+ * @param int|object Course object or id.
+ *
+ * @return int|bool
+ */
+function coursepress_get_course_id( $course = 0 ) {
+
+	$course = coursepress_get_course( $course );
+
+	if ( ! is_wp_error( $course ) ) {
+		return $course->__get( 'ID' );
+	}
+
+	return false;
+}
+
+/**
  * Returns list courses.
  *
  * @param array $args  Arguments to pass to WP_Query.
@@ -561,19 +579,21 @@ function coursepress_get_course_submenu() {
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
 			'url' => coursepress_get_course_units_archive_url( $course_id ),
+			'classes' => array( 'submenu-units' ),
 		),
 	);
-	if ( 'unit-archive' == $current ) {
-		$menus['units']['classes'] = array( 'current-menu-item' );
+	if ( 'unit-archive' == $current || 'step' == $current ) {
+		$menus['units']['classes'][] = 'current-menu-item';
 	}
 
 	// Course Notifications.
 	$menus['notifications'] = array(
 		'label' => __( 'Notifications', 'cp' ),
 		'url' => esc_url_raw( $course->get_notifications_url() ),
+		'classes' => array( 'submenu-notifications' ),
 	);
 	if ( 'notifications' == $current ) {
-		$menus['notifications']['classes'] = array( 'current-menu-item' );
+		$menus['notifications']['classes'][] = 'current-menu-item';
 	}
 
 	/**
@@ -583,9 +603,10 @@ function coursepress_get_course_submenu() {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
 			'url' => esc_url_raw( $course->get_discussion_url() ),
+			'classes' => array( 'submenu-discussions' ),
 		);
 		if ( 'forum' == $current ) {
-			$menus['discussions']['classes'] = array( 'current-menu-item' );
+			$menus['discussions']['classes'][] = 'current-menu-item';
 		}
 	}
 	/**
@@ -595,9 +616,10 @@ function coursepress_get_course_submenu() {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
 			'url' => esc_url_raw( $course->get_workbook_url() ),
+			'classes' => array( 'submenu-workbook' ),
 		);
 		if ( 'workbook' == $current ) {
-			$menus['workbook']['classes'] = array( 'current-menu-item' );
+			$menus['workbook']['classes'][] = 'current-menu-item';
 		}
 	}
 	/**
@@ -607,15 +629,17 @@ function coursepress_get_course_submenu() {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
 			'url' => esc_url_raw( $course->get_grades_url() ),
+			'classes' => array( 'submenu-grades' ),
 		);
 		if ( 'grades' == $current ) {
-			$menus['grades']['classes'] = array( 'current-menu-item' );
+			$menus['grades']['classes'][] = 'current-menu-item';
 		}
 	}
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
 		'url' => esc_url_raw( $course->get_permalink() ),
+		'classes' => array( 'submenu-info' ),
 	);
 	/**
 	 * fill class if empty
@@ -1189,6 +1213,32 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
 	update_post_meta( $course_id, 'course_settings', $settings );
 
 	return true;
+}
+
+/**
+ * Get course setting value.
+ *
+ * @param int $course_id Course ID.
+ * @param string $key Setting key.
+ * @param bool $default Default value.
+ *
+ * @return bool
+ */
+function coursepress_course_get_setting( $course_id, $key, $default = false ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) || empty( $key ) ) {
+		return $default;
+	}
+
+	$settings = $course->get_settings();
+
+	if ( isset( $settings[ $key ] ) ) {
+		return $settings[ $key ];
+	}
+
+	return $default;
 }
 
 /**
@@ -1956,3 +2006,51 @@ function coursepress_get_discussion() {
 	return $found_post;
 }
 
+/**
+ * Get categories assigned to a course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+function coursepress_get_course_categories( $course_id ) {
+
+	$cats = array();
+	if ( empty( $course_id ) ) {
+		return $cats;
+	}
+
+	$course_category = wp_get_object_terms( $course_id, 'course_category' );
+	if ( ! empty( $course_category ) ) {
+		foreach ( $course_category as $term ) {
+			$cats[ $term->term_id ] = $term->name;
+		}
+	}
+
+	return $cats;
+}
+
+/**
+ * Get prerequisite of course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array|bool
+ */
+function coursepress_get_enrollment_prerequisite( $course_id ) {
+
+	if ( empty( $course_id ) ) {
+		return array();
+	}
+
+	$courses = coursepress_course_get_setting( $course_id, 'enrollment_prerequisite', array() );
+	if ( empty( $courses ) ) {
+		return array();
+	}
+
+	$courses = (array) $courses;
+
+	$courses = array_diff( $courses, array( $course_id ) );
+
+	return $courses;
+}

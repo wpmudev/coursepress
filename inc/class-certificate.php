@@ -312,6 +312,29 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		return $pdf_file;
 	}
 
+	/**
+	 * Get pdf file name - this function is depracated, we should do not use
+	 * it - it is easy to get all certificates. It must stay as legacy for
+	 * already generated certificates.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @param integer $student_id student ID.
+	 *
+	 * @return full path
+	 */
+	public function deprecated_get_pdf_file_name( $course_id, $student_id ) {
+
+		global $CoursePress;
+		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+
+		$filename = 'certificate-' . $course_id . '-' . $student_id;
+		$pdf_file = $pdf->cache_path() . $filename.'.pdf';
+
+		return $pdf_file;
+	}
+
 	public function get_pdf_file_url( $course_id, $student_id ) {
 		$pdf_file = $this->get_pdf_file_name( $course_id, $student_id );
 		return str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $pdf_file );
@@ -465,5 +488,67 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		if ( ! is_dir( $check_directory ) ) {
 			mkdir( $check_directory );
 		}
+	}
+
+	/**
+	 * Get encoded url.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $student_id The ID of the student the certification belongs to.
+	 * @param integer $course_id The ID of the completed course.
+	 *
+	 * @return mixed A link to pdf certificate or false.
+	 */
+	public function get_encoded_url( $course_id, $student_id ) {
+
+		// Get from certificate
+		$certificate_id = $this->get_certificate_id( $student_id, $course_id );
+		if ( ! empty( $certificate_id ) ) {
+			$file = get_post_meta( $certificate_id, self::CUSTOM_FIELD_NAME_FOR_PDF_FILE, true );
+			$url = $this->url_prepare( $file, $course_id, $student_id );
+			if ( ! empty( $url ) ) {
+				return $url;
+			}
+		}
+
+		// Get by default
+		$file = $this->get_pdf_file_name( $course_id, $student_id );
+		$url = $this->url_prepare( $file, $course_id, $student_id );
+		if ( ! empty( $url ) ) {
+			return $url;
+		}
+
+		// legacy of not secure certificates.
+		$file = $this->deprecated_get_pdf_file_name( $course_id, $student_id );
+		$url = $this->url_prepare( $file, $course_id, $student_id );
+		if ( ! empty( $url ) ) {
+			return $url;
+		}
+
+		// No file.
+		return false;
+	}
+
+	/**
+	 * Check & prepare PDF url.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $file full path to certificate file.
+	 * @return string/boolean Returns encoded URL or false if file do not * exists.
+	 */
+	public function url_prepare( $file, $course_id, $student_id ) {
+
+		if ( is_file( $file ) && is_readable( $file ) ) {
+			$upload_dir = wp_upload_dir();
+			$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
+			$url = $this->encode( $url );
+			$url = add_query_arg( array( 'fdcpf' => $url, 'c' => $course_id, 'u' => $student_id ), home_url() );
+
+			return $url;
+		}
+
+		return $this->get_pdf_file_url( $course_id, $student_id );
 	}
 }

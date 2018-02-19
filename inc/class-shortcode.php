@@ -9,47 +9,8 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 	protected $courses = array();
 
 	public function __construct() {
-		$shortcodes = array(
-			'course',
-			'course_action_links',
-			'course_calendar',
-			'course_class_size',
-			'course_cost',
-			'course_dates',
-			'course_details',
-			'course_end',
-			'course_start',
-			'course_title',
-			'course_summary',
-			'course_description',
-			'course_enrollment_dates',
-			'course_enrollment_start',
-			'course_enrollment_end',
-			'course_enrollment_type',
-			'course_featured',
-			'course_featured_video',
-			'course_instructor_avatar',
-			'course_instructors',
-			'course_join_button',
-			'course_language',
-			'course_list',
-			'course_list_image',
-			'course_list_box',
-			'course_media',
-			'course_signup',
-			'course_structure',
-			'course_time_estimation',
-			'courses_student_dashboard',
-			'courses_student_settings',
-			'instructor_profile_url',
-		);
 
-		foreach ( $shortcodes as $shortcode ) {
-			$method = 'get_' . $shortcode;
-
-			if ( method_exists( $this, $method ) )
-				add_shortcode( $shortcode, array( $this, $method ) );
-		}
+		( new CoursePress_Data_Shortcodes() )->init();
 	}
 
 	private function get_course_class( $course_id ) {
