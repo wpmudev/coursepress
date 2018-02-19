@@ -227,7 +227,7 @@ final class CoursePress {
 
 	function register_cp_theme() {
 		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-				$this->plugin_path . 'themes/'
+				$this->plugin_path . 'themes'
 			)
 		);
 		foreach ( $theme_directories as $theme_directory ) {
