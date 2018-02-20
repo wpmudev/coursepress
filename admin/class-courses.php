@@ -133,6 +133,12 @@ class CoursePress_Admin_Courses {
 		if ( empty( $date ) ) {
 			return '-';
 		} else {
+			/**
+			 * Parse string to timestamp in case of not
+			 */
+			if ( ! preg_match( '/^\d+$/', $date ) ) {
+				$date = strtotime( $date );
+			}
 			$date = date_i18n( self::$date_format, $date );
 		}
 		return $date;
