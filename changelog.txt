@@ -10,6 +10,8 @@ CHANGELOG
 - Improved: Added CoursePress version to export file.
 - Fixed: Added course categories information in export file.
 - Fixed: Check MarketPress integration to avoid warnings.
+- Fixed: Mistakes in language strings.
+- Fixed: Problem with login form on small screens like mobile.
 
 = 2.1.4 =
 -------------------------------------------------

@@ -1504,13 +1504,18 @@ ul.notification-archive-list:after {
   }
   body .enrolment-container-div .bbm-wrapper {
     position: static;
+    border-radius: 0;
   }
   body .enrolment-container-div .bbm-wrapper .bbm-modal {
     max-height: initial;
+    width: auto;
   }
   body .enrolment-container-div.cp-mask {
-    position: fixed;
-    padding: 5em;
+    position: static;
+    padding: 0;
+    width: auto;
+    height: auto;
+    border-top: 4px solid #5dd5fb;
   }
 }
 @media screen and (min-height: 801px) {

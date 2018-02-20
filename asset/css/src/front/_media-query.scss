@@ -1,32 +1,37 @@
 @media screen and (min-width: 768px) {
-	.enrolment-container-div {
-		.bbm-modal {
-			margin: 0 auto;
-		}
-	}
+    .enrolment-container-div {
+        .bbm-modal {
+            margin: 0 auto;
+        }
+    }
 }
 
 @media screen and (max-height: 800px) {
-	body {
-		.enrolment-container-div {
-			padding: 1em;
-			.bbm-wrapper {
-				position: static;
-				.bbm-modal {
-					max-height: initial;
-				}
-			}
-			&.cp-mask {
-				position: fixed;
-				padding: 5em;
-			}
-		}
-	}
+    body {
+        .enrolment-container-div {
+            padding: 1em;
+            .bbm-wrapper {
+                position: static;
+                border-radius: 0;
+                .bbm-modal {
+                    max-height: initial;
+                    width: auto;
+                }
+            }
+            &.cp-mask {
+                position: static;
+                padding: 0;
+                width: auto;
+                height: auto;
+                border-top: 4px solid #5dd5fb;
+            }
+        }
+    }
 }
 
 @media screen and (min-height: 801px) {
-	.cp-mask {
-		position: fixed;
-	}
+    .cp-mask {
+        position: fixed;
+    }
 }
 
