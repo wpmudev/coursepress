@@ -70,11 +70,13 @@
 					'type' => 'number',
 					'title' => __( 'Threaded comments level', 'cp' ),
 					'value' => $thread_comments_depth,
+					'class' => 'small-text',
 				),
 				'comments_per_page' => array(
 					'type' => 'number',
 					'title' => __( 'Number of comments per page', 'cp' ),
 					'value' => $comments_per_page,
+					'class' => 'small-text',
 				),
 				'comments_order' => array(
 					'type' => 'radio',
