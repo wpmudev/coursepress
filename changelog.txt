@@ -5,6 +5,11 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.5 =
+-------------------------------------------------
+- Improved: Added CoursePress version to export file.
+- Fixed: Added course categories information in export file.
+
 = 2.1.4 =
 -------------------------------------------------
 * Fixed: Course certificate email settings were hidden for nonpremium users.
