@@ -236,9 +236,11 @@ class CoursePress_Data_Shortcode_Instructor {
 
 		switch ( $style ) {
 			case 'block':
-				$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
-				if ( $show_divider && ( 0 < count( $instructors ) ) ) {
-					$content .= '<div class="divider"></div>';
+				if ( 0 < count( $instructors ) ) {
+					$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
+					if ( $show_divider ) { )
+						$content .= '<div class="divider"></div>';
+					}
 				}
 				break;
 
