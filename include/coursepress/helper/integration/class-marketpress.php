@@ -445,22 +445,27 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	public static function update_product_meta( $product_id, $settings, $course_id ) {
 		// Update the meta
-		$is_sale = ! empty( $settings['mp_sale_price_enabled'] ) ? '1' : '';
+		$is_sale = isset( $settings['mp_sale_price_enabled'] ) && ! empty( $settings['mp_sale_price_enabled'] ) ? '1' : '';
 		$product_meta = array(
-			'sku' => $settings['mp_sku'],
-			'regular_price' => $settings['mp_product_price'],
-			'has_sale' => 'on' == $settings['mp_sale_price_enabled']? 1 : 0,
-			'sale_price_amount' => $settings['mp_product_sale_price'],
-			'sort_price' => '' !== $settings['mp_product_sale_price'] ? $settings['mp_product_sale_price'] : $settings['mp_product_price'],
+			'sku' => isset( $settings['mp_sku'] )? $settings['mp_sku']:'',
+			'regular_price' => isset( $settings['mp_product_price'] )? $settings['mp_product_price'] : '',
+			'has_sale' => isset( $settings['mp_sale_price_enabled'] ) && 'on' == $settings['mp_sale_price_enabled']? 1 : 0,
+			'sale_price_amount' => isset( $settings['mp_product_sale_price'] )? $settings['mp_product_sale_price']: '',
+			'sort_price' => isset( $settings['mp_product_sale_price'] ) && '' !== $settings['mp_product_sale_price'] ? $settings['mp_product_sale_price'] : ( isset( $settings['mp_product_price'] )? $settings['mp_product_price']:'' ),
 			'mp_course_id' => $course_id,
-			'mp_price' => $settings['mp_product_price'],
-			'mp_sale_price' => $settings['mp_product_sale_price'],
-			'mp_sku' => $settings['mp_sku'],
+			'mp_price' => isset( $settings['mp_product_price'] )? $settings['mp_product_price']:'',
+			'mp_sale_price' => isset( $settings['mp_product_sale_price'] )? $settings['mp_product_sale_price']:'',
+			'mp_sku' => isset( $settings['mp_sku'] )? $settings['mp_sku']:'',
 			'mp_is_sale' => $is_sale,
 		);
 
 		// Create Auto SKU
-		if ( ! empty( $settings['mp_auto_sku'] ) || empty( $settings['mp_sku'] ) ) {
+		if (
+			isset( $settings['mp_auto_sku'] )
+			&& ! empty( $settings['mp_auto_sku'] )
+			|| ! isset( $settings['mp_sku'] )
+			|| empty( $settings['mp_sku'] )
+		) {
 			$sku_prefix = apply_filters( 'coursepress_course_sku_prefix', 'CP-' );
 			$product_meta['mp_sku'] = $product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
 		}

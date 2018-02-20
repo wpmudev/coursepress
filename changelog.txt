@@ -9,6 +9,7 @@ CHANGELOG
 -------------------------------------------------
 - Improved: Added CoursePress version to export file.
 - Fixed: Added course categories information in export file.
+- Fixed: Check MarketPress integration to avoid warnings.
 
 = 2.1.4 =
 -------------------------------------------------
