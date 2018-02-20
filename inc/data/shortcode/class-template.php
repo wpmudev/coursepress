@@ -32,7 +32,6 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'cp_pages',
 			'course_signup_form',
 			'course_categories',
-			'messaging_submenu',
 		);
 
 		foreach ( $shortcodes as $shortcode ) {
@@ -1294,72 +1293,6 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		}
 
 		return '';
-	}
-
-	/**
-	 * Display navigation links for messaging: Inbox/Messages/Compose
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return string HTML code for navigation block.
-	 */
-	public function get_messaging_submenu() {
-
-		global $coursepress;
-
-		if ( isset( $coursepress->inbox_subpage ) ) {
-			$subpage = $coursepress->inbox_subpage;
-		} else {
-			$subpage = '';
-		}
-
-		$unread_display = '';
-		$show_messaging = coursepress_is_true( get_option( 'show_messaging', 0 ) );
-
-		if ( $show_messaging ) {
-			$unread_count = CoursePress_Data_Course::get_unread_messages_count();
-			if ( $unread_count > 0 ) {
-				$unread_display = sprintf( ' (%d)', $unread_count );
-			} else {
-				$unread_display = '';
-			}
-		}
-
-		$url_inbox = '';
-		$url_messages = '';
-		$url_compose = '';
-		$class_inbox = 'inbox' == $subpage ? 'submenu-active' : '';
-		$class_messages = 'sent_messages' == $subpage ? 'submenu-active' : '';
-		$class_compose = 'new_message' == $subpage ? 'submenu-active' : '';
-
-		ob_start();
-		?>
-		<div class="submenu-main-container submenu-messaging">
-			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-inbox <?php echo esc_attr( $class_inbox ); ?>">
-					<a href="<?php echo esc_url( $url_inbox ); ?>">
-						<?php
-						esc_html_e( 'Inbox', 'cp' );
-						echo $unread_display;
-						?>
-					</a></li>
-				<li class="submenu-item submenu-sent-messages <?php echo esc_attr( $class_messages ); ?>">
-					<a href="<?php echo esc_url( $url_messages ); ?>">
-					<?php esc_html_e( 'Sent', 'cp' ); ?>
-					</a>
-				</li>
-				<li class="submenu-item submenu-new-message <?php echo esc_attr( $class_compose ); ?>">
-					<a href="<?php echo esc_url( $url_compose ); ?>">
-					<?php esc_html_e( 'New Message', 'cp' ); ?>
-					</a>
-				</li>
-			</ul>
-		</div>
-		<br clear="all"/>
-		<?php
-		$content = ob_get_clean();
-
-		return $content;
 	}
 
 	/**
