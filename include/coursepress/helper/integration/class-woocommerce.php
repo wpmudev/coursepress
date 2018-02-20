@@ -323,7 +323,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			 */
 			self::update_product_thumbnail( $post_id );
 
-			$automatic_sku = $settings['mp_auto_sku'];
+			$automatic_sku = isset( $settings['mp_auto_sku'] )? $settings['mp_auto_sku']:'';
 
 			if ( 'on' == $automatic_sku ) {
 				$sku[0] = $automatic_sku_number;
