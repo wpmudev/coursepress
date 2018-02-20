@@ -1,5 +1,10 @@
 <div class="wrap coursepress-wrap coursepress-upgrade" id="coursepress-upgrade">
-	<h1 class="wp-heading-inline"><?php _e( 'Upgrade', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Upgrade', 'cp' ); ?></h1>
+<?php if ( empty( $courses ) ) { ?>
+    <div class="notice notice-success">
+        <p><?php _e( 'Currently you have no courses to upgrade.', 'cp' ); ?></p>
+    </div>
+<?php } else { ?>
     <div class="coursepress-page">
         <div id="progress"></div>
         <a id="coursepress-upgrade-button" class="button button-default" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Upgrade courses', 'cp' ); ?></a>
@@ -24,4 +29,5 @@ foreach ( $courses as $course ) {
 }
 ?>
 </ol>
+<?php } ?>
 </div>

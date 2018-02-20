@@ -10,6 +10,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	protected $cp;
 	private $status;
 	private $count = 0;
+	private $courses = array();
 
 	public function __construct( CoursePress $cp ) {
 		$this->status = get_option( 'coursepress_upgrade', 'no upgrade required' );
@@ -36,10 +37,23 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	public function process_page() {
 	}
 
+	private function set_courses() {
+		if ( empty( $this->courses ) ) {
+			$this->courses = coursepress_get_accessible_courses( false );
+		}
+	}
+
 	public function get_upgrade_page() {
+		$this->set_courses();
+		$courses_to_upgrade = array();
+		foreach ( $this->courses as $course ) {
+			if ( 0 < version_compare( 3, $course->coursepress_version ) ) {
+				$courses_to_upgrade[] = $course;
+			}
+		}
 		$args = array(
 			'count' => $this->count,
-			'courses' => coursepress_get_accessible_courses( false ),
+			'courses' => $courses_to_upgrade,
 			'nonce' => wp_create_nonce( __CLASS__ ),
 		);
 		coursepress_render( 'views/admin/upgrade', $args );
@@ -47,12 +61,12 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	}
 
 	public function count_courses() {
-		global $CoursePress_Core;
-		$post_type = $CoursePress_Core->__get( 'course_post_type' );
-		$count = wp_count_posts( 'course' );
+		$this->set_courses();
 		$this->count = 0;
-		foreach ( $count as $type => $number ) {
-			$this->count += $number;
+		foreach ( $this->courses as $course ) {
+			if ( 0 < version_compare( 3, $course->coursepress_version ) ) {
+				$this->count++;
+			}
 		}
 	}
 
@@ -80,8 +94,9 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	}
 
 	public function upgrade_course_by_id( $course_id ) {
+
 		$meta = get_post_meta( $course_id );
-		//        l($meta);
+		        l( $meta );
 		$result = array(
 			'students' => array(
 				'total' => 0,
@@ -94,18 +109,15 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		 * course_enrolled_student_id
 		 */
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
-		//        l($students);
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
 			foreach ( $students as $student_id ) {
 				$student = new CoursePress_User( $student_id );
-				l( $student );
 				if ( $student->add_course_student( $course_id ) ) {
 					$result['students']['added']++;
 				}
 			}
 		}
-		return $result;
 
 		/**
 		 * Visibility
@@ -119,13 +131,15 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$key = 'cp_structure_visible_'.$key;
 			$visible[ $key ] = array();
 			if (
-				isset( $this->meta->$key )
-				&& is_array( $this->meta->$key )
-				&& ! empty( $this->meta->$key )
+				isset( $meta[ $key ] )
+				&& is_array( $meta[ $key ] )
+				&& ! empty( $meta[ $key ] )
 			) {
-				$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
+				$visible[ $key ] = maybe_unserialize( $meta[ $key ][0] );
 			}
+			l( $visible );
 		}
 
+		return $result;
 	}
 }
