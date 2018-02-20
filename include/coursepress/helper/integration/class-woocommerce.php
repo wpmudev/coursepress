@@ -572,8 +572,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function change_cp_order_item_name( $name, $item ) {
-		$product_id = isset( $item['item_meta']['_product_id'] ) ? $item['item_meta']['_product_id'] : '';
-		$product_id = $product_id[0];
+		$product_id = false;
+		if ( is_array( $item ) ) {
+			$product_id = isset( $item['item_meta']['_product_id'] ) ? $item['item_meta']['_product_id'] : '';
+			$product_id = $product_id[0];
+		} else if ( is_a( $item, 'WC_Order_Item_Product' ) ) {
+			$product_id = $item->get_product_id();
+		}
 		if ( is_numeric( $product_id ) ) {
 			$course_id = wp_get_post_parent_id( $product_id );
 			if ( $course_id && get_post_type( $course_id ) == 'course' ) {

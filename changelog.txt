@@ -12,6 +12,7 @@ CHANGELOG
 - Fixed: Check MarketPress integration to avoid warnings.
 - Fixed: Mistakes in language strings.
 - Fixed: Problem with login form on small screens like mobile.
+- Fixed: Warnings when we use WooCommerce 3x.
 
 = 2.1.4 =
 -------------------------------------------------
