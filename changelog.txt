@@ -13,6 +13,7 @@ CHANGELOG
 - Fixed: Mistakes in language strings.
 - Fixed: Problem with login form on small screens like mobile.
 - Fixed: Warnings when we use WooCommerce 3x.
+- Fixed: Warnings on the "Grade" tab, when one of module is a quiz.
 
 = 2.1.4 =
 -------------------------------------------------
