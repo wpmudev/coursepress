@@ -263,8 +263,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		// Add filter to post classes
 
 		// Override button
-		if ( ! empty( $a['override_button_text'] ) && ! empty( $a['override_button_link'] ) ) {
-			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $a['override_button_link'] ) . '">' . esc_attr( $a['override_button_text'] ) . '</button>';
+		if ( ! empty( $atts['override_button_text'] ) && ! empty( $atts['override_button_link'] ) ) {
+			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $atts['override_button_link'] ) . '">' . esc_attr( $atts['override_button_text'] ) . '</button>';
 		}
 
 		// schema.org
@@ -289,7 +289,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		</div>
 		';
 
-		$template = apply_filters( 'coursepress_template_course_list_box', $template, $course_id, $a );
+		$template = apply_filters( 'coursepress_template_course_list_box', $template, $course_id, $atts );
 
 		$content = do_shortcode( $template );
 
@@ -1251,7 +1251,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	public function get_course_categories( $atts ) {
 
 		$atts = shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
+			'course_id' => coursepress_get_course_id(),
 			'before' => '',
 			'after' => ', ',
 			'icon' => '<span class="dashicons dashicons-category"></span>',

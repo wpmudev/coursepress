@@ -1822,7 +1822,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 */
 	public function get_course_social_links( $atts ) {
 
-		$services = CoursePress_Helper_SocialMedia::get_social_sharing_keys();
+		$services = CoursePress_Data_SocialMedia::get_social_sharing_keys();
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'services' => implode( ',', $services ),

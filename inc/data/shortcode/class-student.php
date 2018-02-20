@@ -748,7 +748,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function course_unit_percent( $atts ) {
+	public function get_course_unit_percent( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
