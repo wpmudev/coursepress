@@ -312,7 +312,7 @@ class CoursePress_Helper_Setting_Email {
 				CoursePress_Helper_Email::COURSE_START_NOTIFICATION => array(
 					'title' => __( 'Course Notification E-mail', 'CP_TD' ),
 					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be relaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_start_fields ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_start_fields ),
 					'order' => 7,
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
@@ -557,7 +557,7 @@ best wishes,
 
 Your course %2$s has begun!
 
-You can review course material here::
+You can review course material here:
 
 %3$s
 

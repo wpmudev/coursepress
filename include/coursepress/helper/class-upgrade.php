@@ -84,7 +84,7 @@ class CoursePress_Helper_Upgrade {
 			}
 		} else {
 			$message = sprintf(
-				__( 'Try to update students data in course: %d, but there was no students enroled to this course.', 'CP_TD' ),
+				__( 'We tried to update the students data in course: %d, but there were no students enrolled to this course.', 'CP_TD' ),
 				$course_id
 			);
 		}
@@ -1083,7 +1083,7 @@ class CoursePress_Helper_Upgrade {
 		}
 		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return  __( 'Added content of dafaults Course Completion pages.', 'CP_TD' );
+		return  __( 'Added content of default Course Completion pages.', 'CP_TD' );
 	}
 
 	/**
