@@ -1,83 +1,83 @@
 .coursepress-wrap {
-  .wpmui-field-description {
-    font-size: 13.5px;
-    color: $grey_2;
-  }
-  .wpmui-checkbox-wrapper,
-  .wpmui-radio-wrapper {
-    .wpmui-field-checkbox {
-      visibility: hidden;
-      position: absolute;
-    }
-    .wpmui-radio {
-      display: none !important;
-    }
-    .wpmui-checkbox-caption,
-    .wpmui-radio-caption {
-      font-size: 14px;
-      display: block;
-      color: $dark_1;
-      padding: 0;
-
-      .cp-toggle-btn {
-        vertical-align: top;
-        margin: 3px 10px 0 -25px;
-      }
-    }
-    .wpmui-radio-caption {
-      vertical-align: middle;
-
-      .cp-toggle-btn {
-        margin-top: 0;
-      }
-    }
     .wpmui-field-description {
-      margin-top: -10px !important;
+        font-size: 13.5px;
+        color: $grey_2;
     }
-    .wpmui-field-checkbox:checked + .wpmui-checkbox-caption,
-    .wpmui-radio:checked + .wpmui-radio-caption {
-      .cp-toggle-btn {
-        &:after {
-          left: 20.5px;
-          background-color: $blue_1;
-          @include transition(0.5s);
+    .wpmui-checkbox-wrapper,
+    .wpmui-radio-wrapper {
+        .wpmui-field-checkbox {
+            visibility: hidden;
+            position: absolute;
         }
-      }
-    }
-  }
-  .wpmui-radio-input-wrapper {
-    padding-left: 25px;
-  }
+        .wpmui-checkbox-caption,
+        .wpmui-radio-caption {
+            font-size: 14px;
+            display: inline-block;
+            color: $dark_1;
+            padding: 0;
 
-  .wpmui-field-select {
-    width: 100%;
-  }
-  .wpmui-select-wrapper {
-    .wpmui-field-label {
-      padding-bottom: 8px;
+            .cp-toggle-btn {
+                vertical-align: top;
+                margin: 3px 10px 0 -25px;
+            }
+        }
+        .wpmui-radio-caption {
+            line-height: 2em;
+            padding-left: 5px
+        }
+        .wpmui-radio-caption {
+            vertical-align: middle;
+            .cp-toggle-btn {
+                margin-top: 0;
+            }
+        }
+        .wpmui-field-description {
+            margin-top: -10px !important;
+        }
+        .wpmui-field-checkbox:checked + .wpmui-checkbox-caption,
+        .wpmui-radio:checked + .wpmui-radio-caption {
+            .cp-toggle-btn {
+                &:after {
+                    left: 20.5px;
+                    background-color: $blue_1;
+                    @include transition(0.5s);
+                }
+            }
+        }
     }
-  }
-  .option-wp_editor .wpmui-label-before {
-    display: block;
-    width: 100%;
-  }
-  .option-html_text {
-    display: block;
-    @include clearfix;
-  }
+    .wpmui-radio-input-wrapper {
+        padding-left: 25px;
+    }
 
-  @media screen {
-    @media (min-width: 768px) {
-      .wpmui-radio-input-wrapper {
-        float: left;
-        margin-right: 25px;
-      }
+    .wpmui-field-select {
+        width: 100%;
     }
-    @media (min-width: 800px) {
-      .wpmui-field-description {
-        padding: 0 0 0 55px;
-        margin-top: -10px !important;
-      }
+    .wpmui-select-wrapper {
+        .wpmui-field-label {
+            padding-bottom: 8px;
+        }
     }
-  }
+    .option-wp_editor .wpmui-label-before {
+        display: block;
+        width: 100%;
+    }
+    .option-html_text {
+        display: block;
+        @include clearfix;
+    }
+
+    @media screen {
+        @media (min-width: 768px) {
+            .wpmui-radio-input-wrapper {
+                float: left;
+                margin-right: 25px;
+            }
+        }
+        @media (min-width: 800px) {
+            .wpmui-field-description {
+                padding: 0 0 0 55px;
+                margin-top: -10px !important;
+            }
+        }
+    }
 }
