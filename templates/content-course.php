@@ -11,9 +11,14 @@ global $post;
 $course = coursepress_get_course( $post );
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-item-box' ); ?>>
+<?php
+$thumbnail = $course->get_feature_image( 270 );
+if ( ! empty( $thumbnail ) ) {
+?>
 	<div class="course-feature-image-container">
-		<?php echo $course->get_feature_image( 270 ); ?>
-	</div>
+		<?php echo $thumbnail; ?>
+    </div>
+<?php } ?>
 	<div class="course-info">
 		<header class="entry-header course-entry-header">
 			<?php the_title( '<h3 class="entry-title course-title"><a href="' . esc_url( $course->get_permalink() ) . '" rel="bookmark">', '</a></h3>' ); ?>
