@@ -106,7 +106,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			);
 		}
 
-		if ( ! empty( $a['courses_type'] ) && 'current_and_upcoming' == $a['courses_type'] ) {
+		if ( ! empty( $atts['courses_type'] ) && 'current_and_upcoming' == $atts['courses_type'] ) {
 			$query = CoursePress_Data_Course::current_and_upcoming_courses( $post_args );
 		} else {
 			$query = new WP_Query( $post_args );
@@ -114,7 +114,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 
 		$content = '';
 		$template = trim( '[course_list_box]' );
-		$template = apply_filters( 'coursepress_template_course_archive', $template, $a );
+		$template = apply_filters( 'coursepress_template_course_archive', $template, $atts );
 
 		foreach ( $query->posts as $post ) {
 			CoursePress_Data_Course::set_the_course( $post );
@@ -132,7 +132,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			) );
 		}
 
-		$content = apply_filters( 'coursepress_course_archive_content', $content, $a );
+		$content = apply_filters( 'coursepress_course_archive_content', $content, $atts );
 
 		if ( $echo ) {
 			echo $content;
@@ -1004,7 +1004,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function course_signup_form( $atts ) {
+	public function egt_course_signup_form( $atts ) {
 
 		$allowed = array( 'signup', 'login' );
 
@@ -1325,9 +1325,9 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			}
 		}
 
-		$url_inbox = $coursepress->get_inbox_slug( true );
-		$url_messages = $coursepress->get_sent_messages_slug( true );
-		$url_compose = $coursepress->get_new_message_slug( true );
+		$url_inbox = '';
+		$url_messages = '';
+		$url_compose = '';
 		$class_inbox = 'inbox' == $subpage ? 'submenu-active' : '';
 		$class_messages = 'sent_messages' == $subpage ? 'submenu-active' : '';
 		$class_compose = 'new_message' == $subpage ? 'submenu-active' : '';
