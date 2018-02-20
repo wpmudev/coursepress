@@ -238,7 +238,7 @@ class CoursePress_Data_Shortcode_Instructor {
 			case 'block':
 				if ( 0 < count( $instructors ) ) {
 					$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
-					if ( $show_divider ) { )
+					if ( $show_divider ) {
 						$content .= '<div class="divider"></div>';
 					}
 				}
