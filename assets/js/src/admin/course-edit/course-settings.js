@@ -38,21 +38,28 @@
 
             validate: function() {
                 var summary, content, proceed;
-
                 proceed = true;
                 summary = this.$('.cp-course-overview');
                 content = this.$('.cp-course-description');
                 this.courseEditor.goToNext = true;
-
                 if ( ! this.model.get('post_excerpt') ) {
                     summary.parent().addClass('cp-error');
+                    if ( proceed ) {
+                        jQuery( 'html, body' ).animate({
+                            scrollTop: summary.parent().offset().top - 20
+                        });
+                    }
                     proceed = false;
                 }
                 if ( ! this.model.get('post_content') ) {
                     content.parent().addClass('cp-error');
+                    if ( proceed ) {
+                        jQuery( 'html, body' ).animate({
+                            scrollTop: content.parent().offset().top - 20
+                        });
+                    }
                     proceed = false;
                 }
-
                 if ( false === proceed ) {
                     this.courseEditor.goToNext = false;
                     return false;
