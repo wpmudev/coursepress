@@ -137,7 +137,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function course_instructor_avatar( $atts ) {
+	public function get_course_instructor_avatar( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'instructor_id' => 0,
@@ -180,7 +180,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function instructor_profile_url( $atts ) {
+	public function get_instructor_profile_url( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'instructor_id' => 0,
@@ -208,8 +208,8 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function coursecourse_media_instructor_avatar( $atts ) {
+	public function get_coursecourse_media_instructor_avatar( $atts ) {
 
-		return $this->course_instructor_avatar( $atts );
+		return $this->get_course_instructor_avatar( $atts );
 	}
 }

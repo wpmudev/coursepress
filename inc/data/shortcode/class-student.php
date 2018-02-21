@@ -126,6 +126,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		$args = shortcode_atts( array(
 			'course_id' => $course_id,
 			'unit_id' => false,
+			'user_id' => coursepress_get_user_id(),
 			'comment_column_title' => __( 'Feedback', 'cp' ),
 			'pending_grade_label' => __( 'Pending', 'cp' ),
 			'table_class' => 'widefat shadow-table assessment-archive-table workbook-table',
@@ -418,6 +419,8 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 			return '';
 		}
 
+		$data['course_id'] = $course_id;
+		$data['course'] = coursepress_get_course( $course_id );
 		$data['nonce'] = wp_create_nonce( 'coursepress_enrollment_action' );
 
 		$data['scode_1'] = '[course_signup_form login_link_id="step2" show_submit="no"]';
@@ -748,7 +751,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function course_unit_percent( $atts ) {
+	public function get_course_unit_percent( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),

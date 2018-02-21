@@ -552,7 +552,7 @@ class CoursePress_Data_Unit {
 		$visibilities = isset( $meta['show_page_title'] ) && ! empty( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
 
 		$return = array(
-			'title' => $titles[ 'page_' . $item_id ],
+			'title' => isset( $titles[ 'page_' . $item_id ] ) ? $titles[ 'page_' . $item_id ] : '',
 			'description' => isset( $descriptions[ 'page_' . $item_id ] ) ? $descriptions[ 'page_' . $item_id ] : '',
 			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
 		);
