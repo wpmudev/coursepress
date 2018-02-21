@@ -5,6 +5,17 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.5 =
+-------------------------------------------------
+- Fixed: Added course categories information in the export file.
+- Fixed: Check MarketPress integration to avoid warnings.
+- Fixed: Mistakes in language strings.
+- Fixed: Problem with the login form on small screens like mobile.
+- Fixed: Show CoursePress Theme instructors box only when a course has at least one instructor.
+- Fixed: Warnings on the "Grade" tab, when one of a module is a quiz.
+- Fixed: Warnings when we use WooCommerce 3x.
+- Improved: Added CoursePress version to export file.
+
 = 2.1.4 =
 -------------------------------------------------
 * Fixed: Course certificate email settings were hidden for nonpremium users.
