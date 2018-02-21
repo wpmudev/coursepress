@@ -19,7 +19,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	function change_localize_array( $localize_array ) {
 		$localize_array['text']['deleting_post'] = __( 'Deleting forum... please wait', 'cp' );
 		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this forum?', 'cp' );
-
+		if ( ! isset( $localize_array['text']['forums'] ) ) {
+			$localize_array['text']['forums'] = array();
+		}
+		$localize_array['text']['forums']['forum_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
 		return $localize_array;
 	}
 

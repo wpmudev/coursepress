@@ -65,5 +65,12 @@
             templateResult: coursepressFormatCourse,
             templateSelection: coursepressFormatCourseSelection
         });
+        $('#coursepress-forum-form').on( 'submit', function() {
+            var form = this;
+            if ( '' === $('input[name=post_title]', form ).val() ) {
+                window.alert( window._coursepress.text.forums.forum_title_is_empty );
+                return false;
+            }
+        });
 	});
 })( jQuery );
