@@ -31,10 +31,21 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
 	}
 
+	/**
+	 * JS localized sstrings.
+	 *
+	 * @since 3.0.0
+	 */
 	function change_localize_array( $localize_array ) {
 		$localize_array['text']['deleting_post'] = __( 'Deleting alert... please wait', 'cp' );
 		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this alert?', 'cp' );
-
+		if ( ! isset( $localize_array['text']['notifications'] ) ) {
+			$localize_array['text']['notifications'] = array();
+		}
+		$localize_array['text']['notifications']['notification_content_is_empty'] = __( 'You should add somehing to the notification email body before sending.', 'cp' );
+		$localize_array['text']['notifications']['notification_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
+		$localize_array['text']['notifications']['alert_content_is_empty'] = __( 'You should add somehing to the alert  body before save.', 'cp' );
+		$localize_array['text']['notifications']['alert_title_is_empty'] = __( 'You should add title before save.', 'cp' );
 		return $localize_array;
 	}
 
@@ -84,7 +95,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		);
 
 		$format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
-		$email_args['tokens'] = sprintf( $format, implode(', ', $tokens ) );
+		$email_args['tokens'] = sprintf( $format, implode( ', ', $tokens ) );
 
 		// Render templates.
 		coursepress_render( 'views/admin/notifications' );

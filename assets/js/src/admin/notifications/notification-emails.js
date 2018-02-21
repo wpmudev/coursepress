@@ -1,9 +1,11 @@
-/* global CoursePress, tinyMCE */
+/* global CoursePress */
 
 (function() {
 	'use strict';
 
 	CoursePress.Define( 'NotificationEmails', function( $, doc, win ) {
+        var contentEditor;
+
 		return CoursePress.View.extend({
 			template_id: 'coursepress-notification-emails-tpl',
 			el: $('#notification-emails'),
@@ -37,15 +39,14 @@
 					data: []
 				});
                 win.setTimeout( function() {
-                    if ( tinyMCE.get( 'notification_content' ) ) {
-                        this.contentEditor = tinyMCE.get( 'notification_content' );
+                    if ( window.tinyMCE.get( 'notification_content' ) ) {
+                        contentEditor = window.tinyMCE.get( 'notification_content' );
                     }
                 }, 1000 );
 			},
 
 			// Get units and students on course selection.
 			getUnitsStudents: function ( ev ) {
-
 				// Get the updated list of units.
 				var course_id = $( ev.currentTarget ).val();
 				if ( '' !== course_id ) {
@@ -59,7 +60,6 @@
 
 			// Get students list on unit select.
 			getStudents: function () {
-
 				var unit_id = this.$('#cp-unit').val();
 				if ( '0' !== unit_id && '' !== unit_id ) {
 					this.request.set( {
@@ -72,12 +72,10 @@
 
 			// Update units and students options.
 			updateUnitsStudents: function ( response ) {
-
 				// Update units value.
 				this.$('#cp-unit').empty().select2({
 					data: _.isEmpty( response.units ) ? [] : response.units
 				});
-
 				// Update students options.
 				this.updateStudents( response );
 			},
@@ -118,9 +116,7 @@
 
 			// Send email notification.
 			sendEmail: function ( ev ) {
-
-				this.$(ev.currentTarget).addClass('cp-progress');
-				var content = win.tinymce.editors.notification_content.getContent(),
+				var content = contentEditor.getContent(),
 					title = this.$('#notification-title').val(),
 					students = [],
 					selector = this.$('#cp-notifications-students li');
@@ -131,7 +127,21 @@
 						}
 					});
 				}
-
+                if ( 0 === title.length ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: window._coursepress.text.notifications.notification_title_is_empty
+                    });
+                    return;
+                }
+                if ( 0 === content.length ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: window._coursepress.text.notifications.notification_content_is_empty
+                    });
+                    return;
+                }
+				this.$(ev.currentTarget).addClass('cp-progress');
 				if ( ! _.isEmpty( students ) ) {
 					this.request.set( {
 						'action': 'send_notification_email',

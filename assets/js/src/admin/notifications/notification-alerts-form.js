@@ -22,7 +22,6 @@
 				// Update units and students based on selections.
 				this.request.on( 'coursepress:success_update_course_alert', this.showSuccess, this );
 				this.request.on( 'coursepress:error_update_course_alert', this.showError, this );
-
 				this.render();
 			},
 
@@ -46,43 +45,57 @@
 			},
 
 			// Create or Update course alert.
-			updateAlert: function ( ev ) {
+            updateAlert: function ( ev ) {
 
-				// Add progress.
-				this.$(ev.currentTarget).addClass('cp-progress');
-				// Editor content.
-				var content,
-					title = this.$('#alert-title').val(),
-					course_id = this.$('#cp-alert-course').val(),
-					receivers = this.$('#cp-alert-receivers').val(),
-					alert_id = this.$('#alert-id').val();
-				if ( undefined === win.tinymce.editors.alert_content ) {
-					content = this.$('#alert_content').val();
-				} else {
-					content = win.tinymce.editors.alert_content.getContent();
-				}
-				if ( '' !== content && '' !== title && '' !== course_id ) {
-					this.request.set( {
-						'action': 'update_course_alert',
-						'course_id': course_id,
-						'alert_id': alert_id,
-						'title': title,
-						'content': content,
-					} );
+                // Editor content.
+                var content,
+                title = this.$('#alert-title').val(),
+                course_id = this.$('#cp-alert-course').val(),
+                receivers = this.$('#cp-alert-receivers').val(),
+                alert_id = this.$('#alert-id').val();
+                if ( undefined === win.tinymce.editors.alert_content ) {
+                    content = this.$('#alert_content').val();
+                } else {
+                    content = win.tinymce.editors.alert_content.getContent();
+                }
+                if ( 0 === title.length ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: window._coursepress.text.notifications.alert_title_is_empty
+                    });
+                    return;
+                }
+                if ( 0 === content.length ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: window._coursepress.text.notifications.alert_content_is_empty
+                    });
+                    return;
+                }
+                // Add progress.
+                this.$(ev.currentTarget).addClass('cp-progress');
+                /**
+                 * set
+                 */
+                this.request.set( {
+                    'action': 'update_course_alert',
+                    'course_id': course_id,
+                    'alert_id': alert_id,
+                    'title': title,
+                    'content': content,
+                } );
 
-					// Set receivers only if course is selected.
-					if ( course_id !== '' && course_id === 'all' ) {
-						this.request.set( 'receivers', receivers );
-					}
+                // Set receivers only if course is selected.
+                if ( course_id !== '' && course_id === 'all' ) {
+                    this.request.set( 'receivers', receivers );
+                }
 
-					this.request.save();
-				} else {
-					// Remove progress.
-					this.$('.cp-alert-submit').removeClass('cp-progress');
-				}
+                this.request.save();
+                // Remove progress.
+                this.$('.cp-alert-submit').removeClass('cp-progress');
 
-				return false;
-			},
+                return false;
+            },
 
 			// After creating new alert.
 			showSuccess: function ( data ) {
