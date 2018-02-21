@@ -7,14 +7,14 @@ CHANGELOG
 
 = 2.1.5 =
 -------------------------------------------------
-- Improved: Added CoursePress version to export file.
-- Fixed: Added course categories information in export file.
+- Fixed: Added course categories information in the export file.
 - Fixed: Check MarketPress integration to avoid warnings.
 - Fixed: Mistakes in language strings.
-- Fixed: Problem with login form on small screens like mobile.
-- Fixed: Warnings when we use WooCommerce 3x.
-- Fixed: Warnings on the "Grade" tab, when one of module is a quiz.
+- Fixed: Problem with the login form on small screens like mobile.
 - Fixed: Show CoursePress Theme instructors box only when a course has at least one instructor.
+- Fixed: Warnings on the "Grade" tab, when one of a module is a quiz.
+- Fixed: Warnings when we use WooCommerce 3x.
+- Improved: Added CoursePress version to export file.
 
 = 2.1.4 =
 -------------------------------------------------
