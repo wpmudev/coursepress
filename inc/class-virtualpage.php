@@ -78,6 +78,22 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	public function check_exists() {
 		$is_404 = false;
 		$type = $this->__get( 'type' );
+
+		if (
+			'single-course' === $type
+			&& isset( $_REQUEST['course_id'] )
+			&& isset( $_REQUEST['action'] )
+			&& 'coursepress_enroll' == $_REQUEST['action']
+		) {
+			$result = coursepress_try_to_add_student( $_REQUEST['course_id'] );
+			if ( true === $result ) {
+				$course = coursepress_get_course( $_REQUEST['course_id'] );
+				$redirect = $course->get_units_url();
+				wp_safe_redirect( $redirect );
+				exit;
+			}
+		}
+
 		switch ( $type ) {
 			case 'single-course':
 			case 'unit-archive':
@@ -203,7 +219,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
 				}
 				$step = $this->__get( 'step' );
-				if ( !$with_modules ) {
+				if ( ! $with_modules ) {
 					$this->__set( 'type', 'step' );
 					$_coursepress_type_now = 'step';
 				}

@@ -217,9 +217,37 @@ function coursepress_get_user_instructor_profile_url( $user_id = 0 ) {
 }
 
 /**
- * Add user as student to a course.
+ * Try to add user as student to a course.
  *
  * @param int $user_id
+ * @param int $course_id
+ *
+ * @return bool|null
+ */
+function coursepress_try_to_add_student( $course_id = 0 ) {
+	if ( empty( $course_id ) ) {
+		return;
+	}
+	$user = coursepress_get_user();
+	if ( ! isset( $user->ID ) ) {
+		return false;
+	}
+	$is_enrolled_at = $user->is_enrolled_at( $course_id );
+	if ( $is_enrolled_at ) {
+		return true;
+	}
+	$course = coursepress_get_course( $course_id );
+	$user_can_enroll = $course->user_can_enroll();
+	if ( $user_can_enroll ) {
+		return coursepress_add_student( $user, $course_id );
+	}
+	return false;
+}
+
+/**
+ * Add user as student to a course.
+ *
+ * @param mixed $user_id
  * @param int $course_id
  *
  * @return bool|null
@@ -228,8 +256,12 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( empty( $user_id ) || empty( $course_id ) ) {
 		return null;
 	}
-
-	$user = coursepress_get_user( $user_id );
+	if ( is_a( $user_id, 'CoursePress_User' ) ) {
+		$user = $user_id;
+		$user_id = $user->ID;
+	} else {
+		$user = coursepress_get_user( $user_id );
+	}
 
 	if ( is_wp_error( $user ) ) {
 		return false;
