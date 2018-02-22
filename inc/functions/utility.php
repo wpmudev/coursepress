@@ -164,6 +164,14 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 		),
 	);
 
+	// Add social sharing default values dynamically.
+	$social_keys = CoursePress_Data_SocialMedia::get_social_sharing_keys();
+	if ( ! empty( $social_keys ) && ! empty( $settings ) ) {
+		foreach ( $social_keys as $social_key ) {
+			$defaults['general']['social_sharing'][ $social_key ] = 1;
+		}
+	}
+
 	if ( ! empty( $settings ) ) {
 		// Legacy settings
 		$defaults['general']['image_width'] = coursepress_get_array_val( $settings, 'course/image_width' );
