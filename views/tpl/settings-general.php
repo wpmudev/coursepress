@@ -233,6 +233,24 @@
             ),
         );
 
+        // Social sharing options.
+        $social_options = CoursePress_Data_SocialMedia::get_social_sharing_array();
+        if ( ! empty( $social_options ) ) {
+	        foreach ( $social_options as $social_key => $title ) {
+		        $fields[ 'social_sharing.' . $social_key ] = array(
+		        	'type'  => 'checkbox',
+			        'title' => $toggle_input . $title,
+			        'value' => coursepress_get_setting( 'general/social_sharing/' . $social_key, 1 ),
+		        );
+	        }
+
+	        // Add social sharing options.
+	        $config['social_sharing'] = array(
+		        'title'  => __( 'Social Sharing', 'CoursePress' ),
+		        'fields' => $fields,
+	        );
+        }
+
         $option_name = sprintf( 'coursepress_%s', basename( __FILE__, '.php' ) );
         $options = apply_filters( $option_name, $config );
         /**

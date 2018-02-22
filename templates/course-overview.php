@@ -52,6 +52,12 @@ if ( ! empty( $price ) ) {
 		</div>
 	</div>
 
+	<div class="additional-summary">
+		<div class="social-shares">
+			<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
+		</div>
+	</div>
+
 	<div class="entry-content course-description">
 		<?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
 	</div>
