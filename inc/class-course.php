@@ -564,6 +564,25 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	/**
+	 * Get instructors emails.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array $emails Array of emails.
+	 */
+	private function _get_instructors_emails() {
+		$emails = array();
+		$ids = $this->_get_instructors();
+		foreach ( $ids as $id ) {
+			$user_info = get_userdata( $id );
+			if ( ! empty( $user_info->user_email ) ) {
+				$emails[] = $user_info->user_email;
+			}
+		}
+		return $emails;
+	}
+
+	/**
 	 * get users data
 	 */
 	private function _users( $ids ) {
@@ -601,6 +620,25 @@ class CoursePress_Course extends CoursePress_Utility {
 			return array_unique( array_filter( $facilitator_ids ) );
 		}
 		return array();
+	}
+
+	/**
+	 * Get facilitators emails.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array $emails Array of emails.
+	 */
+	private function _get_facilitators_emails() {
+		$emails = array();
+		$ids = $this->_get_facilitators();
+		foreach ( $ids as $id ) {
+			$user_info = get_userdata( $id );
+			if ( ! empty( $user_info->user_email ) ) {
+				$emails[] = $user_info->user_email;
+			}
+		}
+		return $emails;
 	}
 
 	/**
@@ -998,9 +1036,9 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			$instructors = $this->get_instructors();
-			if (!empty($instructors)) {
-				foreach ($instructors as $instructor) {
-					coursepress_add_course_instructor($instructor->__get('ID'), $new_course_id);
+			if ( ! empty( $instructors ) ) {
+				foreach ( $instructors as $instructor ) {
+					coursepress_add_course_instructor( $instructor->__get( 'ID' ), $new_course_id );
 				}
 			}
 
@@ -1187,5 +1225,72 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 		$content = preg_replace( '/STUDENT_WORKBOOK/', $value, $content );
 		return $content;
+	}
+
+	/**
+	 * check email - it is possible to invite?
+	 */
+	public function can_invite_email( $email ) {
+		/**
+		 * check current user
+		 */
+		$id = get_current_user_id();
+		$user_info = get_userdata( $id );
+		if ( $user_info->user_email === $email ) {
+			return new WP_Error(
+				'error',
+				__( 'The attempt to invite yourself is ridiculous and ineffective.', 'cp' )
+			);
+		}
+		/**
+		 * check course autor
+		 */
+		$user_info = get_userdata( $this->post_author );
+		if ( $user_info->user_email === $email ) {
+			sprintf(
+				__( 'User with email %s is the course author this email and can not be invited as a student.', 'cp' ),
+				esc_html( $email )
+			);
+		}
+		/**
+		 * check already invited
+		 */
+		$invitee = $this->get_invited_students();
+		if ( isset( $invitee->$email ) ) {
+			return new WP_Error(
+				'error',
+				sprintf(
+					__( 'User with email %s is already invited.', 'cp' ),
+					esc_html( $email )
+				)
+			);
+		}
+		/**
+		 * check instructors
+		 */
+		$instructors = $this->_get_instructors_emails();
+		if ( in_array( $email, $instructors ) ) {
+			return new WP_Error(
+				'error',
+				sprintf(
+					__( 'User with email %s is the instructor of this course and this email can not be invited as a student.', 'cp' ),
+					esc_html( $email )
+				)
+			);
+		}
+		/**
+		 * check facilitators
+		 */
+		$facilitators = $this->_get_facilitators_emails();
+		if ( in_array( $email, $facilitators ) ) {
+			return new WP_Error(
+				'error',
+				sprintf(
+					__( 'User with email %s is the facilitator of this course and this email can not be invited as a student.', 'cp' ),
+					esc_html( $email )
+				)
+			);
+		}
+		return true;
 	}
 }

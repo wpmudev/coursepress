@@ -78,20 +78,26 @@
                     this.model.set( 'action', 'send_student_invite' );
                     this.model.set( 'course_id', this.course_id );
                     this.model.off( 'coursepress:success_send_student_invite' );
-                    this.model.on( 'coursepress:success_send_student_invite', this.invitationSent, this );
+                    this.model.on( 'coursepress:success_send_student_invite', this.invitationSentSuccess, this );
+                    this.model.off( 'coursepress:error_send_student_invite' );
+                    this.model.on( 'coursepress:error_send_student_invite', this.invitationSentError, this );
                     this.model.save();
                 }
             },
-            invitationSent: function(data) {
+            invitationSentError: function(data) {
+                this.$('.send-invite').removeClass('active');
+                new CoursePress.PopUp({
+                    type: 'error',
+                    message: data.message
+                });
+            },
+            invitationSentSuccess: function(data) {
                 var invited;
-
                 invited = this.view.addInvitee(data);
                 invited.$el.addClass('invitee-active');
-
                 _.delay(function() {
                     invited.$el.removeClass('invitee-active');
                 }, 1500);
-
                 this.$('.send-invite').removeClass('active');
                 this.$('[name="first_name"],[name="last_name"],[name="email"]').val('');
             }
