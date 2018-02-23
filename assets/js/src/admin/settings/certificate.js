@@ -8,7 +8,6 @@
 
         $(doc).on( 'click', function(ev) {
            var sender = $(ev.target);
-
            if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
                iris.iris('hide');
                iris = false;
@@ -44,12 +43,10 @@
             },
             setUpUI: function() {
                 var self = this;
-
                 this.$('select').select2();
                 new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
                 new CoursePress.AddImage( this.$('#coursepress-logo-img' ) );
                 this.color = this.$('[name="cert_text_color"]');
-
                 this.color.iris({
                     palettes: true,
                     hide: true,
@@ -58,19 +55,22 @@
                         self.model.cert_text_color = self.color.iris('color');
                     }
                 });
-
-	            this.visualEditor({
-		            container: this.$('.content_certificate_editor'),
-		            content: this.model.content,
-		            callback: function (content) {
-			            self.model.content = content;
-		            }
-	            });
-
+                this.visualEditor({
+                    container: this.$('.content_certificate_editor'),
+                    content: this.model.content,
+                    callback: function (content) {
+                        self.model.content = content;
+                    }
+                });
                 this.certBox = this.$('.box-cert-settings' );
-
                 if ( ( this.model.enabled !== undefined && ! this.model.enabled ) || this.model.use_cp_default ) {
                     this.certBox.hide();
+                }
+                /**
+                 * Hide "Use default CoursePress certificate" option.
+                 */
+                if ( this.model.enabled !== undefined && ! this.model.enabled ) {
+                    this.$('.option-use_cp_default').hide();
                 }
             },
             updateCertificateContent: function() {
@@ -87,15 +87,12 @@
                     name = sender.attr('name'),
                     value = sender.val(),
                     first, model;
-
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
                 }
-
                 name = name.split('.');
                 first = name.shift();
                 model = this.model[first];
-
                 if ( name.length ) {
                     _.each(name, function (t) {
                         model[t] = value;
@@ -113,6 +110,10 @@
                 var enable = this.$('input[name=enabled]', this.$('.cp-box-certificate-options' )).is(':checked');
                 var use_cp_default = this.$('input[name=use_cp_default]', this.$('.cp-box-certificate-options' )).is(':checked');
                 boxes[ ( enable && ! use_cp_default ) ? 'slideDown' : 'slideUp' ]();
+                /**
+                 * Hide "Use default CoursePress certificate" option.
+                 */
+                this.$('.option-use_cp_default')[ enable ? 'slideDown':'slideUp']();
             },
             previewCertificate: function(ev) {
                 var previewButton, model = new CoursePress.Request( this.getModel() );
