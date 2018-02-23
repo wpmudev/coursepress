@@ -65,7 +65,7 @@ class CoursePress_Data_Unsubscribe {
 		$user_id = get_current_user_id();
 
 		// Get slug for the courses listing page.
-		$courses_link = coursepress_get_setting( 'slugs/course', 'courses' );
+		$courses_link = coursepress_get_main_courses_url();
 
 		// Include unsubscribe link
 		$unsubscribe_link = add_query_arg( array( 'uid' => $user_id, 'unsubscriber' => 1 ), $courses_link );
