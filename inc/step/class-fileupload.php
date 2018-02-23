@@ -13,11 +13,16 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			'txt' => 'text/plain',
 			'jpeg' => 'image/jpeg',
 			'jpg' => 'image/jpeg',
+			'png' => 'image/png',
 			'pdf' => 'application/pdf',
 			'zip' => 'application/zip',
 		);
 
 		$allowed = $this->__get( 'allowed_file_types' );
+
+		if ( in_array( 'image', $allowed ) ) {
+			array_push( $allowed, 'jpeg', 'jpg', 'png' );
+		}
 
 		if ( ! empty( $allowed ) ) {
 			foreach ( $mimes as $type => $label ) {
