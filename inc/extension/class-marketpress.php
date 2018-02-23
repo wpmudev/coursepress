@@ -36,6 +36,7 @@ class CoursePress_Extension_MarketPress {
 		if ( ! $this->is_enabled() ) {
 			return;
 		}
+
 		// Add or update product.
 		add_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 		// Hook to course price.
@@ -55,6 +56,8 @@ class CoursePress_Extension_MarketPress {
 		add_action( 'coursepress_course_deleted', array( $this, 'maybe_delete_product' ), 10, 2 );
 		// Trigger an action when a course status is changed.
 		add_action( 'coursepress_course_status_changed', array( $this, 'change_product_status' ), 10, 2 );
+		// Set a flag that MarketPress is active.
+		add_filter( 'coursepress_is_marketpress_active', '__return_true' );
 	}
 
 	/**

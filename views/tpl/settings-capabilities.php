@@ -3,6 +3,7 @@
 		<h2 class="box-heading-title"><?php _e( 'Instructor Capabilities', 'cp' ); ?></h2>
 	</div>
 
+	<?php $marketpress_active = apply_filters( 'coursepress_is_marketpress_active', false ); ?>
 	<div class="cp-box-content cp-caps-list cp-odd">
         <h3 class="label"><?php _e( 'Browse capabilities', 'cp' ); ?></h3>
         <ul class="cp-input-group cp-select-list cp-capabilities">
@@ -15,6 +16,9 @@
             <li data-id="cp-cap-students"><?php _e( 'Students', 'cp' ); ?></li>
             <li data-id="cp-cap-notifications"><?php _e( 'Notifications', 'cp' ); ?></li>
             <li data-id="cp-cap-discussions"><?php _e( 'Discussions', 'cp' ); ?></li>
+	        <?php if ( $marketpress_active ) : ?>
+	            <li data-id="cp-cap-wpdefault"><?php _e( 'Default WordPress Capabilities', 'cp' ); ?></li>
+	        <?php endif; ?>
         </ul>
 	</div>
 
@@ -379,6 +383,44 @@
             ),
         ),
     );
+
+	// Add these capabilities only when MarketPress is acctive.
+	if ( $marketpress_active ) {
+
+		// Default WP capabilities.
+		$config['capabilities/instructors'] = array(
+
+			'title' => __( 'Grant default WordPress capabilities', 'cp' ),
+			'id' => 'cp-cap-wpdefault',
+			'fields' => array(
+				'edit_pages' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Pages (required for MarketPress)', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_pages', true ),
+				),
+				'edit_published_pages'    => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Published Pages', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_published_pages', true ),
+				),
+				'edit_posts' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Posts', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_posts', true ),
+				),
+				'publish_pages' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Publish Pages', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/publish_pages', true ),
+				),
+				'publish_posts' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Publish Posts', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/publish_posts', true ),
+				),
+			),
+		);
+	}
 
     $options = apply_filters( 'coursepress_settings-capabilities', $config );
     $i = 0;
