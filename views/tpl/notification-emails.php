@@ -23,7 +23,14 @@
 	<div class="cp-div cp-sep">
 		<h3 class="label label-small"><?php _e( 'Manually add students', 'cp' ); ?></h3>
 		<div class="cp-input-clear">
-			<select name="student" data-placeholder="<?php _e( 'Begin typing student name', 'cp' ); ?>" id="cp-student"></select>
+			<select name="student" data-placeholder="<?php _e( 'Begin typing student name', 'cp' ); ?>" id="cp-student">
+				<?php if ( ! empty( $students ) ) : ?>
+					<option></option>
+					<?php foreach ( $students as $student ) : ?>
+						<option value="<?php echo $student->ID; ?>"><?php echo $student->get_name(); ?></option>
+					<?php endforeach; ?>
+				<?php endif; ?>
+			</select>
 		</div>
 		<button type="button" class="cp-btn cp-btn-active" id="cp-add-student-btn"><?php _e( 'Add Student', 'cp' ); ?></button>
 	</div>

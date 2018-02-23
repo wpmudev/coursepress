@@ -757,6 +757,31 @@ function coursepress_get_students_ids( $course_id = 0, $page = 0, $per_page = 0 
 }
 
 /**
+ * Get list of students by course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+
+function coursepress_get_students_by_course( $course_id = 0 ) {
+
+	$student_ids = coursepress_get_students_ids( $course_id );
+
+	$students = array();
+	if ( ! empty( $student_ids ) ) {
+		foreach ( $student_ids as $id => $student_id ) {
+			$student = coursepress_get_user( $student_id );
+			if ( ! is_wp_error( $student ) ) {
+				$students[ $student_id ] = $student;
+			}
+		}
+	}
+
+	return $students;
+}
+
+/**
  * Get list of students filtered by completed unit.
  *
  * @param int $course_id Course ID
