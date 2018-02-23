@@ -356,7 +356,7 @@ function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $ret
 		return false;
 	}
 
-	if ( $user->is_student() ) {
+	if ( !$user->is_student() ) {
 		return false; // Not a student of any course? bail!
 	}
 	if ( empty( $user_id ) ) {
