@@ -931,10 +931,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request
 	 */
 	function get_notification_units_students( $request ) {
+
 		$result = array();
 		if ( ! isset( $request->course_id ) ) {
 			wp_send_json_success( $result );
 		}
+
 		// Get students based on the course id.
 		$student_ids = coursepress_get_students_ids( $request->course_id );
 		if ( ! empty( $student_ids ) ) {
@@ -955,7 +957,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				foreach ( $units as $id => $unit ) {
 					$result['units'][] = array(
 						'id'   => $id,
-						'text' => $units->get_the_title(),
+						'text' => $unit->get_the_title(),
 					);
 				}
 			}
