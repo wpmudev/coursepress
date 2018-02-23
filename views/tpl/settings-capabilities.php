@@ -388,7 +388,7 @@
 	if ( $marketpress_active ) {
 
 		// Default WP capabilities.
-		$config['capabilities/instructors'] = array(
+		$config['capabilities/wordpress'] = array(
 
 			'title' => __( 'Grant default WordPress capabilities', 'cp' ),
 			'id' => 'cp-cap-wpdefault',
