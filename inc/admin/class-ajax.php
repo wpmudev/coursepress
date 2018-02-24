@@ -210,7 +210,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			    );
 
 			    if ( ! empty( $unit->post_status ) ) {
-			    	$unit_array['post_status'] = 'publish';
+			    	$unit_array['post_status'] = $unit->post_status;
 			    }
 
 				$metas = array();
