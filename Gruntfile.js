@@ -95,7 +95,7 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_assessments.js': [
 				// Add JS that will be loaded at Assessments page
 				// assets/js/src/admin/assessments/...
-				'assets/js/src/admin/assesments/assesments.js'
+				'assets/js/src/admin/assessments/assessments.js'
 			],
 			'assets/js/coursepress_forum.js': [
 				// Add JS that will be loaded at Forum page

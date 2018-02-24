@@ -280,7 +280,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		}
 
 		// Set the parameters for pagination.
-		$args['number'] = $this->items_per_page( 'coursepress_assesments_per_page' );
+		$args['number'] = $this->items_per_page( 'coursepress_assessments_per_page' );
 		$args['paged'] = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 
 		return coursepress_get_students( $args, $count );
