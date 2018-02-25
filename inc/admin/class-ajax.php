@@ -955,7 +955,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				foreach ( $units as $id => $unit ) {
 					$result['units'][] = array(
 						'id'   => $id,
-						'text' => $units->get_the_title(),
+						'text' => $unit->get_the_title(),
 					);
 				}
 			}

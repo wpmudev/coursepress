@@ -515,6 +515,8 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 		return $course;
 	}
 
+	$course_id = $course->ID;
+
 	$status = $user->get_course_completion_status( $course_id );
 	$results = array( 'status' => $status );
 
