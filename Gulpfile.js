@@ -122,6 +122,12 @@
                 'assets/js/src/admin/notifications/notification-alerts-form.js',
                 'assets/js/src/admin/notifications/notification.js'
             ],
+            'coursepress_reports.js': [
+                // Add JS that will be loaded at reports page
+                // assets/js/src/admin/reports/...
+                'assets/js/src/common/cp-search-form.js',
+                'assets/js/src/admin/reports/reports.js'
+            ],
             'coursepress_settings.js': [
                 // Add JS that will be loaded at Settings page
                 // assets/js/src/admin/settings/....
