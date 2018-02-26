@@ -93,6 +93,14 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 		);
 
 		/**
+		 * sort
+		 */
+		foreach ( $sub_types as $key => $data ) {
+			asort( $data );
+			$sub_types[ $key ] = $data;
+		}
+
+		/**
 		 * Filter to alter shortcodes sub types array.
 		 *
 		 * @param array $data Sub types.
