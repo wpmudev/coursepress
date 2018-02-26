@@ -105,6 +105,13 @@ class CoursePress_Email extends CoursePress_Utility {
 					'subject' => __( '[UNIT_TITLE] is now available', 'coursepress' ),
 					'content' => $this->unit_started_defaults(),
 				),
+				'instructor_feedback' => array(
+					'enabled' => '1',
+					'from' => $blog_name,
+					'email' => $blog_email,
+					'subject' => __( '[COURSE_NAME/UNIT_TITLE] New Feedback', 'coursepress' ),
+					'content' => $this->instructor_feedback_defaults(),
+				),
 			)
 		);
 		if ( $context && isset( $defaults[ $context ] ) ) {
@@ -115,7 +122,7 @@ class CoursePress_Email extends CoursePress_Utility {
 	}
 
 	public function get_settings_sections() {
-		$basic_certificate_fields = apply_filters( 'coursepress_fields_' . 'basic_certificate',
+		$basic_certificate_fields = apply_filters( 'coursepress_fields_basic_certificate',
 			array(
 				'BLOG_NAME' => '',
 				'LOGIN_ADDRESS' => '',
@@ -132,7 +139,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$registration_fields = apply_filters( 'coursepress_fields_' . 'registration',
+		$registration_fields = apply_filters( 'coursepress_fields_registration',
 			array(
 				'STUDENT_FIRST_NAME' => '',
 				'STUDENT_LAST_NAME' => '',
@@ -145,7 +152,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$enrollment_confirm = apply_filters( 'coursepress_fields_' . 'enrollment_confirm',
+		$enrollment_confirm = apply_filters( 'coursepress_fields_enrollment_confirm',
 			array(
 				'STUDENT_FIRST_NAME' => '',
 				'STUDENT_LAST_NAME' => '',
@@ -157,7 +164,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$instructor_enrollment_notification = apply_filters( 'coursepress_fields_' . 'instructor_enrollment_notification',
+		$instructor_enrollment_notification = apply_filters( 'coursepress_fields_instructor_enrollment_notification',
 			array(
 				'STUDENT_FIRST_NAME' => '',
 				'STUDENT_LAST_NAME' => '',
@@ -171,7 +178,21 @@ class CoursePress_Email extends CoursePress_Utility {
 				'WEBSITE_ADDRESS' => '',
 			)
 		);
-		$course_invitation_fields = apply_filters( 'coursepress_fields_' . 'course_invitation',
+		$instructor_feedback = apply_filters( 'coursepress_fields_instructor_feedback',
+			array(
+				'STUDENT_FIRST_NAME' => '',
+				'STUDENT_LAST_NAME' => '',
+				'INSTRUCTOR_FIRST_NAME' => '',
+				'INSTRUCTOR_LAST_NAME' => '',
+				'COURSE_TITLE' => '',
+				'COURSE_ADDRESS' => '',
+				'COURSE_ADMIN_ADDRESS' => '',
+				'COURSE_STUDENTS_ADMIN_ADDRESS' => '',
+				'WEBSITE_NAME' => '',
+				'WEBSITE_ADDRESS' => '',
+			)
+		);
+		$course_invitation_fields = apply_filters( 'coursepress_fields_course_invitation',
 			array(
 				'STUDENT_FIRST_NAME' => '',
 				'STUDENT_LAST_NAME' => '',
@@ -183,7 +204,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$instructor_invitation_fields = apply_filters( 'coursepress_fields_' . 'instructor_invitation',
+		$instructor_invitation_fields = apply_filters( 'coursepress_fields_instructor_invitation',
 			array(
 				'INSTRUCTOR_FIRST_NAME' => '',
 				'INSTRUCTOR_LAST_NAME' => '',
@@ -197,7 +218,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$course_start_fields = apply_filters( 'coursepress_fields_' . 'course_start_notification',
+		$course_start_fields = apply_filters( 'coursepress_fields_course_start_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -207,7 +228,7 @@ class CoursePress_Email extends CoursePress_Utility {
 				'UNSUBSCRIBE_LINK' => '',
 			)
 		);
-		$discussion_fields = apply_filters( 'coursepress_fields_' . 'discussion_notification',
+		$discussion_fields = apply_filters( 'coursepress_fields_discussion_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -220,7 +241,7 @@ class CoursePress_Email extends CoursePress_Utility {
 				'COMMENT_AUTHOR' => '',
 			)
 		);
-		$units_started = apply_filters( 'coursepress_fields_' . 'unit_started_notification',
+		$units_started = apply_filters( 'coursepress_fields_unit_started_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -233,14 +254,16 @@ class CoursePress_Email extends CoursePress_Utility {
 			)
 		);
 		$basic_certificate_fields = array_keys( $basic_certificate_fields );
-		$registration_fields = array_keys( $registration_fields );
-		$enrollment_confirm = array_keys( $enrollment_confirm );
-		$instructor_enrollment_notification = array_keys( $instructor_enrollment_notification );
 		$course_invitation_fields = array_keys( $course_invitation_fields );
-		$instructor_invitation_fields = array_keys( $instructor_invitation_fields );
 		$course_start_fields = array_keys( $course_start_fields );
 		$discussion_fields = array_keys( $discussion_fields );
+		$enrollment_confirm = array_keys( $enrollment_confirm );
+		$instructor_enrollment_notification = array_keys( $instructor_enrollment_notification );
+		$instructor_invitation_fields = array_keys( $instructor_invitation_fields );
+		$registration_fields = array_keys( $registration_fields );
 		$units_started = array_keys( $units_started );
+		$instructor_feedback = array_keys( $instructor_feedback );
+
 		$_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
 		$defaults = apply_filters(
 			'coursepress_default_email_settings_sections',
@@ -304,11 +327,34 @@ class CoursePress_Email extends CoursePress_Utility {
 					'title' => __( 'Course Unit Started E-mail', 'coursepress' ),
 					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'coursepress' ),
 					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'coursepress' ), 'UNIT_TITLE' ) .
-						sprintf( $_codes_text, implode( ', ', $units_started ) ),
+					sprintf( $_codes_text, implode( ', ', $units_started ) ),
+				),
+				'instructor_feedback' => array(
+					'title' => __( 'Instructor Feedback', 'coursepress' ),
+					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).' , 'coursepress' ),
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_feedback ) ),
 				),
 			)
 		);
-		return $defaults;
+		/**
+		 * sort by title
+		 */
+		foreach ( $defaults as $key => $value ) {
+			$defaults[ $key ]['id'] = $key;
+		}
+		uasort( $defaults, array( $this, 'sort_defaults_by_title' ) );
+		$result = array();
+		foreach ( $defaults as $one ) {
+			$result[ $one['id'] ] = $one;
+		}
+		return $result;
+	}
+
+	/**
+	 * Sort emails by title
+	 */
+	private function sort_defaults_by_title( $a, $b ) {
+		return strcmp( $a['title'], $b['title'] );
 	}
 
 	private function _registration_email() {
@@ -601,6 +647,31 @@ The %5$s Team', 'coursepress' ),
 			'UNIT_LIST'
 		);
 		return $default_certification_content;
+	}
+
+	public function instructor_feedback_defaults() {
+		$msg = __( 'Hi %1$s,
+
+A new feedback is given by your instructor at %2$s in %3$s at %4$s
+
+%5$s says
+%6$s
+
+Best wishes,
+The %7$s Team', 'coursepress' );
+		return coursepress_get_setting(
+			'email/instructor_feedback/content',
+			sprintf(
+				$msg,
+				'STUDENT_FIRST_NAME',
+				'COURSE_NAME',
+				'CURRENT_UNIT',
+				'CURRENT_MODULE',
+				'INSTRUCTOR_LAST_NAME',
+				'INSTRUCTOR_FEEDBACK',
+				'WEBSITE_NAME'
+			)
+		);
 	}
 
 	/**
