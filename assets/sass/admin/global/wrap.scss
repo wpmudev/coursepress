@@ -1,245 +1,248 @@
 .coursepress-wrap,
 .coursepress-modal {
-  .coursepress-page {
-    @include clearfix;
-    margin: 15px 0;
-  }
-  .course-menu {
-    margin: 0 0 25px 0;
-    padding: 0;
-
-    li {
-      display: block;
-      padding: 8px 15px;
-      color: $grey_2;
-      cursor: pointer;
-      margin: 0;
-      @include radius(0);
-      @include transition(0.4s);
-
-      &.active {
-        background-color: $grey_5;
-        color: $black;
-        @include radius(20px);
-        @include transition(0.4s);
-      }
+    .coursepress-page {
+        @include clearfix;
+        margin: 15px 0;
     }
-  }
-  .course-content {
-    background-color: #ffffff;
-    border: 1px solid $grey_5;
-    @include radius(6px);
-  }
-  .cp-box-heading {
-    padding: 0 25px;
-    margin: 0 -25px;
-    border-bottom: 1px solid $grey_5;
-    text-transform: uppercase;
-  }
-  .box-heading-title {
-    font-weight: 700;
-    font-size: 1.2em;
-    margin: 15px 0;
-  }
-  .course-content-tab {
-    padding: 0 25px;
-    display: none;
+    .course-menu {
+        margin: 0 0 25px 0;
+        padding: 0;
 
-    &.tab-active {
-      display: block;
-    }
-  }
-  .label {
-    font-weight: 400;
-    color: $dark_2;
-  }
-  .description {
-    font-size: 95%;
-    font-style: normal;
-    color: $grey_2;
-  }
-  .cp-box-content {
-    padding: 15px 0;
-    border-bottom: 1px solid $grey_5;
-    @include clearfix;
+        li {
+            display: block;
+            padding: 8px 15px;
+            color: $grey_2;
+            cursor: pointer;
+            margin: 0;
+            @include radius(0);
+            @include transition(0.4s);
 
-    &:last-of-type {
-      border: 0;
-    }
-
-    h3.label {
-      margin: 0;
-      color: $grey_1;
-      font-weight: 400;
-      font-size: 1.1em;
-    }
-    .box-label-area {
-      margin-bottom: 25px;
-    }
-    .cp-box {
-      margin-bottom: 25px;
-      .label {
-        display: block;
-        margin-bottom: 5px;
-      }
-      .description {
-        margin: 5px 0;
-        display: block;
-      }
-    }
-    .cp-toggle-box {
-      margin-bottom: 15px;
-      .label {
-        display: inline-block;
-      }
-    }
-  }
-  .course-footer {
-    padding: 15px 25px;
-    text-align: right;
-    border-top: 1px solid $grey_5;
-    @include clearfix;
-
-    .cp-btn {
-      font-size: 15px;
-      padding: 8px 15px;
-      text-transform: uppercase;
-    }
-
-    .step-back {
-      float: left;
-    }
-
-    .cp-btn-active {
-      .fa {
-        display: none;
-      }
-    }
-
-    .cp-progress {
-      .fa {
-        display: inline-block;
-        font-size: 20px;
-        margin-right: 8px;
-        @include transition(0.4s);
-      }
-    }
-  }
-  .cp-pad-left {
-    padding-left: 25px;
-  }
-  .cp-pad-right {
-    padding-right: 25px;
-  }
-  .cp-sep {
-    border-bottom: 1px solid $grey_5;
-    padding-bottom: 25px;
-  }
-
-  .cp-select-list {
-    padding-top: 10px;
-    background-color: #ffffff;
-    max-height: 240px;
-    overflow: auto;
-
-    li {
-      display: block;
-      text-align: left;
-      padding: 5px 15px;
-      cursor: pointer;
-      @include radius(0);
-
-      &:first-of-type {
-        @include radius(0);
-      }
-      &:last-of-type {
-        margin-bottom: 10px;
-      }
-      &.active {
-        @include radius(0);
-      }
-    }
-  }
-
-  .cp-odd {
-    position: relative;
-    display: block;
-    background-color: $grey_8;
-    padding: 15px 25px 0 25px;
-    border: {
-      style: solid;
-      width: 1px 0;
-      color: $grey_5;
-    }
-    margin: 0 -25px;
-
-    &:before {
-      content: '';
-      position: absolute;
-      bottom: -12.5px;
-      left: 50px;
-      border: {
-        style: solid;
-        width: 0 1px 1px 0;
-        color: $grey_5;
-      }
-      width: 25px;
-      height: 25px;
-      padding: 0;
-      background-color: $grey_8;
-      -webkit-transform: rotate(45deg);
-      -moz-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      -o-transform: rotate(45deg);
-      transform: rotate(45deg);
-    }
-    &:after {
-      border: 0;
-
-      margin: 0;
-    }
-  }
-  .cp-box-grey {
-    margin: 15px 0;
-    padding: 15px;
-    background-color: $grey_6;
-    display: inline-block;
-    @include radius(4px);
-    &.inactive {
-      display: none;
-    }
-  }
-
-  @media screen {
-    @media (min-width: 768px) {
-      .cp-flex {
-        display: flex;
-      }
-    }
-    @media (min-width: 1024px) {
-      .course-steps-page {
-        display: flex;
-      }
-      .course-menu-list {
-        width: 230px;
-      }
-      .course-content {
-        width: 100%;
-        margin-left: 25px;
-
-        * {
-          @include boxsizing;
+            &.active {
+                background-color: $grey_5;
+                color: $black;
+                @include radius(20px);
+                @include transition(0.4s);
+            }
         }
-      }
-      .box-label-area {
-        float: left;
-        width: $width/12*3;
-      }
-      .box-inner-content {
-        float: left;
-        width: $width/12*9;
-        padding-left: 25px;
-      }
     }
-  }
+    .course-content {
+        background-color: #ffffff;
+        border: 1px solid $grey_5;
+        @include radius(6px);
+    }
+    .cp-box-heading {
+        padding: 0 25px;
+        margin: 0 -25px;
+        border-bottom: 1px solid $grey_5;
+        text-transform: uppercase;
+    }
+    .box-heading-title {
+        font-weight: 700;
+        font-size: 1.2em;
+        margin: 15px 0;
+    }
+    .course-content-tab {
+        padding: 0 25px;
+        display: none;
+
+        &.tab-active {
+            display: block;
+        }
+    }
+    .label {
+        font-weight: 600;
+        color: $grey_3;
+        font-size: .8em;
+    }
+    .description {
+        font-size: 95%;
+        font-style: normal;
+        color: $grey_2;
+    }
+    .cp-box-content {
+        padding: 15px 0;
+        border-bottom: 1px solid $grey_5;
+        @include clearfix;
+
+        &:last-of-type {
+            border: 0;
+        }
+
+        h3 {
+            &.label {
+                margin: 0;
+                color: $grey_1;
+                font-weight: 600;
+                font-size: 1em;
+            }
+        }
+        .box-label-area {
+            margin-bottom: 25px;
+        }
+        .cp-box {
+            margin-bottom: 25px;
+            .label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            .description {
+                margin: 5px 0;
+                display: block;
+            }
+        }
+        .cp-toggle-box {
+            margin-bottom: 15px;
+            .label {
+                display: inline-block;
+            }
+        }
+    }
+    .course-footer {
+        padding: 15px 25px;
+        text-align: right;
+        border-top: 1px solid $grey_5;
+        @include clearfix;
+
+        .cp-btn {
+            font-size: 15px;
+            padding: 8px 15px;
+            text-transform: uppercase;
+        }
+
+        .step-back {
+            float: left;
+        }
+
+        .cp-btn-active {
+            .fa {
+                display: none;
+            }
+        }
+
+        .cp-progress {
+            .fa {
+                display: inline-block;
+                font-size: 20px;
+                margin-right: 8px;
+                @include transition(0.4s);
+            }
+        }
+    }
+    .cp-pad-left {
+        padding-left: 25px;
+    }
+    .cp-pad-right {
+        padding-right: 25px;
+    }
+    .cp-sep {
+        border-bottom: 1px solid $grey_5;
+        padding-bottom: 25px;
+    }
+
+    .cp-select-list {
+        padding-top: 10px;
+        background-color: #ffffff;
+        max-height: 240px;
+        overflow: auto;
+
+        li {
+            display: block;
+            text-align: left;
+            padding: 5px 15px;
+            cursor: pointer;
+            @include radius(0);
+
+            &:first-of-type {
+                @include radius(0);
+            }
+            &:last-of-type {
+                margin-bottom: 10px;
+            }
+            &.active {
+                @include radius(0);
+            }
+        }
+    }
+
+    .cp-odd {
+        position: relative;
+        display: block;
+        background-color: $grey_8;
+        padding: 15px 25px 0 25px;
+        border: {
+            style: solid;
+            width: 1px 0;
+            color: $grey_5;
+        }
+        margin: 0 -25px;
+
+        &:before {
+            content: '';
+            position: absolute;
+            bottom: -12.5px;
+            left: 50px;
+            border: {
+                style: solid;
+                width: 0 1px 1px 0;
+                color: $grey_5;
+            }
+            width: 25px;
+            height: 25px;
+            padding: 0;
+            background-color: $grey_8;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        &:after {
+            border: 0;
+
+            margin: 0;
+        }
+    }
+    .cp-box-grey {
+        margin: 15px 0;
+        padding: 15px;
+        background-color: $grey_6;
+        display: inline-block;
+        @include radius(4px);
+        &.inactive {
+            display: none;
+        }
+    }
+
+    @media screen {
+        @media (min-width: 768px) {
+            .cp-flex {
+                display: flex;
+            }
+        }
+        @media (min-width: 1024px) {
+            .course-steps-page {
+                display: flex;
+            }
+            .course-menu-list {
+                width: 230px;
+            }
+            .course-content {
+                width: 100%;
+                margin-left: 25px;
+
+                * {
+                    @include boxsizing;
+                }
+            }
+            .box-label-area {
+                float: left;
+                width: $width/12*3;
+            }
+            .box-inner-content {
+                float: left;
+                width: $width/12*9;
+                padding-left: 25px;
+            }
+        }
+    }
 }

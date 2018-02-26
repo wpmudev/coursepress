@@ -70,11 +70,13 @@
 					'type' => 'number',
 					'title' => __( 'Threaded comments level', 'cp' ),
 					'value' => $thread_comments_depth,
+					'class' => 'small-text',
 				),
 				'comments_per_page' => array(
 					'type' => 'number',
 					'title' => __( 'Number of comments per page', 'cp' ),
 					'value' => $comments_per_page,
+					'class' => 'small-text',
 				),
 				'comments_order' => array(
 					'type' => 'radio',
@@ -89,7 +91,7 @@
 
 		);
 ?>
-<form method="post" >
+<form method="post" id="coursepress-forum-form" >
 <div class="wrap coursepress-wrap coursepress-notifications" id="coursepress-notifications">
     <h1 class="wp-heading-inline"><?php $forum_id ? esc_html_e( 'Edit Forum', 'cp' ):esc_html_e( 'Create new', 'cp' ); ?></h1>
     <div class="coursepress-page">
@@ -119,8 +121,8 @@ foreach ( $options as $option_key => $option ) {
 	}
 	printf( '<div class="%s">', esc_attr( $classes ) );
 	/**
-			 * flex wrapper: semaphore
-			 */
+	 * flex wrapper: semaphore
+	 */
 	$is_flex = false;
 	foreach ( $option['fields'] as $key => $data ) {
 		/**
@@ -160,8 +162,8 @@ foreach ( $options as $option_key => $option ) {
 }
 ?>
         <div class="cp-box-content">
-            <div class="box-inner-content">
-                <button type="submit" class="cp-btn cp-btn-active step-next"><?php esc_html_e( 'Save', 'cp' ); ?></button>
+            <div class="box-inner-content course-footer">
+                <button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Save', 'cp' ); ?></button>
             </div>
         </div>
 

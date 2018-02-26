@@ -13,10 +13,15 @@ $course = coursepress_get_course();
         <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
     </header>
 
-	<div class="course-details">
+    <div class="course-details">
+<?php
+$media = coursepress_get_course_media( false, 420, 220 );
+if ( ! empty( $media ) ) {
+?>
 		<div class="course-media">
-			<?php echo coursepress_get_course_media( false, 420, 220 ); ?>
-		</div>
+			<?php echo $media; ?>
+        </div>
+<?php } ?>
 		<div class="course-metas">
 			<p class="course-meta">
 				<span class="meta-title"><?php _e( 'Availability', 'cp' ); ?>: </span>
@@ -44,6 +49,12 @@ if ( ! empty( $price ) ) {
             <p class="course-button">
                 <?php coursepress_get_course_enrollment_button(); ?>
             </p>
+		</div>
+	</div>
+
+	<div class="additional-summary">
+		<div class="social-shares">
+			<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
 		</div>
 	</div>
 

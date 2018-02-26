@@ -44,12 +44,12 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function grt_course_unit_details( $atts ) {
+	public function get_course_unit_details( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'unit_id' => 0,
-			'field' => 'post_title',
-		), $atts );
+			'field' => 'permalink',
+		), $atts, 'course_unit_details' );
 
 		$atts = apply_filters( 'shortcode_atts_course_unit_details', $atts );
 
@@ -190,6 +190,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 
 		$course_id = (int) $atts['course_id'];
 		$unit_id = (int) $atts['unit_id'];
+		$previous_unit = empty( $atts['previous_unit'] ) ? false : (int) $atts['previous_unit'];
 
 		if ( empty( $unit_id ) || empty( $course_id ) ) {
 			return '';

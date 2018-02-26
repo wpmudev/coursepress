@@ -68,10 +68,10 @@
 										</span>
 									<?php endif; ?>
 									<?php if ( ! empty( $unit->modules ) ) : ?>
-										<div class="cp-assesments-module-expanded">
+										<div class="cp-assessments-module-expanded">
 											<?php foreach ( $unit->modules as $module_id => $module ) : ?>
 												<div class="cp-assessments-table-container">
-													<table class="cp-assesments-questions-expanded">
+													<table class="cp-assessments-questions-expanded">
 														<?php $step_count = 0; ?>
 														<?php if ( ! empty( $module['steps'] ) ) : ?>
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>

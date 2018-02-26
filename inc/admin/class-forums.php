@@ -19,7 +19,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	function change_localize_array( $localize_array ) {
 		$localize_array['text']['deleting_post'] = __( 'Deleting forum... please wait', 'cp' );
 		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this forum?', 'cp' );
-
+		if ( ! isset( $localize_array['text']['forums'] ) ) {
+			$localize_array['text']['forums'] = array();
+		}
+		$localize_array['text']['forums']['forum_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
 		return $localize_array;
 	}
 
@@ -197,16 +200,17 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		}
 		$postarr = array(
 			'ID' => $_POST[ $this->id_name ],
-			'post_title' => isset( $_POST['post_title'] )? $_POST['post_title']:'',
-			'post_parent' => isset( $_POST['course_id'] )? $_POST['course_id']:0,
-			'post_content' => isset( $_POST['post_content'] )? $_POST['post_content']:'',
+			'post_title' => sanitize_text_field( isset( $_POST['post_title'] )? $_POST['post_title']:'' ),
+			'post_parent' => intval( isset( $_POST['course_id'] )? $_POST['course_id']:0 ),
+			'post_content' => sanitize_textarea_field( isset( $_POST['post_content'] )? $_POST['post_content']:'' ),
 			'post_type' => $this->post_type,
 			'post_status' => 'publish',
 			'meta_input' => array(
 				'unit_id' => isset( $_POST['unit_id'] )? $_POST['unit_id']:'course',
 				'email_notification' => isset( $_POST['email_notification'] )? 'yes':'no',
-				'thread_comments_depth' => isset( $_POST['thread_comments_depth'] )? $_POST['thread_comments_depth']:5,
-				'comments_per_page' => isset( $_POST['comments_per_page'] )? $_POST['comments_per_page']:50,
+				'thread_comments_depth' => intval( isset( $_POST['thread_comments_depth'] )? $_POST['thread_comments_depth']:5 ),
+				'comments_per_page' => intval( isset( $_POST['comments_per_page'] )? $_POST['comments_per_page']:50 ),
+				'comments_order' => sanitize_text_field( isset( $_POST['comments_order'] )? $_POST['comments_order']:'newer' ),
 			),
 		);
 		$postarr = sanitize_post( $postarr, 'db' );

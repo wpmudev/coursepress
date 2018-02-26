@@ -13,11 +13,16 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			'txt' => 'text/plain',
 			'jpeg' => 'image/jpeg',
 			'jpg' => 'image/jpeg',
+			'png' => 'image/png',
 			'pdf' => 'application/pdf',
 			'zip' => 'application/zip',
 		);
 
 		$allowed = $this->__get( 'allowed_file_types' );
+
+		if ( in_array( 'image', $allowed ) ) {
+			array_push( $allowed, 'jpeg', 'jpg', 'png' );
+		}
 
 		if ( ! empty( $allowed ) ) {
 			foreach ( $mimes as $type => $label ) {
@@ -33,7 +38,7 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		);
 	}
 
-	function get_answer_template( $user_id = 0 ) {
+	public function get_answer_template( $user_id = 0 ) {
 		$response = $this->get_user_response( $user_id );
 		$template = '';
 
@@ -54,15 +59,13 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		return $template;
 	}
 
-	function validate_response( $response = array() ) {
+	public function validate_response( $response = array() ) {
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
-
 		if ( ! function_exists( 'get_userdata' ) ) {
 			require_once ABSPATH . 'wp-includes/pluggable.php';
 		}
-
 		if ( ! empty( $_FILES ) ) {
 			$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 			$unit_id = filter_input( INPUT_POST, 'unit_id', FILTER_VALIDATE_INT );
@@ -79,18 +82,14 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			);
 			$user = coursepress_get_user();
 			$previous_response = $this->get_user_response( $user->ID );
-
 			foreach ( $file['name'] as $step_id => $_file ) {
 				$upload_file = array();
-
 				foreach ( $keys as $key ) {
 					$upload_file[ $key ] = $file[ $key ][ $step_id ];
 				}
-
 				$response = wp_handle_upload( $upload_file, $upload_overrides );
-				$response['size'] = $file[$step_id]['size'];
+				$response['size'] = $file['size'][ $step_id ];
 				$data['response'] = $response;
-
 				if ( empty( $response['error'] ) ) {
 					$user->record_response( $course_id, $unit_id, $step_id, $data );
 				} else {
@@ -98,7 +97,6 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 						// Redirect back
 						$referer = filter_input( INPUT_POST, 'referer_url' );
 						coursepress_set_cookie( 'cp_step_error', $response['error'], time() + 120 );
-
 						wp_safe_redirect( $referer );
 						exit;
 					}
@@ -107,7 +105,7 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		}
 	}
 
-	function get_question() {
+	public function get_question() {
 		$step_id = $this->__get( 'ID' );
 		$types = $this->__get( 'allowed_file_types' );
 		$name = sprintf( 'module[%d]', $step_id );
@@ -115,7 +113,7 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		$attr = array(
 			'type' => 'file',
 			'name' => $name,
-			'data-types' => implode(',', $types ),
+			'data-types' => implode( ',', $types ),
 		);
 		if ( $this->is_preview() ) {
 			$attr['readonly'] = 'readonly';

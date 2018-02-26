@@ -32,7 +32,6 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'cp_pages',
 			'course_signup_form',
 			'course_categories',
-			'messaging_submenu',
 		);
 
 		foreach ( $shortcodes as $shortcode ) {
@@ -106,7 +105,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			);
 		}
 
-		if ( ! empty( $a['courses_type'] ) && 'current_and_upcoming' == $a['courses_type'] ) {
+		if ( ! empty( $atts['courses_type'] ) && 'current_and_upcoming' == $atts['courses_type'] ) {
 			$query = CoursePress_Data_Course::current_and_upcoming_courses( $post_args );
 		} else {
 			$query = new WP_Query( $post_args );
@@ -114,7 +113,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 
 		$content = '';
 		$template = trim( '[course_list_box]' );
-		$template = apply_filters( 'coursepress_template_course_archive', $template, $a );
+		$template = apply_filters( 'coursepress_template_course_archive', $template, $atts );
 
 		foreach ( $query->posts as $post ) {
 			CoursePress_Data_Course::set_the_course( $post );
@@ -132,7 +131,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			) );
 		}
 
-		$content = apply_filters( 'coursepress_course_archive_content', $content, $a );
+		$content = apply_filters( 'coursepress_course_archive_content', $content, $atts );
 
 		if ( $echo ) {
 			echo $content;
@@ -263,8 +262,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		// Add filter to post classes
 
 		// Override button
-		if ( ! empty( $a['override_button_text'] ) && ! empty( $a['override_button_link'] ) ) {
-			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $a['override_button_link'] ) . '">' . esc_attr( $a['override_button_text'] ) . '</button>';
+		if ( ! empty( $atts['override_button_text'] ) && ! empty( $atts['override_button_link'] ) ) {
+			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $atts['override_button_link'] ) . '">' . esc_attr( $atts['override_button_text'] ) . '</button>';
 		}
 
 		// schema.org
@@ -289,7 +288,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		</div>
 		';
 
-		$template = apply_filters( 'coursepress_template_course_list_box', $template, $course_id, $a );
+		$template = apply_filters( 'coursepress_template_course_list_box', $template, $course_id, $atts );
 
 		$content = do_shortcode( $template );
 
@@ -1004,7 +1003,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	public function course_signup_form( $atts ) {
+	public function egt_course_signup_form( $atts ) {
 
 		$allowed = array( 'signup', 'login' );
 
@@ -1251,7 +1250,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	public function get_course_categories( $atts ) {
 
 		$atts = shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
+			'course_id' => coursepress_get_course_id(),
 			'before' => '',
 			'after' => ', ',
 			'icon' => '<span class="dashicons dashicons-category"></span>',
@@ -1294,72 +1293,6 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		}
 
 		return '';
-	}
-
-	/**
-	 * Display navigation links for messaging: Inbox/Messages/Compose
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return string HTML code for navigation block.
-	 */
-	public function get_messaging_submenu() {
-
-		global $coursepress;
-
-		if ( isset( $coursepress->inbox_subpage ) ) {
-			$subpage = $coursepress->inbox_subpage;
-		} else {
-			$subpage = '';
-		}
-
-		$unread_display = '';
-		$show_messaging = coursepress_is_true( get_option( 'show_messaging', 0 ) );
-
-		if ( $show_messaging ) {
-			$unread_count = CoursePress_Data_Course::get_unread_messages_count();
-			if ( $unread_count > 0 ) {
-				$unread_display = sprintf( ' (%d)', $unread_count );
-			} else {
-				$unread_display = '';
-			}
-		}
-
-		$url_inbox = $coursepress->get_inbox_slug( true );
-		$url_messages = $coursepress->get_sent_messages_slug( true );
-		$url_compose = $coursepress->get_new_message_slug( true );
-		$class_inbox = 'inbox' == $subpage ? 'submenu-active' : '';
-		$class_messages = 'sent_messages' == $subpage ? 'submenu-active' : '';
-		$class_compose = 'new_message' == $subpage ? 'submenu-active' : '';
-
-		ob_start();
-		?>
-		<div class="submenu-main-container submenu-messaging">
-			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-inbox <?php echo esc_attr( $class_inbox ); ?>">
-					<a href="<?php echo esc_url( $url_inbox ); ?>">
-						<?php
-						esc_html_e( 'Inbox', 'cp' );
-						echo $unread_display;
-						?>
-					</a></li>
-				<li class="submenu-item submenu-sent-messages <?php echo esc_attr( $class_messages ); ?>">
-					<a href="<?php echo esc_url( $url_messages ); ?>">
-					<?php esc_html_e( 'Sent', 'cp' ); ?>
-					</a>
-				</li>
-				<li class="submenu-item submenu-new-message <?php echo esc_attr( $class_compose ); ?>">
-					<a href="<?php echo esc_url( $url_compose ); ?>">
-					<?php esc_html_e( 'New Message', 'cp' ); ?>
-					</a>
-				</li>
-			</ul>
-		</div>
-		<br clear="all"/>
-		<?php
-		$content = ob_get_clean();
-
-		return $content;
 	}
 
 	/**

@@ -94,7 +94,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		// Make sure it is int.
 		$course_id = absint( $course_id );
 		// Get the student IDs for the course.
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
+		$sql = $wpdb->prepare( "SELECT student_id FROM `$this->students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
 		return $wpdb->get_col( $sql );
 	}
 

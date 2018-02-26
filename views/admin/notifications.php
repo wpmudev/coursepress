@@ -13,8 +13,8 @@
 	<div class="coursepress-page ">
 
 		<ul class="cp-notification-menu">
-			<li class="cp-notification-menu-item notification-emails" data-page="emails" data-tab="emails"><?php _e( 'Notification Emails', 'cp' ); ?></li>
 			<li class="cp-notification-menu-item notification-alerts" data-page="alerts" data-tab="alerts"><?php _e( 'Course Alerts', 'cp' ); ?></li>
+			<li class="cp-notification-menu-item notification-emails" data-page="emails" data-tab="emails"><?php _e( 'Notification Emails', 'cp' ); ?></li>
 		</ul>
 
 		<div class="notifications-content">

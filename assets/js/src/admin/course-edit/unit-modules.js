@@ -205,20 +205,16 @@
             setUI: function() {
                 this.moduleListContainer = this.$('#unit-module-list');
                 this.stepsContainer = this.$('#cp-module-steps');
-
                 this.setModuleList();
-
                 // Set the first module as active
                 this.$('[data-order]').first().trigger('click');
             },
 
             addModule: function() {
                 var model, length, modules, new_index;
-
                 modules = _.toArray(this.modules);
                 length = modules.length;
                 new_index = length + 1;
-
                 model = {
                     id: new_index,
                     title: win._coursepress.text.untitled,
@@ -226,7 +222,6 @@
                     description: '',
                     steps: {}
                 };
-
                 this.modules[new_index] = model;
                 this.model.set('modules', this.modules);
                 this.current = new_index;
@@ -234,11 +229,11 @@
                 this.setModuleList();
                 // Set the first module as active
                 this.$('[data-order]').last().trigger('click');
+                this.updateCounter( 1 );
             },
 
             setModuleList: function() {
                 var self = this;
-
                 this.moduleListContainer.html('');
                 this.moduleList = new ModuleList(this.modules);
                 this.moduleList.$el.appendTo(this.moduleListContainer);
@@ -249,37 +244,38 @@
                 });
             },
 
+            /**
+             * update counter
+             */
+            updateCounter: function( val ) {
+                var counter = $('.course-menu-list .unit-item.active .cp-count');
+                var value = parseInt( counter.data('count' ) ) + val;
+                counter.data('count', value).html( value );
+            },
+
             moveStep: function (ev) {
                 var moduleId, stepID, stepElement, step, stepModel, modulesPopup, self = this;
-
                 stepElement = $(ev.currentTarget).closest('.unit-step-module');
-
                 modulesPopup = new ModulesPopup({
                     modules: _.omit(this.modules, function (module) {
                         return module.id === self.moduleView.id;
                     })
                 });
-
                 modulesPopup.on('coursepress:popup_ok', function (popup) {
                     moduleId = popup.model.get('target_module');
                     stepID = stepElement.find('[name="menu_order"]').data('cid');
-
                     if (!moduleId || !stepID) {
                         return;
                     }
-
                     step = _.find(this.moduleView.steps, function (step) {
                         return step.model.cid === stepID;
                     });
                     stepModel = JSON.parse(JSON.stringify(step.model));
                     stepModel = _.omit(stepModel, ['ID', 'cid']);
-
                     // Remove the old version of the step
                     step.removeStep();
-
                     // Switch to the target module
                     this.$('.module-item[data-id="' + moduleId + '"]').trigger('click');
-
                     // Add the step to target module
                     this.moduleView.setStep(stepModel);
                 }, this);
@@ -287,10 +283,8 @@
 
             setActiveModule: function( ev ) {
                 var sender, item, model;
-
                 this.active = sender = this.$(ev.currentTarget);
                 item = sender.data('order');
-
                 this.current = parseInt(item);
                 sender.siblings().removeClass('active');
                 sender.addClass('active');
@@ -336,18 +330,14 @@
 
             reOrderModules: function() {
                 var x, modules;
-
                 x = 0;
                 modules = {};
-
                 _.each( this.moduleListContainer.find('.cp-select-list li'), function(module) {
                     var order, _module;
-
                     module = $(module);
                     order = module.data('order');
                     x += 1;
                     _module = this.modules[order];
-
                     if ( _module.steps ) {
                         _.each( _module.steps, function(step, pos){
                             if(!!step.get) {
@@ -365,7 +355,6 @@
                     module.attr('data-order', x);
                     module.data('order', x);
                 }, this );
-
                 // At this point the deleted modules have been removed from the 'modules' array because their markup doesn't exist on the page.
                 // Let's put them back so that modules can be deleted properly server side.
                 _.each(this.modules, function (module) {
@@ -374,7 +363,6 @@
                         modules[x] = module;
                     }
                 });
-
                 this.modules = modules;
                 this.unitModel.model.set('modules', this.modules);
             },
@@ -383,10 +371,10 @@
                 if ( this.moduleView ) {
                     this.modules[this.current].deleted = true;
                     this.moduleView.remove();
-
                     this.setModuleList();
                     this.reOrderModules();
                     this.$('[data-order]').last().trigger('click');
+                    this.updateCounter( -1 );
                 }
             }
         });

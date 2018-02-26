@@ -128,12 +128,12 @@ class CoursePress_Data_Module {
 		if ( 'section' != $module_type ) {
 			$attributes = array_merge( $attributes, array(
 				'duration' => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
-				'show_title' => cp_is_true( $meta['show_title'][0] ),
-				'allow_retries' => isset( $meta['allow_retries'] ) ? cp_is_true( $meta['allow_retries'][0] ) : true,
+				'show_title' => coursepress_is_true( $meta['show_title'][0] ),
+				'allow_retries' => isset( $meta['allow_retries'] ) ? coursepress_is_true( $meta['allow_retries'][0] ) : true,
 				'retry_attempts' => isset( $meta['retry_attempts'] ) ? (int) $meta['retry_attempts'][0] : 0,
 				'minimum_grade' => isset( $meta['minimum_grade'][0] ) ? floatval( $meta['minimum_grade'][0] ) : floatval( 100 ),
-				'assessable' => isset( $meta['assessable'] ) ? cp_is_true( $meta['assessable'][0] ) : false,
-				'mandatory' => isset( $meta['mandatory'] ) ? cp_is_true( $meta['mandatory'][0] ) : false,
+				'assessable' => isset( $meta['assessable'] ) ? coursepress_is_true( $meta['assessable'][0] ) : false,
+				'mandatory' => isset( $meta['mandatory'] ) ? coursepress_is_true( $meta['mandatory'][0] ) : false,
 			) );
 		}
 
@@ -492,5 +492,30 @@ class CoursePress_Data_Module {
 			return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
 		}
 
+	}
+
+	/**
+	 * Legacy mapping.
+	 *
+	 * @return array
+	 */
+	public static function legacy_map() {
+
+		return array(
+			'audio_module' => 'audio',
+			'chat_module' => 'chat',
+			'checkbox_input_module' => 'input-checkbox',
+			'file_module' => 'download',
+			'file_input_module' => 'input-upload',
+			'image_module' => 'image',
+			'page_break_module' => 'legacy',
+			'radio_input_module' => 'input-radio',
+			'page_break_module' => 'section',
+			'section_break_module' => 'section',
+			'text_module' => 'text',
+			'text_input_module' => 'input-text',
+			'textarea_input_module' => 'input-textarea',
+			'video_module' => 'video',
+		);
 	}
 }

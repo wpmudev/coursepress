@@ -217,9 +217,37 @@ function coursepress_get_user_instructor_profile_url( $user_id = 0 ) {
 }
 
 /**
- * Add user as student to a course.
+ * Try to add user as student to a course.
  *
  * @param int $user_id
+ * @param int $course_id
+ *
+ * @return bool|null
+ */
+function coursepress_try_to_add_student( $course_id = 0 ) {
+	if ( empty( $course_id ) ) {
+		return;
+	}
+	$user = coursepress_get_user();
+	if ( ! isset( $user->ID ) ) {
+		return false;
+	}
+	$is_enrolled_at = $user->is_enrolled_at( $course_id );
+	if ( $is_enrolled_at ) {
+		return true;
+	}
+	$course = coursepress_get_course( $course_id );
+	$user_can_enroll = $course->user_can_enroll();
+	if ( $user_can_enroll ) {
+		return coursepress_add_student( $user, $course_id );
+	}
+	return false;
+}
+
+/**
+ * Add user as student to a course.
+ *
+ * @param mixed $user_id
  * @param int $course_id
  *
  * @return bool|null
@@ -228,8 +256,12 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( empty( $user_id ) || empty( $course_id ) ) {
 		return null;
 	}
-
-	$user = coursepress_get_user( $user_id );
+	if ( is_a( $user_id, 'CoursePress_User' ) ) {
+		$user = $user_id;
+		$user_id = $user->ID;
+	} else {
+		$user = coursepress_get_user( $user_id );
+	}
 
 	if ( is_wp_error( $user ) ) {
 		return false;
@@ -324,7 +356,7 @@ function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $ret
 		return false;
 	}
 
-	if ( $user->is_student() ) {
+	if ( !$user->is_student() ) {
 		return false; // Not a student of any course? bail!
 	}
 	if ( empty( $user_id ) ) {
@@ -482,6 +514,8 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 	if ( is_wp_error( $course ) ) {
 		return $course;
 	}
+
+	$course_id = $course->ID;
 
 	$status = $user->get_course_completion_status( $course_id );
 	$results = array( 'status' => $status );
@@ -722,6 +756,31 @@ function coursepress_get_students_ids( $course_id = 0, $page = 0, $per_page = 0 
 	}
 
 	return $wpdb->get_col( $sql );
+}
+
+/**
+ * Get list of students by course.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+
+function coursepress_get_students_by_course( $course_id = 0 ) {
+
+	$student_ids = coursepress_get_students_ids( $course_id );
+
+	$students = array();
+	if ( ! empty( $student_ids ) ) {
+		foreach ( $student_ids as $id => $student_id ) {
+			$student = coursepress_get_user( $student_id );
+			if ( ! is_wp_error( $student ) ) {
+				$students[ $student_id ] = $student;
+			}
+		}
+	}
+
+	return $students;
 }
 
 /**

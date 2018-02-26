@@ -1430,4 +1430,200 @@ final class CoursePress_Data_Course {
 
 		return $estimation;
 	}
+
+	/**
+	 * Get current and upcoming courses.
+	 *
+	 * @param array $args
+	 * @param int $student_id
+	 *
+	 * @return WP_Query
+	 */
+	public static function current_and_upcoming_courses( $args = array(), $student_id = 0 ) {
+
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
+		$args = wp_parse_args( $args,
+			array(
+				'post_type' => 'course',
+				'post_status' => 'publish',
+				'suppress_filters' => true,
+				'meta_key' => 'cp_course_start_date',
+				'orderby' => 'meta_value_num',
+				'order' => 'ASC',
+				'suppress_filters' => true,
+				'posts_per_page' => get_option( 'posts_per_page' ),
+			)
+		);
+
+		// Orderby Parameter.
+		$selected_order = coursepress_get_setting( 'course/order_by', 'course_start_date' );
+		switch ( $selected_order ) {
+			case 'post_date':
+				$args['orderby'] = 'date';
+				unset( $args['meta_key'] );
+				break;
+			case 'enrollment_start_date':
+				$args['meta_key'] = 'cp_enrollment_start_date';
+				break;
+			case 'start_date':
+			default:
+				$args['meta_key'] = 'cp_course_start_date';
+				break;
+		}
+
+		// Order Parameter.
+		$selected_dir = coursepress_get_setting( 'course/order_by_direction', 'ASC' );
+		if ( ! preg_match( '/^(ASC|DESC)$/', $selected_dir ) ) {
+			$selected_dir = 'ASC';
+		}
+		$args['order'] = $selected_dir;
+
+		// Get expired courses
+		$expired_courses = self::get_expired_courses();
+		$enrollment_ended_courses = array();
+
+		// Get enrollment ended courses for non-admin
+		$is_admin = false;
+		if ( is_numeric( $student_id ) || is_string( $student_id ) ) {
+			$is_admin = user_can( $student_id, 'manage_options' );
+		} else {
+			$student_id = 0;
+		}
+
+		if ( false === $is_admin ) {
+			$enrollment_ended_courses = self::get_enrollment_ended_courses();
+			$enrolled_courses = (array) CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+
+			if ( ! empty( $enrollment_ended_courses ) ) {
+				foreach ( $enrollment_ended_courses as $pos => $post_id ) {
+					$is_instructor = CoursePress_Data_Capabilities::can_update_course( $post_id, $student_id );
+
+					// If current student is enrolled, remove from exclusion
+					if ( in_array( $post_id, $enrolled_courses ) || true === $is_instructor ) {
+						unset( $enrollment_ended_courses[ $pos ] );
+					}
+				}
+			}
+		}
+
+		$excludes = array_merge( $expired_courses, $enrollment_ended_courses );
+		$excludes = array_unique( $excludes );
+
+		if ( ! empty( $excludes ) ) {
+			$args['post__not_in'] = $excludes;
+		}
+
+		$query = new WP_Query( $args );
+
+		return $query;
+	}
+
+	/**
+	 * We use custom SQL to avoid overcaps
+	 *
+	 * @TODO: Create and hooked into `POSTS_JOIN` as counter part to orig CP
+	 *
+	 * @param bool $refresh
+	 *
+	 * @return array
+	 **/
+	public static function get_expired_courses( $refresh = false ) {
+
+		global $wpdb, $CoursePress_Core;
+
+		// Sanitize $refresh.
+		if ( ! is_bool( $refresh ) ) {
+			$refresh = coursepress_is_true( $refresh );
+		}
+
+		$course_ids = get_option( 'cp_expired_courses', false );
+		$last_update = get_option( 'cp_expired_date', false );
+		$now = $CoursePress_Core->get_time();
+		$date = date( 'MdY' );
+
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='course' AND (m.`meta_key`='course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_expired_courses', $course_ids );
+			update_option( 'cp_expired_date', $date );
+		}
+
+		return $course_ids;
+	}
+
+	/**
+	 * Return id from callback.
+	 *
+	 * @param $a
+	 *
+	 * @return int|mixed
+	 */
+	public static function return_id( $a ) {
+
+		if ( is_array( $a ) && isset( $a['post_id'] ) ) {
+			return $a['post_id'];
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Get enrollment ended courses.
+	 *
+	 * @todo: Create and hooked into `POSTS_JOIN` as counter part to orig CP
+	 *
+	 * @param bool $refresh
+	 *
+	 * @return array
+	 **/
+	public static function get_enrollment_ended_courses( $refresh = false ) {
+
+		global $wpdb, $CoursePress_Core;
+
+		// Sanitize $refresh
+		if ( ! is_bool( $refresh ) ) {
+			$refresh = coursepress_is_true( $refresh );
+		}
+
+		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
+		$last_update = get_option( 'cp_enrollment_ended_date', false );
+		$now = $CoursePress_Core->get_time();
+		$date = date( 'MdY' );
+
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='course' AND (m.`meta_key`='enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_enrollment_ended_courses', $course_ids );
+			update_option( 'cp_enrollment_ended_date', $date );
+		}
+
+		return $course_ids;
+	}
 }

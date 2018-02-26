@@ -400,25 +400,8 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 				'action'    => 'coursepress_enroll',
 				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 			);
-			$link = add_query_arg( $link_args, admin_url( 'admin-ajax.php' ) );
-
-			if ( ! is_user_logged_in() ) {
-				// Redirect to login page??
-				$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
-
-				if ( $use_custom_login ) {
-					$login_page = coursepress_get_setting( 'slugs/pages/login', 0 );
-
-					if ( $login_page ) {
-						$link = get_permalink( $login_page );
-					} else {
-						$slug = coursepress_get_setting( 'slugs/login', 'student-login' );
-						$link = site_url( '/' ) . trailingslashit( $slug );
-					}
-				} else {
-					$link = wp_login_url( $link );
-				}
-			} else {
+			if ( is_user_logged_in() ) {
+				$link = add_query_arg( $link_args, admin_url( 'admin-ajax.php' ) );
 				if ( 'prerequisite' == $enrollment_type ) {
 					$courses = $course->__get( 'enrollment_prerequisite' );
 					$messages = array();
@@ -460,6 +443,21 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 					echo implode( ' ', $messages );
 					$link = '';
 					$link_text = '';
+				}
+			} else {
+				$link = add_query_arg( $link_args, $course->get_permalink() );
+				// Redirect to login page??
+				$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
+				if ( $use_custom_login ) {
+					$login_page = coursepress_get_setting( 'slugs/pages/login', 0 );
+					if ( $login_page ) {
+						$link = get_permalink( $login_page );
+					} else {
+						$slug = coursepress_get_setting( 'slugs/login', 'student-login' );
+						$link = site_url( '/' ) . trailingslashit( $slug );
+					}
+				} else {
+					$link = wp_login_url( $link );
 				}
 			}
 		}
@@ -1836,8 +1834,11 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	global $CoursePress;
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
-		return false;
+		return new WP_Error( 'error', __( 'Selected course does not exits.', 'cp' ) );
 	}
+	/**
+	 * Check course passcode
+	 */
 	$email_type = 'course_invitation';
 	if ( 'passcode' == $course->__get( 'enrollment_type' ) ) {
 		$email_type = 'course_invitation_password';
@@ -1845,7 +1846,18 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	$emailClass = $CoursePress->get_class( 'CoursePress_Email' );
 	$email_data = $emailClass->get_email_data( $email_type );
 	if ( empty( $email_data['enabled'] ) ) {
-		return false;
+		return new WP_Error( 'error', __( 'Currently we can not send mails.', 'cp' ) );
+	}
+	/**
+	 * sanitize email
+	 */
+	$email = sanitize_email( $student_data['email'] );
+	/**
+	 * check user can be add
+	 */
+	$can_invite_email = $course->can_invite_email( $email );
+	if ( is_wp_error( $can_invite_email ) ) {
+		return $can_invite_email;
 	}
 	$tokens = array(
 		'COURSE_NAME' => $course->__get( 'post_title' ),
@@ -1857,7 +1869,6 @@ function coursepress_invite_student( $course_id, $student_data ) {
 		'STUDENT_LAST_NAME' => $student_data['last_name'],
 	);
 	$message = $course->replace_vars( $email_data['content'], $tokens );
-	$email = sanitize_email( $student_data['email'] );
 	$args = array(
 		'message' => $message,
 		'to' => $email,
@@ -1875,7 +1886,7 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	 */
 	$object = new stdClass();
 	foreach ( $student_data as $key => $value ) {
-			$object->$key = $value;
+		$object->$key = $value;
 	}
 	$invited_students->{$email} = $object;
 	$course->update_setting( 'invited_students', $invited_students );

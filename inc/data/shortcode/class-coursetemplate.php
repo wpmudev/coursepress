@@ -1822,7 +1822,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 */
 	public function get_course_social_links( $atts ) {
 
-		$services = CoursePress_Helper_SocialMedia::get_social_sharing_keys();
+		$services = CoursePress_Data_SocialMedia::get_social_sharing_keys();
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'services' => implode( ',', $services ),
@@ -2074,11 +2074,12 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$last_unit_url = '';
 
 		foreach ( $units as $unit ) {
+			$unit = coursepress_get_unit( $unit );
 			$unit_url = $unit->get_permalink();
 			$content .= sprintf(
 				'<li><a href="%s">%s</a></li>',
 				esc_url( $unit_url ),
-				esc_html( $unit->post_title )
+				esc_html( $unit->get_the_title() )
 			);
 			$last_unit_url = $unit_url;
 		}
