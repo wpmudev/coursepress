@@ -1,6 +1,6 @@
 <?php
 /**
- * Class CoursePress_Admin_Assesments
+ * Class CoursePress_Admin_Assessments
  *
  * @since 2.0
  * @package CoursePress
@@ -8,7 +8,7 @@
 class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 
 	/**
-	 * Assesments page slug.
+	 * Assessments page slug.
 	 *
 	 * @var string
 	 */
@@ -38,10 +38,10 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
-			'assessments' => $this->get_assesments( $course_id, $unit_id, $graded, $count ),
+			'assessments' => $this->get_assessments( $course_id, $unit_id, $graded, $count ),
 			'courses' => coursepress_get_accessible_courses(),
 			'units' => $units,
-			'list_table' => $this->set_pagination( $count, 'coursepress_assesments_per_page' ),
+			'list_table' => $this->set_pagination( $count, 'coursepress_assessments_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
 			'course_id' => absint( $course_id ),
@@ -94,7 +94,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_assesments( $course_id, $unit_id, $graded = 'all', &$count = 0 ) {
+	function get_assessments( $course_id, $unit_id, $graded = 'all', &$count = 0 ) {
 
 		// We need course id.
 		if ( empty( $course_id ) ) {
@@ -129,7 +129,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	}
 
 	/**
-	 * Custom screen options for assesments listing page.
+	 * Custom screen options for assessments listing page.
 	 *
 	 * @uses get_current_screen().
 	 */
@@ -141,8 +141,8 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
 
-		// Assesments per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_assesments_per_page' ) );
+		// Assessments per page.
+		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_assessments_per_page' ) );
 	}
 
 	/**
@@ -165,7 +165,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		 * @since 3.0
 		 * @param array $columns
 		 */
-		$columns = apply_filters( 'coursepress_assesments_columns', $columns );
+		$columns = apply_filters( 'coursepress_assessments_columns', $columns );
 
 		return $columns;
 	}
@@ -183,6 +183,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		 * @since 3.0
 		 * @param array $hidden_columns.
 		 */
-		return apply_filters( 'coursepress_assesments_hidden_columns', array() );
+		return apply_filters( 'coursepress_assessments_hidden_columns', array() );
 	}
 }
