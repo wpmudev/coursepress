@@ -449,10 +449,8 @@ function coursepress_progress_wheel( $attr = array() ) {
 	}
 	$value = $attr['data-value'];
 
-	if ( intval( $value ) > 0 ) {
-		$value = intval( $value ) / 100;
-		$attr['data-value'] = $value;
-	}
+	$value = intval( $value ) / 100;
+	$attr['data-value'] = $value;
 
 	$attr['class'] = implode( ' ', $class );
 

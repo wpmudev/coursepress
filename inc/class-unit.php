@@ -526,9 +526,6 @@ class CoursePress_Unit extends CoursePress_Utility {
 				} elseif ( $user->is_unit_seen( $course_id, $unit_id ) ) {
 					$unit_class[] = 'unit-seen';
 				}
-				if ( $unit_progress > 0 ) {
-					$unit_progress /= 100;
-				}
 				$attr = array(
 					'class'                      => 'unit-progress',
 					'data-value'                 => $unit_progress,
