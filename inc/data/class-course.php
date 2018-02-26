@@ -1561,9 +1561,10 @@ final class CoursePress_Data_Course {
 
 			update_option( 'cp_expired_courses', $course_ids );
 			update_option( 'cp_expired_date', $date );
+			return $course_ids;
 		}
 
-		return $course_ids;
+		return array();
 	}
 
 	/**

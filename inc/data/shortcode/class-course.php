@@ -21,37 +21,36 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$shortcodes = array(
 			'course',
-			'course_details',
-			'courses_urls',
-			'course_title',
-			'course_summary',
-			'course_description',
-			'course_start',
-			'course_end',
-			'course_dates',
-			'course_enrollment_start',
-			'course_enrollment_end',
-			'course_enrollment_dates',
+			'course_action_links',
+			'course_category',
 			'course_class_size',
 			'course_cost',
-			'course_language',
-			'course_category',
+			'course_dates',
+			'course_description',
+			'course_details',
+			'course_end',
+			'course_enrollment_dates',
+			'course_enrollment_end',
+			'course_enrollment_start',
 			'course_enrollment_type',
-			'course_list_image',
 			'course_featured_video',
-			'course_thumbnail',
-			'course_action_links',
-			'course_media',
-			'course_link',
+			'course_language',
 			'course_length',
-			'course_time_estimation',
+			'course_link',
+			'course_list_image',
+			'course_media',
 			'course_random',
+			'course_start',
+			'course_summary',
+			'courses_urls',
+			'course_thumbnail',
+			'course_time_estimation',
+			'course_title',
 			'get_parent_course_id',
 		);
 
 		foreach ( $shortcodes as $shortcode ) {
 			$method = 'get_' . $shortcode;
-
 			if ( method_exists( $this, $method ) ) {
 				add_shortcode( $shortcode, array( $this, $method ) );
 			}
@@ -80,7 +79,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return mixed
 	 */
 	function get_course( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'show' => 'summary',
@@ -89,25 +87,22 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'label_tag' => 'label',
 			'show_title' => true,
 		), $atts, 'course' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		$shows = explode( ',', $atts['show'] );
 		$shows = array_map( 'trim', $shows );
 		$template = '';
-
-		if ( 'yes' == $atts['show_title'] )
+		if ( 'yes' == $atts['show_title'] ) {
 			$template .= '[course_title course_id="' . $atts['course_id'] . '"]';
-
+		}
+		$content = '';
 		foreach ( $shows as $show ) {
 			$template = '[course_' . $show . ' course_id="' . $atts['course_id'] . '"]';
+			$content .= $this->create_html( 'div', array( 'class' => 'course-overview' ), do_shortcode( $template ) );
 		}
-
-		return $this->create_html( 'div', array( 'class' => 'course-overview' ), do_shortcode( $template ) );
+		return $content;
 	}
 
 	/**
@@ -319,8 +314,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$course = $this->get_course_class( $atts['course_id'] );
 
-		if ( $course->__get( 'is_error' ) )
-			return $course->__get( 'error_message' );
+		if ( $course->__get( 'is_error' ) ) {
+			return $course->__get( 'error_message' ); }
 
 		$template = '';
 
@@ -1079,7 +1074,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 			$attr = array(
 				'class' => $class,
-				'src' => esc_url_raw( $course->featured_video )
+				'src' => esc_url_raw( $course->featured_video ),
 			);
 
 			// @todo: apply CP video.js
