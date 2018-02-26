@@ -670,7 +670,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_class_size( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
@@ -682,14 +681,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'show_no_limit' => 'no',
 			'show_remaining' => 'yes',
 		), $atts, 'course_class_size' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$course = coursepress_get_course( $course_id );
-
 		$show_no_limit = sanitize_html_class( $atts['show_no_limit'] );
 		$show_remaining = sanitize_html_class( $atts['show_remaining'] );
 		$label = sanitize_text_field( $atts['label'] );
@@ -698,14 +694,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$no_limit_text = sanitize_text_field( $atts['no_limit_text'] );
 		$remaining_text = sanitize_text_field( $atts['remaining_text'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$content = '';
-
-		$is_limited = coursepress_is_true( coursepress_course_get_setting( $course_id, 'class_limited', false ) );
 		$class_size = (int) coursepress_course_get_setting( $course_id, 'class_size' );
+		$is_limited = 0 != $class_size;
 		$show_no_limit = coursepress_is_true( $show_no_limit );
 		$show_remaining = coursepress_is_true( $show_remaining );
-
 		if ( $is_limited ) {
 			$content .= $this->create_html( 'span', array( 'class' => 'total' ), $class_size );
 			if ( $show_remaining ) {
@@ -717,12 +710,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				$content .= $no_limit_text;
 			}
 		}
-
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
-
 			$content = '';
-
 			$class = 'course-class-size course-class-size-' . $course_id . ' ' . $class;
 			if ( ! empty( $label ) ) {
 				$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
@@ -730,7 +720,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$content .= $display_content;
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
 		}
-
 		// Return the html in the buffer.
 		return $content;
 	}
