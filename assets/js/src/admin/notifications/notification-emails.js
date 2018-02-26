@@ -111,7 +111,11 @@
 			},
 
 			setSelectedStudents: function ( id, name ) {
-				this.$('ul#cp-notifications-students').append('<li data-user-id="' + id + '">' + name + '</li>');
+				var students_ul = this.$('ul#cp-notifications-students');
+				// Add student only if not already added.
+				if ( students_ul.find('li[data-user-id="' + id + '"]').length === 0 ) {
+					students_ul.append( '<li data-user-id="' + id + '">' + name + '</li>' );
+				}
 			},
 
 			// Send email notification.

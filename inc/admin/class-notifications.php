@@ -65,6 +65,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		// Data for email form.
 		$email_args = array(
 			'courses' => $this->get_courses(),
+			'students' => coursepress_get_students_by_course(),
 		);
 
 		$current_status = $this->get_status();
