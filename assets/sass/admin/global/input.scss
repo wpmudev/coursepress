@@ -22,8 +22,8 @@
     height: auto;
   }
   select {
-    width: 100%;
-    display: block;
+    width: auto;
+    display: inline-block;
   }
   [disabled="disabled"] {
     opacity: 0.6;
