@@ -355,9 +355,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course End Date: ', 'cp' ),
+			'label' => __( 'Course End Date', 'cp' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_date_text' => __( 'No End Date', 'cp' ),
 			'class' => '',
 		), $atts, 'course_end' );
@@ -370,7 +370,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$class = sanitize_html_class( $atts['class'] );
 
@@ -408,9 +408,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Dates: ', 'cp' ),
+			'label' => __( 'Course Dates', 'cp' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_date_text' => __( 'No End Date', 'cp' ),
 			'alt_display_text' => __( 'Open-ended', 'cp' ),
 			'show_alt_display' => 'no',
@@ -425,7 +425,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$alt_display_text = sanitize_text_field( $atts['alt_display_text'] );
 		$show_alt_display = sanitize_html_class( $atts['show_alt_display'] );
@@ -473,9 +473,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Start Date: ', 'cp' ),
+			'label' => __( 'Enrollment Start Date', 'cp' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_date_text' => __( 'Enroll Anytime', 'cp' ),
 			'class' => '',
 		), $atts, 'course_enrollment_start' );
@@ -488,7 +488,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$class = sanitize_html_class( $atts['class'] );
 
@@ -534,9 +534,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment End Date: ', 'cp' ),
+			'label' => __( 'Enrollment End Date', 'cp' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_date_text' => __( 'Enroll Anytime ', 'cp' ),
 			'show_all_dates' => 'no',
 			'class' => '',
@@ -550,7 +550,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$show_all_dates = sanitize_html_class( $atts['show_all_dates'] );
 		$class = sanitize_html_class( $atts['class'] );
@@ -590,11 +590,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Dates: ', 'cp' ),
-			'label_enrolled' => __( 'You Enrolled on: ', 'cp' ),
+			'label' => __( 'Enrollment Dates', 'cp' ),
+			'label_enrolled' => __( 'You Enrolled on', 'cp' ),
 			'show_enrolled_display' => 'yes',
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_date_text' => __( 'Enroll Anytime', 'cp' ),
 			'alt_display_text' => __( 'Open-ended', 'cp' ),
 			'show_alt_display' => 'no',
@@ -611,7 +611,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$label_enrolled = sanitize_text_field( $atts['label_enrolled'] );
 		$show_enrolled_display = sanitize_html_class( $atts['show_enrolled_display'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$alt_display_text = sanitize_text_field( $atts['alt_display_text'] );
 		$show_alt_display = sanitize_text_field( $atts['show_alt_display'] );
@@ -673,9 +673,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'label_tag' => 'strong',
-			'label' => __( 'Class Size: ', 'cp' ),
+			'label' => __( 'Class Size', 'cp' ),
 			'no_limit_text' => __( 'Unlimited', 'cp' ),
 			'remaining_text' => __( '(%d places left)', 'cp' ),
 			'show_no_limit' => 'no',
@@ -690,7 +690,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$show_remaining = sanitize_html_class( $atts['show_remaining'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_limit_text = sanitize_text_field( $atts['no_limit_text'] );
 		$remaining_text = sanitize_text_field( $atts['remaining_text'] );
 		$class = sanitize_html_class( $atts['class'] );
@@ -752,7 +752,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_cost_text = sanitize_text_field( $atts['no_cost_text'] );
 		$show_icon = sanitize_text_field( $atts['show_icon'] );
 		$class = sanitize_html_class( $atts['class'] );
@@ -845,9 +845,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'label' => __( 'Course Category: ', 'cp' ),
+			'label' => __( 'Course Category', 'cp' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'no_category_text' => __( 'None', 'cp' ),
 			'class' => '',
 		), $atts, 'course_category' );
@@ -859,7 +859,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$no_category_text = sanitize_text_field( $atts['no_category_text'] );
 		$class = sanitize_html_class( $atts['class'] );
 
@@ -909,9 +909,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'course_id' => coursepress_get_course_id(),
 			'anyone_text' => __( 'Anyone', 'cp' ),
 			'class' => '',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'label_tag' => 'strong',
-			'label' => __( 'Who can Enroll: ', 'cp' ),
+			'label' => __( 'Who can Enroll', 'cp' ),
 			'manual_text' => __( 'Students are added by instructors.', 'cp' ),
 			'passcode_text' => __( 'A passcode is required to enroll.', 'cp' ),
 			'prerequisite_text' => __( 'Students need to complete %s first.', 'cp' ),
@@ -925,7 +925,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$manual_text = sanitize_text_field( $atts['manual_text'] );
 		$prerequisite_text = sanitize_text_field( $atts['prerequisite_text'] );
 		$passcode_text = sanitize_text_field( $atts['passcode_text'] );
@@ -1388,7 +1388,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
-		$label_delimeter = sanitize_html_class( $atts['label_delimeter'] );
+		$label_delimeter = $atts['label_delimeter'];
 		$class = sanitize_html_class( $atts['class'] );
 		$wrapper = coursepress_is_true( sanitize_text_field( $atts['wrapper'] ) );
 
