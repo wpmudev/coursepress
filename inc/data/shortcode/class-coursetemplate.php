@@ -1453,8 +1453,8 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_list( $atts ) {
-
 		$atts = shortcode_atts( array(
+			'categories' => '',
 			'completed_label' => __( 'Completed courses', 'cp' ),
 			'context' => 'all', // <blank>, enrolled, completed
 			'current_label' => __( 'Current Courses', 'cp' ),
@@ -1467,21 +1467,19 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'instructor' => '', // Note, one or the other
 			'limit' => - 1,
 			'manage_label' => __( 'Manage Courses', 'cp' ),
-			'order' => 'ASC',
 			'orderby' => 'meta', /// possible values: meta, title
+			'order' => 'ASC',
 			'past_label' => __( 'Past courses', 'cp' ),
 			'show_labels' => false,
+			'show_withdraw_link' => false,
 			'status' => 'publish',
 			'student_msg' => sprintf( __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'cp' ), coursepress_get_main_courses_url() ),
 			'student' => '', // If both student and instructor is specified only student will be used
 			'suggested_label' => __( 'Suggested courses', 'cp' ),
 			'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'cp' ),
-			'show_withdraw_link' => false,
-			'categories' => '',
+			'class' => '',
 		), $atts, 'course_page' );
-
 		$atts = $this->sanitize_recursive( $atts );
-
 		$instructor_list = false;
 		$student_list = false;
 		$atts['dashboard'] = coursepress_is_true( $atts['dashboard'] );
@@ -1489,12 +1487,10 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$content = '';
 		$student = 0;
 		$include_ids = array();
-
 		// Sanitize show_withdraw_link.
 		if ( empty( $atts['student'] ) || 'incomplete' != $atts['status'] ) {
 			$atts['show_withdraw_link'] = false;
 		}
-
 		if ( ! empty( $atts['instructor'] ) ) {
 			$include_ids = array();
 			$instructors = explode( ',', $atts['instructor'] );
@@ -1706,6 +1702,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				$shortcode_attributes  = array(
 					'course_id' => $course->ID,
 					'show_withdraw_link' => $atts['show_withdraw_link'],
+					'class' => $atts['class'],
 				);
 				$shortcode_attributes = $this->convert_array_to_params( $shortcode_attributes );
 				$content .= do_shortcode( '[course_list_box ' . $shortcode_attributes . ']' );
@@ -1732,7 +1729,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			} else {
 				foreach ( $courses as $course ) {
 					$course_url = get_edit_post_link( $course->ID );
-					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
+					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '" class="'.esc_attr( $atts['class'] ).'"]' );
 					$counter += 1;
 				}
 			}
@@ -1785,26 +1782,22 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					$label = $atts['facilitator_label'];
 					break;
 			}
-
 			if ( $counter || ( 0 === $counter && $show_empty ) ) {
-				$content = '<div class="dashboard-course-list ' . esc_attr( $context ) . '">' .
+				$atts['class'] .= ' '.$context;
+				$content = '<div class="dashboard-course-list ' . esc_attr( $atts['class'] ) . '">' .
 				           '<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
 				           $content .
 				           '</div>';
 			}
 		} elseif ( $atts['dashboard'] && 'enrolled' === $context ) {
-
 			$label = $atts['suggested_label'];
 			$message = sprintf( $atts['suggested_msg'], esc_url( coursepress_get_main_courses_url() ) );
-
-			$content = '<div class="dashboard-course-list suggested">' .
+			$content = '<div class="dashboard-course-list suggested ' . esc_attr( $atts['class'] ) . '">' .
 			           '<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
 			           '<p>' . $message . '</p>' .
 			           do_shortcode( '[course_random featured_title="" media_type="image" media_priority="image"]' ) .
 			           '</div>';
-
 		}
-
 		return $content;
 	}
 
