@@ -326,7 +326,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->course_open_ended ) {
 			$template .= __( 'Already started', 'cp' );
 		} else {
-			$template .= $course->course_start_date;
+			$create_date = date_create( $course->course_start_date );
+			$template   .= date_format( $create_date, $atts['date_format'] );
 		}
 
 		$class = 'course-start-date';
