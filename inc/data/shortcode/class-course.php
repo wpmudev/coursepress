@@ -78,7 +78,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return mixed
 	 */
-	function get_course( $atts ) {
+	public function get_course( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'show' => 'summary',
@@ -264,7 +264,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	function get_course_description( $atts ) {
+	public function get_course_description( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
@@ -798,7 +798,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	function get_course_language( $atts ) {
+	public function get_course_language( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
@@ -995,7 +995,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	function get_course_list_image( $atts ) {
+	public function get_course_list_image( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
@@ -1039,36 +1039,28 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-	function get_course_featured_video( $atts ) {
-
+	public function get_course_featured_video( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'width' => coursepress_get_setting( 'course/image_width', 235 ),
 			'height' => coursepress_get_setting( 'course/image_height', 235 ),
 			'class' => '',
 		), $atts, 'course_featured_video' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		if ( ! empty( $course->featured_video ) ) {
 			$class = 'course-featured-video';
-
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-
 			$attr = array(
 				'class' => $class,
 				'src' => esc_url_raw( $course->featured_video ),
 			);
-
 			// @todo: apply CP video.js
 		}
-
 		return '';
 	}
 
