@@ -1850,25 +1850,25 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			switch ( $service ) {
 				case 'facebook':
 					$service_title = '<span class="dashicons dashicons-facebook"></span>';
-					$services_content .= '<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=' . $course_url . '&p[images][0]=' . $course_image . '&p[title]=' . $course_title . '&p[summary]=' . urlencode( strip_tags( $course_summary ) ) . '" class="facebook-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=' . urlencode( $course_url ) . '&p[images][0]=' . $course_image . '&p[title]=' . $course_title . '&p[summary]=' . urlencode( strip_tags( $course_summary ) ) . '" class="facebook-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'twitter':
 					$service_title = '<span class="dashicons dashicons-twitter"></span>';
-					$services_content .= '<a href="http://twitter.com/home?status=' . $course_title . ' (' . $course_url . ')" class="twitter-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="http://twitter.com/home?status=' . $course_title . ' (' . urlencode( $course_url ) . ')" class="twitter-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'google':
 					$service_title = '<span class="dashicons dashicons-googleplus"></span>';
-					$services_content .= '<a href="https://plus.google.com/share?url=' . $course_url . '" class="google-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="https://plus.google.com/share?url=' . urlencode( $course_url ) . '" class="google-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'email':
 					$service_title = '<span class="dashicons dashicons-email-alt"></span>';
-					$services_content .= '<a href="mailto:?subject=' . $course_title . '&body=' . strip_tags( $course_summary ) . ' ( ' . $course_url . ' )" target="_top" class="email-share"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="mailto:?subject=' . $course_title . '&body=' . strip_tags( $course_summary ) . ' ( ' . urlencode( $course_url ) . ' )" target="_top" class="email-share"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
