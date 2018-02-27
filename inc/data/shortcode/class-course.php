@@ -1150,7 +1150,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_media( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
@@ -1161,12 +1160,14 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'width' => coursepress_get_setting( 'course/image_width' ),
 			'wrapper' => '',
 		), $atts, 'course_media' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
+		$course = $this->get_course_class( $course_id );
+		if ( is_wp_error( $course ) ) {
+			return '';
+		}
 		$type = sanitize_text_field( $atts['type'] );
 		$priority = sanitize_text_field( $atts['priority'] );
 		$list_page = coursepress_is_true( sanitize_html_class( $atts['list_page'] ) );
@@ -1174,7 +1175,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$wrapper = sanitize_html_class( $atts['wrapper'] );
 		$height = sanitize_text_field( $atts['height'] );
 		$width = sanitize_text_field( $atts['width'] );
-
 		// We'll use pixel if none is set
 		if ( ! empty( $width ) && (int) $width == $width ) {
 			$width .= 'px';
@@ -1182,7 +1182,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( ! empty( $height ) && (int) $height == $height ) {
 			$height .= 'px';
 		}
-
 		if ( ! $list_page ) {
 			$type = empty( $type ) ? coursepress_get_setting( 'course/details_media_type', 'default' ) : $type;
 			$priority = empty( $priority ) ? coursepress_get_setting( 'course/details_media_priority', 'video' ) : $priority;
@@ -1190,41 +1189,30 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$type = empty( $type ) ? coursepress_get_setting( 'course/listing_media_type', 'default' ) : $type;
 			$priority = empty( $priority ) ? coursepress_get_setting( 'course/listing_media_priority', 'image' ) : $priority;
 		}
-
 		$priority = 'default' != $type ? false : $priority;
-
 		// Saves some overhead by not loading the post again if we don't need to.
 		$class = sanitize_html_class( $class );
-
 		$course_video = coursepress_course_get_setting( $course_id, 'featured_video' );
 		$course_image = coursepress_course_get_setting( $course_id, 'listing_image' );
-
 		if ( 'thumbnail' == $type ) {
 			$type = 'image';
 			$priority = 'image';
 			$width = $height = '';
 		}
-
 		// If no wrapper and we're specifying a width and height, we need one, so will use div.
 		if ( empty( $wrapper ) && ( ! empty( $width ) || ! empty( $height ) ) ) {
 			$wrapper = 'div';
 		}
-
 		$wrapper_style = '';
 		$wrapper_style .= ! empty( $width ) ? 'width:' . $width . ';' : '';
 		$wrapper_style .= ! empty( $width ) ? 'height:' . $height . ';' : '';
-
 		if ( is_singular( 'course' ) ) {
 			$wrapper_style = '';
 		}
 		$content = '';
-
 		if ( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
-
 			$class = 'video_player course-featured-media course-featured-media-' . $course_id . ' ' . $class;
-
 			$video_extension = pathinfo( $course_video, PATHINFO_EXTENSION );
-
 			if ( ! empty( $video_extension ) ) {
 				$attr = array(
 					'src' => $course_video,
@@ -1232,15 +1220,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				$content .= wp_video_shortcode( $attr );
 			} else {
 				$embed_args = array();
-
 				// Add YouTube filter.
 				if ( preg_match( '/youtube.com|youtu.be/', $course_video ) ) {
-					add_filter( 'oembed_result', array(
-						'CoursePress_Helper_Utility',
-						'remove_related_videos',
-					), 10, 3 );
+					add_filter( 'oembed_result', array( $this, 'remove_related_videos' ), 10, 3 );
 				}
-
 				$content .= wp_oembed_get( $course_video, $embed_args );
 			}
 

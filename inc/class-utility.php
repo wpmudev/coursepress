@@ -9,6 +9,7 @@ abstract class CoursePress_Utility {
 
 	// Used by the array uasort() callbacks.
 	private $sort_key;
+	private $embed_args;
 
 	public function __set( $name, $value ) {
 		$this->{$name} = $value;
@@ -725,7 +726,7 @@ abstract class CoursePress_Utility {
 	 */
 	public function get_minimum_password_length() {
 
-		return apply_filters('coursepress_min_password_length', 6 );
+		return apply_filters( 'coursepress_min_password_length', 6 );
 	}
 
 	/**
@@ -737,16 +738,16 @@ abstract class CoursePress_Utility {
 	 */
 	public function is_password_strong() {
 
-		$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+		$confirm_weak_password = isset( $_POST['confirm_weak_password'] ) ? (boolean) $_POST['confirm_weak_password'] : false;
 		$min_password_length = self::get_minimum_password_length();
 
-		if (self::is_password_strength_meter_enabled()) {
-			$password_strength = isset($_POST['password_strength_level']) ? intval($_POST['password_strength_level']) : 0;
+		if ( self::is_password_strength_meter_enabled() ) {
+			$password_strength = isset( $_POST['password_strength_level'] ) ? intval( $_POST['password_strength_level'] ) : 0;
 
 			return $confirm_weak_password || $password_strength >= 3;
 		} else {
-			$password = isset($_POST['password']) ? $_POST['password'] : '';
-			$password_strong = strlen($password) >= $min_password_length && preg_match('#[0-9a-z]+#i', $password);
+			$password = isset( $_POST['password'] ) ? $_POST['password'] : '';
+			$password_strong = strlen( $password ) >= $min_password_length && preg_match( '#[0-9a-z]+#i', $password );
 
 			return $confirm_weak_password || $password_strong;
 		}
@@ -759,6 +760,56 @@ abstract class CoursePress_Utility {
 	 */
 	public function is_password_strength_meter_enabled() {
 
-		return (boolean) apply_filters('coursepress_display_password_strength_meter', true );
+		return (boolean) apply_filters( 'coursepress_display_password_strength_meter', true );
+	}
+
+	/**
+	 * remove_youtube_controls
+	 *
+	 *
+	 * @since 2.0
+	 */
+	public function remove_youtube_controls( $code ) {
+		if ( false !== strpos( $code, 'youtu.be' ) || false !== strpos( $code, 'youtube.com' ) ) {
+			$parameters = http_build_query( $this->embed_args );
+			$code = preg_replace(
+				"@src=(['\"])?([^'\">s]*)@",
+				'src=$1$2&' . $parameters,
+				$code
+			);
+		}
+		return $code;
+	}
+
+	/**
+	 * remove_related_videos
+	 *
+	 *
+	 * @since 2.0
+	 */
+	public function remove_related_videos( $html, $url, $args ) {
+		$atts = wp_parse_args(
+			$args,
+			array(
+				'color' => 'white',
+				'rel' => 0,
+				'modestbranding' => 1,
+				'showinfo' => 0,
+			)
+		);
+		$atts = apply_filters( 'coursepress_video_embed_args', $atts, $html, $url, $args );
+		$this->embed_args = $atts;;
+		// build the query url.
+		$parameters = http_build_query( $atts );
+		// Another attempt to remove Youtube features.
+		add_filter( 'embed_handler_html', array( $this, 'remove_youtube_controls' ) );
+		add_filter( 'embed_oembed_html', array( $this, 'remove_youtube_controls' ) );
+		// YouTube
+		$html = str_replace(
+			'feature=oembed',
+			'feature=oembed&' . $parameters,
+			$html
+		);
+		return $html;
 	}
 }
