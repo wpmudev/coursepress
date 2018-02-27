@@ -231,7 +231,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		$course = $unit->get_course();
 		$response = $user->get_response( $course->ID, $unit->ID, $this->__get( 'ID' ) );
 
-		return ! empty( $response['response'] ) ? $response['response'] : false;
+		return ( isset( $response['response'] ) && ! empty( $response['response'] ) ) ? $response['response'] : false;
 	}
 
 	function get_user_attempts( $user_id = 0 ) {
@@ -240,7 +240,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		$course = $unit->get_course();
 		$response = $user->get_response( $course->ID, $unit->ID, $this->__get( 'ID' ) );
 
-		return ! empty( $response['attempts'] ) ? $response['attempts'] : 0;
+		return ( isset( $response['attempts'] ) && ! empty( $response['attempts'] ) ) ? $response['attempts'] : 0;
 	}
 
 	function get_previous_step() {
