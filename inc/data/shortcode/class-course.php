@@ -997,37 +997,32 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_list_image( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'width' => coursepress_get_setting( 'course/image_width', 235 ),
 			'height' => coursepress_get_setting( 'course/image_height', 235 ),
 			'class' => '',
 		), $atts, 'course_list_image' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
+		if ( is_wp_error( $course ) ) {
+			return '';
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		if ( ! empty( $course->listing_image ) ) {
 			$class = 'course-feature-image';
-
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-
 			$attr = array(
 				'class' => $class,
 				'src' => esc_url_raw( $course->listing_image ),
 				'width' => $atts['width'],
 				'height' => $atts['height'],
 			);
-
 			return $this->create_html( 'img', $attr );
 		}
-
 		return '';
 	}
 
