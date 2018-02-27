@@ -16,7 +16,6 @@
  */
 function coursepress_get_course( $course_id = 0, $cached = true ) {
 	global $CoursePress_Course, $CoursePress_Core;
-
 	if ( empty( $course_id ) ) {
 		// Assume current course
 		if ( $CoursePress_Course instanceof CoursePress_Course ) {
@@ -26,29 +25,23 @@ function coursepress_get_course( $course_id = 0, $cached = true ) {
 			$course_id = get_the_ID();
 		}
 	}
-
 	if ( $course_id instanceof WP_Post ) {
-		$course_id = $course_id->ID; }
-
+		$course_id = $course_id->ID;
+	}
 	if (
 		$CoursePress_Course instanceof CoursePress_Course
 		&& $course_id == $CoursePress_Course->__get( 'ID' )
 	) {
 		return $CoursePress_Course;
 	}
-
 	if ( $cached && isset( $CoursePress_Core->courses[ $course_id ] ) ) {
 		return $CoursePress_Core->courses[ $course_id ];
 	}
-
 	$course = new CoursePress_Course( $course_id );
-
 	if ( ! $course->__get( 'is_error' ) ) {
 		$CoursePress_Core->courses[ $course_id ] = $course;
-
 		return $course;
 	}
-
 	return $course->wp_error();
 }
 

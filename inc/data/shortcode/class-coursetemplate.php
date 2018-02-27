@@ -54,9 +54,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_join_button( $atts ) {
-
 		global $enrollment_process_url, $signup_url;
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'access_text' => __( 'Start Learning', 'cp' ),
@@ -75,14 +73,13 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
 			'signup_text' => __( 'Enroll Now!', 'cp' ),
 		), $atts, 'course_join_button' );
-
 		// Check course ID.
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$course = coursepress_get_course( $course_id );
+
 		if ( is_wp_error( $course ) ) {
 			return '';
 		}
@@ -2111,7 +2108,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 */
 	public function get_course_breadcrumbs( $atts ) {
 
-		$atts =	shortcode_atts( array(
+		$atts = shortcode_atts( array(
 			'type' => 'unit_archive',
 			'course_id' => 0,
 		), $atts, 'course_breadcrumbs' );

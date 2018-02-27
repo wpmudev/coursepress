@@ -29,8 +29,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 			$course = get_post( (int) $course );
 		}
-		if ( ! $course instanceof WP_Post
-			|| $course->post_type != 'course' ) {
+		if ( ! $course instanceof WP_Post || 'course' != $course->post_type ) {
+			$this->is_error = true;
 			return $this->wp_error();
 		}
 		$this->progress_table = $wpdb->prefix . 'coursepress_student_progress';
