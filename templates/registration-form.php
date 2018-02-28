@@ -16,18 +16,18 @@ $action_url = admin_url( 'admin-ajax.php?action=coursepress_register' );
 $login_url = coursepress_get_student_login_url();
 
 if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) {
-    $form_message = __( 'Mismatch password!', 'cp' );
+	$form_message = __( 'Mismatch password!', 'cp' );
 } elseif ( coursepress_get_cookie( 'cp_profile_updated' ) ) {
-    $form_message = __( 'Profile successfully updated!', 'cp' );
+	$form_message = __( 'Profile successfully updated!', 'cp' );
 }
 
 if ( is_user_logged_in() ) {
-    $user = coursepress_get_user();
-    $first_name = $user->__get( 'first_name' );
-    $last_name = $user->__get( 'last_name' );
-    $email = $user->__get( 'user_email' );
-    $submit_button = __( 'Update Changes', 'cp' );
-    $action_url = admin_url( 'admin-ajax.php?action=coursepress_update_profile' );
+	$user = coursepress_get_user();
+	$first_name = $user->__get( 'first_name' );
+	$last_name = $user->__get( 'last_name' );
+	$email = $user->__get( 'user_email' );
+	$submit_button = __( 'Update Changes', 'cp' );
+	$action_url = admin_url( 'admin-ajax.php?action=coursepress_update_profile' );
 }
 ?>
 <div class="coursepress-form coursepress-form-signup">
@@ -109,6 +109,7 @@ if ( is_user_logged_in() ) {
 		do_action( 'coursepress_after_signup_password' );
 		?>
 
+        <p>
 		<label class="password-confirm right">
 			<span><?php _e( 'Confirm Password', 'CP_TD' ); ?>:</span>
 			<input type="password" name="password_confirmation" value=""/>
@@ -116,7 +117,8 @@ if ( is_user_logged_in() ) {
 		<label class="weak-password-confirm">
 			<input type="checkbox" name="confirm_weak_password" value="1" />
 			<span><?php _e( 'Confirm use of weak password', 'CP_TD' ); ?></span>
-		</label>
+        </label>
+        </p>
 
 		<?php if ( shortcode_exists( 'signup-tos' ) && '1' == get_option( 'show_tos', 0 ) ) : ?>
 			<label class="tos full">
@@ -132,15 +134,17 @@ if ( is_user_logged_in() ) {
 
 		if ( ! is_user_logged_in() ) :
 		?>
-
+<p>
 		<label class="existing-link full">
 			<?php printf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ); ?>
-		</label>
+        </label>
+</p>
         <?php endif; ?>
+<p>
 		<label class="submit-link full-right">
 			<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php echo $submit_button; ?>" />
 		</label>
-
+</p>
 		<?php
 
 		/**
