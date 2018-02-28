@@ -25,6 +25,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
 
+		// Initialize email alerts.
 		add_action( 'init', array( $this, 'init_email_alerts' ) );
 
 		// Register CP query vars
