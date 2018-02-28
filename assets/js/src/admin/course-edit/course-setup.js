@@ -245,7 +245,7 @@
                 var sender = $(ev.currentTarget).parent(),
                     step = sender.data('step');
 
-                if ( step === this.currentStep ) {
+                if ( 'course-units' !== step && step === this.currentStep ) {
                     return;
                 }
 
