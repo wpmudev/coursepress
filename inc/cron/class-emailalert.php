@@ -102,9 +102,6 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 
 			// Schedule a recurring event.
 			wp_schedule_event( time(), 'hourly', self::SCHEDULE_NAME );
-
-			// Trigger the cron-job:
-			do_action( self::SCHEDULE_NAME );
 		}
 	}
 
@@ -193,6 +190,7 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 
 		$variables = array(
 			'course_id' => $course_id,
+			'email' => $student->user_email,
 			'first_name' => empty( $first_name ) && empty( $last_name ) ? $student->display_name : $first_name,
 			'last_name' => $last_name,
 			'display_name' => $student->display_name,
@@ -226,6 +224,7 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 
 		$variables = array(
 			'unit_id' => $unit_id,
+			'email' => $student->user_email,
 			'first_name' => empty( $first_name ) && empty( $last_name ) ? $student->display_name : $first_name,
 			'last_name' => $last_name,
 			'display_name' => $student->display_name,
