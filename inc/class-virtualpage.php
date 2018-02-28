@@ -301,6 +301,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		if ( ! $wp->is_main_query() ) {
 			return $posts;
 		}
+		if ( empty( $posts ) ) {
+			return $posts;
+		}
 		$type = $this->__get( 'type' );
 		$post = array_shift( $posts );
 		if ( 'student-dashboard' == $type ) {
