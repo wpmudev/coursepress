@@ -456,7 +456,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		}
 	}
 	$attr = array(
-		'class' => 'course-enroll-button ' . $args['class'],
+		'class' => 'course-enroll-button'. ( isset( $args['class'] ) ? ' ' . $args['class']:'' ),
 	);
 	if ( ! empty( $link ) ) {
 		$attr['href'] = $link;
