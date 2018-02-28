@@ -182,39 +182,32 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$units = $request->units;
 			$menu_order = 0;
 			$unit_ids = array();
-
 			foreach ( $units as $cid => $unit ) {
 				$unit->menu_order = $menu_order;
-
 				// Get post object
 				if ( ! empty( $unit->deleted ) ) {
 					// Delete unit here
-				    if ( ! empty( $unit->ID ) ) {
-				    	coursepress_delete_unit( $unit->ID );
-				    }
-				    // Don't return the unit object
-				    unset( $units->{$cid} );
-
-				    continue;
-			    }
-
+					if ( ! empty( $unit->ID ) ) {
+						coursepress_delete_unit( $unit->ID );
+					}
+					// Don't return the unit object
+					unset( $units->{$cid} );
+					continue;
+				}
 				// Get post object
-			    $unit_array = array(
-			    	'ID' => $unit->ID,
-				    'post_title' => $unit->post_title,
-				    'post_content' => $unit->post_content,
-				    'menu_order' => $menu_order,
-				    'post_parent' => $course_id,
-				    'post_status' => 'pending',
-				    'post_type' => 'unit',
-			    );
-
-			    if ( ! empty( $unit->post_status ) ) {
-			    	$unit_array['post_status'] = $unit->post_status;
-			    }
-
+				$unit_array = array(
+					'ID' => $unit->ID,
+					'post_title' => $unit->post_title,
+					'post_content' => $unit->post_content,
+					'menu_order' => $menu_order,
+					'post_parent' => $course_id,
+					'post_status' => 'pending',
+					'post_type' => 'unit',
+				);
+				if ( ! empty( $unit->post_status ) ) {
+					$unit_array['post_status'] = $unit->post_status;
+				}
 				$metas = array();
-
 				foreach ( $unit as $key => $value ) {
 					if ( preg_match( '%meta_%', $key ) ) {
 						$_key           = str_replace( 'meta_', '', $key );
@@ -227,141 +220,121 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				if ( isset( $metas['unit_availability_date'] ) ) {
 					$metas['unit_availability_date_timestamp'] = strtotime( $metas['unit_availability_date'] );
 				}
-
-			    $unit_id = coursepress_create_unit( $unit_array, $metas );
-			    $unit_object = coursepress_get_unit( $unit_id );
-
-			    if ( ! empty( $unit->modules ) ) {
-				    $module_array = array();
-
-				    foreach ( $unit->modules as $module_id => $module ) {
-				    	$module_deleted = false;
-
-				    	if ( isset( $module->deleted ) ) {
-				    		$module_deleted = true;
-				    	    unset( $unit->modules->{$module_id} );
-					    }
-					    $module_array[ $module_id ] = array(
-						    'title' => sanitize_text_field( $module->title ),
-						    'preview' => isset( $module->preview ) ? $module->preview : true, // Default is true,
-						    'show_description' => isset( $module->show_description ) && $module->show_description ? true : false,
-						    'description' => isset( $module->description ) ? $module->description : '',
-					    );
-
-				    	if ( $module_deleted ) {
-				    		unset( $module_array[ $module_id ] );
-					    }
-
-					    if ( ! empty( $module->steps ) ) {
+				$unit_id = coursepress_create_unit( $unit_array, $metas );
+				$unit_object = coursepress_get_unit( $unit_id );
+				if ( ! empty( $unit->modules ) ) {
+					$module_array = array();
+					foreach ( $unit->modules as $module_id => $module ) {
+						$module_deleted = false;
+						if ( isset( $module->deleted ) ) {
+							$module_deleted = true;
+							unset( $unit->modules->{$module_id} );
+						}
+						$module_array[ $module_id ] = array(
+							'title' => sanitize_text_field( $module->title ),
+							'preview' => isset( $module->preview ) ? $module->preview : true, // Default is true,
+							'show_description' => isset( $module->show_description ) && $module->show_description ? true : false,
+							'description' => isset( $module->description ) ? $module->description : '',
+						);
+						if ( $module_deleted ) {
+							unset( $module_array[ $module_id ] );
+						}
+						if ( ! empty( $module->steps ) ) {
 							$new_steps = array();
-
-					    	foreach ( $module->steps as $step_cid => $step ) {
-					    		if ( $module_deleted ) {
-					    			$step->deleted = true;
-							    }
-
-					    		if ( ! empty( $step->deleted ) && $step->deleted ) {
-					    			// This step was deleted, let's delete the data
-								    if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
-								    	coursepress_delete_step( $step->ID );
-								    }
-								    unset( $module->steps->{$step_cid} );
-								    continue;
-							    }
-
-					    		$step_array = array(
-					    			'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
-					    			'post_type' => 'module',
-								    'post_title' => $step->post_title,
-								    'post_content' => $step->post_content,
-								    'post_status' => 'publish',
-								    'post_parent' => $unit_id,
-								    'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
-							    );
-
-					    		$step_metas = array();
-
-					    		foreach ( $step as $step_key => $step_value ) {
-					    			if ( preg_match( '%meta_%', $step_key ) ) {
-					    				$_step_key = str_replace( 'meta_', '', $step_key );
-
-					    				if ( is_object( $step_value ) ) {
-					    					$step_value = $this->to_array( $step_value );
-									    }
+							foreach ( $module->steps as $step_cid => $step ) {
+								if ( $module_deleted ) {
+									$step->deleted = true;
+								}
+								if ( ! empty( $step->deleted ) && $step->deleted ) {
+									// This step was deleted, let's delete the data
+									if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
+										coursepress_delete_step( $step->ID );
+									}
+									unset( $module->steps->{$step_cid} );
+									continue;
+								}
+								$step_array = array(
+									'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
+									'post_type' => 'module',
+									'post_title' => isset( $step->post_title )? $step->post_title : '',
+									'post_content' => isset( $step->post_content )? $step->post_content : '',
+									'post_status' => 'publish',
+									'post_parent' => $unit_id,
+									'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
+								);
+								/**
+								 * Work on step meta
+								 */
+								$step_metas = array();
+								foreach ( $step as $step_key => $step_value ) {
+									if ( preg_match( '%meta_%', $step_key ) ) {
+										$_step_key = str_replace( 'meta_', '', $step_key );
+										if ( is_object( $step_value ) ) {
+											$step_value = $this->to_array( $step_value );
+										}
 										$step_metas[ $_step_key ] = $step_value;
 									}
 								}
-					    		foreach ( $step as $step_key => $step_value ) {
+								foreach ( $step as $step_key => $step_value ) {
 									if ( preg_match( '/^meta_((.+)\[view\d+\])$/', $step_key, $matches ) ) {
 										unset( $step_metas[ $matches[1] ] );
 										$step_metas[ $matches[2] ] = $step_value;
 									}
 								}
-							    $stepId = coursepress_create_step( $step_array, $step_metas );
-					    		$step_object = coursepress_get_course_step( $stepId );
+								$stepId = coursepress_create_step( $step_array, $step_metas );
+								$step_object = coursepress_get_course_step( $stepId );
 								$new_steps[ $step_cid ] = $step_object;
-						    }
-
-						    $module->steps = $new_steps;
-						    $unit->modules->{$module_id} = $module;
-					    }
-				    }
-
-				    $unit_object->update_settings( 'course_modules', $module_array );
-			    } else {
-			    	if ( ! empty( $unit->steps ) ) {
-			    		foreach ( $unit->steps as $step_cid => $step ) {
-						    if ( ! empty( $step->deleted ) && $step->deleted ) {
-							    // This step was deleted, let's delete the data
-							    if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
-								    coursepress_delete_step( $step->ID );
-							    }
-							    unset( $unit->steps->{$step_cid} );
-
-							    continue;
-						    }
-
-						    $step_array = array(
-							    'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
-							    'post_type' => 'module',
-							    'post_title' => $step->post_title,
-							    'post_content' => $step->post_content,
-							    'post_status' => 'publish',
-							    'post_parent' => $unit_id,
-							    'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
-						    );
-
-						    $step_metas = array();
-
-						    foreach ( $step as $step_key => $step_value ) {
-							    if ( preg_match( '%meta_%', $step_key ) ) {
-								    $_step_key = str_replace( 'meta_', '', $step_key );
-
-								    if ( is_object( $step_value ) ) {
-									    $step_value = $this->to_array( $step_value );
-								    }
-								    $step_metas[ $_step_key ] = $step_value;
-							    }
-						    }
-
-						    $stepId = coursepress_create_step( $step_array, $step_metas );
-						    $step_object = coursepress_get_course_step( $stepId );
-						    $unit->steps->{$step_cid} = $step_object;
-					    }
-				    }
-			    }
-
-			    // Set back new vars
-			    $unit->ID = $unit_id;
-			    $unit->menu_order = $menu_order;
-			    $units->{$cid} = $unit;
-
+							}
+							$module->steps = $new_steps;
+							$unit->modules->{$module_id} = $module;
+						}
+					}
+					$unit_object->update_settings( 'course_modules', $module_array );
+				} else {
+					if ( ! empty( $unit->steps ) ) {
+						foreach ( $unit->steps as $step_cid => $step ) {
+							if ( ! empty( $step->deleted ) && $step->deleted ) {
+								// This step was deleted, let's delete the data
+								if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
+									coursepress_delete_step( $step->ID );
+								}
+								unset( $unit->steps->{$step_cid} );
+								continue;
+							}
+							$step_array = array(
+								'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
+								'post_type' => 'module',
+								'post_title' => $step->post_title,
+								'post_content' => $step->post_content,
+								'post_status' => 'publish',
+								'post_parent' => $unit_id,
+								'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
+							);
+							$step_metas = array();
+							foreach ( $step as $step_key => $step_value ) {
+								if ( preg_match( '%meta_%', $step_key ) ) {
+									$_step_key = str_replace( 'meta_', '', $step_key );
+									if ( is_object( $step_value ) ) {
+										$step_value = $this->to_array( $step_value );
+									}
+									$step_metas[ $_step_key ] = $step_value;
+								}
+							}
+							$stepId = coursepress_create_step( $step_array, $step_metas );
+							$step_object = coursepress_get_course_step( $stepId );
+							$unit->steps->{$step_cid} = $step_object;
+						}
+					}
+				}
+				// Set back new vars
+				$unit->ID = $unit_id;
+				$unit->menu_order = $menu_order;
+				$units->{$cid} = $unit;
 				$menu_order++;
-		    }
-
-		    wp_send_json_success( array( 'success' => true, 'units' => $units ) );
-	    }
-	    wp_send_json_error( true );
+			}
+			wp_send_json_success( array( 'success' => true, 'units' => $units ) );
+		}
+		wp_send_json_error( true );
 	}
 
 	/**
