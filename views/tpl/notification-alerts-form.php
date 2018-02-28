@@ -51,8 +51,8 @@
 	</div>
 
 	<div class="course-footer">
-		<button type="button" class="cp-btn cp-btn-cancel cp-alert-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
+		<button type="button" class="cp-btn cp-btn-cancel cp-alert-cancel" data-page="alerts" data-tab="alerts"><?php _e( 'Cancel', 'cp' ); ?></button>
 		<button type="button" class="cp-btn cp-btn-active cp-alert-submit"><i class="fa fa-circle-o-notch fa-spin"></i><?php _e( 'Publish', 'cp' ); ?></button>
 	</div>
-	
+
 </script>
