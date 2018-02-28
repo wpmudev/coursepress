@@ -54,6 +54,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Setup CP pages
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
 
+		// Set custom pages active.
+		add_filter( 'parent_file', array( $this, 'set_category_menu_parent' ) );
+
 		// Set screen option values.
 		add_filter( 'set-screen-option', array( $this, 'set_courselist_options' ), 10, 3 );
 
@@ -88,6 +91,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Set course edit page
 		$edit_label = __( 'New Course', 'cp' );
 		$this->add_submenu( $edit_label, 'coursepress_create_course_cap', 'coursepress_course', 'get_course_edit_page' );
+
+		// Set categories page
+		$cats_label = __( 'Categories', 'cp' );
+		$this->add_submenu( $cats_label, 'coursepress_settings_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
 
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
@@ -143,11 +150,38 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @param string $slug
 	 * @param string $callback
 	 */
-	function add_submenu( $label = '', $cap, $slug, $callback ) {
-		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
+	function add_submenu( $label = '', $cap, $slug, $callback = '' ) {
+
+		// Check if callback given.
+		$callback = empty( $callback ) ? '' : array( $this, $callback );
+
+		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, $callback );
 		// Add to the list of valid CP pages
 		array_unshift( $this->screens, $menu );
 		return $menu;
+	}
+
+	/**
+	 * Set custom taxonomy menu active.
+	 *
+	 * @param string $parent_file Parent slug.
+	 *
+	 * @return string
+	 */
+	function set_category_menu_parent( $parent_file ) {
+
+		global $submenu_file, $current_screen;
+
+		// If current page is course category edit page.
+		if ( isset( $current_screen->id ) && $current_screen->id == 'edit-course_category' ) {
+			// Set submenu active.
+			$submenu_file = 'edit-tags.php?taxonomy=course_category&post_type=course';
+			// Set parent menu active.
+			$parent_file = $this->slug;
+
+		}
+
+		return $parent_file;
 	}
 
 	/**

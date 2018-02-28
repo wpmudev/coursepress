@@ -80,6 +80,22 @@ final class CoursePress_Core extends CoursePress_Utility {
 					'slug' => $category_slug,
 					'with_front' => false,
 				),
+				'labels' => array(
+					'name' => __( 'Categories', 'cp' ),
+					'singular_name' => __( 'Category', 'cp' ),
+					'search_items' => __( 'Search Course Categories', 'cp' ),
+					'all_items' => __( 'All Course Categories', 'cp' ),
+					'edit_item' => __( 'Edit Course Categories', 'cp' ),
+					'update_item' => __( 'Update Course Category', 'cp' ),
+					'add_new_item' => __( 'Add New Course Category', 'cp' ),
+					'new_item_name' => __( 'New Course Category Name', 'cp' ),
+				),
+				'capabilities' => array(
+					'manage_terms' => 'coursepress_course_categories_manage_terms_cap',
+					'edit_terms' => 'coursepress_course_categories_edit_terms_cap',
+					'delete_terms' => 'coursepress_course_categories_delete_terms_cap',
+					'assign_terms' => 'coursepress_courses_cap',
+				),
 			)
 		);
 
