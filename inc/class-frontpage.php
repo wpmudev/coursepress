@@ -104,7 +104,6 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$_coursepress_vars = $cp;
 		if ( ! empty( $cp ) ) {
 			$this->__set( 'page_now', $cp['type'] );
-
 			// Set CP Virtual Page
 			$CoursePress_VirtualPage = new CoursePress_VirtualPage( $cp );
 		}
@@ -144,11 +143,11 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 
 	private function set_local_vars() {
 		$localize_vars = array(
-			'_wpnonce' => wp_create_nonce('coursepress_nonce'),
-			'ajaxurl'  => admin_url('admin-ajax.php'),
+			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+			'ajaxurl'  => admin_url( 'admin-ajax.php' ),
 			'text' => array(
-				'attempts_consumed' => __('You can no longer play this media because you have run out of attempts.')
-			)
+				'attempts_consumed' => __( 'You can no longer play this media because you have run out of attempts.' ),
+			),
 		);
 
 		/**

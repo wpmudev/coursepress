@@ -4,15 +4,38 @@
  *
  * Handles coursepress actions.
  *
- * @since 3.0
+ * @since 3.0.0
  * @package CoursePress
  */
 class CoursePress_Admin_Actions {
 
 	public function __construct() {
-
 		// Hook to `admin_init` action hook to process action requests.
 		add_action( 'admin_init', array( $this, 'process_action_request' ) );
+		add_filter( 'post_type_link', array( $this, 'modify_module_discussion_link' ), 10, 2 );
+	}
+
+	/**
+	 * Filters the permalink.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string  $post_link The post's permalink.
+	 * @param WP_Post $post      The post in question.
+	 */
+	public function modify_module_discussion_link( $post_link, $post ) {
+		if ( ! is_admin() ) {
+			return $post_link;
+		}
+		global $CoursePress_Core;
+		$post_type = $CoursePress_Core->step_post_type;
+		if ( $post_type === $post->post_type ) {
+			$step = new CoursePress_step( $post );
+			if ( 'discussion' === $step->module_type ) {
+				return $step->get_permalink();
+			}
+		}
+		return $post_link;
 	}
 
 	/**
@@ -22,7 +45,7 @@ class CoursePress_Admin_Actions {
 	 * So if the request is `duplcate_course` it's corresponding method will be `duplcate_course`.
 	 * For ajax requests please use `CoursePress_Admin_Ajax` class.
 	 */
-	function process_action_request() {
+	public function process_action_request() {
 		$request = $_REQUEST;
 		// Continue only if cp_action is set, nonce found and not ajax in request.
 		if ( empty( $request['cp_action'] ) || empty( $request['_wpnonce'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -43,7 +66,7 @@ class CoursePress_Admin_Actions {
 	 *
 	 * @param array $request Request data.
 	 */
-	function export_course( $request ) {
+	public function export_course( $request ) {
 		// If course id found, export.
 		if ( ! isset( $request['course_id'] ) ) {
 			return;

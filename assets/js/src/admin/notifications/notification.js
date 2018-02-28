@@ -16,6 +16,7 @@
 			events: {
 				'click .cp-notification-menu-item': 'setNotificationPage',
 				'click .cp_edit_alert': 'setNotificationPage',
+				'click .cp-btn-cancel': 'cancelForm',
 			},
 
 			// While initializing.
@@ -64,7 +65,8 @@
 
 				this.setPage( page, tab );
 				//Clear form
-				$('.cp-alert-cancel').trigger('click');
+				// $('.cp-alert-cancel').trigger('click');
+				this.clearForm();
 				if ( undefined !== alert_id ) {
 					//set existing alert data
 					this.request.set( {
@@ -102,6 +104,23 @@
 			getAlertsFormView: function() {
 				new CoursePress.NotificationAlertsForm();
 			},
+
+			cancelForm: function() {
+				this.setPage( 'alerts', 'alerts' );
+				this.clearForm();
+			},
+
+			// Clear field values.
+			clearForm: function () {
+				if ( undefined === win.tinymce.editors.alert_content ) {
+					this.$('#alert_content, #notification_content').val('');
+				} else {
+					win.tinymce.editors.alert_content.setContent('');
+				}
+				this.$('#alert-title, #notification-title').val('');
+				this.$('#alert-id').val('');
+				this.$('#cp-alert-course').val('all').trigger('change');
+			}
 		} );
 
 		Notification = new Notification();

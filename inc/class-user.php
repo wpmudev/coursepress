@@ -1052,8 +1052,8 @@ class CoursePress_User extends CoursePress_Utility {
 		$response['date'] = $date;
 		$response['graded_by'] = $graded_by;
 		$progress = $this->get_completion_data( $course_id );
-		$previous_response = $this->get_response($course_id, $unit_id, $step_id);
-		$response['attempts'] = !isset($previous_response['attempts']) ? 1 : intval($previous_response['attempts']) + 1;
+		$previous_response = $this->get_response( $course_id, $unit_id, $step_id );
+		$response['attempts'] = ! isset( $previous_response['attempts'] ) ? 1 : intval( $previous_response['attempts'] ) + 1;
 		$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/' . $step_id, $response );
 		$this->add_student_progress( $course_id, $progress );
 		do_action( 'coursepress_record_response', $step_id );
@@ -1101,6 +1101,9 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return array Returns an array of courses where each course is an instance of CoursePress_Course
 	 */
 	public function get_instructed_courses( $published = true, $returnAll = true ) {
+		if ( $this->is_error ) {
+			return array();
+		}
 		$args = array(
 			'post_status' => $published ? 'publish' : 'any',
 			'meta_key' => 'instructor',
@@ -1127,6 +1130,9 @@ class CoursePress_User extends CoursePress_Utility {
 	 *****************************************/
 
 	public function get_facilitated_courses( $published = true, $returnAll = true ) {
+		if ( $this->is_error ) {
+			return array();
+		}
 		$args = array(
 			'post_status' => $published ? 'publish' : 'any',
 			'meta_key' => 'facilitator',

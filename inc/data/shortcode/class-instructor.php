@@ -177,13 +177,25 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'instructor_id' => 0,
 		), $atts );
-		$instructor_profile_slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
 		$instructor_id = (int) $atts['instructor_id'];
 		if ( empty( $instructor_id ) ) {
 			return '';
 		}
-		$instructor = get_userdata( $instructor_id );
-		$username = trailingslashit( $instructor->user_login );
+		/**
+		 * Check user exists
+		 */
+		$user = coursepress_get_user( $instructor_id );
+		if ( $user->is_error() ) {
+			return '';
+		}
+		/**
+		 * User is not an instructor, bail!
+		 */
+		if ( ! $user->is_instructor() ) {
+			return '';
+		}
+		$instructor_profile_slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
+		$username = trailingslashit( $user->user_login );
 		return trailingslashit( home_url() ) . trailingslashit( $instructor_profile_slug ) . $username;
 	}
 

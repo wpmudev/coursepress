@@ -9,11 +9,9 @@ $statuses = array(
 	'pass' => __( 'Certified', 'cp' ),
 );
 $pagenow = remove_query_arg( 'dummy', add_query_arg( 'dummy', 1 ) );
-$courses_link = coursepress_get_main_courses_url();
-$courses_link = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( $courses_link ), __( 'Courses', 'cp' ) );
 ?>
 
-<?php if ( ! empty( $enrolled_courses ) ) : ?>
+<?php if ( ! empty( $enrolled_courses ) ) { ?>
 	<h3><?php _e( 'My Courses', 'cp' ); ?></h3>
 	<table class="coursepress-table courses-table">
 		<thead>
@@ -57,6 +55,14 @@ $courses_link = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( $cou
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-<?php else : ?>
-	<p class="description"><?php printf( __( 'You are not enrolled to any course. Go to %s and enroll now!', 'cp' ), $courses_link ); ?></p>
-<?php endif; ?>
+<?php
+} else {
+	$url = coursepress_get_student_login_url();
+	$message = sprintf( __( 'To see student dashbord you need to be <a href="%s">logged in</a>.', 'cp' ), $url );
+	if ( is_user_logged_in() ) {
+		$courses_link = coursepress_get_main_courses_url();
+		$courses_link = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( $courses_link ), __( 'Courses', 'cp' ) );
+		$message = sprintf( __( 'You are not enrolled to any course. Go to %s and enroll now!', 'cp' ), $courses_link );
+	}
+	printf( '<p class="description">%s</p>', $message );
+}
