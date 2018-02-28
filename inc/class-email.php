@@ -84,7 +84,7 @@ class CoursePress_Email extends CoursePress_Utility {
 					'subject' => __( 'Order Confirmation', 'coursepress' ),
 					'content' => $this->_new_order_email(),
 				),
-				'course_start_notification' => array(
+				'course_start' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
@@ -98,7 +98,7 @@ class CoursePress_Email extends CoursePress_Utility {
 					'subject' => __( 'Discussion Notification', 'coursepress' ),
 					'content' => $this->discussion_defaults(),
 				),
-				'unit_started_notification' => array(
+				'unit_started' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
@@ -313,7 +313,7 @@ class CoursePress_Email extends CoursePress_Utility {
 					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, 'CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL' ),
 				),
-				'course_start_notification' => array(
+				'course_start' => array(
 					'title' => __( 'Course Notification E-mail', 'coursepress' ),
 					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_start_fields ) ),
@@ -323,7 +323,7 @@ class CoursePress_Email extends CoursePress_Utility {
 					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $discussion_fields ) ),
 				),
-				'unit_started_notification' => array(
+				'unit_started' => array(
 					'title' => __( 'Course Unit Started E-mail', 'coursepress' ),
 					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'coursepress' ),
 					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'coursepress' ), 'UNIT_TITLE' ) .
