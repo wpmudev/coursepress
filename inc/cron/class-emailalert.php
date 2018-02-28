@@ -11,7 +11,7 @@
  * Same structure as the process_course_start function ;)
  * Review how the function get_course_keys() is used to generate a 'notice' key.
  */
-class CoursePress_Helper_EmailAlert {
+class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 
 	/**
 	 * Prefix for usermeta values that store a certain 'notice sent' flag.
@@ -31,20 +31,20 @@ class CoursePress_Helper_EmailAlert {
 	 * Number of emails that were processed (sent) during this request.
 	 * @var int
 	 */
-	protected static $processed = 0;
+	protected $processed = 0;
 
 	/**
 	 * Max. number of emails to process (send) during this request.
 	 * @var int
 	 */
-	protected static $max_emails = 50;
+	protected $max_emails = 50;
 
 	/**
 	 * When more emails need to be processed: Wait (seconds) before running the
 	 * email task again. This is needed if more than $max_emails items exit.
 	 * @var int
 	 */
-	protected static $batch_delay = 30;
+	protected $batch_delay = 30;
 
 	/**
 	 * Flag is set to true if during this request more items are found that are
@@ -53,14 +53,14 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @var bool
 	 */
-	protected static $has_more = false;
+	protected $has_more = false;
 
 	/**
 	 * Timestamp of todays date that is used to recognize notifications that
 	 * need to be processed today.
 	 * @var string
 	 */
-	protected static $today = '';
+	protected $today = '';
 
 	/**
 	 * Initialize the module: Setup the cron schedule to auto-send email alerts
@@ -68,20 +68,19 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since  2.0.0
 	 */
-	public static function init() {
+	public function init() {
 
 		// Handle the schedule-hook.
-		add_action( self::SCHEDULE_NAME, array( __CLASS__, 'init_email_task' ), 1 );
+		add_action( self::SCHEDULE_NAME, array( $this, 'init_email_task' ), 1 );
 
-		add_action( self::SCHEDULE_NAME, array( __CLASS__, 'finalize_email_task' ), 99 );
+		add_action( self::SCHEDULE_NAME, array( $this, 'finalize_email_task' ), 99 );
 
-		add_action( self::SCHEDULE_NAME, array( __CLASS__, 'process_course_start' ), 10 );
+		add_action( self::SCHEDULE_NAME, array( $this, 'process_course_start' ), 10 );
 
-		add_action( self::SCHEDULE_NAME, array( __CLASS__, 'process_unit_start' ), 10 );
+		add_action( self::SCHEDULE_NAME, array( $this, 'process_unit_start' ), 10 );
 
-		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-		add_action( 'coursepress_admin_render_page', array( __CLASS__, 'setup_schedule' ) );
+		// Set cron if not set.
+		add_action( 'admin_init', array( $this, 'setup_schedule' ) );
 	}
 
 	/**
@@ -92,7 +91,7 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function setup_schedule() {
+	public function setup_schedule() {
 
 		// Check if we need to set up the scheduled event.
 		$scheduled = wp_next_scheduled( self::SCHEDULE_NAME );
@@ -114,26 +113,30 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function process_course_start() {
+	public function process_course_start() {
 
-		$courses = self::get_courses_that_start_today();
+		$courses = $this->get_courses_that_start_today();
 
 		// Loop all courses that start today and find enrolled students.
 		foreach ( $courses as $course_id ) {
 
-			$users = self::get_next_students_of_course( $course_id );
-			$keys = self::get_course_keys( $course_id, false );
+			$users = $this->get_next_students_of_course( $course_id );
+			$keys = $this->get_course_keys( $course_id, false );
 
 			foreach ( $users as $student ) {
 				// Stop, if we reached the request limit.
-				if ( self::reach_process_limit( true ) ) { break; }
+				if ( $this->reach_process_limit( true ) ) {
+					break;
+				}
 
 				// Send the actual email to the student!
-				self::send_email_course_start( $student, $keys['notified'], $course_id );
+				$this->send_email_course_start( $student, $keys['notified'], $course_id );
 			}
 
 			// Stop, if we reached the request limit.
-			if ( self::reach_process_limit() ) { break; }
+			if ( $this->reach_process_limit() ) {
+				break;
+			}
 		}
 	}
 
@@ -142,30 +145,32 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function process_unit_start() {
+	public function process_unit_start() {
 
-		$units = self::get_units_that_start_today();
+		$units = $this->get_units_that_start_today();
 
 		// Loop all units that start today and find enrolled students.
 		foreach ( $units as $unit_id ) {
 
 			$course_id = CoursePress_Data_Unit::get_course_id_by_unit( $unit_id );
-			$users = self::get_next_students_of_course( $course_id, $unit_id );
-			$keys = self::get_course_keys( $course_id, $unit_id );
+			$users = $this->get_next_students_of_course( $course_id, $unit_id );
+			$keys = $this->get_course_keys( $course_id, $unit_id );
 
 			foreach ( $users as $student ) {
 
 				// Stop, if we reached the request limit.
-				if ( self::reach_process_limit( true ) ) {
+				if ( $this->reach_process_limit( true ) ) {
 					break;
 				}
 
 				// Send the actual email to the student!
-				self::send_email_unit_start( $student, $keys['notified'], $unit_id );
+				$this->send_email_unit_start( $student, $keys['notified'], $unit_id );
 			}
 
 			// Stop, if we reached the request limit.
-			if ( self::reach_process_limit() ) { break; }
+			if ( $this->reach_process_limit() ) {
+				break;
+			}
 		}
 	}
 
@@ -178,10 +183,10 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	protected static function send_email_course_start( $student, $notify_key, $course_id ) {
+	protected function send_email_course_start( $student, $notify_key, $course_id ) {
 
 		// IMPORTANT: Increase counter!
-		self::$processed += 1;
+		$this->processed += 1;
 
 		$first_name = get_user_meta( $student->ID, 'first_name', true );
 		$last_name = get_user_meta( $student->ID, 'last_name', true );
@@ -211,10 +216,10 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	protected static function send_email_unit_start( $student, $notify_key, $unit_id ) {
+	protected function send_email_unit_start( $student, $notify_key, $unit_id ) {
 
 		// IMPORTANT: Increase counter!
-		self::$processed += 1;
+		$this->processed += 1;
 
 		$first_name = get_user_meta( $student->ID, 'first_name', true );
 		$last_name = get_user_meta( $student->ID, 'last_name', true );
@@ -246,19 +251,19 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function init_email_task() {
+	public function init_email_task() {
 
 		/**
 		 * We only send 50 emails per request.
 		 * if more emails need to be sent, they are scheduled to be processed
 		 * 30 seconds later, to avoid killing our servers.
 		 */
-		self::$processed = 0;
+		$this->processed = 0;
 		// This is the max. number of emails sent per request.
-		self::$max_emails = 50;
+		$this->max_emails = 50;
 		// Process next batch after 30 seconds.
-		self::$batch_delay = 30;
-		self::$has_more = false;
+		$this->batch_delay = 30;
+		$this->has_more = false;
 
 		/**
 		 * Get the date (in UTC) of today.
@@ -266,7 +271,7 @@ class CoursePress_Helper_EmailAlert {
 		 * and we use string comparison to recognize "today" items.
 		 */
 		$today_stamp = current_time( 'timestamp', 1 );
-		self::$today = date_i18n( 'Y-m-d', $today_stamp );
+		$this->today = date_i18n( 'Y-m-d', $today_stamp );
 
 		/**
 		 * Allow timezone-conversion via filter.
@@ -274,7 +279,7 @@ class CoursePress_Helper_EmailAlert {
 		 *
 		 * @var string Date in Y-m-d format.
 		 */
-		self::$today = apply_filters( 'coursepress_scheduled_email_date', self::$today, $today_stamp );
+		$this->today = apply_filters( 'coursepress_scheduled_email_date', $this->today, $today_stamp );
 
 		/**
 		 * We allow to modify the batch-size and delay via WP filter so websites
@@ -283,14 +288,14 @@ class CoursePress_Helper_EmailAlert {
 		 *
 		 * @since 2.0.0
 		 */
-		self::$max_emails = apply_filters( 'coursepress_scheduled_email_batch_size', self::$max_emails );
+		$this->max_emails = apply_filters( 'coursepress_scheduled_email_batch_size', $this->max_emails );
 
 		/**
 		 * We allow to modify the batch-delay.
 		 *
 		 * @since 2.0.0
 		 */
-		self::$batch_delay = apply_filters( 'coursepress_scheduled_email_batch_delay', self::$batch_delay );
+		$this->batch_delay = apply_filters( 'coursepress_scheduled_email_batch_delay', $this->batch_delay );
 	}
 
 	/**
@@ -299,20 +304,20 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function finalize_email_task() {
+	public function finalize_email_task() {
 
 		/**
 		 * If we found more students than the max_emails limit allows us to
 		 * process, then we re-schedule this hook again in 30 seconds.
 		 */
-		if ( self::$has_more ) {
+		if ( $this->has_more ) {
 
 			wp_clear_scheduled_hook( self::SCHEDULE_NAME );
 
 			// Schedule this event again in 30 seconds to process next students.
-			wp_schedule_event( time() + self::$batch_delay, 'hourly', self::SCHEDULE_NAME );
+			wp_schedule_event( time() + $this->batch_delay, 'hourly', self::SCHEDULE_NAME );
 
-		} elseif ( ! self::$processed ) {
+		} elseif ( ! $this->processed ) {
 
 			/**
 			 * We only clean ols flags when we did not send emails. This is a
@@ -320,7 +325,7 @@ class CoursePress_Helper_EmailAlert {
 			 * data in a single request. The action runs hourly, so there is
 			 * pleny of opportuniy for the cleanup.
 			 */
-			self::clean_old_flags();
+			$this->clean_old_flags();
 		}
 	}
 
@@ -337,9 +342,7 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @return array List or course-IDs.
 	 */
-	protected static function get_courses_that_start_today() {
-
-		global $CoursePress_Core;
+	protected function get_courses_that_start_today() {
 
 		$courses_args = array(
 			'post_type' => 'course',
@@ -355,10 +358,10 @@ class CoursePress_Helper_EmailAlert {
 		foreach ( $all_courses as $course ) {
 
 			$start_date = coursepress_course_get_setting( $course->ID, 'course_start_date' );
-			$start_stamp = $CoursePress_Core->strtotime( $start_date );
+			$start_stamp = $this->strtotime( $start_date );
 			$start_date = date_i18n( 'Y-m-d', $start_stamp );
 
-			if ( self::is_today( $start_date ) ) {
+			if ( $this->is_today( $start_date ) ) {
 				$items[] = $course->ID;
 			}
 		}
@@ -373,9 +376,7 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @return array List or unit-IDs (= post-ID).
 	 */
-	protected static function get_units_that_start_today() {
-
-		global $CoursePress_Core;
+	protected function get_units_that_start_today() {
 
 		$unit_args = array(
 			'post_type' => 'unit',
@@ -394,7 +395,7 @@ class CoursePress_Helper_EmailAlert {
 			$start_date = CoursePress_Data_Unit::get_unit_availability_date( $unit->ID, $course_id, 'Y-m-d' );
 
 			$course_start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
-			$course_start_stamp = $CoursePress_Core->strtotime( $course_start_date );
+			$course_start_stamp = $this->strtotime( $course_start_date );
 			$course_start_date = date_i18n( 'Y-m-d', $course_start_stamp );
 
 			// Check the date is in timestamp format
@@ -407,7 +408,7 @@ class CoursePress_Helper_EmailAlert {
 				continue;
 			}
 
-			if ( self::is_today( $start_date ) ) {
+			if ( $this->is_today( $start_date ) ) {
 				$items[] = $unit->ID;
 			}
 		}
@@ -426,7 +427,7 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @return array List of user-object (not WP_User objects).
 	 */
-	protected static function get_next_students_of_course( $course_id, $unit_id = 0 ) {
+	protected function get_next_students_of_course( $course_id, $unit_id = 0 ) {
 
 		global $wpdb;
 
@@ -452,7 +453,7 @@ class CoursePress_Helper_EmailAlert {
 		LIMIT 0, %d
 		";
 
-		$keys = self::get_course_keys( $course_id, $unit_id );
+		$keys = $this->get_course_keys( $course_id, $unit_id );
 
 		// Find next 100 students of the courses that start today.
 		// We use a custom SQL here for performance reasons.
@@ -460,7 +461,7 @@ class CoursePress_Helper_EmailAlert {
 			$student_sql,
 			$keys['enrolled'],
 			$keys['notified'],
-			self::$max_emails + 1
+			$this->max_emails + 1
 		);
 
 		$users = $wpdb->get_results( $sql );
@@ -478,15 +479,15 @@ class CoursePress_Helper_EmailAlert {
 	 * New: For special cases we now accept a third parameter to specify a
 	 * custom notification key, which can be any value (string or int).
 	 *
-	 * @param int    $course_id The course ID.
-	 * @param int    $unit_id Notification: Use unit-ID (overrules course_id).
+	 * @param int $course_id The course ID.
+	 * @param int $unit_id Notification: Use unit-ID (overrules course_id).
 	 * @param string $custom Notification: Use custom value (overrules unit_id).
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
-	protected static function get_course_keys( $course_id, $unit_id = false, $custom = false ) {
+	protected function get_course_keys( $course_id, $unit_id = false, $custom = false ) {
 
 		if ( $custom ) {
 			$notice_key = 'cust_' . $custom;
@@ -527,12 +528,12 @@ class CoursePress_Helper_EmailAlert {
 	 * @return bool True means that we processed as many emails as we are
 	 *              allowed to. More emails need to be sent in next request.
 	 */
-	protected static function reach_process_limit( $flag_more = false ) {
+	protected function reach_process_limit( $flag_more = false ) {
 
-		$limit_reached = ( self::$processed >= self::$max_emails );
+		$limit_reached = ( $this->processed >= $this->max_emails );
 
 		if ( $limit_reached && $flag_more ) {
-			self::$has_more = true;
+			$this->has_more = true;
 		}
 
 		return $limit_reached;
@@ -541,14 +542,15 @@ class CoursePress_Helper_EmailAlert {
 	/**
 	 * Checks if the specified date is TODAY or not.
 	 *
-	 * @since  1.0.0
-	 * @param  string $date Date in format Y-m-d.
+	 * @param string $date Date in format Y-m-d.
+	 *
+	 * @since 1.0.0
+	 *
 	 * @return bool True if the date string is todays date.
 	 */
-	protected static function is_today( $date ) {
-		$is_today = ( $date == self::$today );
+	protected function is_today( $date ) {
 
-		return $is_today;
+		return $date == $this->today;
 	}
 
 	/**
@@ -560,10 +562,12 @@ class CoursePress_Helper_EmailAlert {
 	 *
 	 * @since  2.0.0
 	 */
-	protected static function clean_old_flags() {
+	protected function clean_old_flags() {
+
 		global $wpdb;
 
 		$meta_prefix = self::META_NOTICE_PREFIX;
+
 		if ( is_multisite() ) {
 			$meta_prefix = $wpdb->prefix . $meta_prefix;
 		}

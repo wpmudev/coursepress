@@ -25,6 +25,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
 
+		add_action( 'init', array( $this, 'init_email_alerts' ) );
+
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -146,6 +148,22 @@ final class CoursePress_Core extends CoursePress_Utility {
 	function init_unsubscribe() {
 		$unsubscribe_helper = new CoursePress_Data_Unsubscribe();
 		$unsubscribe_helper->init();
+	}
+
+	/**
+	 * Initialize email alerts.
+	 *
+	 * @return void
+	 */
+	function init_email_alerts() {
+
+		global $CoursePress;
+
+		// Initialize Email alerts
+		$emailAlerts = $CoursePress->get_class( 'CoursePress_Cron_EmailAlert' );
+
+		// Initialize email alert crons.
+		$emailAlerts->init();
 	}
 
 	function add_query_vars( $vars ) {

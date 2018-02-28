@@ -76,6 +76,7 @@ final class CoursePress {
 		'CoursePress_Core',
 		'CoursePress_Extension',
 		'CoursePress_Cron_Discussion',
+		'CoursePress_Cron_EmailAlert',
 	);
 
 	/**
