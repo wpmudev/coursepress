@@ -9,7 +9,7 @@
 			el: $('#notification-alerts_form'),
 			events: {
 				'click .cp-alert-submit': 'updateAlert',
-				'click .cp-alert-cancel': 'clearForm',
+				// 'click .cp-alert-cancel': 'clearForm',
 				'change #cp-alert-course': 'showHideReceivers',
 			},
 
