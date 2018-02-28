@@ -1059,9 +1059,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_structure( $atts ) {
-
 		$orig_atts = $atts;
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'free_text' => __( 'Preview', 'cp' ),
@@ -1077,8 +1075,14 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'class' => '',
 			'deep' => false,
 		), $atts, 'course_structure' );
-
+		/**
+		 * get course
+		 */
 		$course_id = (int) $atts['course_id'];
+		$course = coursepress_get_course( $course_id );
+		if ( is_wp_error( $course ) ) {
+			return '';
+		}
 		$free_text = sanitize_text_field( $atts['free_text'] );
 		$show_title = coursepress_is_true( sanitize_text_field( $atts['show_title'] ) );
 		$show_label = coursepress_is_true( sanitize_text_field( $atts['show_label'] ) );
@@ -1097,30 +1101,23 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$structure_visible = coursepress_is_true( coursepress_course_get_setting( $course_id, 'structure_visible' ) );
-
 		if ( ! $structure_visible ) {
 			return '';
 		}
-
 		$time_estimates = coursepress_is_true( coursepress_course_get_setting( $course_id, 'structure_show_duration' ) );
-
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$visibility = CoursePress_Data_Course::structure_visibility( $course_id );
 		$structure_level = coursepress_course_get_setting( $course_id, 'structure_level' );
 		$is_unit_only = 'unit' === $structure_level;
-
 		if ( ! $visibility['has_visible'] ) {
 			return '';
 		}
-
 		$student_id = is_user_logged_in() ? get_current_user_id() : 0;
 		$student = coursepress_get_user( $student_id );
 		$course = coursepress_get_course( $course_id );
 		$enrolled = false;
 		$student_progress = false;
-
 		if ( ! empty( $student_id ) ) {
 			$enrolled = is_wp_error( $student ) ? false : $student->is_enrolled_at( $course_id );
 		}
@@ -1845,7 +1842,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 							'p[url]' => urlencode( $course_url ),
 							'p[images][0]' => $course_image,
 							'p[title]' => $course_title,
-							'p[summary]' => urlencode( strip_tags( $course_summary ) )
+							'p[summary]' => urlencode( strip_tags( $course_summary ) ),
 						),
 						'http://www.facebook.com/sharer/sharer.php'
 					);
