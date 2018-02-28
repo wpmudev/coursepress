@@ -107,13 +107,14 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 
 	public function get_question() {
 		$step_id = $this->__get( 'ID' );
-		$types = $this->__get( 'allowed_file_types' );
-		$name = sprintf( 'module[%d]', $step_id );
+		$types   = $this->__get( 'allowed_file_types' );
+		$types   = is_array( $types ) ? implode( ',', $types ) : $types;
+		$name    = sprintf( 'module[%d]', $step_id );
 
 		$attr = array(
 			'type' => 'file',
 			'name' => $name,
-			'data-types' => implode( ',', $types ),
+			'data-types' => $types,
 		);
 		if ( $this->is_preview() ) {
 			$attr['readonly'] = 'readonly';

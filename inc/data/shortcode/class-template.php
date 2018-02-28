@@ -197,14 +197,15 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'override_button_link' => '',
 			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
-			'show_withdraw_link' => false,
+            'show_withdraw_link' => false,
+            'class' => '',
 		), $atts, 'course_list_box' );
 
 		$course_id = (int) $atts['course_id'];
+		$class = sanitize_text_field( $atts['class'] );
 		$clickable_label = sanitize_text_field( $atts['clickable_label'] );
 		$echo = coursepress_is_true( $atts['echo'] );
 		$clickable = coursepress_is_true( $atts['clickable'] );
-
 
 		$user = coursepress_get_user();
 		$course = coursepress_get_course( $course_id );
@@ -259,7 +260,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$course_title = do_shortcode( sprintf( '[course_title course_id="%s"]', $course_id ) );
 		$course_title = sprintf( '<a href="%s" rel="bookmark">%s</a>', esc_url( $url ), $course_title );
 
-		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
+		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . ' ' . esc_attr( $class ) . '" ' . $clickable_link . ' ' . $schema . ' >
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
 				' . $course_title . '

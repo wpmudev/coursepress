@@ -54,9 +54,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_join_button( $atts ) {
-
 		global $enrollment_process_url, $signup_url;
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'access_text' => __( 'Start Learning', 'cp' ),
@@ -75,14 +73,13 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
 			'signup_text' => __( 'Enroll Now!', 'cp' ),
 		), $atts, 'course_join_button' );
-
 		// Check course ID.
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$course = coursepress_get_course( $course_id );
+
 		if ( is_wp_error( $course ) ) {
 			return '';
 		}
@@ -1456,8 +1453,8 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_list( $atts ) {
-
 		$atts = shortcode_atts( array(
+			'categories' => '',
 			'completed_label' => __( 'Completed courses', 'cp' ),
 			'context' => 'all', // <blank>, enrolled, completed
 			'current_label' => __( 'Current Courses', 'cp' ),
@@ -1470,21 +1467,19 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'instructor' => '', // Note, one or the other
 			'limit' => - 1,
 			'manage_label' => __( 'Manage Courses', 'cp' ),
-			'order' => 'ASC',
 			'orderby' => 'meta', /// possible values: meta, title
+			'order' => 'ASC',
 			'past_label' => __( 'Past courses', 'cp' ),
 			'show_labels' => false,
+			'show_withdraw_link' => false,
 			'status' => 'publish',
 			'student_msg' => sprintf( __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'cp' ), coursepress_get_main_courses_url() ),
 			'student' => '', // If both student and instructor is specified only student will be used
 			'suggested_label' => __( 'Suggested courses', 'cp' ),
 			'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'cp' ),
-			'show_withdraw_link' => false,
-			'categories' => '',
+			'class' => '',
 		), $atts, 'course_page' );
-
 		$atts = $this->sanitize_recursive( $atts );
-
 		$instructor_list = false;
 		$student_list = false;
 		$atts['dashboard'] = coursepress_is_true( $atts['dashboard'] );
@@ -1492,12 +1487,10 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$content = '';
 		$student = 0;
 		$include_ids = array();
-
 		// Sanitize show_withdraw_link.
 		if ( empty( $atts['student'] ) || 'incomplete' != $atts['status'] ) {
 			$atts['show_withdraw_link'] = false;
 		}
-
 		if ( ! empty( $atts['instructor'] ) ) {
 			$include_ids = array();
 			$instructors = explode( ',', $atts['instructor'] );
@@ -1709,6 +1702,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				$shortcode_attributes  = array(
 					'course_id' => $course->ID,
 					'show_withdraw_link' => $atts['show_withdraw_link'],
+					'class' => $atts['class'],
 				);
 				$shortcode_attributes = $this->convert_array_to_params( $shortcode_attributes );
 				$content .= do_shortcode( '[course_list_box ' . $shortcode_attributes . ']' );
@@ -1735,7 +1729,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			} else {
 				foreach ( $courses as $course ) {
 					$course_url = get_edit_post_link( $course->ID );
-					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
+					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '" class="'.esc_attr( $atts['class'] ).'"]' );
 					$counter += 1;
 				}
 			}
@@ -1788,26 +1782,22 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					$label = $atts['facilitator_label'];
 					break;
 			}
-
 			if ( $counter || ( 0 === $counter && $show_empty ) ) {
-				$content = '<div class="dashboard-course-list ' . esc_attr( $context ) . '">' .
+				$atts['class'] .= ' '.$context;
+				$content = '<div class="dashboard-course-list ' . esc_attr( $atts['class'] ) . '">' .
 				           '<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
 				           $content .
 				           '</div>';
 			}
 		} elseif ( $atts['dashboard'] && 'enrolled' === $context ) {
-
 			$label = $atts['suggested_label'];
 			$message = sprintf( $atts['suggested_msg'], esc_url( coursepress_get_main_courses_url() ) );
-
-			$content = '<div class="dashboard-course-list suggested">' .
+			$content = '<div class="dashboard-course-list suggested ' . esc_attr( $atts['class'] ) . '">' .
 			           '<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
 			           '<p>' . $message . '</p>' .
 			           do_shortcode( '[course_random featured_title="" media_type="image" media_priority="image"]' ) .
 			           '</div>';
-
 		}
-
 		return $content;
 	}
 
@@ -1849,26 +1839,55 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			}
 			switch ( $service ) {
 				case 'facebook':
+					$url = add_query_arg(
+						array(
+							's' => 100,
+							'p[url]' => urlencode( $course_url ),
+							'p[images][0]' => $course_image,
+							'p[title]' => $course_title,
+							'p[summary]' => urlencode( strip_tags( $course_summary ) )
+						),
+						'http://www.facebook.com/sharer/sharer.php'
+					);
 					$service_title = '<span class="dashicons dashicons-facebook"></span>';
-					$services_content .= '<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=' . $course_url . '&p[images][0]=' . $course_image . '&p[title]=' . $course_title . '&p[summary]=' . urlencode( strip_tags( $course_summary ) ) . '" class="facebook-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="' . esc_url( $url ) . '" class="facebook-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'twitter':
+					$url = add_query_arg(
+						array(
+							'status' => $course_title . ' (' . urlencode( $course_url ) . ')',
+						),
+						'http://twitter.com/home'
+					);
 					$service_title = '<span class="dashicons dashicons-twitter"></span>';
-					$services_content .= '<a href="http://twitter.com/home?status=' . $course_title . ' (' . $course_url . ')" class="twitter-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="' . esc_url( $url ) . '" class="twitter-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'google':
+					$url = add_query_arg(
+						array(
+							'url' => urlencode( $course_url ),
+						),
+						'https://plus.google.com/share'
+					);
 					$service_title = '<span class="dashicons dashicons-googleplus"></span>';
-					$services_content .= '<a href="https://plus.google.com/share?url=' . $course_url . '" class="google-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="' . esc_url( $url ) . '" class="google-share" target="_blank"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
 				case 'email':
+					$url = add_query_arg(
+						array(
+							'subject' => $course_title,
+							'body' => strip_tags( $course_summary ) . ' ( ' . urlencode( $course_url ) . ' )',
+						),
+						'mailto:'
+					);
 					$service_title = '<span class="dashicons dashicons-email-alt"></span>';
-					$services_content .= '<a href="mailto:?subject=' . $course_title . '&body=' . strip_tags( $course_summary ) . ' ( ' . $course_url . ' )" target="_top" class="email-share"><span class="service-title">' . $service_title . '</span></a>';
+					$services_content .= '<a href="' . esc_url( $url ) . '" target="_top" class="email-share"><span class="service-title">' . $service_title . '</span></a>';
 					$services_content .= ' ';
 					break;
 
@@ -2111,7 +2130,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 */
 	public function get_course_breadcrumbs( $atts ) {
 
-		$atts =	shortcode_atts( array(
+		$atts = shortcode_atts( array(
 			'type' => 'unit_archive',
 			'course_id' => 0,
 		), $atts, 'course_breadcrumbs' );

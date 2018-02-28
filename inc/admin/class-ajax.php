@@ -42,7 +42,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * There's only 1 ajax request, each request differs and process base on the `action` param set.
 	 * So if the request is `update_course` it's corresponding method will be `update_course`.
 	 */
-	function process_ajax_request() {
+	public function process_ajax_request() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
 		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
 		if ( isset( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress_nonce' ) ) {
@@ -64,7 +64,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	/**
 	 * Get the course units for editing
 	 */
-	function get_course_units() {
+	public function get_course_units() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
 		$with_modules = filter_input( INPUT_GET, 'with_modules', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
@@ -121,7 +121,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_success( $units );
 	}
 
-	function update_course( $request ) {
+	public function update_course( $request ) {
 		global $CoursePress_Core;
 
 		$course_object = array(
@@ -176,7 +176,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
 	}
 
-	function update_units( $request ) {
+	public function update_units( $request ) {
 		if ( $request->units ) {
 			$course_id = (int) $request->course_id;
 			$units = $request->units;
@@ -371,7 +371,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request
 	 */
-	function change_post( $request ) {
+	public function change_post( $request ) {
 		if ( empty( $request->id ) || empty( $request->type ) || empty( $request->cp_action )
 				|| ! coursepress_is_type( $request->id, $request->type ) ) {
 			return;
@@ -389,7 +389,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request
 	 * @return array
 	 */
-	function update_settings( $request ) {
+	public function update_settings( $request ) {
 		if ( $request ) {
 			$request = get_object_vars( $request );
 			$request = array_map( array( $this, 'to_array' ), $request );
@@ -422,14 +422,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request
 	 * @return array
 	 */
-	function preview_certificate( $request ) {
+	public function preview_certificate( $request ) {
 		global $CoursePress;
-
 		$course_id = '';
 		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
-
 		if ( isset( $request->ID ) ) {
-				$course_id = $request->ID;
+			$course_id = $request->ID;
 			$content = $request->meta_basic_certificate_layout;
 			$background = $request->meta_certificate_background;
 			$margins = isset( $request->meta_cert_margin ) ? get_object_vars( $request->meta_cert_margin ) : array();
@@ -439,21 +437,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$logo_positions = isset( $request->meta_certificate_logo_position ) ? get_object_vars( $request->meta_certificate_logo_position ) : array();
 		} else {
 			$content = $request->content;
-			$background = $request->background_image;
+			$background = isset( $request->background_image )? $request->background_image : false;
 			$margins = get_object_vars( $request->margin );
 			$text_color = $request->cert_text_color;
 			$orientation = $request->orientation;
-			$logo_image = $request->certificate_logo;
+			$logo_image = isset( $request->certificate_logo )?  $request->certificate_logo : false;
 			$logo_positions = get_object_vars( $request->certificate_logo_position );
 		}
-
 		$logo = array_merge(
 			array( 'file' => $logo_image ),
 			$logo_positions
 		);
 		$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 		$content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
-
 		$vars = array(
 			'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
 			'LAST_NAME' => __( 'Snow', 'CP_TD' ),
@@ -463,7 +459,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		);
 		$content = $this->replace_vars( $content, $vars );
 		$text_color = $this->convert_hex_color_to_rgb( $text_color, '#000000' );
-
 		// Set PDF args
 		$args = array(
 			'title' => __( 'Course Completion Certificate', 'CP_TD' ),
@@ -479,14 +474,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$cache_buster = md5( serialize( $args ) );
 		$filename = sprintf( 'cert-preview-%s-%s.pdf', $course_id, $cache_buster );
 		$args['filename'] = $filename;
-
 		$error = '';
 		try {
 			$pdf->make_pdf( $content, $args );
 		} catch (Exception $exception) {
 			$error = $exception->getMessage();
 		}
-
 		if ( $error ) {
 			wp_send_json_error( array( 'message' => $error ) );
 		} else {
@@ -496,13 +489,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 	}
 
-	function upload_file() {
+	public function upload_file() {
 		$request = $_POST;
-
 		if ( ! empty( $_FILES ) && ! empty( $request['_wpnonce'] )
 			&& wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
 			$type = $request['type'];
-
 			if ( method_exists( $this, $type ) ) {
 				call_user_func( array( $this, $type ), $_FILES, $request );
 			}
@@ -510,14 +501,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error( true );
 	}
 
-	function import_file( $files, $request ) {
+	public function import_file( $files, $request ) {
 		$import = wp_import_handle_upload();
 		if ( ! empty( $import['id'] ) ) {
 			$import_id = $import['id'];
 			$filename = $import['file'];
 			$courses = file_get_contents( $filename );
 			$data = array();
-
 			/**
 			 * sanitize option
 			 */
@@ -552,7 +542,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error();
 	}
 
-	function import_course( $request ) {
+	public function import_course( $request ) {
 		$import_id = $request->import_id;
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
@@ -578,14 +568,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request Request data.
 	 */
-	function course_status_toggle( $request ) {
+	public function course_status_toggle( $request ) {
 		$toggled = false;
-
 		// If course id and status is not empty, attempt to change status.
 		if ( ! empty( $request->course_id ) && ! empty( $request->status ) ) {
 			$toggled = coursepress_change_post( $request->course_id, $request->status, 'course' );
 		}
-
 		// If status changed, return success response, else fail.
 		if ( $toggled ) {
 			$success = array( 'message' => __( 'Course status updated successfully.', 'cp' ) );
@@ -601,13 +589,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request Request data.
 	 */
-	function create_course_category( $request ) {
-
+	public function create_course_category( $request ) {
 		// Do not continue if empty.
 		if ( empty( $request->name ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
 		}
-
 		// Check if term already exist. We may have created it through select2 and removed.
 		$term = get_term_by( 'name', $request->name, 'course_category' );
 		// If term not exist, create new one.
@@ -618,7 +604,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $term ) {
 			wp_send_json_success( $term->name );
 		}
-
 		wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
 	}
 
@@ -627,25 +612,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request Request data.
 	 */
-	function send_email_invite( $request ) {
-
+	public function send_email_invite( $request ) {
 		// Do not continue if empty.
 		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 		}
-
 		$args = array(
 			'email' => $request->email,
 			'course_id' => $request->course_id,
 			'first_name' => empty( $request->first_name ) ? '' : $request->first_name,
 			'last_name' => empty( $request->last_name ) ? '' : $request->last_name,
 		);
-
 		// Send email invitation.
 		if ( coursepress_send_email_invite( $args, $request->type ) ) {
 			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
 		}
-
 		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 	}
 
@@ -654,27 +635,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request Request data.
 	 */
-	function assign_to_course( $request ) {
-
+	public function assign_to_course( $request ) {
 		// Do not continue if required values are empty.
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
 		}
-
 		switch ( $request->type ) {
 			case 'instructor':
 				$success = coursepress_add_course_instructor( $request->user, $request->course_id );
 				break;
-
 			case 'facilitator':
 				$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
 				break;
-
 			default:
 				$success = false;
 				break;
 		}
-
 		// If sent, send success response back.
 		if ( $success ) {
 			$user = $name = coursepress_get_user( $request->user );
@@ -687,7 +663,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				)
 			);
 		}
-
 		wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
 	}
 
@@ -696,27 +671,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request Request data.
 	 */
-	function remove_from_course( $request ) {
-
+	public function remove_from_course( $request ) {
 		// Do not continue if required values are empty.
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
 		}
-
 		switch ( $request->type ) {
 			case 'instructor':
 				$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
 				break;
-
 			case 'facilitator':
 				$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
 				break;
-
 			default:
 				$success = false;
 				break;
 		}
-
 		// If sent, send success response back.
 		if ( $success ) {
 			wp_send_json_success(
@@ -726,7 +696,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				)
 			);
 		}
-
 		wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
 	}
 
@@ -735,36 +704,29 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request Request data.
 	 */
-	function get_course_users() {
-
+	public function get_course_users() {
 		$users = array();
 		// Request data.
 		$request = $_REQUEST;
-
 		// Do some security checks.
 		if ( isset( $request['_wpnonce'] ) && wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
-
 			$search = empty( $request['search'] ) ? '' : $request['search'];
 			// Do not continue if required values are empty.
 			if ( ! empty( $request['course_id'] ) && ! empty( $request['type'] ) ) {
 				$users = coursepress_get_available_users( $request['course_id'], $request['type'], $search );
 			}
 		}
-
 		wp_send_json( $users );
 	}
 
-	function import_sample_course( $request ) {
+	public function import_sample_course( $request ) {
 		global $CoursePress;
-
 		$file = $request->meta_sample_course;
 		$option_id = 'sample_' . $file;
 		$data = array();
 		$data['import_id'] = $option_id;
-
 		// Let's check if the sample had previously use
 		$courses = coursepress_get_option( $option_id );
-
 		if ( empty( $courses ) ) {
 			$filename = $CoursePress->plugin_path . 'assets/external/sample-courses/' . $file;
 			$courses = file_get_contents( $filename );
@@ -772,61 +734,54 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$courses = get_object_vars( $courses );
 			coursepress_update_option( $option_id, $courses );
 		}
-
 		if ( $courses ) {
 			wp_send_json_success( $data );
 		}
-
 		wp_send_json_error( true );
 	}
 
-	function enroll() {
+	/**
+	 * Enroll user to course
+	 */
+	public function enroll() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-
 		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error( true );
 		}
-
 		if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
 			$course = coursepress_get_course( $course_id );
 			$redirect = $course->get_units_url();
-
 			wp_safe_redirect( $redirect );
 			exit;
 		}
-
 		wp_send_json_error( true );
 	}
 
-	function enroll_with_passcode() {
+	/**
+	 * Enroll user with password to course
+	 */
+	public function enroll_with_passcode() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_POST, '_wpnonce' );
 		$passcode = filter_input( INPUT_POST, 'course_passcode' );
-
 		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error();
 		}
-
 		$course = coursepress_get_course( $course_id );
-
 		if ( ! is_wp_error( $course ) ) {
 			$course_passcode = $course->__get( 'enrollment_passcode' );
-
 			if ( $course_passcode == trim( $passcode ) && coursepress_add_student( get_current_user_id(), $course_id ) ) {
 				$redirect = $course->get_units_url();
-
 				wp_safe_redirect( $redirect );
 				exit;
 			} else {
 				coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
 				$redirect = $course->get_permalink();
-
 				wp_safe_redirect( $redirect );
 				exit;
 			}
 		}
-
 		wp_send_json_error( true );
 	}
 
@@ -841,33 +796,27 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_success( $result );
 	}
 
-	function register_user() {}
+	public function register_user() {}
 
-	function update_profile() {
+	public function update_profile() {
 		$request = $_POST;
 		$wpnonce = $request['_wpnonce'];
-
 		if ( ! $wpnonce || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error( true );
 		}
-
 		$user = get_userdata( get_current_user_id() );
 		$redirect = coursepress_get_student_settings_url();
-
 		if ( ! empty( $request['password'] ) ) {
 			$password = sanitize_text_field( $request['password'] );
 			$confirm = sanitize_text_field( $request['password_confirmation'] );
-
 			if ( $password !== $confirm ) {
 				coursepress_set_cookie( 'cp_mismatch_password', true, time() + 120 );
-
 				wp_safe_redirect( $redirect );
 				exit;
 			} else {
 				$user->user_pass = $password;
 			}
 		}
-
 		if ( ! empty( $request['first_name'] ) ) {
 			$user->first_name = sanitize_text_field( $request['first_name'] );
 		}
@@ -877,25 +826,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! empty( $request['email'] ) ) {
 			$user->user_email = sanitize_email( $request['email'] );
 		}
-
 		wp_update_user( $user );
-
 		coursepress_set_cookie( 'cp_profile_updated', true, time() + 120 );
-
 		wp_safe_redirect( $redirect );
 		exit;
 	}
 
-	function record_media_response( $request ) {
-
+	public function record_media_response( $request ) {
 		$user_id = get_current_user_id();
 		$user = coursepress_get_user( $user_id );
 		$user->record_response( $request->course_id, $request->unit_id, $request->step_id, array() );
-
 		return array( 'success' => true );
 	}
 
-	function validate_submission() {
+	public function validate_submission() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$unit_id = filter_input( INPUT_POST, 'unit_id', FILTER_VALIDATE_INT );
 		$module_id = filter_input( INPUT_POST, 'module_id', FILTER_VALIDATE_INT );
@@ -930,13 +874,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request
 	 */
-	function get_notification_units_students( $request ) {
-
+	public function get_notification_units_students( $request ) {
 		$result = array();
 		if ( ! isset( $request->course_id ) ) {
 			wp_send_json_success( $result );
 		}
-
 		// Get students based on the course id.
 		$student_ids = coursepress_get_students_ids( $request->course_id );
 		if ( ! empty( $student_ids ) ) {
@@ -970,14 +912,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param object $request
 	 */
-	function get_notification_students( $request ) {
+	public function get_notification_students( $request ) {
 		$result = array();
-
 		// Make sure required values are set.
 		if ( empty( $request->course_id ) || empty( $request->unit_id ) ) {
 			wp_send_json_error( $result );
 		}
-
 		// Get students based on the completed units.
 		$students = coursepress_get_students_by_completed_unit( $request->course_id, $request->unit_id );
 		if ( ! empty( $students ) ) {
@@ -988,7 +928,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				);
 			}
 		}
-
 		wp_send_json_success( $result );
 	}
 
@@ -997,20 +936,17 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request Request data.
 	 */
-	function send_notification_email( $request ) {
+	public function send_notification_email( $request ) {
 		global $CoursePress;
-
 		// Check if required values are set.
 		if ( empty( $request->content ) || empty( $request->title ) || empty( $request->students ) ) {
 			wp_send_json_error();
 		}
 		$email = $CoursePress->get_class( 'CoursePress_Email' );
-
 		// Send email notifications.
 		if ( $email->notification_alert_email( $request->students, $request->title, $request->content ) ) {
 			wp_send_json_success( array( 'message' => __( 'Notification emails sent successfully.', 'cp' ) ) );
 		}
-
 		wp_send_json_error( array( 'message' => __( 'Could not send email notifications.', 'cp' ) ) );
 	}
 
@@ -1019,14 +955,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request Request data.
 	 */
-	function discussion_status_toggle( $request ) {
+	public function discussion_status_toggle( $request ) {
 		$toggled = false;
-
 		// If discussion id and status is not empty, attempt to change status.
 		if ( ! empty( $request->discussion_id ) && ! empty( $request->status ) ) {
 			$toggled = coursepress_change_post( $request->discussion_id, $request->status, 'discussion' );
 		}
-
 		// If status changed, return success response, else fail.
 		if ( $toggled ) {
 			$success = array( 'message' => __( 'Discussion status updated successfully.', 'cp' ) );
@@ -1042,14 +976,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request Request data.
 	 */
-	function alert_status_toggle( $request ) {
+	public function alert_status_toggle( $request ) {
 		$toggled = false;
-
 		// If alert id and status is not empty, attempt to change status.
 		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
 			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'notification' );
 		}
-
 		// If status changed, return success response, else fail.
 		if ( $toggled ) {
 			$success = array( 'message' => __( 'Alert status updated successfully.', 'cp' ) );
@@ -1060,7 +992,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 	}
 
-	function get_course_alert( $request ) {
+	public function get_course_alert( $request ) {
 		$data = ! empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
 		if ( $data ) {
 			wp_send_json_success( $data );
@@ -1073,17 +1005,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 *
 	 * @param $request Request data.
 	 */
-	function update_course_alert( $request ) {
-
+	public function update_course_alert( $request ) {
 		$created = false;
-
 		// Check if required values are set.
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
 			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
 			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
 			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $receivers, $alert_id );
 		}
-
 		// If alert inserted return success response, else fail.
 		if ( $created ) {
 			if ( ! empty( $alert_id ) ) {
