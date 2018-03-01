@@ -94,7 +94,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set categories page
 		$cats_label = __( 'Categories', 'cp' );
-		$this->add_submenu( $cats_label, 'coursepress_settings_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
+		$this->add_submenu( $cats_label, 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
 
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
@@ -124,7 +124,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set reports page
 		$label = __( 'Reports', 'cp' );
-		$screen_id = $this->add_submenu( $label, 'coursepress_settings_cap', 'coursepress_reports', 'get_report_page' );
+		$screen_id = $this->add_submenu( $label, 'coursepress_reports_cap', 'coursepress_reports', 'get_report_page' );
 		array_unshift( $this->screens, $screen_id );
 
 		// Set Notification page

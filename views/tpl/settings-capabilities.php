@@ -45,7 +45,7 @@
             ),
             'coursepress_students_cap' => array(
                 'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Students submenus', 'cp' ),
+                'title' => $toggle_input . __( 'Access the Students submenu', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
             ),
             'coursepress_assessments_cap' => array(

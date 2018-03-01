@@ -122,4 +122,46 @@ class CoursePress_Data_Instructor {
 
 		return $course_ids;
 	}
+
+	/**
+	 * Get assigned courses count for the user.
+	 *
+	 * @param object $user WP_User object.
+	 *
+	 * @return int
+	 */
+	public static function get_course_count( $user ) {
+
+		return self::get_courses_number( coursepress_get_user_id( $user ) );
+	}
+
+	/**
+	 * Get number of instructor's assigned courses.
+	 *
+	 * @param object $user WP_User object.
+	 *
+	 * @return int
+	 */
+	public static function get_courses_number( $user ) {
+
+		return count( self::get_course_meta_keys( $user ) );
+	}
+
+	/**
+	 * Is the user assigned to course?
+	 *
+	 * @param int $instructor_id Instructor ID.
+	 * @param int $course_id Course ID.
+	 *
+	 * @return bool
+	 */
+	public static function is_assigned_to_course( $instructor_id, $course_id ) {
+
+		$instructor_course_id = get_user_option( 'course_' . $course_id, $instructor_id );
+		if ( ! empty( $instructor_course_id ) ) {
+			return true;
+		}
+
+		return false;
+	}
 }
