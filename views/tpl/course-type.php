@@ -65,7 +65,7 @@
             <div class="cp-box cp-sep cp-course-type {{'manual'===course_type?'active':'inactive'}}" id="type-manual">
                 <div class="cp-box">
                     <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
-                    <p><?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" /></p>
+                    <p><?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" min="0" value="{{class_size}}" /> <span class="description"><?php _e( 'Set "0" to unlimited size.', 'cp' ); ?></span> </p>
                 </div>
 
 				<div class="cp-box">

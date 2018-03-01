@@ -145,7 +145,7 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 				'x' => 0,
 				'y' => 0,
 				'w' => 0,
-			)
+			),
 		),
 		'extensions' => array(),
 		'marketpress' => array(
@@ -647,14 +647,12 @@ function coursepress_get_dashboard_url() {
 
 function coursepress_get_student_login_url() {
 	$login_page = coursepress_get_setting( 'slugs/pages/login' );
-
 	if ( (int) $login_page > 0 ) {
 		$login_url = get_permalink( (int) $login_page );
 	} else {
 		$login_slug = coursepress_get_setting( 'slugs/login', 'student-login' );
 		$login_url = site_url( '/' ) . trailingslashit( $login_slug );
 	}
-
 	return $login_url;
 }
 

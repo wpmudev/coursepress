@@ -93,6 +93,14 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 		);
 
 		/**
+		 * sort
+		 */
+		foreach ( $sub_types as $key => $data ) {
+			asort( $data );
+			$sub_types[ $key ] = $data;
+		}
+
+		/**
 		 * Filter to alter shortcodes sub types array.
 		 *
 		 * @param array $data Sub types.
@@ -113,7 +121,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 			'course_details'        => array(
 				'title'         => __( 'COURSE DETAILS', 'cp' ),
 				'description'   => __( 'This shortcode allows you to display details about your course.', 'cp' ),
-				'usage'         => array( '[course show="title,summary,cost,button" course_id="5"]' ),
+				'usage'         => array( '[course show="title, summary, cost" course_id="5"]' ),
 				'add_info'      => coursepress_alert_message( __( 'All the same information can be retrieved by using the specific course shortcodes following.', 'cp' ) ),
 				'required_attr' => array(
 					array(
@@ -139,7 +147,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					array(
 						'attr'        => 'label_delimeter',
 						'description' => __( 'Symbol to use after the label.', 'cp' ),
-					)
+					),
 				),
 			),
 			'course_title'          => array(
@@ -165,7 +173,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					array(
 						'attr'        => 'label_delimeter',
 						'description' => __( 'Symbol to use after the label.', 'cp' ),
-					)
+					),
 				),
 			),
 			'course_summary'        => array(
@@ -214,7 +222,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode shows the course start date.', 'cp' ),
 				'usage'         => array(
 					'[course_start]',
-					'[course_start label="Awesomeness begins on" label_tag="h3"]'
+					'[course_start label="Awesomeness begins on" label_tag="h3"]',
 				),
 				'required_attr' => array(
 					array(
@@ -254,7 +262,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode shows the course end date.', 'cp' ),
 				'usage'         => array(
 					'[course_end]',
-					'[course_end label="The End." label_tag="h3" course_id="5"]'
+					'[course_end label="The End." label_tag="h3" course_id="5"]',
 				),
 				'required_attr' => array(
 					array(
@@ -299,7 +307,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode displays the course start and end date range. Typically as [course_start] - [course_end].', 'cp' ),
 				'usage'         => array(
 					'[course_dates course_id="42"]',
-					'[course_dates course_id="42" show_alt_display="yes" alt_display_text="Learn Anytime!"]'
+					'[course_dates course_id="42" show_alt_display="yes" alt_display_text="Learn Anytime!"]',
 				),
 				'required_attr' => array(
 					array(
@@ -354,7 +362,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode displays the course enrollment start date.', 'cp' ),
 				'usage'         => array(
 					'[course_enrollment_start]',
-					'[course_enrollment_start label="Signup from" label_tag="em"]'
+					'[course_enrollment_start label="Signup from" label_tag="em"]',
 				),
 				'required_attr' => array(
 					array(
@@ -399,7 +407,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode displays the course enrollment end date.', 'cp' ),
 				'usage'         => array(
 					'[course_enrollment_end]',
-					'[course_enrollment_end label="End" label_delimeter="-"]'
+					'[course_enrollment_end label="End" label_delimeter="-"]',
 				),
 				'required_attr' => array(
 					array(
@@ -449,7 +457,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode displays the course enrollment start and end date range. Typically as [course_enrollment_start] - [course_enrollment_end].', 'cp' ),
 				'usage'         => array(
 					'[course_enrollment_dates]',
-					'[course_enrollment_dates no_date_text="No better time than now!"]'
+					'[course_enrollment_dates no_date_text="No better time than now!"]',
 				),
 				'required_attr' => array(
 					array(
@@ -505,7 +513,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'usage'         => array(
 					'[course_enrollment_type]',
 					'[course_enrollment_type course_id="42"]',
-					'[course_enrollment_type passcode_text="Whats the magic word?"]'
+					'[course_enrollment_type passcode_text="Whats the magic word?"]',
 				),
 				'required_attr' => array(
 					array(
@@ -562,7 +570,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					'[course_time_estimation]',
 					'[course_time_estimation wrapper="yes"]',
 					'[course_time_estimation course_id="42"]',
-					'[course_time_estimation course_id="42" wrapper="yes"]'
+					'[course_time_estimation course_id="42" wrapper="yes"]',
 				),
 				'required_attr' => array(
 					array(
@@ -601,7 +609,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'usage'         => array(
 					'[course_class_size]',
 					'[course_class_size course_id="42" no_limit_text="The more the merrier"]',
-					'[course_class_size remaining_text="Only %d places remaining!"]'
+					'[course_class_size remaining_text="Only %d places remaining!"]',
 				),
 				'required_attr' => array(
 					array(
@@ -753,7 +761,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode embeds a video player with the course’s featured video. (See [course_media]).', 'cp' ),
 				'usage'         => array(
 					'[course_featured_video]',
-					'[course_featured_video width="320" height="240"]'
+					'[course_featured_video width="320" height="240"]',
 				),
 				'required_attr' => array(
 					array(
@@ -810,7 +818,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					'[course_media list_page="yes"]',
 					'[course_media type="video"]',
 					'[course_media priority="image"]',
-					'[course_media type="thumbnail"]'
+					'[course_media type="thumbnail"]',
 				),
 				'required_attr' => array(
 					array(
@@ -846,7 +854,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode shows the Join/Signup/Enroll button for the course. What it displays is dependent on the course settings and the user’s status/enrollment. See the attributes for possible button labels.', 'cp' ),
 				'usage'         => array(
 					'[course_join_button]',
-					'[course_join_button course_id="11" course_expired_text="You missed out big time!"]'
+					'[course_join_button course_id="11" course_expired_text="You missed out big time!"]',
 				),
 				'required_attr' => array(
 					array(
@@ -976,7 +984,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					'[course_list instructor="2"]',
 					'[course_list student="3"]',
 					'[course_list instructor="2,4,5"]',
-					'[course_list show="dates,cost" limit="5"]'
+					'[course_list show="dates,cost" limit="5"]',
 				),
 				'optional_attr' => array(
 					array(
@@ -992,71 +1000,6 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					array(
 						'attr'        => 'student',
 						'description' => __( 'The student id to list courses for a specific student. Can also specify multiple students using commas. (e.g. student="1,2,3").', 'cp' ),
-						'default'     => __( 'empty', 'cp' ),
-					),
-					array(
-						'attr'        => 'two_column',
-						'description' => __( ' Use "yes" to display primary fields in left column and actions in right column. Use "no" for a single column.', 'cp' ),
-						'default'     => 'yes',
-					),
-					array(
-						'attr'        => 'left_class',
-						'description' => __( 'Additional CSS classes for styling the left column (if selected).', 'cp' ),
-						'default'     => __( 'empty', 'cp' ),
-					),
-					array(
-						'attr'        => 'right_class',
-						'description' => __( 'Additional CSS classes for styling the right column (if selected).', 'cp' ),
-						'default'     => __( 'empty', 'cp' ),
-					),
-					array(
-						'attr'        => 'title_link',
-						'description' => __( 'Use "yes" to turn titles into links to the course. Use "no" to display titles without links.', 'cp' ),
-						'default'     => 'yes',
-					),
-					array(
-						'attr'        => 'title_tag',
-						'description' => __( 'The HTML element (without brackets) to use for course titles.', 'cp' ),
-						'default'     => 'h3',
-					),
-					array(
-						'attr'        => 'title_class',
-						'description' => __( 'Additional CSS classes for styling the course titles.', 'cp' ),
-						'default'     => __( 'empty', 'cp' ),
-					),
-					array(
-						'attr'        => 'show',
-						'description' => __( 'The fields to show for the course body. See [course] shortcode.', 'cp' ),
-						'default'     => 'dates,enrollment_dates,class_size,cost',
-					),
-					array(
-						'attr'        => 'show_button',
-						'description' => __( 'Show [course_join_button]. Accepts "yes" and "no".', 'cp' ),
-						'default'     => 'yes',
-					),
-					array(
-						'attr'        => 'show_divider',
-						'description' => __( 'Add divider between courses. Accepts "yes" or "no".', 'cp' ),
-						'default'     => 'yes',
-					),
-					array(
-						'attr'        => 'show_media',
-						'description' => __( 'Show [course_media] if "yes".', 'cp' ),
-						'default'     => 'no',
-					),
-					array(
-						'attr'        => 'media_type',
-						'description' => __( 'Type to use for media. See [course_media].', 'cp' ),
-						'default'     => __( 'CoursePress settings for Course Listing Pages', 'cp' ),
-					),
-					array(
-						'attr'        => 'media_priority',
-						'description' => __( 'Priority to use for media. See [course_media].', 'cp' ),
-						'default'     => __( 'CoursePress settings for Course Listing Pages', 'cp' ),
-					),
-					array(
-						'attr'        => 'course_class',
-						'description' => __( 'Additional CSS classes for styling each course.', 'cp' ),
 						'default'     => __( 'empty', 'cp' ),
 					),
 					array(
@@ -1081,7 +1024,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'description'   => __( 'This shortcode shows a featured course.', 'cp' ),
 				'usage'         => array(
 					'[course_featured course_id="42"]',
-					'[course_featured course_id="11" featured_title="The best we got!"]'
+					'[course_featured course_id="11" featured_title="The best we got!"]',
 				),
 				'required_attr' => array(
 					array(
@@ -1123,7 +1066,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'usage'         => array(
 					'[course_structure]',
 					'[course_structure course_id="42" free_text="Gratis!" show_title="no"]',
-					'[course_structure show_title="no" label="Curriculum"]'
+					'[course_structure show_title="no" label="Curriculum"]',
 				),
 				'required_attr' => array(
 					array(
@@ -1222,7 +1165,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'usage'         => array(
 					'[course_instructors]',
 					'[course_instructors course_id="5"]',
-					'[course_instructors style="list"]'
+					'[course_instructors style="list"]',
 				),
 				'add_info'      => __( 'This is already part of CoursePress and can be set in CoursePress Settings. Links to default pages can be found in Appearance > Menus > CoursePress', 'cp' ),
 				'optional_attr' => array(
@@ -1343,6 +1286,16 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'usage'       => array( '[courses_student_settings]' ),
 			),
 		);
+		/**
+		 * Sort Optional Attributes
+		 */
+		foreach ( $details as $key => $data ) {
+			if ( isset( $data['optional_attr'] ) ) {
+				$attributes = $data['optional_attr'];
+				uasort( $attributes, array( $this, 'sort_optional_attr' ) );
+				$details[ $key ]['optional_attr'] = $attributes;
+			}
+		}
 
 		/**
 		 * Filter to alter shortcode details array.
@@ -1350,6 +1303,10 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 		 * @param array $details Shortcode details.
 		 */
 		return apply_filters( 'coursepress_shortcodes_details', $details );
+	}
+
+	private function sort_optional_attr( $a, $b ) {
+		return strnatcmp( $a['attr'], $b['attr'] );
 	}
 
 	/**

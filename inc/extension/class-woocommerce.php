@@ -13,6 +13,7 @@ class CoursePress_Extension_WooCommerce {
 	 * @var array
 	 */
 	private $base_path = 'woocommerce/woocommerce.php';
+	private $active = false;
 
 	/**
 	 * Initialize the class.
@@ -92,13 +93,12 @@ class CoursePress_Extension_WooCommerce {
 	 * @return bool
 	 */
 	function is_enabled() {
-
 		// Check if extension is enabled in settings.
 		$settings = coursepress_get_setting( 'woocommerce' );
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
+			$this->active = true;
 			return true;
 		}
-
 		return false;
 	}
 
@@ -129,9 +129,7 @@ class CoursePress_Extension_WooCommerce {
 	 * @return bool
 	 */
 	public function activated() {
-
 		return class_exists( 'WooCommerce' );
-
 	}
 
 	public function add_course_default_fields( $course_meta ) {
@@ -145,7 +143,6 @@ class CoursePress_Extension_WooCommerce {
 		$course_meta['mp_sku'] = '';
 		return $course_meta;
 	}
-
 
 	public function course_update( $course_id, $course_meta ) {
 		if ( ! $this->active ) {
@@ -722,7 +719,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( !$post || 'product' != $post->post_type ) {
+		if ( ! $post || 'product' != $post->post_type ) {
 			return;
 		}
 		/**

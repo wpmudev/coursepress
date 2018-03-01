@@ -65,9 +65,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_archive( $atts ) {
-
 		global $wp;
-
 		$atts = shortcode_atts( array(
 			'category' => CoursePress_Data_Course::$last_course_category,
 			'posts_per_page' => 10,
@@ -75,14 +73,11 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'echo' => false,
 			'courses_type' => 'current_and_upcoming',
 		), $atts, 'course_archive' );
-
 		$category = sanitize_text_field( $atts['category'] );
 		$per_page = (int) $atts['posts_per_page'];
 		$show_pager = coursepress_is_true( $atts['show_pager'] );
 		$echo = coursepress_is_true( $atts['echo'] );
-
 		$paged = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
-
 		$post_args = array(
 			'post_type' => 'course',
 			'post_status' => 'publish',
@@ -91,9 +86,9 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'meta_key' => 'course_start_date',
 			'orderby' => 'meta_value_num',
 			'order' => 'ASC',
-			'suppress_filters' => true,
+            'suppress_filters' => true,
+            'fields' => 'ids',
 		);
-
 		// Add category filter
 		if ( $category && 'all' !== $category ) {
 			$post_args['tax_query'] = array(
@@ -104,22 +99,18 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				),
 			);
 		}
-
 		if ( ! empty( $atts['courses_type'] ) && 'current_and_upcoming' == $atts['courses_type'] ) {
 			$query = CoursePress_Data_Course::current_and_upcoming_courses( $post_args );
 		} else {
 			$query = new WP_Query( $post_args );
-		}
-
+        }
 		$content = '';
-		$template = trim( '[course_list_box]' );
+		$template = trim( '[course_list_box course_id="%d"]' );
 		$template = apply_filters( 'coursepress_template_course_archive', $template, $atts );
-
-		foreach ( $query->posts as $post ) {
-			CoursePress_Data_Course::set_the_course( $post );
-			$content .= do_shortcode( $template );
+        foreach ( $query->posts as $post_id ) {
+            $shortcode = sprintf( $template, $post_id );
+			$content .= do_shortcode( $shortcode );
 		}
-
 		// Pager.
 		if ( $show_pager ) {
 			$big = 999999999;
@@ -130,13 +121,10 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				'total' => $query->max_num_pages,
 			) );
 		}
-
 		$content = apply_filters( 'coursepress_course_archive_content', $content, $atts );
-
 		if ( $echo ) {
 			echo $content;
 		}
-
 		return $content;
 	}
 
@@ -209,14 +197,15 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'override_button_link' => '',
 			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
-			'show_withdraw_link' => false,
+            'show_withdraw_link' => false,
+            'class' => '',
 		), $atts, 'course_list_box' );
 
 		$course_id = (int) $atts['course_id'];
+		$class = sanitize_text_field( $atts['class'] );
 		$clickable_label = sanitize_text_field( $atts['clickable_label'] );
 		$echo = coursepress_is_true( $atts['echo'] );
 		$clickable = coursepress_is_true( $atts['clickable'] );
-
 
 		$user = coursepress_get_user();
 		$course = coursepress_get_course( $course_id );
@@ -271,7 +260,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$course_title = do_shortcode( sprintf( '[course_title course_id="%s"]', $course_id ) );
 		$course_title = sprintf( '<a href="%s" rel="bookmark">%s</a>', esc_url( $url ), $course_title );
 
-		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
+		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . ' ' . esc_attr( $class ) . '" ' . $clickable_link . ' ' . $schema . ' >
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
 				' . $course_title . '

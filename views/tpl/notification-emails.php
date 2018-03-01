@@ -65,6 +65,7 @@
 	</div>
 
 	<div class="course-footer">
+		<button type="button" class="cp-btn cp-btn-cancel cp-email-cancel" data-page="emails" data-tab="emails"><?php _e( 'Cancel', 'cp' ); ?></button>
 		<button type="button" class="cp-btn cp-btn-active cp-send-email"><i class="fa fa-circle-o-notch fa-spin"></i><?php _e( 'Send Email', 'cp' ); ?></button>
 	</div>
 

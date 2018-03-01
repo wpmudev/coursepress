@@ -269,7 +269,7 @@
             ),
             'coursepress_add_move_my_students_cap' => array(
                 'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Add students to any course', 'cp' ),
+                'title' => $toggle_input . __( 'Add students to own courses', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_students_cap', true ),
             ),
             'coursepress_add_move_students_cap' => array(

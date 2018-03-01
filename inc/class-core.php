@@ -25,6 +25,9 @@ final class CoursePress_Core extends CoursePress_Utility {
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
 
+		// Initialize email alerts.
+		add_action( 'init', array( $this, 'init_email_alerts' ) );
+
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -79,6 +82,22 @@ final class CoursePress_Core extends CoursePress_Utility {
 				'rewrite' => array(
 					'slug' => $category_slug,
 					'with_front' => false,
+				),
+				'labels' => array(
+					'name' => __( 'Categories', 'cp' ),
+					'singular_name' => __( 'Category', 'cp' ),
+					'search_items' => __( 'Search Course Categories', 'cp' ),
+					'all_items' => __( 'All Course Categories', 'cp' ),
+					'edit_item' => __( 'Edit Course Categories', 'cp' ),
+					'update_item' => __( 'Update Course Category', 'cp' ),
+					'add_new_item' => __( 'Add New Course Category', 'cp' ),
+					'new_item_name' => __( 'New Course Category Name', 'cp' ),
+				),
+				'capabilities' => array(
+					'manage_terms' => 'coursepress_course_categories_manage_terms_cap',
+					'edit_terms' => 'coursepress_course_categories_edit_terms_cap',
+					'delete_terms' => 'coursepress_course_categories_delete_terms_cap',
+					'assign_terms' => 'coursepress_courses_cap',
 				),
 			)
 		);
@@ -146,6 +165,22 @@ final class CoursePress_Core extends CoursePress_Utility {
 	function init_unsubscribe() {
 		$unsubscribe_helper = new CoursePress_Data_Unsubscribe();
 		$unsubscribe_helper->init();
+	}
+
+	/**
+	 * Initialize email alerts.
+	 *
+	 * @return void
+	 */
+	function init_email_alerts() {
+
+		global $CoursePress;
+
+		// Initialize Email alerts
+		$emailAlerts = $CoursePress->get_class( 'CoursePress_Cron_EmailAlert' );
+
+		// Initialize email alert crons.
+		$emailAlerts->init();
 	}
 
 	function add_query_vars( $vars ) {
