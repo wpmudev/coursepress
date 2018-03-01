@@ -1258,7 +1258,7 @@ final class CoursePress_Data_Course {
 			if ( $has_full_access ) {
 				$statuses = $can_update_course ? array( 'publish', 'private', 'draft' ) : array( 'publish' );
 				$units = CoursePress_Data_Course::get_units_with_modules( $course_id, $statuses );
-				$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
+				$units = self::sort_on_key( $units, 'order' );
 				$prev_unit_id = false;
 				$unit_restricted = false;
 
@@ -1626,5 +1626,24 @@ final class CoursePress_Data_Course {
 		}
 
 		return $course_ids;
+	}
+
+	/**
+	 * Sort multi-dimension arrays on 'order' value.
+	 *
+	 * @param $array
+	 * @param $sort_key
+	 * @param bool $sort_asc
+	 *
+	 * @return mixed
+	 */
+	private static function sort_on_key( $array, $sort_key, $sort_asc = true ) {
+		$this->sort_key = $sort_key;
+		if ( ! $sort_asc ) {
+			uasort( $array, array( $this, 'sort_desc' ) );
+		} else {
+			uasort( $array, array( $this, 'sort_asc' ) );
+		}
+		return $array;
 	}
 }

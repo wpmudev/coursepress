@@ -235,8 +235,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function assign_admin_capabilities( $user ) {
 		if ( ! is_object( $user ) ) {
-			$user_id = CoursePress_Helper_Utility::get_id( $user );
-			$user = new WP_User( $user_id );
+			$user = new WP_User( $user );
 		}
 
 		$capability_types = self::$capabilities['instructor'];
@@ -1490,13 +1489,13 @@ class CoursePress_Data_Capabilities {
 	 * @param  int|WP_User $user The user to modify.
 	 */
 	public static function assign_instructor_capabilities( $user ) {
-		$user_id = CoursePress_Helper_Utility::get_id( $user );
-
+		$user_id = $user;
+		if ( is_object( $user ) ) {
+			$user_id = $user->ID;
+		}
 		// The default capabilities for an instructor
 		$instructor_capabilities = self::get_instructor_capabilities();
-
 		$user_obj = new WP_User( $user_id );
-
 		$role_name = self::get_role_instructor_name( false );
 		update_user_option( $user_id, $role_name, 'instructor' );
 
@@ -1532,26 +1531,22 @@ class CoursePress_Data_Capabilities {
 	 * @param  int|WP_User $user The user to modify.
 	 */
 	public static function drop_instructor_capabilities( $user ) {
-		$user_id = CoursePress_Helper_Utility::get_id( $user );
-
+		$user_id = $user;
+		if ( is_object( $user ) ) {
+			$user_id = $user->ID;
+		}
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return;
 		}
-
 		$user_obj = new WP_User( $user_id );
-
 		// Remove the "instructor" flag from the user again.
-
 		$role_name = self::get_role_instructor_name();
 		delete_user_option( $user_id, $role_name );
-
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
-
 		self::remove_cp_instructor_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
-
 		// Add facilitator role
 		$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'any' ), true, 0, 1 );
 		if ( ! empty( $facilitated_courses ) ) {

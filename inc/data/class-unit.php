@@ -416,20 +416,6 @@ class CoursePress_Data_Unit {
 				$student_id, $course_id, $previous_unit_id, $student_progress
 			);
 
-			$status = CoursePress_Helper_Utility::set_array_value(
-				$status, 'mandatory_required/enabled', $force_current_unit_completion
-			);
-			$status = CoursePress_Helper_Utility::set_array_value(
-				$status, 'mandatory_required/result', $mandatory_done
-			);
-
-			$status = CoursePress_Helper_Utility::set_array_value(
-				$status, 'completion_required/enabled', $force_current_unit_successful_completion
-			);
-			$status = CoursePress_Helper_Utility::set_array_value(
-				$status, 'completion_required/result', $unit_completed
-			);
-
 			if ( $status['completion_required']['enabled'] ) {
 				$is_available = $status['completion_required']['result'];
 			} elseif ( $status['mandatory_required']['enabled'] ) {
@@ -443,8 +429,6 @@ class CoursePress_Data_Unit {
 			 */
 			if ( $is_available && $force_current_unit_successful_completion ) {
 				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
-				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/enabled', true );
-				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/result', $is_available );
 			}
 		}
 

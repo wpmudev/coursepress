@@ -398,7 +398,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					/**
 					 * Default Background
 					 */
-					$background = $CoursePress->plugin_path .'/asset/img/certificate/certificate-background-p.png';
+					$background = $CoursePress->plugin_path .'asset/images/certificate/certificate-background-p.png';
 					/**
 					 * default orientation
 					 */
@@ -407,7 +407,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					 * CP Logo
 					 */
 					$logo = array(
-						'file' => $CoursePress->plugin_path . '/asset/img/certificate/certificate-logo-coursepress.png',
+						'file' => $CoursePress->plugin_path . 'asset/images/certificate/certificate-logo-coursepress.png',
 						'x' => 95,
 						'y' => 15,
 						'w' => 100,

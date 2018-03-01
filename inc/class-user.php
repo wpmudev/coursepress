@@ -453,7 +453,6 @@ class CoursePress_User extends CoursePress_Utility {
 			$progress = $this->get_completion_data( $course_id );
 		}
 		$course = coursepress_get_course( $course_id );
-		$is_done = coursepress_get_array_val( $progress, 'completion/completed' );
 		$completion = coursepress_get_array_val( $progress, 'completion' );
 		if ( empty( $completion ) ) {
 			$completion = array();
@@ -461,13 +460,33 @@ class CoursePress_User extends CoursePress_Utility {
 		$units = $course->get_units( true ); // Only validate published units
 		$with_modules = $course->is_with_modules();
 		$course_progress = 0;
+		$course_progress_counter = 0;
 		foreach ( $units as $unit ) {
 			$unit_id = $unit->__get( 'ID' );
 			$progress = $this->validate_unit( $unit, $with_modules, $progress );
 			$unit_progress = coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
 			$course_progress += (int) $unit_progress;
+			$course_progress_counter++;
+		}
+		/**
+		 * Count avarage, becouse sum is not a good value!
+		 */
+		if ( 0 < $course_progress_counter ) {
+			$course_progress = intval( $course_progress / $course_progress_counter );
 		}
 		$progress = coursepress_set_array_val( $progress, 'completion/progress', $course_progress );
+		/**
+		 * is course progress larger or equal minimum course completion?
+		 */
+		$is_done = $course_progress >= $course->minimum_grade_required;
+		$progress = coursepress_set_array_val( $progress, 'completion/completed', $is_done );
+		if ( $is_done ) {
+			$certificate = new CoursePress_Certificate();
+			$certificate->generate_certificate( $this->ID, $course_id );
+		}
+		/**
+		* set
+		*/
 		return $progress;
 	}
 
@@ -1056,6 +1075,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$response['attempts'] = ! isset( $previous_response['attempts'] ) ? 1 : intval( $previous_response['attempts'] ) + 1;
 		$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/' . $step_id, $response );
 		$this->add_student_progress( $course_id, $progress );
+		$this->validate_completion_data( $course_id, $progress );
 		do_action( 'coursepress_record_response', $step_id );
 	}
 
