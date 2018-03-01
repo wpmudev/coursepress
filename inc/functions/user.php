@@ -356,7 +356,7 @@ function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $ret
 		return false;
 	}
 
-	if ( !$user->is_student() ) {
+	if ( ! $user->is_student() ) {
 		return false; // Not a student of any course? bail!
 	}
 	if ( empty( $user_id ) ) {
@@ -503,6 +503,14 @@ function coursepress_get_accessible_courses( $returnAll = true ) {
  * @return array|CoursePress_Course|CoursePress_User|int|WP_Error
  */
 function coursepress_get_user_course_completion_data( $user_id = 0, $course_id = 0 ) {
+
+	if ( 0 === $user_id ) {
+		$user_id = get_current_user_id();
+	}
+	if ( 0 === $user_id ) {
+		return new WP_Error( 'missing_user_id', __( 'It is impossible to get completion data without user.', 'cp' ) );
+	}
+
 	$user = coursepress_get_user( $user_id );
 
 	if ( is_wp_error( $user ) ) {
@@ -518,6 +526,7 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 	$course_id = $course->ID;
 
 	$status = $user->get_course_completion_status( $course_id );
+
 	$results = array( 'status' => $status );
 
 	if ( 'pass' == $status ) {
