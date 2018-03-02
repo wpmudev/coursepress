@@ -51,7 +51,7 @@
             'coursepress_assessments_cap' => array(
                 'type' => 'checkbox',
                 'title' => $toggle_input . __( 'Access the Assessment submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessment_cap', true ),
+                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
             ),
             'coursepress_reports_cap' => array(
 	            'type' => 'checkbox',

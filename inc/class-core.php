@@ -23,7 +23,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 
 		// Set capabilities.
-		add_action( 'init', array( $this, 'init_capabilities' ) );
+		CoursePress_Data_Capabilities::init();
 
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
@@ -184,16 +184,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 
 		// Initialize email alert crons.
 		$emailAlerts->init();
-	}
-
-	/**
-	 * Initialize capabilities.
-	 *
-	 * @return void
-	 */
-	function init_capabilities() {
-
-		CoursePress_Data_Capabilities::init();
 	}
 
 	function add_query_vars( $vars ) {
