@@ -34,6 +34,35 @@ final class CoursePress_Core extends CoursePress_Utility {
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
 		// Listen to comment submission
 		add_filter( 'comments_open', array( $this, 'comments_open' ), 10, 2 );
+		/**
+		 * try to regenerate missing pdf
+		 */
+		add_action( 'template_redirect', array( $this, 'regenerate_pdf' ) );
+	}
+
+	/**
+	 * Try to regenerate Certificate file.
+	 *
+	 * Try to regenerate Certificate file in case of missing.
+	 *
+	 * @since 3.0.0
+	 */
+	public function regenerate_pdf() {
+		if ( ! is_404() ) {
+			return;
+		}
+		if ( ! preg_match( '@(pdf-cache/)([a-z0-9\/]+\.pdf)$@', $_SERVER['REQUEST_URI'], $matches ) ) {
+			return;
+		}
+		if ( isset( $_REQUEST['try'] ) ) {
+			return;
+		}
+		$certificate = new CoursePress_Certificate();
+		$result = $certificate->try_to_regenerate( $matches[2] );
+		if ( $result ) {
+			$url = add_query_arg( 'try', 'yes' );
+			wp_redirect( $url );
+		}
 	}
 
 	public function register_post_types() {
