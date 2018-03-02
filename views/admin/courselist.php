@@ -150,7 +150,8 @@ foreach ( $bulk_actions as $value => $label ) {
                             <td class="column-status">
                                 <label>
                                     <?php $active = ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
-                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
+                                    <?php $can_change_status = CoursePress_Data_Capabilities::can_change_course_status( $course->ID ); ?>
+                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?>  <?php echo $can_change_status ? '' : 'disabled="disabled"'; ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
                             </td>
 <?php } ?>
@@ -159,37 +160,46 @@ foreach ( $bulk_actions as $value => $label ) {
                             <td scope="row" class="check-column"></td>
                             <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo esc_attr( $course->ID ); ?>">
                                 <div class="cp-row-actions">
-<?php if ( 'trash' != $current_status ) { ?>
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
+                                    <?php if ( 'trash' != $current_status ) { ?>
+                                        <?php $can_update = CoursePress_Data_Capabilities::can_update_course( $course->ID ); ?>
+                                        <?php if ( $can_update ) : ?>
+                                            <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |
+                                            <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
+                                            <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
+                                        <?php endif; ?>
 
                                     <div class="cp-dropdown hide-if-no-js">
                                         <button type="button" class="cp-btn-xs cp-dropdown-btn">
                                             <?php _e( 'More', 'cp' ); ?>
                                         </button>
                                         <ul class="cp-dropdown-menu">
-                                            <li class="menu-item-students">
-                                                <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
-                                            </li>
-                                            <li class="menu-item-duplicate-course cp-duplicate">
-                                                <a href="#"><?php _e( 'Duplicate', 'cp' ); ?></a>
-                                            </li>
+                                            <?php if ( $can_update ) : ?>
+                                                <li class="menu-item-students">
+                                                    <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
+                                                </li>
+                                            <?php endif; ?>
+                                            <?php if ( CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) : ?>
+                                                <li class="menu-item-duplicate-course cp-duplicate">
+                                                    <a href="#"><?php _e( 'Duplicate', 'cp' ); ?></a>
+                                                </li>
+                                            <?php endif; ?>
                                             <li class="menu-item-export">
                                                 <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-view-course">
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View', 'cp' ); ?></a>
                                             </li>
+                                        <?php if ( CoursePress_Data_Capabilities::can_delete_course( $course->ID ) ) : ?>
                                             <li class="menu-item-trash cp-trash" data-course="<?php echo $course->ID; ?>">
                                                 <a href="#"><?php _e( 'Trash', 'cp' ); ?></a>
                                             </li>
+                                        <?php endif; ?>
                                         </ul>
                                     </div>
-<?php } else { ?>
-<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
-<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
-<?php } ?>
+                                    <?php } else { ?>
+                                    <span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
+                                    <span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
+                                    <?php } ?>
                                 </div>
                             </td>
                         </tr>
