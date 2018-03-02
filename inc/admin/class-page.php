@@ -109,7 +109,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set assessment page
 		$assessment_label = __( 'Assessments', 'cp' );
-		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessments_cap', 'coursepress_assessments', 'get_assessments_page' );
 		array_unshift( $this->screens, $assesment_screen_id );
 		// Add preload callback
 		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assessments_page' ) );
