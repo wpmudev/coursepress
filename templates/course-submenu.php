@@ -10,11 +10,15 @@
 	<ul id="submenu-main" class="submenu course-submenu">
 <?php
 $menu = coursepress_get_course_submenu();
-foreach ( $menu as $menu_id => $menu_item ) {
+if ( $menu ) {
+        foreach ( $menu as $menu_id => $menu_item ) {
 ?>
 			<li class="<?php esc_attr_e( implode( ' ', $menu_item['classes'] ) ); ?>">
 				<a href="<?php echo esc_url_raw( $menu_item['url'] ); ?>"><?php esc_html_e( $menu_item['label'] ); ?></a>
 			</li>
-		<?php } ?>
+<?php
+        }
+}
+?>
 	</ul>
 </div>
