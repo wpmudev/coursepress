@@ -82,7 +82,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Main CP Page
 		$label = __( 'CoursePress Base', 'cp' );
-		$screen_id = add_menu_page( $label, $label, 'coursepress_dashboard_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
+		$screen_id = add_menu_page( $label, $label, 'coursepress_courses_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
 		// Add screen ID to the list of valid CP pages
 		array_unshift( $this->screens, $screen_id );
 		// Add preload callback
@@ -138,8 +138,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$settings_label = __( 'Settings', 'cp' );
 		$this->add_submenu( $settings_label, 'coursepress_settings_cap', 'coursepress_settings', 'get_settings_page' );
 
-		// Change top menu label
-		$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
+		// Rewrite the menu text when user can access course list.
+		if ( current_user_can( 'coursepress_courses_cap' ) ) {
+			// Change top menu label
+			$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
+		}
 	}
 
 	/**

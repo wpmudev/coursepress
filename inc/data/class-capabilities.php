@@ -1490,7 +1490,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public function is_course_facilitator( $course, $user_id = '' ) {
+	public static function is_course_facilitator( $course, $user_id = '' ) {
 
 		$user = coursepress_get_user( $user_id );
 
