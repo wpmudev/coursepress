@@ -737,20 +737,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function enroll_with_passcode() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_POST, '_wpnonce' );
-		$passcode = filter_input( INPUT_POST, 'course_passcode' );
 		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error();
 		}
 		$course = coursepress_get_course( $course_id );
 		if ( ! is_wp_error( $course ) ) {
-			$course_passcode = $course->__get( 'enrollment_passcode' );
-			if ( $course_passcode == trim( $passcode ) && coursepress_add_student( get_current_user_id(), $course_id ) ) {
+			if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
 				$redirect = $course->get_units_url();
-				wp_safe_redirect( $redirect );
-				exit;
-			} else {
-				coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
-				$redirect = $course->get_permalink();
 				wp_safe_redirect( $redirect );
 				exit;
 			}
