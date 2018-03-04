@@ -16,7 +16,7 @@
 			events: {
 				'click .cp-notification-menu-item': 'setNotificationPage',
 				'click .cp_edit_alert': 'setNotificationPage',
-				'click .cp-btn-cancel': 'cancelForm',
+				'click .cp-btn-cancel': 'setNotificationPage',
 			},
 
 			// While initializing.
@@ -63,6 +63,10 @@
 					alert_id = target.data('id'),
 					tab = target.data('tab');
 
+                                if ( undefined === alert_id && 'alerts' === page ) {
+                                    this.reloadAlerts();
+                                    return;
+                                }
 				this.setPage( page, tab );
 				//Clear form
 				// $('.cp-alert-cancel').trigger('click');
@@ -105,10 +109,12 @@
 				new CoursePress.NotificationAlertsForm();
 			},
 
-			cancelForm: function() {
-				this.setPage( 'alerts', 'alerts' );
-				this.clearForm();
-			},
+                        /**
+                         * Reload the current page.
+                         */
+                        reloadAlerts: function() {
+                            location.reload();
+                        },
 
 			// Clear field values.
 			clearForm: function () {
