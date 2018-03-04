@@ -43,11 +43,7 @@
                 this.courseEditor.goToNext = false;
 
                 if ( ! this.model.get( 'post_title' ) ) {
-                    proceed = false;
-                    post_title.parent().addClass('cp-error');
-                    jQuery( 'html, body' ).animate({
-                        scrollTop: post_title.parent().offset().top - 20
-                    });
+                    proceed = this.setErrorMarker( post_title, proceed );
                 }
 
                 if ( 'manual' === this.model.course_type ) {

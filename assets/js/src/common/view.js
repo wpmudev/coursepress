@@ -122,6 +122,16 @@
                     error.removeClass('cp-error');
                 }
             },
+            setErrorMarker: function( selector, proceed ) {
+                selector.parent().addClass('cp-error');
+                if ( proceed ) {
+                    jQuery( 'html, body' ).animate({
+                        scrollTop: selector.parent().offset().top - 20
+                    });
+                }
+                proceed = false;
+                return proceed;
+            },
             visualEditor: function( options ) {
                // var self = this;
 
