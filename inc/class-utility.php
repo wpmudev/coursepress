@@ -138,7 +138,33 @@ abstract class CoursePress_Utility {
 		return $html;
 	}
 
-	public function to_array( $array ) {
+        /**
+         * Mark current menu title
+         *
+         * @global object $wp
+         * @param string $tag
+         * @param array $attributes
+         * @param string $content
+         * @param string $href
+         * @return string
+         */
+        public function create_course_menu_title( $tag, $attributes = array(), $content = '', $href = '' ) {
+            global $wp;
+
+            if ( !empty( $attributes['href'] ) ) {
+                $href = $attributes['href'];
+            }
+            if ( !empty( $href ) && trailingslashit( home_url( $wp->request ) ) === $href ) {
+                if ( !empty( $attributes['class'] ) ) {
+                    $attributes['class'] .= ' course-current-step';
+                } else {
+                    $attributes['class'] = 'course-current-step';
+                }
+            }
+            return  $this->create_html( $tag, $attributes, $content );
+        }
+
+        public function to_array( $array ) {
 		if ( is_object( $array ) ) {
 			$array = get_object_vars( $array );
 		}
