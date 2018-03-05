@@ -43,22 +43,10 @@
                 content = this.$('.cp-course-description');
                 this.courseEditor.goToNext = true;
                 if ( ! this.model.get('post_excerpt') ) {
-                    summary.parent().addClass('cp-error');
-                    if ( proceed ) {
-                        jQuery( 'html, body' ).animate({
-                            scrollTop: summary.parent().offset().top - 20
-                        });
-                    }
-                    proceed = false;
+                    proceed = this.setErrorMarker( summary, proceed );
                 }
                 if ( ! this.model.get('post_content') ) {
-                    content.parent().addClass('cp-error');
-                    if ( proceed ) {
-                        jQuery( 'html, body' ).animate({
-                            scrollTop: content.parent().offset().top - 20
-                        });
-                    }
-                    proceed = false;
+                    proceed = this.setErrorMarker( content, proceed );
                 }
                 if ( false === proceed ) {
                     this.courseEditor.goToNext = false;

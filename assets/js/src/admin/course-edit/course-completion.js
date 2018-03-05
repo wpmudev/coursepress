@@ -129,8 +129,7 @@
                 var proceed = true;
 
                 if ( ! this.the_title.val() ) {
-                    this.the_title.parent().addClass('cp-error');
-                    proceed = false;
+                    proceed = this.setErrorMarker( this.the_title, proceed );
                 }
 
                 if ( ! proceed ) {

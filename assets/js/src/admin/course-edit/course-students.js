@@ -53,27 +53,24 @@
                 this.model = new CoursePress.Request();
             },
             sendInvitation: function() {
-                var first_name, last_name, email, error;
+                var first_name, last_name, email, proceed;
 
-                error = 0;
+                proceed = true;
                 first_name = this.$('[name="first_name"]');
                 last_name = this.$('[name="last_name"]');
                 email = this.$('[name="email"]');
 
                 if ( ! this.model.get('first_name') ) {
-                    first_name.parent().addClass('cp-error');
-                    error++;
+                    proceed = this.setErrorMarker( first_name, proceed );
                 }
                 if ( ! this.model.get( 'last_name' ) ) {
-                    last_name.parent().addClass('cp-error');
-                    error++;
+                    proceed = this.setErrorMarker( last_name, proceed );
                 }
                 if ( ! this.model.get('email') ) {
-                    email.parent().addClass('cp-error');
-                    error++;
+                    proceed = this.setErrorMarker( email, proceed );
                 }
 
-                if ( ! error ) {
+                if ( proceed ) {
                     this.$('.send-invite').addClass('active');
                     this.model.set( 'action', 'send_student_invite' );
                     this.model.set( 'course_id', this.course_id );
