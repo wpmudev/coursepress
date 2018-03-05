@@ -186,7 +186,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				$student->course_answered = $course_answered;
 				$student->course_total = $course_total;
 				$student->average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-				$student->course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
+				$student->course_average = $course_assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
 
 			$args = array(
 				'page' => $this->slug,
