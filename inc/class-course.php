@@ -351,7 +351,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( $open ) {
 			return __( 'Open Ended', 'cp' );
 		}
-		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
+		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_end_date() ) );
 	}
 
 	public function get_enrollment_start_date() {
