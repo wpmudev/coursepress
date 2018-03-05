@@ -122,7 +122,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	public function update_course( $request ) {
-		global $CoursePress_Core;
 
 		$course_object = array(
 			'post_type' => 'course',
@@ -150,8 +149,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		if ( (int) $course_object['ID'] > 0 ) {
+
+			// Check course update capability.
+			if ( ! CoursePress_Data_Capabilities::can_update_course( (int) $course_object['ID'] ) ) {
+				return array( 'success' => false );
+			}
+
 			$course_id = wp_update_post( $course_object );
 		} else {
+
+			// Check course creation capability.
+			if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
+				return array( 'success' => false );
+			}
+
 			$course_id = wp_insert_post( $course_object );
 		}
 
