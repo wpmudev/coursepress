@@ -20,7 +20,7 @@
                     // On status toggle fail.
                     this.request.on( 'coursepress:error_alert_status_toggle', this.revertStatusToggle, this );
                     // On trash, delete, restore or duplicate notification.
-                    this.request.on( 'coursepress:success_change_post', this.reloadNotifications, this );
+                    this.request.on( 'coursepress:success_change_post', this.reloadAlerts, this );
 
                     this.render();
             },
@@ -111,7 +111,7 @@
             /**
              * Reload the current page.
              */
-            reloadNotifications: function() {
+            reloadAlerts: function() {
                 location.reload();
             },
         });
