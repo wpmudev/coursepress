@@ -96,3 +96,17 @@
     text-transform: uppercase;
   }
 }
+.wp-core-ui{
+  .option-preview_certificate {
+    .wpmui-field-input {
+      line-height: 26px;
+    }
+
+    .button[disabled],
+    .button:disabled{
+      color: #000000!important;
+      border-color: #ddd!important;
+      background: #ddd!important;
+    }
+  }
+}

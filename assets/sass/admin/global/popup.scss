@@ -6,6 +6,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.5);
+  z-index: 9;
 
   .coursepress-popup-heading {
     padding: 15px 25px;
@@ -176,7 +177,7 @@ body.cp-help-overlay-body {
       height: $radius-size;
     }
   }
-  
+
   &-left,
   &-right {
     height: 100%;
@@ -190,7 +191,7 @@ body.cp-help-overlay-body {
     &::after {
       bottom: -$radius-size;
     }
-    
+
     &::before {
       left: 0;
       background-image: radial-gradient(circle at 100% 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
@@ -209,12 +210,12 @@ body.cp-help-overlay-body {
   }
   &-bottom {
     bottom: 0;
-    
+
     &::before,
     &::after {
       top: -$radius-size;
     }
-    
+
     &::before {
       left: 0;
       background-image: radial-gradient(circle at 100% 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
@@ -242,7 +243,7 @@ body.cp-help-overlay-body {
         background: url('../images/arrow-blue.png') no-repeat;
         position: absolute;
       }
-    
+
       &.position-bottom {
         margin: 30px auto;
 
