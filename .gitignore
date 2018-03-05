@@ -23,5 +23,4 @@ coursepress-files/pdf-cache/
 /release
 composer.json
 /assets/css/**
-/assets/js/**
-!/assets/js/src/**
+/assets/js/*.js

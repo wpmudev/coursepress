@@ -16,22 +16,17 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 
 	/** Class constructor */
 	public function __construct() {
-
 		parent::__construct( array(
 			'singular' => __( 'Reports', 'CP_TD' ),
 			'plural' => __( 'Reports', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
-
-		//      $this->is_cache_path_writable = CoursePress_Helper_PDF::is_cache_path_writable();
-
 		$this->courses = coursepress_get_accessible_courses();
-
 		if ( empty( $_REQUEST['course_id'] ) && ! empty( $this->courses ) ) {
 			$tmp = array_keys( $this->courses );
 			$this->course_id = array_shift( $tmp );
 		} else {
-			$this->course_id = (int) $_REQUEST['course_id'];
+			$this->course_id = (int) ( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 0 );
 		}
 	}
 

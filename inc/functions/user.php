@@ -252,7 +252,7 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( $user->is_enrolled_at( $course_id ) ) {
 		return new WP_Error( 'already_enrolled', __( 'User can not be added. User is already enrolled.', 'cp' ) );
 	}
-	$user->add_course_student( $course_id );
+	$user->add_course_student( $course );
 	/**
 	 * Fired whenever a new student is added to a course.
 	 *

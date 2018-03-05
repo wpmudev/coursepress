@@ -162,7 +162,6 @@
                 error = 0;
                 error_msg = {};
 
-                /*
 
                 _.each( units, function( unit ) {
                     var cid, model, modules, steps;
@@ -202,7 +201,6 @@
                     }
                 }, this );
 
-                */
 
                 if ( ! error ) {
                     this.editCourse.unitList.updateUnits();

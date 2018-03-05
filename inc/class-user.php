@@ -299,15 +299,26 @@ class CoursePress_User extends CoursePress_Utility {
 	/**
 	 * Add student to course
 	 */
-	public function add_course_student( $course_id ) {
+	public function add_course_student( $course ) {
 		global $wpdb;
+		$course_id = $course->ID;
 		if (  $this->is_enrolled_at( $course_id ) ) {
 			return true;
 		}
 		$id = $this->__get( 'ID' );
 		if ( empty( $id ) ) {
 			return;
+		}+
+
+		$passcode = filter_input( INPUT_POST, 'course_passcode' );
+		$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
+		if ( $course_passcode != trim( $passcode ) ) {
+			coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
+			$redirect = $course->get_permalink();
+			wp_safe_redirect( $redirect );
+			exit;
 		}
+
 		$array = array(
 			'course_id' => $course_id,
 			'student_id' => $id,
