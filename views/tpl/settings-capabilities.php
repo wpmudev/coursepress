@@ -102,7 +102,7 @@
             ),
             'coursepress_update_course_cap' => array(
                 'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update any course', 'cp' ),
+                'title' => $toggle_input . __( 'Update any assigned course', 'cp' ),
                 //'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
             ),
