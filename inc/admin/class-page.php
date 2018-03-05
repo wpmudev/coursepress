@@ -599,7 +599,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Check capabilities before showing edit/create form.
 		$can_access = empty( $course_id )? CoursePress_Data_Capabilities::can_create_course() : CoursePress_Data_Capabilities::can_update_course( $course_id );
-		if ( $can_access ) {
+		if ( ! $can_access ) {
 			$args = array(
 				'title' => __( 'Access Denied', 'cp' ),
 				'message' => __( 'Sorry, you are not allowed to edit this course.', 'cp' ),
