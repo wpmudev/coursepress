@@ -215,7 +215,7 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 		if ( $this->is_super_admin()|| CoursePress_Data_Capabilities::can_view_others_course() ) {
 			$courses = coursepress_get_courses( $args, $count );
-		} elseif ( ( $this->is_instructor() || $this->is_facilitator() ) ) {
+		} elseif ( $this->is_instructor() || $this->is_facilitator() ) {
 			$args['meta_query'] = array(
 				'relation' => 'OR',
 				array(
