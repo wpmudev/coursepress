@@ -33,6 +33,7 @@ foreach ( $bulk_actions as $value => $label ) {
 <input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php esc_attr_e( $current ); ?>" />
                 </div>
 <?php } ?>
+<?php if ( ! empty( $courses ) ) { ?>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
@@ -51,6 +52,7 @@ foreach ( $courses as $course_id => $course ) {
                     </div>
                     <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
                 </div>
+<?php } ?>
             </div>
 
         </form>

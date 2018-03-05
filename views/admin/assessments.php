@@ -1,10 +1,13 @@
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
-	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
-
-	<div class="coursepress-page">
+    <h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
+	    <div class="coursepress-page">
+<?php if ( empty( $courses ) ) { ?>
+<div class="cp-alert cp-alert-info">
+	<p><?php esc_html_e( 'No courses found.', 'cp' ); ?></p>
+</div>
+<?php } else { ?>
 		<form method="get" class="cp-search-form" id="cp-search-form">
 			<div class="cp-flex">
-
 				<div class="cp-div">
 					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
 					<select id="course_id" name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
@@ -18,7 +21,6 @@
 						<?php endif; ?>
 					</select>
 				</div>
-
 				<div class="cp-div">
 					<label for="student_progress" class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
 					<select id="student_progress" name="student_progress">
@@ -30,7 +32,6 @@
 						<?php endif; ?>
 					</select>
 				</div>
-
 				<div class="cp-div cp-input-group-div">
 					<ul class="cp-flex cp-input-group">
 						<li class="cp-div-flex <?php echo ! in_array( $graded, array( 'graded', 'ungraded' ) ) ? 'active' : ''; ?>">
@@ -53,11 +54,8 @@
 						</li>
 					</ul>
 				</div>
-
 			</div>
-
 			<div class="cp-flex">
-
 				<div class="cp-div">
 					<label class="label"><?php _e( 'Search students by name, username or email.', 'cp' ); ?></label>
 					<div class="cp-input-clear">
@@ -67,10 +65,8 @@
 					</div>
 					<button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
 				</div>
-
 			</div>
 		</form>
-
 		<?php if ( isset( $assessments['pass_grade'] ) ) : ?>
 			<ul class="cp-assessments-overview">
 				<li><?php _e( 'Showing students' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['students_count']; ?></span></li>
@@ -79,7 +75,6 @@
 				<li><?php _e( 'Grade system' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['grade_system']; ?></span></li>
 			</ul>
 		<?php endif; ?>
-
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
 			<tr>
@@ -95,7 +90,6 @@
 			<?php if ( ! empty( $assessments['students'] ) ) : ?>
 				<?php foreach ( $assessments['students'] as $student ) : ?>
 					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>">
-
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 							<td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 								<?php
@@ -202,7 +196,7 @@
 																		<tr>
 																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
-																			<?php if($step->type != 'written'): ?>
+																			<?php if ( $step->type != 'written' ) :  ?>
 																				<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																			<?php endif; ?>
 																		</tr>
@@ -210,16 +204,16 @@
 																			<?php $response = $step->get_user_response( $student->ID ); ?>
 																			<tr>
 																				<td><?php echo $question['title']; ?></td>
-																				<?php if($question['type'] == 'written'): ?>
-																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][$qkey]; ?>
+																				<?php if ( $question['type'] == 'written' ) :  ?>
+																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][ $qkey ]; ?>
 																					<td>
-																						<?php if ($written_answer): ?>
-																							<?php echo stripslashes($written_answer); ?>
-																						<?php else: ?>
-																							<span class="cp-no-answer"><?php _e('No answer!'); ?></span>
+																						<?php if ( $written_answer ) :  ?>
+																							<?php echo stripslashes( $written_answer ); ?>
+																						<?php else : ?>
+																							<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
 																						<?php endif; ?>
 																					</td>
-																				<?php else: ?>
+																				<?php else : ?>
 																				<td>
 																					<?php if ( isset( $response[ $qkey ] ) ) : ?>
 																						<ul class="cp-assessments-answers">
@@ -246,7 +240,7 @@
 																				<td>
 																					<ul class="cp-assessments-answers">
 																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
-																						<?php if ($question['options']): ?>
+																						<?php if ( $question['options'] ) :  ?>
 																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
 																							<?php if ( ! empty( $checked ) ) : ?>
 																								<li>
@@ -260,13 +254,13 @@
 																				<?php endif; ?>
 																			</tr>
 																		<?php endforeach; ?>
-																	<?php elseif($step->type === 'fileupload'): ?>
+																	<?php elseif ( $step->type === 'fileupload' ) :  ?>
 																		<tr>
 																			<td colspan="3">
 																				<?php $uploaded_files = $step->get_user_response( $student->ID ); ?>
-																				<?php if($uploaded_files && isset($uploaded_files['url'])): ?>
-																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e('Uploaded File', 'cp'); ?></a>
-																				<?php else: ?>
+																				<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
+																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
+																				<?php else : ?>
 																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
 																				<?php endif; ?>
 																			</td>
@@ -313,5 +307,6 @@
 				<?php $list_table->pagination( 'bottom' ); ?>
 			</div>
 		<?php endif; ?>
+<?php }  ?>
 	</div>
 </div>

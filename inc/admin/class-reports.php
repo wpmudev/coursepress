@@ -105,7 +105,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			$tmp = array_keys( $courses );
 			$this->course_id = array_shift( $tmp );
 		} else {
-			$this->course_id = (int) $_REQUEST['course_id'];
+			$this->course_id = (int) ( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 0 );
 		}
 
 		$args = array(
