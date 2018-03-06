@@ -602,7 +602,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		if ( ! $can_access ) {
 			$args = array(
 				'title' => __( 'Access Denied', 'cp' ),
-				'message' => __( 'Sorry, you are not allowed to edit this course.', 'cp' ),
+				'message' => __( 'Sorry, you are not allowed to do this.', 'cp' ),
 			);
 			coursepress_render( 'views/admin/error-wrong', $args );
 			return;
