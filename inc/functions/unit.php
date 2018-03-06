@@ -22,9 +22,6 @@ function coursepress_get_unit( $unit_id = 0 ) {
 		}
 	} else {
 		$unit = new CoursePress_Unit( $unit_id );
-		if ( is_wp_error( $unit ) ) {
-			return null;
-		}
 		return $unit;
 	}
 	return null;
@@ -38,14 +35,11 @@ function coursepress_get_unit( $unit_id = 0 ) {
  * @return int|bool
  */
 function coursepress_get_unit_id( $unit = 0 ) {
-
 	$unit = coursepress_get_unit( $unit );
-
-	if ( ! empty( $unit ) ) {
-		return $unit->__get( 'ID' );
+	if ( is_wp_error( $unit ) ) {
+		return false;
 	}
-
-	return false;
+	return $unit->__get( 'ID' );
 }
 
 /**
@@ -57,7 +51,7 @@ function coursepress_get_unit_id( $unit = 0 ) {
  */
 function coursepress_get_unit_title( $unit_id = 0 ) {
 	$unit = coursepress_get_unit( $unit_id );
-	if ( is_wp_error( $unit ) || empty( $unit ) ) {
+	if ( is_wp_error( $unit ) ) {
 		return null;
 	}
 	return $unit->get_the_title();
@@ -117,6 +111,9 @@ function coursepress_delete_unit( $unit_id = 0 ) {
 		return false;
 	}
 	$course = $unit->get_course();
+	if ( is_wp_error( $course ) ) {
+		return false;
+	}
 	// Remove the unit from course structures
 	$course_structures = array(
 		'structure_visible_units',
@@ -162,6 +159,9 @@ function coursepress_create_unit( $unit, $unit_meta = array() ) {
 		$unit_id = wp_update_post( $unit );
 	}
 	$unit_object = coursepress_get_unit( $unit_id );
+	if ( is_wp_error( $unit_object ) ) {
+		return false;
+	}
 	$unit_object->update_settings( true, $unit_meta );
 	/**
 	 * Fired whenever a new unit is created or updated.
@@ -212,12 +212,9 @@ function coursepress_delete_step( $step_id = 0 ) {
  * @return string
  */
 function coursepress_get_unit_permalink( $unit_id = 0 ) {
-
 	$unit = coursepress_get_unit( $unit_id );
-
 	if ( is_wp_error( $unit ) ) {
 		return null;
 	}
-
 	return $unit->get_permalink();
 }

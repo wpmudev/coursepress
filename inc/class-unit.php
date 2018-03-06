@@ -19,7 +19,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			$unit = get_post( $unit );
 		}
 		if ( ! $unit instanceof WP_Post ) {
-			return $this->wp_error();
+			return $this->wp_error( 'wrong-unit', __( 'Selected unit does not exists.', 'cp' ) );
 		}
 		$this->__set( 'ID', $unit->ID );
 		$this->__set( 'post_title', $unit->post_title );
@@ -652,15 +652,15 @@ class CoursePress_Unit extends CoursePress_Utility {
 		foreach ( $steps as $step ) {
 			$step_id = $step->__get( 'ID' );
 			$step_title = $step->__get( 'post_title' );
-                        if ( !$has_access ) {
-                            $step_access = coursepress_has_access( $course_id, $unit_id, $module_id, $step_id );
-                            $is_accessible = !empty( $step_access['access'] );
-                        } else {
-                            $is_accessible = true;
-                        }
-			$step_url = esc_url( $step->get_permalink() );
-			$step_suffix = '';
-			$step_class = array( 'course-step' );
+			if ( ! $has_access ) {
+				$step_access = coursepress_has_access( $course_id, $unit_id, $module_id, $step_id );
+				$is_accessible = ! empty( $step_access['access'] );
+			} else {
+				$is_accessible = true;
+			}
+						$step_url = esc_url( $step->get_permalink() );
+						$step_suffix = '';
+						$step_class = array( 'course-step' );
 			if ( ! $step->is_show_title() ) {
 				continue;
 			}
@@ -681,8 +681,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$attr = array( 'href' => add_query_arg( 'preview', 1, $step_url ), 'class' => 'preview' );
 				$step_suffix .= $this->create_html( 'a', $attr, __( 'Preview', 'cp' ) );
 			}
-			$attr = array( 'class' => implode( ' ', $step_class ) );
-			$steps_structure .= $this->create_course_menu_title( 'li', $attr, $step_title . $step_suffix, $step_url );
+						$attr = array( 'class' => implode( ' ', $step_class ) );
+						$steps_structure .= $this->create_course_menu_title( 'li', $attr, $step_title . $step_suffix, $step_url );
 		}
 		if ( ! empty( $steps_structure ) ) {
 			$attr = array( 'class' => 'tree step-tree' );
