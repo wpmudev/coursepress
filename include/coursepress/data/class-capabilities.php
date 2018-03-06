@@ -1866,10 +1866,14 @@ class CoursePress_Data_Capabilities {
 		if ( 2 < sizeof( $args ) ) {
 			return $allcaps;
 		}
-		if ( ! CoursePress_Data_Course::is_course( $args[2] ) ) {
+		$course_id = 0;
+		if ( isset( $args[2] ) ) {
+			$course_id = $args[2];
+		}
+		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
 			return $allcaps;
 		}
-		$can_update = self::can_update_course( $args[2], $user->ID );
+		$can_update = self::can_update_course( $course_id, $user->ID );
 		if ( ! $can_update ) {
 			foreach ( (array) $caps as $cap ) {
 				$allcaps[ $cap ] = false;
