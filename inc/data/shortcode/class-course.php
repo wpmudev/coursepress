@@ -302,7 +302,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_start( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
 			'label' => __( 'Start Date', 'cp' ),
@@ -311,32 +310,29 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'date_format' => coursepress_get_option( 'date_format' ),
 			'class' => '',
 		), $atts, 'course_start' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
+		if ( is_wp_error( $course ) ) {
+			return;
+		}
 		if ( $course->__get( 'is_error' ) ) {
-			return $course->__get( 'error_message' ); }
-
+			return $course->__get( 'error_message' );
+		}
 		$template = '';
 
 		if ( ! empty( $atts['label'] ) ) {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
 		}
-
 		if ( $course->course_open_ended ) {
 			$template .= __( 'Already started', 'cp' );
 		} else {
 			$create_date = date_create( $course->course_start_date );
 			$template   .= date_format( $create_date, $atts['date_format'] );
 		}
-
 		$class = 'course-start-date';
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
-
 		$template = $this->create_html( 'span', array( 'class' => $class ), $template );
-
 		return $template;
 	}
 

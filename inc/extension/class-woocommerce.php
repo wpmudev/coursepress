@@ -97,14 +97,15 @@ class CoursePress_Extension_WooCommerce {
 	 *
 	 * @return bool
 	 */
-	function is_enabled() {
+	public function is_enabled() {
 		// Check if extension is enabled in settings.
 		$settings = coursepress_get_setting( 'woocommerce' );
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
-			$this->active = true;
-			return true;
+			$this->active = class_exists( 'WC_Product' );;
+			return $this->active;
 		}
-		return false;
+		$this->active = false;
+		return $this->active;
 	}
 
 	/**
