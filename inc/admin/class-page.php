@@ -120,7 +120,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set Comments page
 		$comment_label = __( 'Comments', 'cp' );
-		$this->add_submenu( $comment_label, 'coursepress_comments_cap', 'coursepress_comments', 'get_comments_page' );
+		$this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
 
 		// Set reports page
 		$label = __( 'Reports', 'cp' );
