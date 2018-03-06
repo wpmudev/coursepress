@@ -24,15 +24,15 @@ if ( ! empty( $media ) ) {
 <?php } ?>
 		<div class="course-metas">
 			<p class="course-meta">
-				<span class="meta-title"><?php _e( 'Availability', 'cp' ); ?>: </span>
+				<span class="meta-title"><?php _e( 'Availability:', 'cp' ); ?></span>
 				<span class="course-meta-dates"><?php echo coursepress_get_course_availability_dates(); ?></span>
 			</p>
 			<p class="course-meta">
-				<span class="meta-title"><?php _e( 'Enrollment', 'cp' ); ?>: </span>
+				<span class="meta-title"><?php _e( 'Enrollment:', 'cp' ); ?></span>
 				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_dates(); ?></span>
 			</p>
             <p class="course-meta">
-                <span class="meta-title"><?php _e( 'Language', 'cp' ); ?>:</span>
+                <span class="meta-title"><?php _e( 'Language:', 'cp' ); ?></span>
                 <span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
             </p>
 <?php
@@ -40,7 +40,7 @@ $price = $course->get_course_cost();
 if ( ! empty( $price ) ) {
 ?>
             <p class="course-meta">
-                <span class="meta-title"><?php _e( 'Price', 'cp' ); ?>:</span>
+                <span class="meta-title"><?php _e( 'Price:', 'cp' ); ?></span>
                 <span class="course-meta course-meta-price"><?php echo $price; ?></span>
             </p>
 <?php
