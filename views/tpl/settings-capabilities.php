@@ -45,13 +45,13 @@
             ),
             'coursepress_students_cap' => array(
                 'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Students submenus', 'cp' ),
+                'title' => $toggle_input . __( 'Access the Students submenu', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
             ),
             'coursepress_assessments_cap' => array(
                 'type' => 'checkbox',
                 'title' => $toggle_input . __( 'Access the Assessment submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessment_cap', true ),
+                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
             ),
             'coursepress_reports_cap' => array(
 	            'type' => 'checkbox',
@@ -102,7 +102,7 @@
             ),
             'coursepress_update_course_cap' => array(
                 'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update any course', 'cp' ),
+                'title' => $toggle_input . __( 'Update any assigned course', 'cp' ),
                 //'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
             ),
