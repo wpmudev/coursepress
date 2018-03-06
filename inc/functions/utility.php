@@ -55,14 +55,12 @@ function coursepress_get_enrollment_types() {
 
 function coursepress_get_default_enrollment_type() {
 	$default = 'registered';
-
 	/**
 	 * Fire to allow default enrollment type to change.
 	 *
 	 * @since 2.0
 	 */
 	$default = apply_filters( 'coursepress_course_enrollment_type_default', $default );
-
 	return $default;
 }
 
@@ -74,13 +72,11 @@ function coursepress_get_default_enrollment_type() {
 function coursepress_get_categories() {
 	$terms = get_terms( array( 'taxonomy' => 'course_category', 'hide_empty' => false ) );
 	$cats = array();
-
 	if ( ! empty( $terms ) ) {
 		foreach ( $terms as $term ) {
 			$cats[ $term->term_id ] = $term->name;
 		}
 	}
-
 	return $cats;
 }
 
@@ -559,13 +555,13 @@ function coursepress_alert_message( $content = '', $type = 'info' ) {
 }
 
 function coursepress_convert_hex_color_to_rgb( $hex_color, $default ) {
-
-	$color_valid = (boolean) preg_match( '/^#[a-f0-9]{6}$/i', $hex_color );
-	if ( $color_valid ) {
-		$values = CP_TCPDF_COLORS::convertHTMLColorToDec( $hex_color, CP_TCPDF_COLORS::$spotcolor );
-		return array_values( $values );
+	if ( is_string( $hex_color ) ) {
+		$color_valid = (boolean) preg_match( '/^#[a-f0-9]{6}$/i', $hex_color );
+		if ( $color_valid ) {
+			$values = CP_TCPDF_COLORS::convertHTMLColorToDec( $hex_color, CP_TCPDF_COLORS::$spotcolor );
+			return array_values( $values );
+		}
 	}
-
 	return $default;
 }
 
