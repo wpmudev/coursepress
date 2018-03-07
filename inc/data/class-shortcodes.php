@@ -28,7 +28,6 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 		$class_object->init();
 		$class_object = new CoursePress_Data_Shortcode_Unit();
 		$class_object->init();
-		unset( $class_object );
 	}
 
 	/**
