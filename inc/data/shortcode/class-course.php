@@ -18,7 +18,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @since  2.0.0
 	 */
 	public function init() {
-
 		$shortcodes = array(
 			'course',
 			'course_action_links',
@@ -48,7 +47,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'course_title',
 			'get_parent_course_id',
 		);
-
 		foreach ( $shortcodes as $shortcode ) {
 			$method = 'get_' . $shortcode;
 			if ( method_exists( $this, $method ) ) {
@@ -67,7 +65,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return objecy CoursePress_Course
 	 */
 	private function get_course_class( $course_id ) {
-
 		return coursepress_get_course( $course_id );
 	}
 
@@ -88,6 +85,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'show_title' => true,
 		), $atts, 'course' );
 		$course = $this->get_course_class( $atts['course_id'] );
+		if ( is_wp_error( $course ) ) {
+			return $course->get_error_message();
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
@@ -116,21 +116,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Requested course detail.
 	 */
 	public function get_course_details( $atts ) {
-
 		global $wp_query;
-
 		$atts = shortcode_atts( array(
 			'course_id' => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
 			'field' => 'course_start_date',
 		), $atts, 'course_details' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$action = sanitize_html_class( $atts['field'] );
-
 		// Specify alias values for certain actions.
 		$translate_action = array(
 			'enroll_type' => 'enrollment_type',
@@ -140,21 +135,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'enrollment_end_date' => 'enrollment_end',
 			'price' => 'cost',
 		);
-
 		// Check if user specified an alias.
 		if ( array_key_exists( $action, $translate_action ) ) {
 			$action = $translate_action[ $action ];
 		}
-
 		$args = array(
 			'course_id' => $course_id,
 			'show' => $action,
 		);
-
 		$content = $this->get_course( $args );
-
 		coursepress_log_student_activity( 'course_seen' );
-
 		return $content;
 	}
 
@@ -169,21 +159,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Requested course detail.
 	 */
 	public function get_courses_urls( $atts ) {
-
 		global $enrollment_process_url, $signup_url;
-
 		$atts = shortcode_atts( array(
 			'url' => '',
 		), $atts, 'courses_urls' );
-
 		switch ( $atts['url'] ) {
 			case 'enrollment-process':
 				return $enrollment_process_url;
-
 			case 'signup':
 				return $signup_url;
 		}
-
 		return '';
 	}
 
@@ -197,37 +182,29 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_title( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
 			'title_tag' => 'h3',
 			'clickable' => 'yes',
 		), $atts, 'course_title' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		$class = 'course-title';
-
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
-
 		if ( 'yes' == $atts['clickable'] ) {
 			$attr = array(
 				'href' => $course->get_permalink(),
 				'rel' => 'bookmark',
 			);
-
 			$template = $this->create_html( 'a', $attr, $course->post_title );
 		} else {
 			$template = $course->post_title;
 		}
-
 		return $this->create_html( $atts['title_tag'], array( 'class' => $class ), $template );
 	}
 
@@ -241,17 +218,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_summary( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 		), $atts, 'course_summary' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		return $this->create_html( 'div', array( 'class' => 'course-summary' ), $course->post_excerpt );
 	}
 
@@ -265,30 +238,25 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_description( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'label' => '',
 			'class' => '',
 		), $atts, 'course_description' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
+		if ( is_wp_error( $course ) ) {
+			return $course->get_error_message();
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		$template = $atts['label'];
 		$class = 'course-description';
-
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
-
 		$template .= $course->post_content;
-
 		$template = $this->create_html( 'div', array( 'class' => $class ), $template );
-
 		return $template;
 	}
 
@@ -318,7 +286,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			return $course->__get( 'error_message' );
 		}
 		$template = '';
-
 		if ( ! empty( $atts['label'] ) ) {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
 		}
@@ -348,7 +315,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_end( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
@@ -358,33 +324,25 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'no_date_text' => __( 'No End Date', 'cp' ),
 			'class' => '',
 		), $atts, 'course_end' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$end_date = coursepress_course_get_setting( $course_id, 'course_end_date' );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'course_open_ended', false ) );
-
 		$class = 'course-end-date course-end-date-' . $course_id . ' ' . $class;
 		$content = '';
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', date_i18n( $date_format, $this->strtotime( $end_date ) ) );
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -401,7 +359,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_dates( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
@@ -413,12 +370,20 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'show_alt_display' => 'no',
 			'class' => '',
 		), $atts, 'course_dates' );
-
+		/**
+		 * Check course ID
+		 */
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
+		/**
+		 * Check course
+		 */
+		$course = $this->get_course_class( $course_id );
+		if ( is_wp_error( $course ) ) {
+			return $course->get_error_message();
+		}
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -427,17 +392,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$alt_display_text = sanitize_text_field( $atts['alt_display_text'] );
 		$show_alt_display = sanitize_html_class( $atts['show_alt_display'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
 		$end_date = coursepress_course_get_setting( $course_id, 'course_end_date' );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'course_open_ended', false ) );
-
 		$end_output = $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', ( date_i18n( $date_format, $this->strtotime( $end_date ) ) ) );
 		$show_alt_display = coursepress_is_true( $show_alt_display );
-
 		$content = '';
 		$class = 'course-dates course-dates-' . esc_attr( $course_id ) . ' ' . esc_attr( $class );
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
@@ -447,9 +408,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		} else {
 			$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, $this->strtotime( $start_date ) ) ) . ' - ' . $end_output;
 		}
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -466,7 +425,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_enrollment_start( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
@@ -476,28 +434,23 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'no_date_text' => __( 'Enroll Anytime', 'cp' ),
 			'class' => '',
 		), $atts, 'course_enrollment_start' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$now = $this->date_time_now();
 		$start_date = coursepress_course_get_setting( $course_id, 'enrollment_start_date' );
 		$start_date = $this->strtotime( $start_date );
 		$date = str_replace( ' ', '&nbsp;', date_i18n( $date_format, $start_date ) );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'enrollment_open_ended' ) );
-
 		$content = '';
 		$class = 'enrollment-start-date enrollment-start-date-' . $course_id . ' ' . $class;
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
@@ -506,9 +459,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		} else {
 			$content .= $open_ended ? $no_date_text : $date;
 		}
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -527,7 +478,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_enrollment_end( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
@@ -538,12 +488,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'show_all_dates' => 'no',
 			'class' => '',
 		), $atts, 'course_enrollment_end' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -551,21 +499,15 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$no_date_text = sanitize_text_field( $atts['no_date_text'] );
 		$show_all_dates = sanitize_html_class( $atts['show_all_dates'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$end_date = coursepress_course_get_setting( $course_id, 'enrollment_end_date' );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'enrollment_open_ended' ) );
-
 		$content = '';
 		$class = 'enrollment-end-date enrollment-end-date-' . $course_id . ' ' . $class;
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', date_i18n( $date_format, $this->strtotime( $end_date ) ) );
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		if ( ! $open_ended || 'yes' == $show_all_dates ) {
 			return $content;
 		} else {
@@ -583,7 +525,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_enrollment_dates( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'date_format' => get_option( 'date_format' ),
@@ -597,12 +538,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'show_alt_display' => 'no',
 			'class' => '',
 		), $atts, 'course_enrollment_dates' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_enrolled = sanitize_text_field( $atts['label_enrolled'] );
@@ -613,12 +552,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$alt_display_text = sanitize_text_field( $atts['alt_display_text'] );
 		$show_alt_display = sanitize_text_field( $atts['show_alt_display'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$start_date = coursepress_course_get_setting( $course_id, 'enrollment_start_date' );
 		$end_date = coursepress_course_get_setting( $course_id, 'enrollment_end_date' );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'enrollment_open_ended', false ) );
 		$show_alt_display = coursepress_is_true( $show_alt_display );
-
 		if ( 'yes' == strtolower( $show_enrolled_display ) ) {
 			$enrollment_date = coursepress_get_student_date_enrolled( $course_id );
 			if ( ! empty( $enrollment_date ) ) {
@@ -626,14 +563,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				$label = $label_enrolled;
 			}
 		}
-
 		$content = '';
 		$class = 'enrollment-dates enrollment-dates-' . $course_id . ' ' . $class;
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		if ( empty( $enrollment_date ) ) {
 			if ( $show_alt_display && $open_ended ) {
 				$content .= $alt_display_text;
@@ -644,9 +578,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			// User is enrolled
 			$content .= $enrollment_date;
 		}
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -731,7 +663,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_cost( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
@@ -741,24 +672,19 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'no_cost_text' => __( 'FREE', 'cp' ),
 			'show_icon' => 'no',
 		), $atts, 'course_cost' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
 		$no_cost_text = sanitize_text_field( $atts['no_cost_text'] );
 		$show_icon = sanitize_text_field( $atts['show_icon'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$show_icon = coursepress_is_true( $show_icon );
 		$is_paid = coursepress_is_true( coursepress_course_get_setting( $course_id, 'payment_paid_course', false ) );
-
 		$content = '';
-
 		if ( $is_paid ) {
 			$content .= apply_filters( 'coursepress_shortcode_course_cost', '', $course_id );
 		} else {
@@ -768,12 +694,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				$content .= $no_cost_text;
 			}
 		}
-
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
-
 			$content = '';
-
 			$class = 'course-cost course-cost-' . $course_id . ' ' . $class;
 			if ( ! empty( $label ) ) {
 				$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
@@ -781,7 +704,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$content .= $display_content;
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
 		}
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -796,7 +718,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_language( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'label' => __( 'Language', 'cp' ),
@@ -804,28 +725,23 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'label_delimiter' => ':',
 			'class' => '',
 		), $atts, 'course_language' );
-
 		$course = $this->get_course_class( $atts['course_id'] );
-
+		if ( is_wp_error( $course ) ) {
+			return '';
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-
 		$template = '';
-
 		if ( ! empty( $atts['label'] ) ) {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
 		}
-
 		$template .= $course->__get( 'course_language' );
-
 		$class = 'course-language';
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
-
 		$template = $this->create_html( 'span', array( 'class' => $class ), $template );
-
 		return $template;
 	}
 
@@ -839,7 +755,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_category( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'label' => __( 'Course Category', 'cp' ),
@@ -848,46 +763,34 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'no_category_text' => __( 'None', 'cp' ),
 			'class' => '',
 		), $atts, 'course_category' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
 		$no_category_text = sanitize_text_field( $atts['no_category_text'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$content = '';
-
 		$categories = coursepress_get_course_categories( $course_id );
-
 		if ( empty( $categories ) ) {
 			return $no_category_text;
 		}
-
 		$counter = 0;
 		foreach ( $categories as $key => $category ) {
 			$counter += 1;
 			$content .= $category;
 			$content .= count( $categories ) > $counter ? ', ' : '';
 		}
-
 		$display_content = $content;
-
 		$content = '';
-
 		$class = 'course-category course-category-' . $course_id . ' ' . $class;
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= $display_content;
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		return $content;
 	}
 
@@ -901,7 +804,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_enrollment_type( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'anyone_text' => __( 'Anyone', 'cp' ),
@@ -914,12 +816,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'prerequisite_text' => __( 'Students need to complete %s first.', 'cp' ),
 			'registered_text' => __( 'Registered users.', 'cp' ),
 		), $atts, 'course_enrollment_type' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
@@ -929,24 +829,18 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$anyone_text = sanitize_text_field( $atts['anyone_text'] );
 		$registered_text = sanitize_text_field( $atts['registered_text'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$enrollment_type = coursepress_course_get_setting( $course_id, 'enrollment_type' );
-
 		$enrollment_text = '';
-
 		switch ( $enrollment_type ) {
 			case 'anyone':
 				$enrollment_text = $anyone_text;
 				break;
-
 			case 'registered':
 				$enrollment_text = $registered_text;
 				break;
-
 			case 'passcode':
 				$enrollment_text = $passcode_text;
 				break;
-
 			case 'prerequisite':
 				$prereq = coursepress_get_enrollment_prerequisite( $course_id );
 				$prereq_courses = array();
@@ -961,24 +855,19 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				}
 				$enrollment_text = sprintf( $prerequisite_text, implode( ', ', $prereq_courses ) );
 				break;
-
 			case 'manually':
 				$enrollment_text = $manual_text;
 				break;
 		}
-
 		// For non-standard enrolment types.
 		$enrollment_text = apply_filters( 'coursepress_course_enrollment_type_text', $enrollment_text );
-
 		$content = '';
 		$class = 'course-enrollment-type course-enrollment-type-' . $course_id . ' ' . $class;
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= $enrollment_text;
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -1039,6 +928,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'class' => '',
 		), $atts, 'course_featured_video' );
 		$course = $this->get_course_class( $atts['course_id'] );
+		if ( is_wp_error( $course ) ) {
+			return $course->get_error_message();
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
@@ -1066,21 +958,17 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_thumbnail( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'wrapper' => 'figure',
 			'class' => '',
 		), $atts, 'course_thumbnail' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$wrapper = sanitize_html_class( $atts['wrapper'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		return do_shortcode( '[course_media course_id="' . $course_id . '" wrapper="' . $wrapper . '" class="' . $class . '" type="thumbnail"]' );
 	}
 
@@ -1094,47 +982,36 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_action_links( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'class' => '',
 		), $atts, 'course_action_links' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$class = sanitize_html_class( $atts['class'] );
-
 		$course_start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
 		$course_end_date = coursepress_course_get_setting( $course_id, 'course_end_date' );
 		$open_ended_course = coursepress_is_true( coursepress_course_get_setting( $course_id, 'course_open_ended' ) );
-
 		$withdraw_link_visible = false;
 		$student_id = get_current_user_id();
 		$now = $this->date_time_now();
-
 		if ( ! empty( $student_id ) && coursepress_is_student_enrolled_at( $course_id, $student_id ) ) {
 			if ( ( ( $this->strtotime( $course_start_date ) <= $now && $this->strtotime( $course_end_date ) >= $now ) || ( $this->strtotime( $course_end_date ) >= $now ) ) || $open_ended_course ) {
 				// Course is currently active or is not yet active (will be active in the future).
 				$withdraw_link_visible = true;
 			}
 		}
-
 		$content = '';
 		$class = 'apply-links course-action-links course-action-links-' . $course_id . ' ' . $class;
-
 		if ( $withdraw_link_visible ) {
 			$link = wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' );
 			$content .= $this->create_html( 'a', array( 'href' => $link, 'onClick' => 'return withdraw();' ), esc_html__( 'Withdraw', 'cp' ) );
 			$content .= ' | ';
 		}
-
 		$content .= $this->create_html( 'a', array( 'href' => get_permalink( $course_id ) ), esc_html__( 'Course Details', 'cp' ) );
-
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		return $content;
 	}
 
@@ -1222,19 +1099,15 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				}
 				$content .= wp_oembed_get( $course_video, $embed_args );
 			}
-
 			$content = empty( $wrapper ) ? $content : $this->create_html( $wrapper, array( 'style' => $wrapper_style ), $content );
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
 		}
-
 		if ( ( ( 'default' == $type && 'image' == $priority ) || 'image' == $type || ( 'default' == $type && 'video' == $priority && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
-
 			$class = 'course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class;
 			$content_img = $this->create_html( 'img', array( 'src' => esc_url( $course_image ), 'class' => 'course-media-img' ) );
 			$content_wrapper = empty( $wrapper ) ? $content_img : $this->create_html( $wrapper, array( 'style' => $wrapper_style ), $content_img );
 			$content .= $this->create_html( 'div', array( 'class' => $class ), $content_wrapper );
 		}
-
 		return $content;
 	}
 
@@ -1248,23 +1121,18 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_link( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'element' => 'span',
 			'class' => 'course-link',
 		), $atts, 'course_link' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$element = sanitize_html_class( $atts['element'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$content = do_shortcode( '[course_title course_id="' . $course_id . '" title_tag="' . $element . '" link="yes" class="' . $class . '"]' );
-
 		return $content;
 	}
 
@@ -1278,7 +1146,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_length( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'label' => __( 'Course Length', 'cp' ),
@@ -1287,41 +1154,31 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'class' => '',
 			'suffix' => ' Weeks',
 		), $atts, 'course_start' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = sanitize_text_field( $atts['label_delimeter'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'course_open_ended' ) );
 		if ( $open_ended ) {
 			return '';
 		}
-
 		$start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
 		$end_date = coursepress_course_get_setting( $course_id, 'course_end_date' );
-
 		$length = ceil( ( $this->strtotime( $end_date ) - $this->strtotime( $start_date ) ) / 604800 );
-
 		if ( $length <= 0 ) {
 			return '';
 		}
-
 		$class = 'course-length course-length-' . $course_id . ' ' . $class;
 		$content = '';
-
 		if ( ! empty( $label ) ) {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= $length . $atts['suffix'];
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 		// Return the html in the buffer.
 		return $content;
 	}
@@ -1336,9 +1193,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_time_estimation( $atts ) {
-
 		$content = '';
-
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'label' => __( 'Estimated Duration:&nbsp;', 'cp' ),
@@ -1347,29 +1202,23 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'wrapper' => 'no',
 			'class' => '',
 		), $atts, 'course_time_estimation' );
-
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
 		$class = sanitize_html_class( $atts['class'] );
 		$wrapper = coursepress_is_true( sanitize_text_field( $atts['wrapper'] ) );
-
 		if ( $wrapper && ! empty( $label ) ) {
 			$content .= $this->create_html( $label_tag, array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
-
 		$content .= CoursePress_Data_Course::get_time_estimation( $course_id );
-
 		if ( $wrapper ) {
 			$class = 'course-time-estimate course-time-estimate-' . $course_id . ' ' . $class;
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
 		}
-
 		return $content;
 	}
 
@@ -1387,7 +1236,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return string Shortcode output.
 	 */
 	public function get_course_random( $atts ) {
-
 		$atts = shortcode_atts( array(
 			'number' => 3,
 			'featured_title' => 'default',
@@ -1397,7 +1245,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'course_class' => 'default',
 			'class' => '',
 		), $atts, 'course_random' );
-
 		$number = (int) $atts['number'];
 		$featured_title = sanitize_text_field( $atts['featured_title'] );
 		$button_title = sanitize_text_field( $atts['button_title'] );
@@ -1405,20 +1252,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$media_priority = sanitize_html_class( $atts['media_priority'] );
 		$course_class = sanitize_html_class( $atts['course_class'] );
 		$class = sanitize_html_class( $atts['class'] );
-
 		$args = array(
 			'post_type' => 'course',
 			'posts_per_page' => $number,
 			'orderby' => 'rand',
 			'fields' => 'ids',
 		);
-
 		$courses = new WP_Query( $args );
 		$courses = $courses->posts;
 		$class = sanitize_html_class( $class );
-
 		$featured_atts = $content = '';
-
 		if ( 'default' != $featured_title ) {
 			$featured_atts .= 'featured_title="' . $featured_title . '" ';
 		}
@@ -1434,14 +1277,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( 'default' != $course_class ) {
 			$featured_atts .= 'class="' . $course_class . '" ';
 		}
-
 		foreach ( $courses as $course ) {
 			$shortcode_content = do_shortcode( '[course_featured course_id="' . $course . '" ' . $featured_atts . ']' );
 			$content .= $this->create_html( 'div', array( 'class' => 'course-item course-item-' . $course ), $shortcode_content );
 		}
-
 		$content = 0 < count( $courses ) ? $this->create_html( 'div', array( 'class' => 'course-random' . $class ), $content ) : $content;
-
 		return $content;
 	}
 
@@ -1454,7 +1294,6 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @return int The course ID or 0 if not called inside a course/unit/module.
 	 */
 	public function get_parent_course_id() {
-
 		return CoursePress_Data_Course::get_current_course_id();
 	}
 }

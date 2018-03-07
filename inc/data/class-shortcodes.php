@@ -16,13 +16,19 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 	 * @since  2.0.0
 	 */
 	public function init() {
-
-		( new CoursePress_Data_Shortcode_Course() )->init();
-		( new CoursePress_Data_Shortcode_CourseTemplate() )->init();
-		( new CoursePress_Data_Shortcode_Instructor() )->init();
-		( new CoursePress_Data_Shortcode_Student() )->init();
-		( new CoursePress_Data_Shortcode_Template() )->init();
-		( new CoursePress_Data_Shortcode_Unit() )->init();
+		$class_object = new CoursePress_Data_Shortcode_Course();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_CourseTemplate();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Instructor();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Student();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Template();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Unit();
+		$class_object->init();
+		unset( $class_object );
 	}
 
 	/**
