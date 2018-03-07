@@ -282,15 +282,6 @@
                 unitItem = new UnitView(unitModel, this);
                 unitItem.$el.appendTo(this.unitsContainer);
                 this.unitItems[id] = unitItem;
-                // If no permission, hide edit button and preview checkbox.
-                if ( unitModel.get('can_update_course_unit') === false ) {
-                    this.$('.edit-unit').remove();
-                    this.$('.cp-preview-unit').attr('disabled','disabled');
-                }
-                // If no permission, hide edit button.
-                if ( unitModel.get('can_delete_course_unit') === false ) {
-                    this.$('.delete-unit').remove();
-                }
             }
         });
     });

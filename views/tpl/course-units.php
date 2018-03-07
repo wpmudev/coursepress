@@ -14,7 +14,7 @@
             <div class="box-inner-content">
                 <div class="cp-toggle-box cp-unit-status">
                     <label>
-                        <input type="checkbox" name="post_status" value="publish" class="cp-toggle-input" {{_.checked('publish', post_status)}} /> <span class="cp-toggle-btn"></span>
+                        <input type="checkbox" name="post_status" value="publish" class="cp-toggle-input" {{_.checked('publish', post_status)}} {{ can_change_course_unit_status ? '' : 'disabled="disabled"' }} /> <span class="cp-toggle-btn"></span>
                         <span class="label"><?php _e( 'Publish', 'cp' ); ?></span>
                     </label>
                 </div>
@@ -263,8 +263,12 @@
     <div class="cp-unit-heading">
         <label>{{post_title}}</label>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs preview-unit" data-url="{{unit_permalink}}"><?php _e( 'Preview', 'cp' ); ?></button>
-        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs edit-unit" data-unit="{{cid}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
-        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs delete-unit" data-unit="{{cid}}"><?php _e( 'Delete', 'cp' ); ?></button>
+        <# if ( can_update_course_unit ) { #>
+            <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs edit-unit" data-unit="{{cid}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
+        <# } #>
+        <# if ( can_delete_course_unit ) { #>
+            <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs delete-unit" data-unit="{{cid}}"><?php _e( 'Delete', 'cp' ); ?></button>
+        <# } #>
     </div>
     <div class="cp-unit-content cp-unit-steps">
         <table class="unit-table-list">
@@ -281,7 +285,7 @@
                         </td>
                         <td class="column-preview" data-module="{{module_id}}">
                             <label class="cp-checkbox cp-ignore-update-model">
-                                <input type="checkbox" name="preview" class="cp-checkbox-input cp-preview-unit" value="1" {{_.checked(true, module.preview)}} />
+                                <input type="checkbox" name="preview" class="cp-checkbox-input" value="1" {{_.checked(true, module.preview)}} {{ can_update_course_unit ? '' : 'disabled="disabled"' }} />
                                 <span class="cp-checkbox-icon"></span>
                             </label>
                         </td>

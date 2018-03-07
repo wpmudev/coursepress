@@ -113,9 +113,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 				// Set permalink to the unit.
 				$unit->unit_permalink = $unit->get_permalink();
-				// Check if current user can create new units.
+				// Get unit permissions.
 				$unit->can_update_course_unit = CoursePress_Data_Capabilities::can_update_course_unit( $unit->ID );
 				$unit->can_delete_course_unit = CoursePress_Data_Capabilities::can_delete_course_unit( $unit->ID );
+				$unit->can_change_course_unit_status = CoursePress_Data_Capabilities::can_change_course_unit_status( $unit->ID );
 
 				$units[ $pos ] = $unit;
 			}
