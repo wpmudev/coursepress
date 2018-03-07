@@ -90,7 +90,7 @@ foreach ( $bulk_actions as $value => $label ) {
 		</td>
                             <td class="column-title">
 <?php
-				echo $course->post_title;
+				printf( '<a href="%s">%s</a>', esc_url( $edit_link ), esc_html( $course->post_title ) );
 				echo $course->get_numeric_identifier_to_course_name( $course->ID , ' <small>(', ')</small>' );
 ?>
                             </td>
