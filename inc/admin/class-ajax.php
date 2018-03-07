@@ -113,6 +113,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 				// Set permalink to the unit.
 				$unit->unit_permalink = $unit->get_permalink();
+				// Check if current user can create new units.
+				$unit->can_update_course_unit = CoursePress_Data_Capabilities::can_update_course_unit( $unit->ID );
+				$unit->can_delete_course_unit = CoursePress_Data_Capabilities::can_delete_course_unit( $unit->ID );
 
 				$units[ $pos ] = $unit;
 			}
@@ -197,6 +200,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$unit->menu_order = $menu_order;
 				// Get post object
 				if ( ! empty( $unit->deleted ) ) {
+					// Do not continue if no permission.
+					if ( ! CoursePress_Data_Capabilities::can_delete_course_unit( $unit->ID ) ) {
+						continue;
+					}
 					// Delete unit here
 					if ( ! empty( $unit->ID ) ) {
 						coursepress_delete_unit( $unit->ID );
@@ -205,6 +212,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					unset( $units->{$cid} );
 					continue;
 				}
+
+				// Check if required capability is set.
+				$can_proceed = empty( $unit->ID ) ?
+					CoursePress_Data_Capabilities::can_create_course_unit( $course_id ) :
+					CoursePress_Data_Capabilities::can_update_course_unit( $unit->ID );
+				// Do not continue if no permission.
+				if ( ! $can_proceed ) {
+					continue;
+				}
+
 				// Get post object
 				$unit_array = array(
 					'ID' => $unit->ID,

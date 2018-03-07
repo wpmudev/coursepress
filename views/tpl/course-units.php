@@ -249,7 +249,9 @@
 
 <script type="text/template" id="coursepress-unit-list-tpl">
     <ul class="units-list"></ul>
-    <button type="button" class="cp-btn cp-btn-default cp-btn-xs new-unit"><?php _e( 'Add Unit', 'cp' ); ?></button>
+    <?php if ( $can_create_course_unit ) : ?>
+        <button type="button" class="cp-btn cp-btn-default cp-btn-xs new-unit"><?php _e( 'Add Unit', 'cp' ); ?></button>
+    <?php endif; ?>
 </script>
 
 <script type="text/template" id="coursepress-unit-item-tpl">
@@ -279,7 +281,7 @@
                         </td>
                         <td class="column-preview" data-module="{{module_id}}">
                             <label class="cp-checkbox cp-ignore-update-model">
-                                <input type="checkbox" name="preview" class="cp-checkbox-input" value="1" {{_.checked(true, module.preview)}} />
+                                <input type="checkbox" name="preview" class="cp-checkbox-input cp-preview-unit" value="1" {{_.checked(true, module.preview)}} />
                                 <span class="cp-checkbox-icon"></span>
                             </label>
                         </td>

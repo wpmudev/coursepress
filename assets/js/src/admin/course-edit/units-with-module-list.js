@@ -116,6 +116,10 @@
             editModule: function(ev) {
                 var sender, module_id, unit_id, unit;
 
+                if ( this.$('.edit-unit').length === 0 ) {
+                    return;
+                }
+
                 sender = this.$(ev.currentTarget);
                 module_id = sender.data('module');
                 unit_id = sender.data('unit');
@@ -277,6 +281,15 @@
                 unitItem = new UnitView(unitModel, this);
                 unitItem.$el.appendTo(this.unitsContainer);
                 this.unitItems[id] = unitItem;
+                // If no permission, hide edit button and preview checkbox.
+                if ( unitModel.get('can_update_course_unit') === false ) {
+                    this.$('.edit-unit').remove();
+                    this.$('.cp-preview-unit').attr('disabled','disabled');
+                }
+                // If no permission, hide edit button.
+                if ( unitModel.get('can_delete_course_unit') === false ) {
+                    this.$('.delete-unit').remove();
+                }
             }
         });
     });
