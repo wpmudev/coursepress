@@ -16,6 +16,24 @@
                 }
             }
         }
+        .cp-flex {
+            &.cp-user {
+                @media (max-width: 800px) {
+                    display: block;
+                    .gravatar,
+                    .user_login,
+                    .display_name {
+                        display: block;
+                        padding-bottom: 5px;
+                    }
+                }
+            }
+        }
+        @media (max-width: 800px) {
+            .column-certified {
+                display: none;
+            }
+        }
     }
     .column-student {
         width: 70%;
@@ -33,6 +51,11 @@
     }
     .bulkactions {
         padding-bottom: 10px;
+    }
+    .cp-invitee-container {
+        @media (max-width: 800px) {
+            display: block;
+        }
     }
 }
 

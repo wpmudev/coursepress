@@ -36,6 +36,14 @@
         }
         .column-title {
             display: table-cell;
+            @media screen {
+                @media (min-width: 1020px) {
+                    a {
+                        color: $black;
+                        cursor: default;
+                    }
+                }
+            }
         }
         .column-units,
         .column-students,

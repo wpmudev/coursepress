@@ -1,289 +1,308 @@
 .coursepress-popup {
-  z-index: 99;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  z-index: 9;
-
-  .coursepress-popup-heading {
-    padding: 15px 25px;
-    border-bottom: 1px solid $grey_6;
-
-    h3 {
-      margin: 0;
-    }
-  }
-  .coursepress-popup-body {
-    border: 1px solid $grey_5;
-    width: 40%;
-    margin: 125px auto;
-    background-color: #ffffff;
-    @include radius(4px);
-
-    &.popup-error {
-      border-color: rgba(255, 0, 0, 0.1);
-
-      .coursepress-popup-heading {
-        color: red;
-        border-bottom: 1px solid rgba(255, 0, 0, 0.1);
-
-        h3 {
-          color: red;
-        }
-        &:before {
-          @include icon('\f071');
-          display: inline-block;
-          float: left;
-          margin-right: 8px;
-          font-size: 1.4em;
-        }
-      }
-      .coursepress-popup-heading,
-      .coursepress-popup-content,
-      .coursepress-popup-footer {
-        background-color: rgba(255, 0, 0, 0.02);
-      }
-      .coursepress-popup-footer {
-        .cp-btn-cancel {
-          display: none;
-        }
-      }
-    }
-  }
-
-  .coursepress-popup-content {
-    padding: 15px 25px;
-  }
-  .coursepress-popup-footer {
-    text-align: center;
-    padding: 15px 25px;
-  }
-  .coursepress-modal-heading {
-    border-bottom: 1px solid $grey_5;
-  }
-  .coursepress-modal-body {
-    border-radius: $default_radius;
-    width: 40%;
-  }
-}
-
-.coursepress-modal {
-  @extend .coursepress-popup;
-  background-color: rgba(221, 221, 221, 0.72);
-
-  .coursepress-popup-body {
-    border-radius: $default_radius;
-    width: 45%;
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 9;
 
     .coursepress-popup-heading {
-      border-bottom: 1px solid $grey_5;
-      font-size: 0.9em;
+        padding: 15px 25px;
+        border-bottom: 1px solid $grey_6;
 
-      .coursepress-popup-title {
-        width: 95%;
-        display: inline-block;
-        font-size: 0.9em;
-      }
-
-      .cp-modal-close {
-        float: right;
-        cursor: pointer;
-        &:after {
-          @include icon('\f00d');
-          margin-left: 5px;
+        h3 {
+            margin: 0;
         }
-      }
+    }
+    .coursepress-popup-body {
+        border: 1px solid $grey_5;
+        width: 40%;
+        margin: 125px auto;
+        background-color: #ffffff;
+        @include radius(4px);
+
+        @media (max-width: 800px) {
+            width: 50%;
+        }
+        @media (max-width: 600px) {
+            width: 70%;
+        }
+        @media (max-width: 400px) {
+            width: 90%;
+        }
+
+        &.popup-error {
+            border-color: rgba(255, 0, 0, 0.1);
+
+            .coursepress-popup-heading {
+                color: red;
+                border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+
+                h3 {
+                    color: red;
+                }
+                &:before {
+                    @include icon('\f071');
+                    display: inline-block;
+                    float: left;
+                    margin-right: 8px;
+                    font-size: 1.4em;
+                }
+            }
+            .coursepress-popup-heading,
+            .coursepress-popup-content,
+            .coursepress-popup-footer {
+                background-color: rgba(255, 0, 0, 0.02);
+            }
+            .coursepress-popup-footer {
+                .cp-btn-cancel {
+                    display: none;
+                }
+            }
+        }
     }
 
-    .coursepress-popup-footer {
-      border-top: 1px solid #DDDDDD;
-      text-align: right;
-      padding: 27px 25px;
-      font-size: 1.1em;
-      p {
-        font-size: 1.1em;
-      }
+    .coursepress-popup-content {
+        padding: 15px 25px;
     }
-  }
+    .coursepress-popup-footer {
+        text-align: center;
+        padding: 15px 25px;
+    }
+    .coursepress-modal-heading {
+        border-bottom: 1px solid $grey_5;
+    }
+    .coursepress-modal-body {
+        border-radius: $default_radius;
+        width: 40%;
+    }
 }
 
 .coursepress-modal {
-  font-size: 100%;
+    @extend .coursepress-popup;
+    background-color: rgba(221, 221, 221, 0.72);
 
-  .cp-content-nopad {
-    padding: 0;
-  }
+    .coursepress-popup-body {
+        border-radius: $default_radius;
+        width: 45%;
+        @media (max-width: 800px) {
+            width: 65%;
+        }
+        @media (max-width: 600px) {
+            width: 80%;
+        }
+        @media (max-width: 400px) {
+            width: 90%;
+        }
 
-  .cp-div-grey {
-    background-color: $grey_12;
-  }
+        .coursepress-popup-heading {
+            border-bottom: 1px solid $grey_5;
+            font-size: 0.9em;
 
-  .cp-div-flex {
-    padding: 20px 33px 50px;
-  }
+            .coursepress-popup-title {
+                width: 95%;
+                display: inline-block;
+                font-size: 0.9em;
+            }
 
-  [type="text"],
-  select {
-    margin: 6px 0px;
-    display: block;
-    background-color: $grey_9;
-    line-height: 1.5;
-    width: 100%;
-  }
+            .cp-modal-close {
+                float: right;
+                cursor: pointer;
+                &:after {
+                    @include icon('\f00d');
+                    margin-left: 5px;
+                }
+            }
+        }
 
-  .label {
-    display: block;
-    margin-bottom: 5px;
-  }
+        .coursepress-popup-footer {
+            border-top: 1px solid #DDDDDD;
+            text-align: right;
+            padding: 27px 25px;
+            font-size: 1.1em;
+            p {
+                font-size: 1.1em;
+            }
+        }
+    }
+}
 
-  .select2-container {
-    margin: 5px 0;
-  }
-  .coursepress-popup-heading {
-    text-transform: uppercase;
-  }
+.coursepress-modal {
+    font-size: 100%;
+
+    .cp-content-nopad {
+        padding: 0;
+    }
+
+    .cp-div-grey {
+        background-color: $grey_12;
+    }
+
+    .cp-div-flex {
+        padding: 20px 33px 50px;
+    }
+
+    [type="text"],
+    select {
+        margin: 6px 0px;
+        display: block;
+        background-color: $grey_9;
+        line-height: 1.5;
+        width: 100%;
+    }
+
+    .label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .select2-container {
+        margin: 5px 0;
+    }
+    .coursepress-popup-heading {
+        text-transform: uppercase;
+    }
 }
 
 body.cp-help-overlay-body {
-  position: relative;
-  height: auto;
+    position: relative;
+    height: auto;
 }
 
 .cp-help-overlay {
-  $radius-size: 11px;
-  $background-color: rgba(0, 0, 0, 0.5);
-  $z-index: 999;
+    $radius-size: 11px;
+    $background-color: rgba(0, 0, 0, 0.5);
+    $z-index: 999;
 
-  &-top,
-  &-left,
-  &-right,
-  &-bottom {
-    position: absolute;
-    background-color: $background-color;
-    z-index: $z-index;
-  }
-  &-top,
-  &-bottom {
-    &::before,
-    &::after {
-      content: "";
-      display: block;
-      position: absolute;
-      background-repeat: no-repeat;
-      width: $radius-size;
-      height: $radius-size;
-    }
-  }
-
-  &-left,
-  &-right {
-    height: 100%;
-    top: 0;
-    bottom: 0;
-  }
-  &-top {
-    top: 0;
-
-    &::before,
-    &::after {
-      bottom: -$radius-size;
-    }
-
-    &::before {
-      left: 0;
-      background-image: radial-gradient(circle at 100% 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
-    }
-
-    &::after {
-      right: 0;
-      background-image: radial-gradient(circle at 0 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
-    }
-  }
-  &-left {
-    left: 0;
-  }
-  &-right {
-    right: 0;
-  }
-  &-bottom {
-    bottom: 0;
-
-    &::before,
-    &::after {
-      top: -$radius-size;
-    }
-
-    &::before {
-      left: 0;
-      background-image: radial-gradient(circle at 100% 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
-    }
-
-    &::after {
-      right: 0;
-      background-image: radial-gradient(circle at 0 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
-    }
-  }
-
-  &-content {
-    background: transparent;
-    z-index: $z-index + 1;
-    position: relative;
-    height: auto;
-
-    .coursepress-popup-body {
-      background-color: #F2FBFF;
-      margin: 0;
-      position: relative;
-
-      &::before {
-        content: "";
-        background: url('../images/arrow-blue.png') no-repeat;
+    &-top,
+    &-left,
+    &-right,
+    &-bottom {
         position: absolute;
-      }
-
-      &.position-bottom {
-        margin: 30px auto;
-
-        &::before {
-          height: 50px;
-          top: -10px;
-          left: -70px;
-          width: 120px;
-          background-size: 120px;
-          transform: rotate(260deg) scaleX(-1);
-        }
-      }
-
-      &.position-right {
-        margin-left: 60px;
-
-        &::before {
-          height: 60px;
-          top: -30px;
-          left: -80px;
-          width: 160px;
-        }
-      }
-
-      .cp-close {
-        position: relative;
-        z-index: 2;
-        text-transform: uppercase;
-        margin-top: -20px;
-        color: #17A8E3;
-        cursor: pointer;
-
-        &:after {
-          display: none;
-        }
-      }
-
-      .coursepress-popup-footer {
-        padding: 15px;
-      }
+        background-color: $background-color;
+        z-index: $z-index;
     }
-  }
+    &-top,
+    &-bottom {
+        &::before,
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            background-repeat: no-repeat;
+            width: $radius-size;
+            height: $radius-size;
+        }
+    }
+
+    &-left,
+    &-right {
+        height: 100%;
+        top: 0;
+        bottom: 0;
+    }
+    &-top {
+        top: 0;
+
+        &::before,
+        &::after {
+            bottom: -$radius-size;
+        }
+
+        &::before {
+            left: 0;
+            background-image: radial-gradient(circle at 100% 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
+        }
+
+        &::after {
+            right: 0;
+            background-image: radial-gradient(circle at 0 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
+        }
+    }
+    &-left {
+        left: 0;
+    }
+    &-right {
+        right: 0;
+    }
+    &-bottom {
+        bottom: 0;
+
+        &::before,
+        &::after {
+            top: -$radius-size;
+        }
+
+        &::before {
+            left: 0;
+            background-image: radial-gradient(circle at 100% 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
+        }
+
+        &::after {
+            right: 0;
+            background-image: radial-gradient(circle at 0 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
+        }
+    }
+
+    &-content {
+        background: transparent;
+        z-index: $z-index + 1;
+        position: relative;
+        height: auto;
+
+        .coursepress-popup-body {
+            background-color: #F2FBFF;
+            margin: 0;
+            position: relative;
+
+            &::before {
+                content: "";
+                background: url('../images/arrow-blue.png') no-repeat;
+                position: absolute;
+            }
+
+            &.position-bottom {
+                margin: 30px auto;
+
+                &::before {
+                    height: 50px;
+                    top: -10px;
+                    left: -70px;
+                    width: 120px;
+                    background-size: 120px;
+                    transform: rotate(260deg) scaleX(-1);
+                }
+            }
+
+            &.position-right {
+                margin-left: 60px;
+
+                &::before {
+                    height: 60px;
+                    top: -30px;
+                    left: -80px;
+                    width: 160px;
+                }
+            }
+
+            .cp-close {
+                position: relative;
+                z-index: 2;
+                text-transform: uppercase;
+                margin-top: -20px;
+                color: #17A8E3;
+                cursor: pointer;
+
+                &:after {
+                    display: none;
+                }
+            }
+
+            .coursepress-popup-footer {
+                padding: 15px;
+            }
+        }
+    }
 }

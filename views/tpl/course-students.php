@@ -42,7 +42,7 @@
                             <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
                         </div>
                     </td>
-                    <td class="cp-student-certified">
+                    <td class="cp-student-certified column-certified">
 		                <?php
 			                /**
 			                 * @var array $certified_students

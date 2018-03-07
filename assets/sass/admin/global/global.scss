@@ -1,95 +1,96 @@
 .coursepress #wpwrap {
-  max-width: 1428px;
+    max-width: 1428px;
 }
 .coursepress-wrap,
 .coursepress-modal {
-  color: $black;
-  font-family: "Roboto Condensed", "Roboto", Arial, sans-serif;
-  font-size: 16px;
+    color: $black;
+    font-family: "Roboto Condensed", "Roboto", Arial, sans-serif;
+    font-size: 16px;
 
-  a {
-    text-decoration: none;
-  }
-  .wp-heading-inline {
-    text-transform: uppercase;
-    color: $dark_1;
-    font-weight: 700;
-    font-size: 2.2em;
-    margin-top: 15px;
-  }
-  .course-tag {
-    font-size: 11px;
-    display: block;
-    font-weight: 700;
-    color: $grey_2;
-  }
-  .inactive {
-    display: none;
-  }
+    a {
+        text-decoration: none;
+    }
+    .wp-heading-inline {
+        text-transform: uppercase;
+        color: $dark_1;
+        font-weight: 700;
+        font-size: 2.2em;
+        margin-top: 15px;
+        line-height: 1.2em;
+    }
+    .course-tag {
+        font-size: 11px;
+        display: block;
+        font-weight: 700;
+        color: $grey_2;
+    }
+    .inactive {
+        display: none;
+    }
 
-  .cp-flex {
-    display: flex;
+    .cp-flex {
+        display: flex;
 
-    .cp-div-flex {
-      flex: 1;
+        .cp-div-flex {
+            flex: 1;
+        }
+        .cp-div-flex-2 {
+            flex: 4;
+            padding-right: 15px;
+        }
+        .cp-pad-right {
+            padding-right: 15px;
+        }
+        .cp-pad-left {
+            padding-left: 15px;
+        }
     }
-    .cp-div-flex-2 {
-      flex: 4;
-      padding-right: 15px;
-    }
-    .cp-pad-right {
-      padding-right: 15px;
-    }
-    .cp-pad-left {
-      padding-left: 15px;
-    }
-  }
-  .cp-flex-2 {
-    display: flex;
+    .cp-flex-2 {
+        display: flex;
 
-    [type="text"] {
-      width: 100%;
-      margin-right: 10px;
+        [type="text"] {
+            width: 100%;
+            margin-right: 10px;
+        }
     }
-  }
 
-  .iris-picker {
-    height: 200px !important;
-  }
-  .iris-picker-inner {
-    width: 95%;
-  }
-  .iris-slider-offset {
-    height: 70%;
-  }
+    .iris-picker {
+        height: 200px !important;
+    }
+    .iris-picker-inner {
+        width: 95%;
+    }
+    .iris-slider-offset {
+        height: 70%;
+    }
 }
 
 /** CERTIFICATE PREVIEW **/
 .coursepress-popup-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: $grey_4;
-  z-index: 9999999999999999;
-
-  #coursepress-cert-frame {
-    position: relative;
-    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 90%;
-    border: 1px solid $grey_3;
-  }
-  button {
-    float: right;
-    margin: 5px 15px;
-  }
-  h2 {
-    margin: 0;
-    color: #ffffff;
-    padding-left: 25px;
-    line-height: 2.4;
-    font-weight: 400;
-  }
+    height: 100%;
+    background-color: $grey_4;
+    z-index: 9999999999999999;
+
+    #coursepress-cert-frame {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 90%;
+        border: 1px solid $grey_3;
+    }
+    button {
+        float: right;
+        margin: 5px 15px;
+    }
+    h2 {
+        margin: 0;
+        color: #ffffff;
+        padding-left: 25px;
+        line-height: 2.4;
+        font-weight: 400;
+    }
 }

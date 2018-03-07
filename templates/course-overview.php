@@ -12,8 +12,8 @@ $course = coursepress_get_course();
         <h1 class="page-title"><?php _e( 'Course', 'cp' ); ?></h1>
         <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
     </header>
-
-    <div class="course-details">
+    <div class="entry-content">
+        <div class="course-details">
 <?php
 $media = coursepress_get_course_media( false, 420, 220 );
 if ( ! empty( $media ) ) {
@@ -50,20 +50,21 @@ if ( ! empty( $price ) ) {
                 <?php coursepress_get_course_enrollment_button(); ?>
             </p>
 		</div>
-	</div>
+        </div>
 
-	<div class="additional-summary">
-		<div class="social-shares">
-			<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
-		</div>
-	</div>
+        <div class="additional-summary">
+            <div class="social-shares">
+                <?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
+            </div>
+        </div>
 
-	<div class="entry-content course-description">
-		<?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
-	</div>
+        <div class="course-description">
+            <?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
+        </div>
 
-	<div class="course-structure">
-		<h3 class="sub-title course-sub-title"><?php _e( 'Course Structure', 'cp' ); ?></h3>
-		<?php echo coursepress_get_course_structure(); ?>
-	</div>
+        <div class="course-structure">
+            <h3 class="sub-title course-sub-title"><?php _e( 'Course Structure', 'cp' ); ?></h3>
+            <?php echo coursepress_get_course_structure(); ?>
+        </div>
+    </div>
 </article>
