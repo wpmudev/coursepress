@@ -1226,7 +1226,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function add_student_to_course( $request ) {
 		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
 			// Do not continue if not capable.
-			if ( CoursePress_Data_Capabilities::can_add_course_student( $request->course_id ) ) {
+			if ( ! CoursePress_Data_Capabilities::can_add_course_student( $request->course_id ) ) {
 				wp_send_json_error();
 			}
 			$result = coursepress_add_student( $request->student_id, $request->course_id );
