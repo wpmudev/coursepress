@@ -1203,6 +1203,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function courses_bulk_action( $request ) {
 		if ( isset( $request->courses ) && is_array( $request->courses ) && isset( $request->which ) ) {
 			foreach ( $request->courses as $course_id ) {
+
+				// Make sure that the user is capable.
+				if ( in_array( $request->which, array( 'trash', 'delete' ) ) && ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+					continue;
+				} elseif ( in_array( $request->which, array( 'draft', 'publish' ) ) && ! CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+					continue;
+				}
+
 				coursepress_change_post( $course_id, $request->which, 'course' );
 			}
 			wp_send_json_success();
