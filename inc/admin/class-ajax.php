@@ -1141,7 +1141,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$course_id = $request->course_id;
 		// Do not continue if not capable.
 		if ( ! CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
-			wp_send_json_error( true );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to invite students.', 'cp' ) ) );
 		}
 		$args = array(
 			'first_name' => $request->first_name,
@@ -1173,8 +1173,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request->course_id && is_email( $request->email ) ) {
 			// Continue only if user can withdraw student.
 			if ( CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
-				$success = coursepress_remove_student_invite( $request->course_id, $request->email );
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove student invitation.', 'cp' ) ) );
 			}
+			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
 
 		// Success resoponse with email.
@@ -1227,7 +1228,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
 			// Do not continue if not capable.
 			if ( ! CoursePress_Data_Capabilities::can_add_course_student( $request->course_id ) ) {
-				wp_send_json_error();
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to add students.', 'cp' ) ) );
 			}
 			$result = coursepress_add_student( $request->student_id, $request->course_id );
 			if ( is_wp_error( $result ) ) {
@@ -1279,7 +1280,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		// Do not continue if this user is not capable.
 		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
-			return array( 'success' => false );
+			return array( 'success' => false, 'message' => __( 'You do not have permission to withdraw students.', 'cp' ) );
 		}
 		foreach ( $request->students as $student_id ) {
 			coursepress_delete_student( $student_id, $request->course_id );
