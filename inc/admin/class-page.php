@@ -737,7 +737,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'select' => __( 'Selectable', 'cp' ),
 		);
 		$this->localize_array['questions'] = $question_types;
-		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps, 'course' => $course ) );
+		$unit_args = array(
+			'steps' => $steps,
+			'course' => $course,
+			'can_create_course_unit' => CoursePress_Data_Capabilities::can_create_course_unit( $course_id ),
+		);
+		coursepress_render( 'views/tpl/course-units', $unit_args );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
 		$paged = $this->get_pagenum();

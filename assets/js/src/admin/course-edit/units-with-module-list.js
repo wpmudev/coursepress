@@ -116,6 +116,11 @@
             editModule: function(ev) {
                 var sender, module_id, unit_id, unit;
 
+                // Do not expand if no permission.
+                if ( this.$('.edit-unit').length === 0 ) {
+                    return;
+                }
+
                 sender = this.$(ev.currentTarget);
                 module_id = sender.data('module');
                 unit_id = sender.data('unit');

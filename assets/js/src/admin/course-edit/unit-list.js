@@ -28,7 +28,10 @@
             meta_force_current_unit_successful_completion: false,
             count: 0,
             steps: false,
-            unit_permalink: ''
+            unit_permalink: '',
+            can_update_course_unit: true,
+            can_delete_course_unit: true,
+            can_change_course_unit_status: true,
         };
 
         UnitItem = CoursePress.View.extend({
@@ -231,6 +234,11 @@
                 var unitModel;
 
                 unitModel = this.getUnitModel(cid);
+
+                // Do not expand if no permission.
+                if ( unitModel.get('can_update_course_unit') === false ) {
+                    return;
+                }
 
                 if ( this.editCourseView.unitsview ) {
                     this.editCourseView.unitsview.remove();
