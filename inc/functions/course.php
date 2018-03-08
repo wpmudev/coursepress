@@ -1309,7 +1309,7 @@ function coursepress_get_course_facilitators( $course_id ) {
 function coursepress_delete_course( $course_id ) {
 
 	// Continue only capable.
-	if ( CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+	if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
 		return false;
 	}
 
