@@ -615,10 +615,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request data.
 	 */
 	public function send_email_invite( $request ) {
+
+		$proceed = true;
 		// Do not continue if empty.
 		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
+			$proceed = false;
+		} elseif ( $request->type === 'instructor' && ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+			$proceed = false;
+		} elseif ( $request->type === 'facilitator' && ! CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+			$proceed = false;
+		}
+		// If we can not continue.
+		if ( ! $proceed ) {
 			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 		}
+
 		$args = array(
 			'email' => $request->email,
 			'course_id' => $request->course_id,
@@ -642,15 +653,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
 		}
+		$success = false;
 		switch ( $request->type ) {
 			case 'instructor':
-				$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+					$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				}
 				break;
 			case 'facilitator':
-				$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
-				break;
-			default:
-				$success = false;
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+					$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
+				}
 				break;
 		}
 		// If sent, send success response back.
@@ -678,15 +693,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
 		}
+		$success = false;
 		switch ( $request->type ) {
 			case 'instructor':
-				$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+					$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				}
 				break;
 			case 'facilitator':
-				$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
-				break;
-			default:
-				$success = false;
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+					$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
+				}
 				break;
 		}
 		// If sent, send success response back.

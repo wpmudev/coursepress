@@ -139,7 +139,9 @@
                         <p class="description" id="cp-no-instructor"><?php _e( 'This course currently have no instructors', 'cp' ); ?></p>
                     <?php endif; ?>
                 </div>
-                <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-instructor-selector"><?php _e( 'Add Instructor', 'cp' ); ?></button>
+                <?php if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) : ?>
+                    <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-instructor-selector"><?php _e( 'Add Instructor', 'cp' ); ?></button>
+                <?php endif; ?>
             </div>
 
             <div class="cp-box">
@@ -157,7 +159,9 @@
                         <p class="description" id="cp-no-facilitator"><?php _e( 'This course currently have no facilitators', 'cp' ); ?></p>
                     <?php endif; ?>
                 </div>
-                <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-facilitator-selector"><?php _e( 'Add Facilitators', 'cp' ); ?></button>
+                <?php if ( CoursePress_Data_Capabilities::can_assign_facilitator( $course_id ) ) : ?>
+                    <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-facilitator-selector"><?php _e( 'Add Facilitators', 'cp' ); ?></button>
+                <?php endif; ?>
             </div>
         </div>
     </div>
