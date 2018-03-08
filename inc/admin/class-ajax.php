@@ -1207,7 +1207,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				// Make sure that the user is capable.
 				if ( in_array( $request->which, array( 'trash', 'delete' ) ) && ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
 					continue;
-				} elseif ( in_array( $request->which, array( 'draft', 'publish' ) ) && ! CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+				} elseif ( ! CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 					continue;
 				}
 

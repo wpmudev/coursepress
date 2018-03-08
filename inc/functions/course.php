@@ -1503,20 +1503,8 @@ function coursepress_change_post( $post_id, $status, $type ) {
 	$post_id = absint( $post_id );
 	// Allowed statuses to change.
 	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
-	$capable = false;
-	// Get author of the current post.
-	$author = get_post_field( 'post_author', $post_id );
 
-	if ( ! coursepress_is_type( $post_id, $type ) ) {
-		$capable = false;
-	} elseif ( current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
-		// If current user is capable of updating any notification statuses.
-		$capable = true;
-	} elseif ( $author == get_current_user_id() && current_user_can( 'coursepress_change_my_' . $type . '_status_cap' ) ) {
-		$capable = true;
-	}
-
-	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! coursepress_is_type( $post_id, $type ) ) {
 
 		/**
 		 * Perform actions when post status not changed.
