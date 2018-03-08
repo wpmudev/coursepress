@@ -769,6 +769,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		}
 
 		$args = array(
+			'course_id'          => $course_id,
 			'total_students'     => $total_students,
 			'students'           => $students,
 			'redirect'           => remove_query_arg( 'dummy' ),

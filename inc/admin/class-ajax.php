@@ -1139,6 +1139,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	public function send_student_invite( $request ) {
 		$course_id = $request->course_id;
+		// Do not continue if not capable.
+		if ( ! CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
+			wp_send_json_error( true );
+		}
 		$args = array(
 			'first_name' => $request->first_name,
 			'last_name' => $request->last_name,
@@ -1167,7 +1171,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$success = false;
 		// We need course id and valid email.
 		if ( $request->course_id && is_email( $request->email ) ) {
-			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
+			// Continue only if user can withdraw student.
+			if ( CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
+				$success = coursepress_remove_student_invite( $request->course_id, $request->email );
+			}
 		}
 
 		// Success resoponse with email.
@@ -1218,6 +1225,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	public function add_student_to_course( $request ) {
 		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
+			// Do not continue if not capable.
+			if ( CoursePress_Data_Capabilities::can_add_course_student( $request->course_id ) ) {
+				wp_send_json_error();
+			}
 			$result = coursepress_add_student( $request->student_id, $request->course_id );
 			if ( is_wp_error( $result ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
@@ -1265,6 +1276,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			|| ! is_array( $request->students )
 		) {
 			return;
+		}
+		// Do not continue if this user is not capable.
+		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
+			return array( 'success' => false );
 		}
 		foreach ( $request->students as $student_id ) {
 			coursepress_delete_student( $student_id, $request->course_id );
