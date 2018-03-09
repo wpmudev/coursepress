@@ -114,9 +114,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				// Set permalink to the unit.
 				$unit->unit_permalink = $unit->get_permalink();
 				// Get unit permissions.
-				$unit->can_update_course_unit = CoursePress_Data_Capabilities::can_update_course_unit( $unit->ID );
-				$unit->can_delete_course_unit = CoursePress_Data_Capabilities::can_delete_course_unit( $unit->ID );
-				$unit->can_change_course_unit_status = CoursePress_Data_Capabilities::can_change_course_unit_status( $unit->ID );
+				$unit->can_update_unit = CoursePress_Data_Capabilities::can_update_unit( $unit->ID );
+				$unit->can_delete_unit = CoursePress_Data_Capabilities::can_delete_unit( $unit->ID );
+				$unit->can_change_unit_status = CoursePress_Data_Capabilities::can_change_unit_status( $unit->ID );
 
 				$units[ $pos ] = $unit;
 			}
@@ -202,7 +202,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				// Get post object
 				if ( ! empty( $unit->deleted ) ) {
 					// Do not continue if no permission.
-					if ( ! CoursePress_Data_Capabilities::can_delete_course_unit( $unit->ID ) ) {
+					if ( ! CoursePress_Data_Capabilities::can_delete_unit( $unit->ID ) ) {
 						continue;
 					}
 					// Delete unit here
@@ -216,8 +216,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 				// Check if required capability is set.
 				$can_proceed = empty( $unit->ID ) ?
-					CoursePress_Data_Capabilities::can_create_course_unit( $course_id ) :
-					CoursePress_Data_Capabilities::can_update_course_unit( $unit->ID );
+					CoursePress_Data_Capabilities::can_create_unit( $course_id ) :
+					CoursePress_Data_Capabilities::can_update_unit( $unit->ID );
 				// Do not continue if no permission.
 				if ( ! $can_proceed ) {
 					continue;

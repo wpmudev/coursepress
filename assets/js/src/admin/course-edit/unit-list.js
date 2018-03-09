@@ -29,9 +29,9 @@
             count: 0,
             steps: false,
             unit_permalink: '',
-            can_update_course_unit: true,
-            can_delete_course_unit: true,
-            can_change_course_unit_status: true,
+            can_update_unit: true,
+            can_delete_unit: true,
+            can_change_unit_status: true,
         };
 
         UnitItem = CoursePress.View.extend({
@@ -236,7 +236,7 @@
                 unitModel = this.getUnitModel(cid);
 
                 // Do not expand if no permission.
-                if ( unitModel.get('can_update_course_unit') === false ) {
+                if ( unitModel.get('can_update_unit') === false ) {
                     return;
                 }
 
