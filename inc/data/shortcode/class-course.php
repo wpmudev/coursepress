@@ -273,7 +273,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
 			'label' => __( 'Start Date', 'cp' ),
-			'label_delimiter' => ':',
+			'label_delimiter' => ': ',
 			'label_tag' => 'strong',
 			'date_format' => coursepress_get_option( 'date_format' ),
 			'class' => '',
@@ -290,7 +290,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
 		}
 		if ( $course->course_open_ended ) {
-			$template .= __( 'Already started', 'cp' );
+			$start = $course->__get( 'course_start_date_timestamp' );
+			$today = strtotime( date( 'Y-m-d 23:59:59', time() ) );
+			if ( $start > $today ) {
+				$template .= $this->time2str( $start );
+			} else {
+				$template .= __( 'Already started', 'cp' );
+			}
 		} else {
 			$create_date = date_create( $course->course_start_date );
 			$template   .= date_format( $create_date, $atts['date_format'] );
