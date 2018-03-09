@@ -102,6 +102,14 @@
 																			<td><?php echo $question['title']; ?></td>
 																			<td>
 																				<?php $response = $step->get_user_response( $student_id ); ?>
+																				<?php if ( $question['type'] == 'written' ) :  ?>
+																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][ $qkey ]; ?>
+																						<?php if ( $written_answer ) :  ?>
+																							<?php echo stripslashes( $written_answer ); ?>
+																						<?php else : ?>
+																							<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																						<?php endif; ?>
+																				<?php else : ?>
 																				<?php if ( isset( $response[ $qkey ] ) ) : ?>
 																					<ul class="cp-assessments-answers">
 																						<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
@@ -122,6 +130,7 @@
 																					<ul class="cp-assessments-answers">
 																						<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
 																					</ul>
+																				<?php endif; ?>
 																				<?php endif; ?>
 																			</td>
 																		</tr>
