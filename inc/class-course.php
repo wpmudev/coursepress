@@ -354,6 +354,11 @@ class CoursePress_Course extends CoursePress_Utility {
 			$open = $this->__get( 'course_open_ended' );
 		}
 		if ( $open ) {
+			$start = $this->__get( 'course_start_date_timestamp' );
+			$today = strtotime( date( 'Y-m-d 23:59:59', time() ) );
+			if ( $start > $today ) {
+				return $this->time2str( $start );
+			}
 			return __( 'Open Ended', 'cp' );
 		}
 		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_end_date() ) );
@@ -423,6 +428,9 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( empty( $openEnded )
 			&& $start_date > 0
 			&& $start_date > $time_now ) {
+			return false;
+		}
+		if ( $time_now < $start_date ) {
 			return false;
 		}
 		return true;
