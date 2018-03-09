@@ -521,7 +521,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_create_unit( $user_id = '' ) {
+	public static function can_user_create_unit( $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -551,7 +551,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_create_course_unit( $course_id, $user_id = '' ) {
+	public static function can_create_unit( $course_id, $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -574,7 +574,7 @@ class CoursePress_Data_Capabilities {
 					$return = user_can( $user_id, 'coursepress_update_my_course_unit_cap' );
 				}
 			} elseif ( $is_instructor || $is_facilitator ) {
-				$return = self::can_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+				$return = self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
 			}
 		}
 
@@ -590,7 +590,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_view_course_units( $course_id, $user_id = '' ) {
+	public static function can_view_units( $course_id, $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -617,7 +617,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_update_course_unit( $unit_id = '', $user_id = '' ) {
+	public static function can_update_unit( $unit_id = '', $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -657,7 +657,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_delete_course_unit( $unit_id = '', $user_id = '' ) {
+	public static function can_delete_unit( $unit_id = '', $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -697,7 +697,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_change_course_unit_status( $unit_id = '', $user_id = '' ) {
+	public static function can_change_unit_status( $unit_id = '', $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -1069,7 +1069,7 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
-	 * Can withdraw student?
+	 * Can create notification for all courses?
 	 *
 	 * @param mixed $user_id User ID
 	 *
@@ -1217,7 +1217,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_change_status_notification( $notification, $user_id = '' ) {
+	public static function can_change_notification_status( $notification, $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
@@ -1433,7 +1433,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_change_status_discussion( $discussion, $user_id = '' ) {
+	public static function can_change_discussion_status( $discussion, $user_id = '' ) {
 
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();

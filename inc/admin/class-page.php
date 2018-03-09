@@ -740,7 +740,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$unit_args = array(
 			'steps' => $steps,
 			'course' => $course,
-			'can_create_course_unit' => CoursePress_Data_Capabilities::can_create_course_unit( $course_id ),
+			'can_create_unit' => CoursePress_Data_Capabilities::can_course_unit( $course_id ),
 		);
 		coursepress_render( 'views/tpl/course-units', $unit_args );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );

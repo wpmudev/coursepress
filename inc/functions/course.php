@@ -1492,11 +1492,12 @@ function coursepress_is_type( $post_id, $type ) {
  *
  * @param int $post_id Post ID.
  * @param string $status New status (publish/draft/pending/trash/restore/delete).
- * @param string $type New status (alert/discussion).
+ * @param string $type post type (course/unit/alert/discussion).
+ * @param bool $caps_check Should check capability?
  *
  * @return bool
  */
-function coursepress_change_post( $post_id, $status, $type ) {
+function coursepress_change_post( $post_id, $status, $type, $caps_check = true ) {
 	/**
 	 * sanitize post id
 	 */
@@ -1516,6 +1517,28 @@ function coursepress_change_post( $post_id, $status, $type ) {
 		 */
 		do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
 		return false;
+	}
+
+	// If capability needs to be checked.
+	if ( $caps_check ) {
+		/**
+		 * Check capability for the post.
+		 * Remember you capability checking method name should match
+		 * following format.
+		 * For delete, trash, and restore: can_delete_POSTTYPE
+		 * For other status changes: can_change_POSTTYPE_status
+		 */
+		$cap_method = in_array( $status, array(
+			'trash',
+			'delete',
+			'restore'
+		) ) ? 'can_delete_' . $type : 'can_change_' . $type . '_status';
+		if ( method_exists( 'CoursePress_Data_Capabilities', $cap_method ) && ! CoursePress_Data_Capabilities::$cap_method( $post_id ) ) {
+			// This action hook is documented above.
+			do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
+
+			return false;
+		}
 	}
 
 	switch ( $status ) {
