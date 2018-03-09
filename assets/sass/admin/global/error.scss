@@ -1,4 +1,5 @@
-.coursepress-wrap {
+.coursepress-wrap,
+.coursepress-modal {
     .cp-box {
         &.cp-error {
             position: relative;
@@ -10,12 +11,12 @@
                 left: 5px;
                 color: red;
             }
-
             input,
             textarea,
             select {
                 border-color: red;
                 background-color: rgba(255, 0, 0, 0.02);
+                padding-left: 1.7em;
             }
         }
         &.cp-box-error {
