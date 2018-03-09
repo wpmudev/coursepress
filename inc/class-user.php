@@ -545,7 +545,11 @@ class CoursePress_User extends CoursePress_Utility {
 		$force_pass_completion = $unit->__get( 'force_current_unit_successful_completion' );
 		$completion = coursepress_get_array_val( $progress, 'completion/' . $unit_id );
 		$unit_ratio = $this->get_unit_progress_ratio( $unit, $with_modules );
-		$unit_completion = coursepress_get_array_val( $progress, 'completion/' . $unit_id );
+        $unit_completion = coursepress_get_array_val( $progress, 'completion/' . $unit_id );
+
+        l(array( $unit_id, $with_modules) );
+
+
 		if ( ! $unit_completion ) {
 			$unit_completion = array();
 		}
@@ -554,9 +558,12 @@ class CoursePress_User extends CoursePress_Utility {
 			if ( $modules ) {
 				foreach ( $modules as $module_id => $module ) {
 					$module_progress = 0;
-					$steps_count = 1 + count( $module['steps'] );
-					$module_count = $steps_count;
-					$module_ratio = 100 / $module_count;
+					$steps_count = count( $module['steps'] );
+                    $module_count = $steps_count;
+                    $module_ratio = 100;
+                    if ( 1 < $module_count ) {
+                        $module_ratio = 100 / $module_count;
+                    }
 					$module_seen = coursepress_get_array_val(
 						$progress,
 						'units/' . $unit_id . '/visited_pages/' . $module_id
@@ -617,6 +624,101 @@ class CoursePress_User extends CoursePress_Utility {
 		return $progress;
 	}
 
+    private function validate_steps( $steps, $course_id, $unit_id, $progress, $force_completion, $force_pass_completio ) {
+        $total_steps = count( $steps );
+        if ( 0 === $total_steps ) {
+            return;
+        }
+
+        $required_steps = $assessable_steps = $step_progress = $passed = $answered = $completed_steps = $steps_grades = $steps_completion = $module_progress = 0;
+
+
+		$unit = coursepress_get_unit( $unit_id );
+		$course = coursepress_get_course( $course_id );
+//        $unit_progress_ratio = $this->get_unit_progress_ratio( $unit, $course->is_with_modules() );
+        $step_ratio = 100 / $total_steps;
+
+
+
+        l(array(
+            'total_steps' => $total_steps,
+//            'unit_progress_ratio' => $unit_progress_ratio,
+            'step_ratio' => $step_ratio,
+        ));
+        $steps_completion = array();
+        foreach ( $steps as $step ) {
+            $step_progress = 0;
+            $step_id = $step->__get( 'ID' );
+            /**
+             * Required?
+             */
+            $is_required = $step->__get( 'mandatory' );
+            if ( $is_required ) {
+                $required_steps++;
+            }
+            /**
+             * Assessbled?
+             */
+            $is_assessable = $step->__get( 'assessable' );
+            if ( $is_assessable ) {
+                $assessable_steps++;
+            }
+            /**
+             * answerable
+             */
+            $is_answerable = $step->is_answerable();
+
+            /**
+             * seen?
+             */
+			$step_seen = coursepress_get_array_val(
+				$progress,
+				'completion/' . $unit_id . '/modules_seen/' . $step_id
+            );
+            if ( ! $step_seen ) {
+                continue;
+            }
+            if ( $is_answerable ) {
+//                l($step);
+            } else {
+                $step_progress = 100;
+                $completed_steps++;
+            }
+            $steps_completion = coursepress_set_array_val( $steps_completion, $step_id . '/progress', $step_progress );
+            $module_progress += ( $step_progress * $step_ratio / 100 );
+        }
+
+
+
+
+
+
+			$minimum_grade = $step->__get( 'minimum_grade' );
+			$step_type = $step->__get( 'module_type' );
+
+
+		$completion = array(
+			'required_steps' => $required_steps,
+			'assessable_steps' => $assessable_steps,
+			'total_steps' => $total_steps,
+			'progress' => $step_progress,
+			'passed' => $passed,
+			'answered' => $answered,
+			'average' => $module_progress,
+            'gradable' => 0,
+			'completed_steps' => $completed_steps,
+			'steps_grades' => $steps_grades,
+			'steps' => $steps_completion,
+			'module_progress' => $module_progress,
+        );
+
+//l($completion);
+
+		return $completion;
+    }
+
+
+
 	/**
 	 * Helper method to validate course steps progress.
 	 *
@@ -629,7 +731,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 *
 	 * @return array
 	 */
-	private function validate_steps( $steps, $course_id, $unit_id, $progress, $force_completion, $force_pass_completio ) {
+	private function validate_steps2( $steps, $course_id, $unit_id, $progress, $force_completion, $force_pass_completio ) {
 		$total_steps = count( $steps );
 		$required_steps = 0;
 		$assessable_steps = 0;

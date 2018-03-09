@@ -57,7 +57,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $keys;
 	}
 
-	function setUpStepMeta() {
+	public function setUpStepMeta() {
 		$keys = $this->get_keys();
 		$id = $this->__get( 'ID' );
 
@@ -82,7 +82,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		}
 	}
 
-	function get_settings() {
+	public function get_settings() {
 		$keys = $this->get_keys();
 		$settings = array();
 
@@ -94,7 +94,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $settings;
 	}
 
-	function update_settings( $key, $value ) {
+	public function update_settings( $key, $value ) {
 		$step_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
 
@@ -114,17 +114,17 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $settings;
 	}
 
-	function get_the_title() {
+	public function get_the_title() {
 		return $this->__get( 'post_title' );
 	}
 
-	function get_unit() {
+	public function get_unit() {
 		$unit_id = $this->__get( 'post_parent' );
 
 		return coursepress_get_unit( $unit_id );
 	}
 
-	function get_permalink() {
+	public function get_permalink() {
 		$module_number = $this->__get( 'module_page' );
 
 		if ( ! $module_number ) {
@@ -150,14 +150,22 @@ class CoursePress_Step extends CoursePress_Unit {
 		}
 	}
 
-	function is_answerable() {
-		$module_type = $this->__get( 'module_type' );
-		$is_answerable = preg_match( '%input-%', $module_type );
-
+	public function is_answerable() {
+        $module_type = $this->__get( 'module_type' );
+        /**
+         * All fields with input
+         */
+        $is_answerable = preg_match( '%input-%', $module_type );
+        /**
+         * discussion is an exception and it is answerable too
+         */
+        if ( 'discussion' == $module_type ) {
+            $is_answerable = true;
+        }
 		return $is_answerable;
 	}
 
-	function has_seen_by( $user_id ) {
+	public function has_seen_by( $user_id ) {
 		$user = coursepress_get_user( $user_id );
 
 		$step_id = $this->__get( 'ID' );
@@ -174,7 +182,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/modules_seen/' . $step_id );
 	}
 
-	function is_completed_by( $user_id = 0 ) {
+	public function is_completed_by( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 
 		$step_id   = $this->__get( 'ID' );
@@ -192,7 +200,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return (int) $step_progress >= 100;
 	}
 
-	function is_previous_step_completed_by( $user_id = 0 ) {
+	public function is_previous_step_completed_by( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 		$course_id = $this->__get( 'course_id' );
 
@@ -207,25 +215,25 @@ class CoursePress_Step extends CoursePress_Unit {
 		return true;
 	}
 
-	function is_show_title() {
+	public function is_show_title() {
 		return $this->__get( 'show_title' );
 	}
 
-	function is_required() {
+	public function is_required() {
 		return $this->__get( 'mandatory' );
 	}
 
-	function is_assessable() {
+	public function is_assessable() {
 		return $this->__get( 'assessable' );
 	}
 
-	function get_course() {
+	public function get_course() {
 		$unit = $this->get_unit();
 
 		return $unit->get_course();
 	}
 
-	function get_user_response( $user_id = 0 ) {
+	public function get_user_response( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
@@ -234,7 +242,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return ( isset( $response['response'] ) && ! empty( $response['response'] ) ) ? $response['response'] : false;
 	}
 
-	function get_user_attempts( $user_id = 0 ) {
+	public function get_user_attempts( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
@@ -243,7 +251,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		return ( isset( $response['attempts'] ) && ! empty( $response['attempts'] ) ) ? $response['attempts'] : 0;
 	}
 
-	function get_previous_step() {
+	public function get_previous_step() {
 		$user = coursepress_get_user();
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
@@ -272,11 +280,11 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $prev;
 	}
 
-	function is_preview() {
+	public function is_preview() {
 		return ! empty( $_REQUEST['preview'] );
 	}
 
-	function get_next_step() {
+	public function get_next_step() {
 		$user = coursepress_get_user();
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
@@ -305,10 +313,10 @@ class CoursePress_Step extends CoursePress_Unit {
 	}
 
 	/** Must be overriden in a sub class */
-	function get_question() {}
+	public function get_question() {}
 
 	/** Must be overriden in a sub class */
-	function get_answer_template( $user_id = 0 ) {
+	public function get_answer_template( $user_id = 0 ) {
 		$template = '';
 
 		if ( $this->is_answerable() ) {
@@ -349,9 +357,9 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $template;
 	}
 
-	function validate_response( $response = array() ) {}
+	public function validate_response( $response = array() ) {}
 
-	function template( $user_id = 0 ) {
+	public function template( $user_id = 0 ) {
 		$template = '';
 		$user = coursepress_get_user( $user_id );
 		$course = coursepress_get_course();
@@ -419,7 +427,7 @@ class CoursePress_Step extends CoursePress_Unit {
 	 *
 	 * @return bool Success or Fail?
 	 */
-	function duplicate_step( $unit_id = 0 ) {
+	public function duplicate_step( $unit_id = 0 ) {
 
 		// If in case unit post object is not and ID not found, bail.
 		// Step ID is set when this class is instantiated.
