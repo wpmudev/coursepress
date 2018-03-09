@@ -36,6 +36,10 @@
       @include transition(0.5s);
     }
   }
+  .cp-toggle-input:disabled + .cp-toggle-btn {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   .cp-toggle-box {
     .cp-toggle-btn {
       vertical-align: middle;
