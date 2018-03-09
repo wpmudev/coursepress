@@ -180,9 +180,9 @@
             <div class="cp-flex">
                 <div class="cp-div-flex cp-pad-right cp-div-grey">
                     <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
-                    <input type="text" id="cp-invite-first-name-instructor" placeholder="<?php _e( 'First Name' ); ?>" />
-                    <input type="text" id="cp-invite-last-name-instructor" placeholder="<?php _e( 'Last Name' ); ?>" />
-                    <input type="text" id="cp-invite-email-instructor" placeholder="<?php _e( 'Email' ); ?>" />
+                    <div class="cp-box"><input type="text" id="cp-invite-first-name-instructor" placeholder="<?php _e( 'First Name' ); ?>" /></div>
+                    <div class="cp-box"><input type="text" id="cp-invite-last-name-instructor" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
+                    <div class="cp-box"><input type="text" id="cp-invite-email-instructor" placeholder="<?php _e( 'Email' ); ?>" /></div>
                     <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
                     <p class="cp-invitation-response-instructor inactive">ss</p>
                 </div>
@@ -211,9 +211,9 @@
             <div class="cp-flex">
                 <div class="cp-div-flex cp-pad-right cp-div-grey">
                     <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
-                    <input type="text" id="cp-invite-first-name-facilitator" placeholder="<?php _e( 'First Name' ); ?>" />
-                    <input type="text" id="cp-invite-last-name-facilitator" placeholder="<?php _e( 'Last Name' ); ?>" />
-                    <input type="text" id="cp-invite-email-facilitator" placeholder="<?php _e( 'Email' ); ?>" />
+                    <div class="cp-box"><input type="text" id="cp-invite-first-name-facilitator" placeholder="<?php _e( 'First Name' ); ?>" /></div>
+                    <div class="cp-box"><input type="text" id="cp-invite-last-name-facilitator" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
+                    <div class="cp-box"><input type="text" id="cp-invite-email-facilitator" placeholder="<?php _e( 'Email' ); ?>" /></div>
                     <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
                     <p class="cp-invitation-response-facilitator inactive">ss</p>
                 </div>

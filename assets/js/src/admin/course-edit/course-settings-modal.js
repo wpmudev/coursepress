@@ -12,33 +12,31 @@
             events: {
                 'click .cp-close': 'remove',
                 'click .cp-send-invite': 'sendInvite',
-                'click .cp-assign-user': 'assignUser'
+                'click .cp-assign-user': 'assignUser',
+                'focus input[type=text]': 'removeErrorMarker'
             },
-            initialize: function( options ) {
 
-	            // Set required variables.
+            initialize: function( options ) {
+                // Set required variables.
                 this.course = options.course;
                 this.request = new CoursePress.Request();
-	            this.template_id = options.template_id;
-	            this.type = options.type;
+                this.template_id = options.template_id;
+                this.type = options.type;
                 this.inv_resp = '.cp-invitation-response-' + options.type;
                 this.assgn_resp = '.cp-assign-response-' + options.type;
-
-				// Setup UI elements.
+                // Setup UI elements.
                 this.on( 'view_rendered', this.setUpUI, this );
-
-	            // Handle ajax request responses.
+                // Handle ajax request responses.
                 this.request.on( 'coursepress:success_send_email_invite', this.inviteSuccess, this );
                 this.request.on( 'coursepress:success_assign_to_course', this.assignSuccess, this );
                 this.request.on( 'coursepress:error_send_email_invite', this.inviteError, this );
                 this.request.on( 'coursepress:error_assign_to_course', this.assignError, this );
-
                 this.render();
             },
 
-	        /**
-	         * Setup UI elements.
-	         */
+            /**
+             * Setup UI elements.
+             */
             setUpUI: function () {
                 // Setup ajax select2.
                 this.setupAjaxSelect2(this.$('#cp-course-instructor'), 'instructor');
@@ -61,9 +59,9 @@
                     width: '100%',
                     ajax: {
                         url: win._coursepress.ajaxurl,
-                            dataType: 'json',
-                            delay: 500,
-                            data: function (params) {
+                        dataType: 'json',
+                        delay: 500,
+                        data: function (params) {
                             return {
                                 search: params.term,
                                 _wpnonce: win._coursepress._wpnonce,
@@ -84,7 +82,7 @@
                 });
             },
 
-	        // On render.
+            // On render.
             render: function() {
                 CoursePress.View.prototype.render.apply( this );
                 this.$el.appendTo( 'body' );
@@ -94,21 +92,27 @@
              * Send invitation mail to the email.
              */
             sendInvite: function () {
-
-	            // Email to send the invitation.
-                var email = this.$('#cp-invite-email-' + this.type).val();
-                var first_name = this.$('#cp-invite-first-name-' + this.type).val();
-                var last_name = this.$('#cp-invite-last-name-' + this.type).val();
-                if ( '' !== email && '' !== first_name ) {
+                // Email to send the invitation.
+                var email = this.$('#cp-invite-email-' + this.type);
+                var first_name = this.$('#cp-invite-first-name-' + this.type);
+                var last_name = this.$('#cp-invite-last-name-' + this.type);
+                if ( '' !== email.val() && '' !== first_name.val() ) {
                     this.request.set( {
                         'action': 'send_email_invite',
                         'type': this.type,
-                        'email': email,
-                        'first_name': first_name,
-                        'last_name': last_name,
+                        'email': email.val(),
+                        'first_name': first_name.val(),
+                        'last_name': last_name.val(),
                         'course_id': this.course.course_id
                     } );
                     this.request.save();
+                } else {
+                    if ( '' === email.val() ) {
+                        this.setErrorMarker( email, false );
+                    }
+                    if ( '' === first_name.val() ) {
+                        this.setErrorMarker( first_name, false );
+                    }
                 }
             },
 
@@ -118,7 +122,6 @@
              * @param data
              */
             inviteSuccess: function ( data ) {
-
                 this.$('#cp-invite-first-name-' + this.type).val('');
                 this.$('#cp-invite-last-name-' + this.type).val('');
                 this.$('#cp-invite-email-' + this.type).val('');
@@ -132,7 +135,6 @@
              * @param data
              */
             inviteError: function ( data ) {
-
                 // Show response message.
                 this.showResponse(data, this.inv_resp);
             },
@@ -181,7 +183,6 @@
              * @param data
              */
             assignError: function ( data ) {
-
                 // Show response message.
                 this.showResponse(data, this.assgn_resp);
             },
@@ -193,7 +194,6 @@
              * @param selector
              */
             showResponse: function ( data, selector_class ) {
-
                 var selector = this.$(selector_class);
                 // Show response message.
                 selector.html(data.message).removeClass('inactive');

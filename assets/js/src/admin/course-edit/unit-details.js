@@ -115,7 +115,8 @@
                 this.$('.datepicker').datepicker({
                     dateFormat: 'MM dd, yy',
                     showOtherMonths: true,
-                    selectOtherMonths: true
+                    selectOtherMonths: true,
+                    firstDay: window._coursepress.wp.start_of_week
                 });
             },
 
