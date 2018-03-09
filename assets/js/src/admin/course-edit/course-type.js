@@ -67,7 +67,8 @@
                 this.$('.datepicker').datepicker({
                     dateFormat: 'MM dd, yy',
                     showOtherMonths: true,
-                    selectOtherMonths: true
+                    selectOtherMonths: true,
+                    firstDay: window._coursepress.wp.start_of_week
                 });
                 if ( this.model.get( 'payment_paid_course') ) {
                     this.$('[name="meta_payment_paid_course"]').trigger( 'change' );

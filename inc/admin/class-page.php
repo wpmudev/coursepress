@@ -259,6 +259,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
 			'plugin_url' => $CoursePress->plugin_url,
+			/**
+			 * WordPress
+			 */
+			'wp' => array(
+				'date_format' => get_option( 'date_format', 'Y-m-d' ),
+				'start_of_week' => get_option( 'start_of_week', 0 ),
+				'time_format' => get_option( 'time_format', 'H:i' ),
+				'WPLANG' => get_option( 'WPLANG', 'en' ),
+			),
 			// Common use texts
 			'text' => array(
 				'untitled' => __( 'Untitled', 'cp' ),
