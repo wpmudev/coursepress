@@ -256,7 +256,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	public function get_feature_image_url() {
-		l( $this->__get( 'listing_image' ) );
 		return $this->__get( 'listing_image' );
 	}
 
