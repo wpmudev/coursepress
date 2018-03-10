@@ -26,7 +26,7 @@ class CoursePress_Data_Capabilities {
 			'coursepress_courses_cap' => 1,
 			'coursepress_instructors_cap' => 0, // DEPRECATED
 			'coursepress_students_cap' => 1,
-			'coursepress_assessment_cap' => 1,
+			'coursepress_assessments_cap' => 1,
 			'coursepress_reports_cap' => 1,
 			'coursepress_notifications_cap' => 1,
 			'coursepress_discussions_cap' => 1,
