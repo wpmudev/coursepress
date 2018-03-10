@@ -94,6 +94,21 @@
 <form method="post" id="coursepress-forum-form" >
 <div class="wrap coursepress-wrap coursepress-notifications" id="coursepress-notifications">
     <h1 class="wp-heading-inline"><?php $forum_id ? esc_html_e( 'Edit Forum', 'cp' ):esc_html_e( 'Create new', 'cp' ); ?></h1>
+	<?php if ( !empty( $forum_created ) ) { ?>
+		<div class="notice notice-success"><p>
+			<?php
+			$url = add_query_arg(
+				array(
+					'page' => $page,
+					$id_name => $forum_created,
+				),
+				admin_url( 'admin.php' )
+			);
+			
+			printf( __( 'Forum created. %sEdit forum%s', 'cp' ), '<a href="' . $url . '">', '</a>' );
+			?>
+		</p></div>
+	<?php } ?>
     <div class="coursepress-page">
 <?php
 		$option_name = sprintf( 'coursepress_%s', basename( __FILE__, '.php' ) );
