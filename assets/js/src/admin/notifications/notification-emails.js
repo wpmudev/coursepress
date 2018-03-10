@@ -4,8 +4,6 @@
 	'use strict';
 
 	CoursePress.Define( 'NotificationEmails', function( $, doc, win ) {
-        var contentEditor;
-
 		return CoursePress.View.extend({
 			template_id: 'coursepress-notification-emails-tpl',
 			el: $('#notification-emails'),
@@ -16,6 +14,7 @@
 				'click ul#cp-notifications-students li': 'unSelectStudent',
 				'click .cp-send-email': 'sendEmail',
 			},
+			content: '',
 
 			// Initialize.
 			initialize: function() {
@@ -24,6 +23,8 @@
 				// Update units and students based on selections.
 				this.request.on( 'coursepress:success_get_notification_units_students', this.updateUnitsStudents, this );
 				this.request.on( 'coursepress:success_get_notification_students', this.updateStudents, this );
+				this.request.on( 'coursepress:success_send_notification_email', this.successSend, this );
+				this.request.on( 'coursepress:error_send_notification_email', this.errorSend, this );
 				this.render();
 			},
 
@@ -38,11 +39,18 @@
 					width: '100%',
 					data: []
 				});
-                win.setTimeout( function() {
-                    if ( window.tinyMCE.get( 'notification_content' ) ) {
-                        contentEditor = window.tinyMCE.get( 'notification_content' );
-                    }
-                }, 1000 );
+				this.initVisualEditor();
+			},
+
+			initVisualEditor: function() {
+				self = this;
+				this.visualEditor({
+				    content: '',
+				    container: this.$('#notification_content').empty(),
+				    callback: function( content ) {
+					self.content = content;
+				    }
+				});
 			},
 
 			// Get units and students on course selection.
@@ -120,7 +128,9 @@
 
 			// Send email notification.
 			sendEmail: function ( ev ) {
-				var content = contentEditor.getContent(),
+				ev.preventDefault();
+				ev.stopImmediatePropagation();
+				var content = this.content,
 					title = this.$('#notification-title').val(),
 					students = [],
 					selector = this.$('#cp-notifications-students li');
@@ -153,10 +163,40 @@
 						'title': title,
 						'content': content,
 					} );
-					this.request.on( 'coursepress:success_send_notification_email', this.afterEmail, this );
-					this.request.on( 'coursepress:error_send_notification_email', this.afterEmail, this );
 					this.request.save();
 				}
+
+			},
+			
+			//Show sucess alert after sending email
+			successSend: function ( data ) {
+			    if ( data.message !== 'undefined') {
+				new CoursePress.PopUp({
+				    type: 'info',
+				    message: data.message,
+				});
+			    }
+			    this.clearForm();
+			    this.afterEmail();
+			},
+
+			//Show error alert after sending email
+			errorSend: function ( data ) {
+			    if ( data.message !== 'undefined') {
+				new CoursePress.PopUp({
+				    type: 'error',
+				    message: data.message,
+				});
+			    }
+			    this.afterEmail();
+			},
+
+
+			// Clear field values.
+			clearForm: function () {
+				this.initVisualEditor();
+				this.$('#notification-title').val('');
+				this.$('#cp-course').val('0').trigger('change');
 			},
 
 			// After email notification.
