@@ -135,8 +135,8 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		} else {
 			$course_url = add_query_arg(
 				array(
-					'action' => 'enroll_student',
-					'_wpnonce' => wp_create_nonce( 'enroll_student' ),
+					'action' => 'coursepress_enroll',
+					'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 				),
 				$course_url
 			);

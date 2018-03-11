@@ -78,16 +78,17 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	public function check_exists() {
 		$is_404 = false;
 		$type = $this->__get( 'type' );
+		$course_id = !empty( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : get_the_ID();
 
 		if (
 			'single-course' === $type
-			&& isset( $_REQUEST['course_id'] )
+			&& !empty( $course_id )
 			&& isset( $_REQUEST['action'] )
 			&& 'coursepress_enroll' == $_REQUEST['action']
 		) {
-			$result = coursepress_try_to_add_student( $_REQUEST['course_id'] );
+			$result = coursepress_try_to_add_student( $course_id );
 			if ( true === $result ) {
-				$course = coursepress_get_course( $_REQUEST['course_id'] );
+				$course = coursepress_get_course( $course_id );
 				$redirect = $course->get_units_url();
 				wp_safe_redirect( $redirect );
 				exit;

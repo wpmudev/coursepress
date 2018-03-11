@@ -633,15 +633,28 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 }
 
 function coursepress_wp_login_form() {
-	$redirect_after_login = coursepress_get_setting( 'general/redirect_after_login' );
-	$redirect             = '';
-	if ( $redirect_after_login ) {
-		$redirect = coursepress_get_dashboard_url();
+	$redirect = coursepress_get_redirect_to();
+	if ( ! $redirect ) {
+		$redirect_after_login = coursepress_get_setting( 'general/redirect_after_login' );
+		if ( $redirect_after_login ) {
+			$redirect = coursepress_get_dashboard_url();
+		}
 	}
 	$args = array(
 		'redirect' => $redirect,
 	);
 	wp_login_form( $args );
+}
+
+function coursepress_get_redirect_to() {
+	$redirect_to = '';
+	if ( isset( $_REQUEST['redirect_to'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
+		if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'redirect_to' ) ) {
+			$redirect_to = $_REQUEST['redirect_to'];
+		}
+	}
+	
+	return $redirect_to;
 }
 
 /**
