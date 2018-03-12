@@ -6,12 +6,12 @@ function coursepress_visual_editor( $content, $id, $settings = array() ) {
     wp_editor( $content, $id, $settings );
 }
 
-function coursepress_teeny_editor( $content, $id, $settings = array() ) {
-    $settings['teeny'] = true;
-    $settings['media_buttons'] = false;
-
-    coursepress_visual_editor( $content, $id, $settings );
-}
+//function coursepress_teeny_editor( $content, $id, $settings = array() ) {
+//    $settings['teeny'] = true;
+//    $settings['media_buttons'] = false;
+//
+//    coursepress_visual_editor( $content, $id, $settings );
+//}
 
 /**
  * Send email invitation to the instructor/facilitator.

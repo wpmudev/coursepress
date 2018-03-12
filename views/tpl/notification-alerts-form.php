@@ -48,8 +48,7 @@
 			</div>
 		</div>
 		<div class="box-inner-content">
-			<?php coursepress_teeny_editor( '', 'alert_content', array( 'textarea_name' => 'alert_content', 'textarea_rows' => 5 ) ); ?>
-                        <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
+			<div id="alert_content"></div>
 		</div>
 	</div>
 

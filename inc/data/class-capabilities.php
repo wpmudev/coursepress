@@ -26,7 +26,7 @@ class CoursePress_Data_Capabilities {
 			'coursepress_courses_cap' => 1,
 			'coursepress_instructors_cap' => 0, // DEPRECATED
 			'coursepress_students_cap' => 1,
-			'coursepress_assessment_cap' => 1,
+			'coursepress_assessments_cap' => 1,
 			'coursepress_reports_cap' => 1,
 			'coursepress_notifications_cap' => 1,
 			'coursepress_discussions_cap' => 1,
@@ -110,6 +110,7 @@ class CoursePress_Data_Capabilities {
 			'publish_pages' => 0,
 			'publish_posts' => 0,
 			'edit_comments' => 1,
+			'read' => 1,
 		),
 	);
 
@@ -1745,9 +1746,6 @@ class CoursePress_Data_Capabilities {
 		// Do not use reset_user_capabilities()
 		// Very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
-
-		// no need to add READ capability as all WP users have this up to Subscriber level
-		// $user_obj->add_cap( 'read' );
 
 		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files

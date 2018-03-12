@@ -173,19 +173,19 @@
 
                     cid = unit.model.get('cid');
 
-                    if ( unit.unitDetails ) {
-                        // Let's trigger per unit validation first
-                        if ( ! unit.unitDetails.validateUnit() ) {
-                            error += 1;
-                        }
-                    } else if ( ! error ) {
+//                    if ( unit.unitDetails ) {
+//                        // Let's trigger per unit validation first
+//                        if ( ! unit.unitDetails.validateUnit() ) {
+//                            error += 1;
+//                        }
+//                    } else if ( ! error ) {
                         // Check per model if no errors found
                         model = this.editCourse.unitList.unitModels[cid];
 
-                        if ( ! model.get('post_title') ) {
+                        if ( ! model.get('post_title') || 'Untitled' === model.get('post_title') ) {
                             error_msg.no_title = win._coursepress.text.unit.no_title;
                         } else if ( model.get('meta_use_feature_image') &&
-                            ! model.get('meta_feature_image') ) {
+                            ! model.get('meta_unit_feature_image') ) {
                             error_msg.no_feature = win._coursepress.text.unit.no_feature_image;
                         } else if ( model.get('meta_use_description') &&
                             ! model.get('post_content') ) {
@@ -193,27 +193,28 @@
                         } else if ( this.with_modules ) {
                             modules = model.get('modules');
 
-                            if ( ! modules || _.keys(modules).length ) {
+                            if ( ! modules || ! _.keys(modules).length ) {
                                 error_msg.no_modules = win._coursepress.text.unit.no_modules;
                             }
                         } else if ( ! this.with_modules ) {
                             steps = model.get('steps');
 
-                            if ( ! steps || _.keys(steps).length ) {
+                            if ( ! steps || ! _.keys(steps).length ) {
                                 error_msg.no_steps = win._coursepress.text.unit.no_steps;
                             }
                         }
-                    }
+//                    }
                 }, this );
-
-
-                if ( ! error ) {
+                var array_error_msg = $.map( error_msg, function(value) {
+                    return [value];
+                });
+                if ( ! error && ! array_error_msg.length ) {
                     this.editCourse.unitList.updateUnits();
                 } else {
-                    if ( error_msg.length ) {
+                    if ( array_error_msg.length ) {
                         popup = new CoursePress.PopUp({
                             type: 'warning',
-                            message: error_msg.join('<br/>')
+                            message: array_error_msg.join('<br/>')
                         });
                     }
                 }

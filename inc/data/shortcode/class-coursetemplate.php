@@ -78,6 +78,13 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		if ( is_wp_error( $course ) ) {
 			return '';
 		}
+		// Remove enroll button for instructors/facilitators/admins.
+		if ( is_user_logged_in() ) {
+			$student = coursepress_get_user();
+			if ( $student->has_access_at( $course_id ) ) {
+				return '';
+			}
+		}
 		$list_page = coursepress_is_true( $atts['list_page'] );
 		$class = sanitize_html_class( $atts['class'] );
 		$course_url = $course->get_permalink();
@@ -115,7 +122,6 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$continue_learning_link = null;
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
-			$student = coursepress_get_user();
 			$student_enrolled = $student->is_enrolled_at( $course_id );
 			$is_instructor = $student->is_instructor_at( $course_id );
 			$course_progress = $student->get_course_progress( $course_id );
@@ -135,8 +141,8 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		} else {
 			$course_url = add_query_arg(
 				array(
-					'action' => 'enroll_student',
-					'_wpnonce' => wp_create_nonce( 'enroll_student' ),
+					'action' => 'coursepress_enroll',
+					'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 				),
 				$course_url
 			);
@@ -442,15 +448,6 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					break;
 			}
 			$button = $button_pre . $button . $button_post;
-		}
-		// Remove enrol button for instructors.
-		if ( is_user_logged_in() ) {
-			if ( empty( $student ) ) {
-				$student = coursepress_get_user();
-			}
-			if ( $student->is_instructor_at( $course_id ) ) {
-				return '';
-			}
 		}
 		// Wrap button in form if needed.
 		if ( $is_form ) {

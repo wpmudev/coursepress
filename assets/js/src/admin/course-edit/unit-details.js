@@ -158,7 +158,6 @@
             updateUnitCollection: function () {
                 // Set the model back to the collection
                 this.editCourseView.unitList.unitModels[this.model.cid] = this.model;
-                this.editCourseView.unitList.units[this.model.cid].unitDetails.model = this.model;
             }
         });
     });

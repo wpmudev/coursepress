@@ -1411,10 +1411,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				$content .= ob_get_clean();
 
 				$redirect_to = CoursePress_Core::get_slug( 'student_dashboard', true );
-				if ( isset( $_REQUEST['redirect_to'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
-					if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'redirect_to' ) ) {
-						$redirect_to = $_REQUEST['redirect_to'];
-					}
+				if ( $redirect = coursepress_get_redirect_to() ) {
+					$redirect_to = $redirect;
 				}
 
 				$content .= '<label class="signup-link full">' . ( $this->users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'cp' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'cp' ), '</a>' ) : '' ) . '</label>';
