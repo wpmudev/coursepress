@@ -70,7 +70,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'post_title' => '',
 			'post_content' => '',
 			'course_id' => 0,
-			$this->id_name => 0,
+			'forum_id' => 0,
 			'unit_id' => 'course',
 			'email_notification' => 'yes',
 			'thread_comments_depth' => 5,
@@ -83,12 +83,17 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		);
 		if ( isset( $forum_id ) ) {
 			if ( ! empty( $forum_id ) || 0 === $forum_id ) {
-				$forum_id = $this->update( $forum_id );
+				$_forum_id = $this->update( $forum_id );
 			}
+			if ( $_forum_id !== $forum_id ) {
+				$args['forum_created'] = $_forum_id;
+				$args['id_name'] = $this->id_name;
+			}
+
 			$post = get_post( $forum_id );
 			if ( is_a( $post, 'WP_Post' ) ) {
 				if ( $this->post_type == $post->post_type ) {
-					$args[ $this->id_name ] = $post->ID;
+					$args['forum_id'] = $post->ID;
 					$args['course_id'] = $post->post_parent;
 					$args['post_title'] = $post->post_title;
 					$args['post_content'] = stripslashes( $post->post_content );
