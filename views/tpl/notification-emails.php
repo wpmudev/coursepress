@@ -60,8 +60,9 @@
 				<h3 class="label"><?php _e( 'Email body', 'cp' ); ?></h3>
 			</div>
 		</div>
-		<?php coursepress_teeny_editor( '', 'notification_content', array( 'textarea_name' => 'notification_content', 'textarea_rows' => 5 ) ); ?>
-        <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
+		<div class="box-inner-content">
+			<div id="notification_content"></div>
+		</div>
 	</div>
 
 	<div class="course-footer">
