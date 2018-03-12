@@ -205,10 +205,9 @@
                         }
 //                    }
                 }, this );
-
-		var array_error_msg = $.map( error_msg, function(value, index) {
-		    return [value];
-		});
+                var array_error_msg = $.map( error_msg, function(value) {
+                    return [value];
+                });
                 if ( ! error && ! array_error_msg.length ) {
                     this.editCourse.unitList.updateUnits();
                 } else {

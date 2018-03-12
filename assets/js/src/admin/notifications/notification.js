@@ -6,7 +6,7 @@
 	/**
 	 * Notifications pages including sub pages.
 	 */
-	CoursePress.Define( 'Notification', function( $, doc, win ) {
+	CoursePress.Define( 'Notification', function( $ ) {
 		var Notification;
 
 		Notification = CoursePress.View.extend( {

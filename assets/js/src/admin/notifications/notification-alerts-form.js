@@ -3,7 +3,7 @@
 (function() {
 	'use strict';
 
-	CoursePress.Define( 'NotificationAlertsForm', function( $, doc, win ) {
+	CoursePress.Define( 'NotificationAlertsForm', function( $ ) {
 		return CoursePress.View.extend({
 			template_id: 'coursepress-notification-alerts-form-tpl',
 			el: $('#notification-alerts_form'),
@@ -47,7 +47,7 @@
 			},
 
 			initVisualEditor: function( content ) {
-				self = this;
+				var self = this;
 				self.content = content;
 				this.visualEditor({
 				    content: content,

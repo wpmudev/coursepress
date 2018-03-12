@@ -43,7 +43,7 @@
 			},
 
 			initVisualEditor: function() {
-				self = this;
+				var self = this;
 				this.visualEditor({
 				    content: '',
 				    container: this.$('#notification_content').empty(),
