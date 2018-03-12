@@ -7,7 +7,7 @@
 </div>
 <?php } else { ?>
 		<form method="get" class="cp-search-form" id="cp-search-form">
-			<div class="cp-flex">
+			<div class="cp-flex cp-students">
 				<div class="cp-div">
 					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
 					<select id="course_id" name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">

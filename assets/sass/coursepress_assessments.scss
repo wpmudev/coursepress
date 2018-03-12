@@ -5,10 +5,35 @@
     .coursepress-page {
         .cp-flex {
             margin-bottom: 12px;
-            .cp-div {
-                min-width: 17%;
-                &.cp-input-group-div {
-                    min-width: 33%;
+            &.cp-students {
+                @media screen {
+                    @media (max-width: $wp_admin_width_to_hide_left_menu) {
+                        display: block;
+                    }
+                }
+                .cp-div {
+                    width: 30%;
+                    @media screen {
+                        @media (max-width: $wp_admin_width_to_hide_left_menu) {
+                            width: 100%;
+                            margin-left: 0;
+                            padding-bottom: 1em;
+                        }
+                    }
+                    .select2-selection--single {
+                        min-width: auto;
+                    }
+                }
+            }
+        }
+        #cp-search-form {
+            @media screen {
+                @media (max-width: 450px) {
+                    .cp-input-clear {
+                        input[name=s] {
+                            width: 170px;
+                        }
+                    }
                 }
             }
         }
@@ -180,6 +205,18 @@
             .column-reports {
                 a {
                     padding: 8px;
+                }
+            }
+        }
+        @media screen {
+            @media (max-width: $wp_admin_width_to_hide_left_menu) {
+                .column-last_active {
+                    display: none;
+                }
+            }
+            @media (max-width: 500px) {
+                .column-modules_progress {
+                    display: none;
                 }
             }
         }
