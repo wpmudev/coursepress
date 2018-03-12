@@ -1116,15 +1116,10 @@ class CoursePress_Data_Capabilities {
 		// This filter is documented in include/coursepress/helper/class-setting.php
 		$capability_my = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
 		$capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
-		if ( ! is_object( $course ) ) {
-			$return = user_can( $user_id, $capability_my ) || user_can( $user_id, $capability_assigned );
-
-		} else {
-			if ( self::is_course_creator( $course, $user_id ) ) {
-				$return = user_can( $user_id, $capability_my );
-			} elseif ( self::is_course_instructor( $course, $user_id ) ) {
-				$return = user_can( $user_id, $capability_assigned );
-			}
+		if ( self::is_course_creator( $course, $user_id ) ) {
+			$return = user_can( $user_id, $capability_my );
+		} elseif ( self::is_course_instructor( $course, $user_id ) ) {
+			$return = user_can( $user_id, $capability_assigned );
 		}
 
 		return $return;
