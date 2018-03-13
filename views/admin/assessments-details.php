@@ -92,6 +92,19 @@
 																		<?php endif; ?>
 																	</th>
 																</tr>
+                                                                    <?php
+																	if ( $step->type === 'fileupload' ) {  ?>
+																		<tr>
+																			<td colspan="3">
+																				<?php $uploaded_files = $step->get_user_response( $student_id ); ?>
+																				<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
+																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
+																				<?php else : ?>
+																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																				<?php endif; ?>
+																			</td>
+                                                                        </tr>
+																	<?php } ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
