@@ -319,7 +319,7 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			$return = true;
 		} else {
-			$return = ! empty( $current_user->allcaps['coursepress_courses_cap'] );
+			$return = ! empty( $current_user->allcaps['instructor']['coursepress_courses_cap'] );
 		}
 
 		return $return;

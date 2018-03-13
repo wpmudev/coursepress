@@ -12,7 +12,9 @@
 <div class="wrap coursepress-wrap coursepress-courses" id="coursepress-courselist">
     <h1 class="wp-heading-inline">
         <?php _e( 'Courses', 'cp' ); ?>
-        <a href="<?php echo $course_edit_link; ?>" class="cp-btn cp-bordered-btn"><?php echo $course_post_type_object->labels->add_new_item; ?></a>
+        <?php if ( CoursePress_Data_Capabilities::can_create_course() ) : ?>
+            <a href="<?php echo $course_edit_link; ?>" class="cp-btn cp-bordered-btn"><?php echo $course_post_type_object->labels->add_new_item; ?></a>
+        <?php endif; ?>
     </h1>
 
     <div class="coursepress-page">
