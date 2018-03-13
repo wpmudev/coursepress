@@ -53,13 +53,13 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 	public function get_course_instructors( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'avatar_size' => 42,
+			'avatar_size' => 80,
 			'default_avatar' => '',
 			'label' => __( 'Instructor', 'cp' ),
 			'label_delimiter' => ':',
 			'label_plural' => __( 'Instructors', 'cp' ),
 			'label_tag' => 'h3',
-			'link_all' => false,
+			'link_all' => true,
 			'link_text' => __( 'View Profile', 'cp' ),
 			'list_separator' => ', ',
 			'show_divider' => true,
@@ -67,6 +67,9 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 			'summary_length' => 50,
 		), $atts, 'course_instructors' );
 		$course = coursepress_get_course( $atts['course_id'] );
+		if ( is_wp_error( $course ) ) {
+			return '';
+		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
@@ -87,19 +90,29 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 		}
 		$instructors_template = array();
 		foreach ( $instructors as $instructor ) {
-			// @var $instructor CoursePress_User
 			$template = '';
 			if ( 'block' == $atts['style'] ) {
-				$template .= $instructor->get_avatar( $atts['avatar_size'] );
+				$template .= sprintf(
+					'<div class="instructor instructor-%d instructor-%s">',
+					esc_attr( $instructor->ID ),
+					esc_attr( $instructor->user_nicename )
+				);
+				$template .= $instructor->get_avatar( $atts['avatar_size'], $atts['default_avatar'] );
 			}
 			$link = $instructor->get_instructor_profile_link();
-			if ( ! $link_all ) {
 				$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
+			if ( $link_all ) {
 				$template .= $this->create_html( 'a', $attr, $instructor->get_name() );
 			} else {
 				$template .= $instructor->get_name();
+				if ( 'block' === $atts['style'] ) {
+					$template .= $this->create_html( 'a', $attr, $atts['link_text'] );
+				}
 			}
 			$instructors_template[] = $template;
+			if ( 'block' == $atts['style'] ) {
+				$template .= '</div>';
+			}
 		}
 		if ( 'flat' == $atts['style'] ) {
 			$templates .= ' ';
