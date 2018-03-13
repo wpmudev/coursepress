@@ -1093,12 +1093,12 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	/**
 	 * Helper function to load registration process/validation if user is not logged-in.
 	 **/
-	public function process_registration_form() {
+    public function process_registration_form() {
         if ( ! is_user_logged_in() ) {
-            $user_login = CoursePress_UserLogin();
-			$user_login->process_registration_form();
-		}
-	}
+            $user_login = new CoursePress_UserLogin();
+            $user_login->process_registration_form();
+        }
+    }
 
 	/**
 	 * CoursePress course signup.

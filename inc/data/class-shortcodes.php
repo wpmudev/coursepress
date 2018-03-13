@@ -239,8 +239,8 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'optional_attr' => array(
 					array(
 						'attr'        => 'date_format',
-						'description' => __( 'PHP style date format.', 'cp' ),
-						'default'     => __( 'WordPress setting', 'cp' ),
+						'description' => __( 'PHP style date format. If empty, then date will be shown as relative.', 'cp' ),
+						'default'     => __( 'Empty', 'cp' ),
 					),
 					array(
 						'attr'        => 'label',
