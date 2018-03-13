@@ -64,6 +64,7 @@
 
             uploadCourseError: function() {
                 this.uploadCourseSuccess();
+                this.errorContainer.html( win._coursepress.text.importing_failed ).show();
             },
 
             uploadCourse: function( data ) {
