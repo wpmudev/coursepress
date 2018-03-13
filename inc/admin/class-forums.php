@@ -203,6 +203,14 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_action ) ) {
 			return $forum_id;
 		}
+		// Check capabilities.
+		if( ! empty( $forum_id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $forum_id ) ) {
+			return $forum_id;
+		} elseif ( ! empty( $_POST['course_id'] ) && ! CoursePress_Data_Capabilities::can_add_discussion( (int) $_POST['course_id'] ) ) {
+			return $forum_id;
+		} elseif ( ! CoursePress_Data_Capabilities::can_add_discussions() ) {
+			return $forum_id;
+		}
 		$postarr = array(
 			'ID' => $_POST[ $this->id_name ],
 			'post_title' => sanitize_text_field( isset( $_POST['post_title'] )? $_POST['post_title']:'' ),
