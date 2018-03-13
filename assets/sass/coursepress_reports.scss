@@ -17,8 +17,65 @@
                 padding-right: 5px;
             }
         }
+        #cp-search-form {
+            .cp-flex {
+                @media screen {
+                    @media (max-width: $wp_admin_width_to_hide_left_menu) {
+                        display: block;
+                    }
+                }
+                .cp-div {
+                    @media screen {
+                        @media (max-width: $wp_admin_width_to_hide_left_menu) {
+                            width: 100%;
+                            margin-left: 0;
+                            padding-bottom: 1em;
+                        }
+                    }
+                    .select2-selection--single {
+                        min-width: auto;
+                    }
+                }
+            }
+        }
         .coursepress-table {
             margin-bottom: 2em;
+            @media screen {
+                @media (max-width: 600px) {
+                    .column-id {
+                        display: none;
+                    }
+                }
+                @media (max-width: 550px) {
+                    .column-responses {
+                        display: none;
+                    }
+                }
+                @media (max-width: 500px) {
+                    .column-student {
+                        .gravatar {
+                            display: none;
+                        }
+                    }
+                    thead {
+                        .column-student {
+                            span {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+                @media (max-width: 450px) {
+                    .column-average {
+                        display: none;
+                    }
+                    .column-student {
+                        .display_name {
+                            display: none;
+                        }
+                    }
+                }
+            }
             tbody {
                 .column-answered,
                 .column-average,

@@ -20,7 +20,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	function columns() {
 		$columns = array(
 			'ID' => __( 'ID', 'cp' ),
-			'student' => __( 'Student Name', 'cp' ),
+			'student' => __( '<span>Student </span>Name', 'cp' ),
 			'responses' => __( 'Responses', 'cp' ),
 			'average' => __( 'Average', 'cp' ),
 			'download' => __( 'Download', 'cp' ),
