@@ -381,7 +381,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( $open_ended ) {
 			return __( 'Anytime', 'cp' );
 		}
-		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
+		$start = $this->get_enrollment_start_date();
+		$end = $this->get_enrollment_end_date();
+		if ( $start == $end ) {
+			return sprintf( __( 'Only %s', 'cp' ), $start );
+		}
+		return implode( $separator, array( $start, $end ) );
 	}
 
 	public function get_course_language() {
