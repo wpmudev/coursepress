@@ -580,7 +580,7 @@ You can review course material here::
 
 Best wishes,
 The %4$s Team', 'coursepress' ),
-				'FIRST_NAME',
+				'STUDENT_FIRST_NAME',
 				'COURSE_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>',
 				'WEBSITE_ADDRESS'

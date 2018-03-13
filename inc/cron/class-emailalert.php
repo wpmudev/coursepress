@@ -503,14 +503,6 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 			'notified' => self::META_NOTICE_PREFIX . $notice_key,
 		);
 
-		if ( is_multisite() ) {
-
-			global $wpdb;
-
-			$keys['enrolled'] = $wpdb->prefix . $keys['enrolled'];
-			$keys['notified'] = $wpdb->prefix . $keys['notified'];
-		}
-
 		return $keys;
 	}
 
