@@ -182,8 +182,8 @@ class CoursePress_User extends CoursePress_Utility {
 		return implode( ' ', $names );
 	}
 
-	public function get_avatar( $size = 42 ) {
-		$avatar = get_avatar( $this->__get( 'user_email' ), $size );
+	public function get_avatar( $size = 42, $default = null ) {
+		$avatar = get_avatar( $this->__get( 'user_email' ), $size, $default );
 		return $avatar;
 	}
 
@@ -308,7 +308,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		if ( empty( $id ) ) {
 			return;
-		}+
+		} +
 
 		$passcode = filter_input( INPUT_POST, 'course_passcode' );
 		$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
