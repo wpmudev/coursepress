@@ -225,6 +225,8 @@ class CoursePress_Email extends CoursePress_Utility {
 				'COURSE_OVERVIEW' => '',
 				'BLOG_NAME' => '',
 				'WEBSITE_ADDRESS' => '',
+				'STUDENT_FIRST_NAME' => '',
+				'STUDENT_LAST_NAME' => '',
 				'UNSUBSCRIBE_LINK' => '',
 			)
 		);
@@ -580,7 +582,7 @@ You can review course material here::
 
 Best wishes,
 The %4$s Team', 'coursepress' ),
-				'FIRST_NAME',
+				'STUDENT_FIRST_NAME',
 				'COURSE_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>',
 				'WEBSITE_ADDRESS'
