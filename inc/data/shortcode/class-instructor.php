@@ -90,6 +90,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 		}
 		$instructors_template = array();
 		foreach ( $instructors as $instructor ) {
+			$link = $instructor->get_instructor_profile_link();
 			$template = '';
 			if ( 'block' == $atts['style'] ) {
 				$template .= sprintf(
@@ -99,8 +100,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 				);
 				$template .= $instructor->get_avatar( $atts['avatar_size'], $atts['default_avatar'] );
 			}
-			$link = $instructor->get_instructor_profile_link();
-				$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
+			$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
 			if ( $link_all ) {
 				$template .= $this->create_html( 'a', $attr, $instructor->get_name() );
 			} else {
@@ -109,15 +109,30 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 					$template .= $this->create_html( 'a', $attr, $atts['link_text'] );
 				}
 			}
-			$instructors_template[] = $template;
 			if ( 'block' == $atts['style'] ) {
+				if ( $atts['summary_length'] && isset( $instructor->description ) && $instructor->description ) {
+					$description = wp_trim_words( $instructor->description, $atts['summary_length'] );
+					if ( $link_all ) {
+						$attr = array( 'href' => esc_url_raw( $link ) );
+						$description = $this->create_html( 'a', $attr, $description );
+					}
+					$template .= $this->create_html( 'div', array( 'class' => 'description' ), $description );
+				}
 				$template .= '</div>';
 			}
+			$instructors_template[] = $template;
 		}
 		if ( 'flat' == $atts['style'] ) {
 			$templates .= ' ';
 		}
-		$templates .= implode( $atts['list_separator'], $instructors_template );
+		$separator = $atts['list_separator'];
+		if ( 'block' == $atts['style'] ) {
+			$separator = '<hr class="clear" />';
+		}
+		if ( ! coursepress_is_true( $atts['show_divider'] ) ) {
+			$separator = '';
+		}
+		$templates .= implode( $separator, $instructors_template );
 		return $this->create_html( 'div', array( 'class' => implode( ' ', $class ) ), $templates );
 	}
 
