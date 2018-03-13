@@ -169,14 +169,18 @@
 												<?php foreach ( $unit->modules as $module_id => $module ) : ?>
 													<div class="cp-assessments-table-container inactive">
 														<table class="cp-assessments-questions-expanded">
+															<tr class="module-title">
+																<th colspan="3"><?php echo $module['title']; ?></th>
+															</tr>
 															<?php $step_count = 0; ?>
-															<?php if ( ! empty( $module['steps'] ) ) : ?>
+                                                            <?php if ( empty( $module['steps'] ) ) : ?>
+																<tr>
+																	<td colspan="3"><?php _e( 'No answerable modules found.', 'cp' ); ?></td>
+																</tr>
+<?php else : ?>
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
 																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
 																	<?php if ( $step_count == 0 ) : ?>
-																		<tr>
-																			<th colspan="3"><?php echo $module['title']; ?></th>
-																		</tr>
 																	<?php endif; ?>
 																	<tr class="cp-question-title">
 																		<th colspan="3">
@@ -276,11 +280,6 @@
 																	<?php endif; ?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
-															<?php endif; ?>
-															<?php if ( $step_count < 1 ) : ?>
-																<tr>
-																	<td colspan="3"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
-																</tr>
 															<?php endif; ?>
 														</table>
 													</div>
