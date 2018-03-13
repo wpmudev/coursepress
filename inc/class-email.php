@@ -225,6 +225,8 @@ class CoursePress_Email extends CoursePress_Utility {
 				'COURSE_OVERVIEW' => '',
 				'BLOG_NAME' => '',
 				'WEBSITE_ADDRESS' => '',
+				'STUDENT_FIRST_NAME' => '',
+				'STUDENT_LAST_NAME' => '',
 				'UNSUBSCRIBE_LINK' => '',
 			)
 		);
