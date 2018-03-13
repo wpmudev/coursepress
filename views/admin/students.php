@@ -59,54 +59,55 @@
 ?>
 <tr class="<?php echo esc_attr( $odd ? 'odd' : 'even' ); ?>" data-studetnt-id="<?php echo esc_attr( $student->ID ); ?>">
 
-	<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
+    <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
-                                <?php
-								switch ( $column_id ) :
-									// @todo Add profile link if required.
-									case 'student' :
-										echo '<div class="cp-flex cp-user">';
-										echo '<span class="gravatar">';
-										echo get_avatar( $student->ID, 30 );
-										echo '</span>';
-										echo ' ';
-										echo '<span class="user_login">';
-										echo $student->user_login;
-										echo '</span>';
-										echo ' ';
-										echo '<span class="display_name">(';
-										echo $student->get_name();
-										echo ')</span>';
-										echo '</div>';
-										break;
-									case 'last_active' :
-										// Last activity time.
-										$last_active = $student->get_last_activity_time();
-										if ( $last_active ) {
-											echo date_i18n( $last_active_format, $last_active );
-											$kind = $student->get_last_activity_kind();
-											if ( ! empty( $kind ) ) {
-												printf( '<span class="activity-kind">%s</span>', $kind );
-											}
-										} else {
-											echo '--';
-										}
-										break;
-									case 'number_of_courses' :
-										echo count( $student->get_enrolled_courses_ids() );
-										break;
-									default :
-										/**
-										 * Trigger to allow custom column value
-										 *
-										 * @since 3.0
-										 * @param string $column_id
-										 * @param CoursePress_Student object $student
-										 */
-										do_action( 'coursepress_studentlist_column', $column_id, $student );
-										break;
-								endswitch;
-								?>
+<?php
+					$a = sprintf( '<a href="%s">%%s</a>', esc_url( add_query_arg( array( 'view' => 'profile', 'student_id' => $student->ID ) ) ) );
+switch ( $column_id ) :
+	// @todo Add profile link if required.
+	case 'student' :
+		echo '<div class="cp-flex cp-user">';
+		echo '<span class="gravatar">';
+		echo get_avatar( $student->ID, 30 );
+		echo '</span>';
+		echo ' ';
+		echo '<span class="user_login">';
+		printf( $a, $student->user_login );
+		echo '</span>';
+		echo ' ';
+		echo '<span class="display_name">(';
+		printf( $a, $student->get_name() );
+		echo ')</span>';
+		echo '</div>';
+	break;
+	case 'last_active' :
+		// Last activity time.
+		$last_active = $student->get_last_activity_time();
+		if ( $last_active ) {
+			echo date_i18n( $last_active_format, $last_active );
+			$kind = $student->get_last_activity_kind();
+			if ( ! empty( $kind ) ) {
+				printf( '<span class="activity-kind">%s</span>', $kind );
+			}
+		} else {
+			echo '--';
+		}
+	break;
+	case 'number_of_courses' :
+		echo count( $student->get_enrolled_courses_ids() );
+	break;
+	default :
+		/**
+						 * Trigger to allow custom column value
+						 *
+						 * @since 3.0
+						 * @param string $column_id
+						 * @param CoursePress_Student object $student
+						 */
+		do_action( 'coursepress_studentlist_column', $column_id, $student );
+	break;
+endswitch;
+?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
