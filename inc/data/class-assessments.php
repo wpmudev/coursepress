@@ -72,13 +72,6 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		foreach ( $students as $student_id => $student ) {
 			// Set the user object to main array.
 			$assessments['students'][ $student_id ] = $student;
-			// Do not continue if user not completed the course.
-			if ( ! $student->is_course_completed( $this->course->ID ) ) {
-				// We need to exclude this user from count.
-				$count = $count -= 1;
-				unset( $assessments['students'][ $student_id ] );
-				continue;
-			}
 			// If filtered by unit and that unit is not accessable to student.
 			if ( ! empty( $unit_id ) && count( $units ) === 1 ) {
 				$unit = reset( $units );
