@@ -1234,7 +1234,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				ob_start();
 				do_action( 'coursepress_form_fields' );
 				$content .= ob_get_clean();
-				$redirect_to = coursepress_get_setting( 'slugs/student_dashboard' );
+				$redirect_to = coursepress_get_dashboard_url();
 				if ( $redirect = coursepress_get_redirect_to() ) {
 					$redirect_to = $redirect;
 				}
