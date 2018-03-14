@@ -289,6 +289,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'deleting_course' => __( 'Deleting course... please wait', 'cp' ),
 				'deleting_courses' => __( 'Deleting courses... please wait', 'cp' ),
 				'importing_courses' => __( 'Importing courses... please wait', 'cp' ),
+				'importing_failed' => __( 'Import failed. Please check the file and try again.', 'cp' ),
 				'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this course?', 'cp' ),
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
