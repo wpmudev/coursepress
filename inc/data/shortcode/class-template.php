@@ -1192,7 +1192,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 					if ( ! empty( $redirect_url ) ) {
 						wp_redirect( esc_url_raw( urldecode( $redirect_url ) ) );
 					} else {
-						wp_redirect( esc_url_raw( coursepress_get_setting( 'slugs/student_dashboard' ) ) );
+						wp_redirect( esc_url_raw( coursepress_get_dashboard_url() ) );
 					}
 					exit;
 				}
