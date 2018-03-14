@@ -14,6 +14,20 @@
 class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 
 	/**
+	 * Warning or error message to display on registration form.
+	 *
+	 * @var (string)
+	 **/
+	static $form_message = '';
+
+	/**
+	 * Form class to render on registration form.
+	 *
+	 * @var (string)
+	 **/
+	static $form_message_class = '';
+
+	/**
 	 * Register the shortcodes.
 	 *
 	 * @since  2.0.0
@@ -1097,6 +1111,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
         if ( ! is_user_logged_in() ) {
             $user_login = new CoursePress_UserLogin();
             $user_login->process_registration_form();
+				self::$form_message       = $user_login::$form_message;
+				self::$form_message_class = $user_login::$form_message_class;
         }
     }
 
@@ -1127,26 +1143,40 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'signup_title' => __( 'Signup', 'cp' ),
 			'signup_url' => '',
 		), $atts, 'course_signup' );
-		$failed_login_text = sanitize_text_field( $atts['failed_login_text'] );
+
+		$failed_login_text  = sanitize_text_field( $atts['failed_login_text'] );
 		$failed_login_class = sanitize_html_class( $atts['failed_login_class'] );
-		$login_tag = sanitize_html_class( $atts['login_tag'] );
-		$login_title = sanitize_text_field( $atts['login_title'] );
-		$signup_url = esc_url_raw( $atts['signup_url'] );
-		$redirect_url = esc_url_raw( $atts['redirect_url'] );
-		$page = in_array( $atts['page'], $allowed ) ? $atts['page'] : 'signup';
-		$signup_prefix = empty( $signup_url ) ? '&' : '?';
-		$login_prefix = empty( $login_url ) ? '&' : '?';
-		$signup_url = empty( $signup_url ) ? coursepress_get_setting( 'slugs/signup' ) : $signup_url;
-		$login_url = empty( $login_url ) ? coursepress_get_setting( 'slugs/login' ) : $login_url;
+		$login_tag          = sanitize_html_class( $atts['login_tag'] );
+		$login_title        = sanitize_text_field( $atts['login_title'] );
+		$signup_url         = esc_url_raw( $atts['signup_url'] );
+		$redirect_url       = esc_url_raw( $atts['redirect_url'] );
+		$page               = in_array( $atts['page'], $allowed ) ? $atts['page'] : 'signup';
+		$signup_prefix      = empty( $signup_url ) ? '&' : '?';
+		$login_prefix       = empty( $login_url ) ? '&' : '?';
+		$signup_url         = empty( $signup_url ) ? coursepress_get_setting( 'slugs/signup' ) : $signup_url;
+		$login_url          = empty( $atts['login_url'] ) ? coursepress_get_student_login_url() : $atts['login_url'];
 		if ( ! empty( $redirect_url ) ) {
-			$signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
-			$login_url = $login_url . $login_prefix . 'redirect_url=' . urlencode( $redirect_url );
+			$signup_url = add_query_arg( 'redirect_url', urlencode( $redirect_url ), $signup_url );
+			$login_url  = add_query_arg( 'redirect_url', urlencode( $redirect_url ), $login_url );
+		} else {
+			$redirect_url = coursepress_get_dashboard_url();
 		}
+
 		if ( ! empty( $_POST['redirect_url'] ) ) {
-			$signup_url = $signup_url . '?redirect_url=' . $_POST['redirect_url'];
+			$signup_url = add_query_arg( 'redirect_url', urlencode( $_POST['redirect_url'] ), $signup_url );
 		}
-		$form_message = '';
-		$form_message_class = '';
+
+		$form_message       = apply_filters( 'signup_form_message', self::$form_message );
+		$form_message_class = apply_filters( 'signup_form_message_class', self::$form_message_class );
+
+		set_query_var( 'form_message', $form_message );
+		set_query_var( 'form_message_class', $form_message_class );
+		set_query_var( 'signup_tag', $atts['signup_tag'] );
+		set_query_var( 'signup_title', $atts['signup_title'] );
+		set_query_var( 'redirect_url', $redirect_url );
+		set_query_var( 'signup_url', $signup_url );
+		set_query_var( 'login_url', $login_url );
+
 		$content = '';
 		switch ( $page ) {
 			case 'signup':
@@ -1175,7 +1205,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				// Attempt a login if submitted.
 				if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
 					if ( apply_filters( 'cp_course_signup_form_show_messages', false ) ) {
-						$form_message = $failed_login_text;
+						$form_message       = $failed_login_text;
 						$form_message_class = $failed_login_class;
 					}
 				}
@@ -1204,7 +1234,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				ob_start();
 				do_action( 'coursepress_form_fields' );
 				$content .= ob_get_clean();
-				$redirect_to = CoursePress_Core::get_slug( 'student_dashboard', true );
+				$redirect_to = coursepress_get_setting( 'slugs/student_dashboard' );
 				if ( $redirect = coursepress_get_redirect_to() ) {
 					$redirect_to = $redirect;
 				}
