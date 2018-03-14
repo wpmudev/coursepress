@@ -46,6 +46,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 		 * try to regenerate missing pdf
 		 */
 		add_action( 'template_redirect', array( $this, 'regenerate_pdf' ) );
+
+		add_action( 'parse_request', array( $this, 'course_signup' ), 1 );
 	}
 
 	/**
@@ -296,5 +298,48 @@ final class CoursePress_Core extends CoursePress_Utility {
 		}
 
 		return $is_open;
+	}
+
+	/**
+	 * Login user - we need do it in parse_request action, because when
+	 * shortcode is parsed, then it is too late to set auth cookie.
+	 */
+	public static function course_signup() {
+		if ( ! isset( $_POST['log'] ) || ! isset( $_POST['pwd'] ) ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			return;
+		}
+		// Attempt a login if submitted.
+		$user = $_POST['log'];
+		if ( preg_match( '/@/', $user ) ) {
+			$userdata = get_user_by( 'email', $user );
+			$user = $userdata->user_login;
+		}
+		$credentials = array(
+			'user_login' => $user,
+			'user_password' => $_POST['pwd'],
+		);
+		$auth = wp_signon( $credentials );
+		if ( ! is_wp_error( $auth ) ) {
+			/**
+			 * redirect contributors+ to dashboard
+			 */
+			$userdata = get_user_by( 'login', $user );
+			if ( user_can( $userdata, 'edit_posts' ) ) {
+				wp_safe_redirect( admin_url() );
+				exit;
+			}
+			if ( isset( $_POST['redirect_url'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else if ( isset( $_POST['redirect_to'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_to'] ) ) );
+			} else {
+				wp_redirect( esc_url_raw( coursepress_get_dashboard_url() ) );
+			}
+			exit;
+		}
+		add_filter( 'cp_course_signup_form_show_messages', '__return_true' );
 	}
 }

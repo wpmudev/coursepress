@@ -4,16 +4,21 @@
  *
  * @since 2.0.5
  **/
-$signup_tag = 'h3';
-$signup_title = __( 'Register', 'cp' );
-$form_message = '';
-$form_message_class = '';
-$course_id = 0;
-$redirect_url = coursepress_get_dashboard_url();
-$first_name = $last_name = $username = $email = '';
+
+$signup_tag         = get_query_var( 'signup_tag' );
+$signup_title       = get_query_var( 'signup_title' );
+$form_message       = get_query_var( 'form_message' );
+$form_message_class = get_query_var( 'form_message_class' );
+$redirect_url       = get_query_var( 'redirect_url' );
+$login_url          = get_query_var( 'login_url' );
+$course_id          = ! empty( $_GET['course_id'] ) ? (int) $_GET['course_id'] : 0;
+$username           = ! empty( $_POST['username'] ) ? $_POST['username'] : '';
+$first_name         = ! empty( $_POST['first_name'] ) ? $_POST['first_name'] : '';
+$last_name          = ! empty( $_POST['last_name'] ) ? $_POST['last_name'] : '';
+$email              = ! empty( $_POST['email'] ) ? $_POST['email'] : '';
+
 $submit_button = __( 'Create an Account', 'cp' );
-$action_url = admin_url( 'admin-ajax.php?action=coursepress_register' );
-$login_url = coursepress_get_student_login_url();
+$action_url    = admin_url( 'admin-ajax.php?action=coursepress_register' );
 
 if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) {
 	$form_message = __( 'Mismatch password!', 'cp' );
@@ -22,12 +27,12 @@ if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) {
 }
 
 if ( is_user_logged_in() ) {
-	$user = coursepress_get_user();
-	$first_name = $user->__get( 'first_name' );
-	$last_name = $user->__get( 'last_name' );
-	$email = $user->__get( 'user_email' );
+	$user          = coursepress_get_user();
+	$first_name    = $user->__get( 'first_name' );
+	$last_name     = $user->__get( 'last_name' );
+	$email         = $user->__get( 'user_email' );
 	$submit_button = __( 'Update Changes', 'cp' );
-	$action_url = admin_url( 'admin-ajax.php?action=coursepress_update_profile' );
+	$action_url    = admin_url( 'admin-ajax.php?action=coursepress_update_profile' );
 }
 ?>
 <div class="coursepress-form coursepress-form-signup">
@@ -36,7 +41,7 @@ if ( is_user_logged_in() ) {
 	<?php endif; ?>
 	<p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
 
-	<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form" action="<?php echo $action_url; ?>">
+	<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form" action="<?php //echo $action_url; ?>">
 		<?php
 		/**
 		 * Trigger before the signup form.
