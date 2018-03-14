@@ -196,14 +196,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
+		// Apply schema.
+		$title = apply_filters( 'coursepress_schema', $course->post_title, 'title' );
 		if ( 'yes' == $atts['clickable'] ) {
 			$attr = array(
 				'href' => $course->get_permalink(),
 				'rel' => 'bookmark',
 			);
-			$template = $this->create_html( 'a', $attr, $course->post_title );
+			$template = $this->create_html( 'a', $attr, $title );
 		} else {
-			$template = $course->post_title;
+			$template = $title;
 		}
 		return $this->create_html( $atts['title_tag'], array( 'class' => $class ), $template );
 	}
@@ -255,8 +257,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
 		}
+		// Apply schema.
+		$content_schema = apply_filters( 'coursepress_schema', '', 'description' );
 		$template .= $course->post_content;
-		$template = $this->create_html( 'div', array( 'class' => $class ), $template );
+		$template = '<div class="' . $class . '"' . $content_schema . '>'. $template . '</div>';
 		return $template;
 	}
 
@@ -906,13 +910,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-			$attr = array(
-				'class' => $class,
-				'src' => esc_url_raw( $course->listing_image ),
-				'width' => $atts['width'],
-				'height' => $atts['height'],
-			);
-			return $this->create_html( 'img', $attr );
+			// Apply schema.
+			$schema = apply_filters( 'coursepress_schema', '', 'image' );
+			$content = '<img width="' . esc_attr( $atts['width'] ) . '" height="' . esc_attr( $atts['height'] ) . '" src="' . esc_url_raw( $course->listing_image ) . '" class="' . $class . '"'.$schema.' />';
+			return $content;
 		}
 		return '';
 	}
