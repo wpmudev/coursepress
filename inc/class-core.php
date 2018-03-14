@@ -25,6 +25,11 @@ final class CoursePress_Core extends CoursePress_Utility {
 		// Set capabilities.
 		CoursePress_Data_Capabilities::init();
 
+		// If front end set schema.
+		if ( ! is_admin() ) {
+			CoursePress_Data_Schema::init();
+		}
+
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
 

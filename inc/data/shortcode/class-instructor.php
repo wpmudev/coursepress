@@ -91,20 +91,25 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 		$instructors_template = array();
 		foreach ( $instructors as $instructor ) {
 			$link = $instructor->get_instructor_profile_link();
+			$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
+			$instructor_name = apply_filters( 'coursepress_schema', $instructor->get_name(), 'title' );
 			$template = '';
 			if ( 'block' == $atts['style'] ) {
 				$template .= sprintf(
-					'<div class="instructor instructor-%d instructor-%s">',
+					'<div class="instructor instructor-%d instructor-%s"' . $schema . '>',
 					esc_attr( $instructor->ID ),
 					esc_attr( $instructor->user_nicename )
 				);
+				$schema = apply_filters( 'coursepress_schema', '', 'image' );
+				$template .= '<div class="profile-avatar"'. $schema . '>';
 				$template .= $instructor->get_avatar( $atts['avatar_size'], $atts['default_avatar'] );
+				$template .= '</div>';
 			}
 			$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
 			if ( $link_all ) {
-				$template .= $this->create_html( 'a', $attr, $instructor->get_name() );
+				$template .= $this->create_html( 'a', $attr, $instructor_name );
 			} else {
-				$template .= $instructor->get_name();
+				$template .= $instructor_name;
 				if ( 'block' === $atts['style'] ) {
 					$template .= $this->create_html( 'a', $attr, $atts['link_text'] );
 				}
@@ -116,7 +121,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 						$attr = array( 'href' => esc_url_raw( $link ) );
 						$description = $this->create_html( 'a', $attr, $description );
 					}
-					$template .= $this->create_html( 'div', array( 'class' => 'description' ), $description );
+					$template .= $this->create_html( 'div', array( 'class' => 'description profile-description' ), $description );
 				}
 				$template .= '</div>';
 			}
