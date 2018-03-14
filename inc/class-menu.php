@@ -6,9 +6,14 @@ class CoursePress_Menu extends CoursePress_Utility {
 	var $menu_location = 'primary';
 
 	public function __construct() {
-		// Maybe set CP menu of one of the active menu
-		add_action( 'init', array( $this, 'find_active_menu' ) );
-		add_action( 'wp_nav_menu_objects', array( $this, 'maybe_setup_menu' ), 10, 2 );
+
+		// Only assign our custom menu if it is enabled.
+		$is_menu_enabled = coursepress_is_true( coursepress_get_setting( 'general/show_coursepress_menu', 0 ) );
+		if ( $is_menu_enabled ) {
+			// Maybe set CP menu of one of the active menu
+			add_action( 'init', array( $this, 'find_active_menu' ) );
+			add_action( 'wp_nav_menu_objects', array( $this, 'maybe_setup_menu' ), 10, 2 );
+		}
 	}
 
 	function find_active_menu() {
