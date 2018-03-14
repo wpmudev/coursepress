@@ -8,7 +8,7 @@ class CoursePress_Menu extends CoursePress_Utility {
 	public function __construct() {
 
 		// Only assign our custom menu if it is enabled.
-		$is_menu_enabled = coursepress_is_true( coursepress_get_setting( 'general/show_coursepress_menu', 0 ) );
+		$is_menu_enabled = coursepress_is_true( coursepress_get_setting( 'general/show_coursepress_menu', 1 ) );
 		if ( $is_menu_enabled ) {
 			// Maybe set CP menu of one of the active menu
 			add_action( 'init', array( $this, 'find_active_menu' ) );
