@@ -31,11 +31,10 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 		 * Process user registration submission.
 		 **/
 		public function process_registration_form() {
-
 			if ( isset( $_POST['student-settings-submit'] ) && isset( $_POST['_wpnonce'] )
-				&& wp_verify_nonce( $_POST['_wpnonce'], 'student_signup' ) ) {
+				&& wp_verify_nonce( $_POST['_wpnonce'], 'coursepress_nonce' ) ) {
 
-				check_admin_referer( 'student_signup' );
+				check_admin_referer( 'coursepress_nonce' );
 
 				/**
 				 * Trigger before validating registration form
