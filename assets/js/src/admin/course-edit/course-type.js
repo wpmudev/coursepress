@@ -15,10 +15,31 @@
                 'change [name="meta_payment_paid_course"]': 'changeCoursePaid',
                 'change [name=meta_course_open_ended]': 'toggleCourseAvailability',
                 'change [name=meta_enrollment_open_ended]': 'toggleCourseEnrollmentDates',
+                'change [name=meta_course_start_date]': 'changeMinEndDate',
+                'change [name=meta_course_end_date]': 'changeMaxStartDate',
+                'change [name=meta_enrollment_start_date]': 'changeMinEnrollmentEndDate',
+                'change [name=meta_enrollment_end_date]': 'changeMaxEnrollmentStarDate',
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker',
                 'click .sample-course-btn': 'selectSampleCourse'
             },
+	    getDate: function( ev ) {
+		var date;
+		date = this.$(ev.currentTarget).datepicker('getDate');
+		return date;
+	    },
+	    changeMinEndDate: function( ev ) {
+                this.$('[name=meta_course_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+	    },
+	    changeMaxStartDate: function( ev ) {
+                this.$('[name=meta_course_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
+	    },
+	    changeMinEnrollmentEndDate: function( ev ) {
+                this.$('[name=meta_enrollment_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+	    },
+	    changeMaxEnrollmentStarDate: function( ev ) {
+                this.$('[name=meta_enrollment_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
+	    },
 
             initialize: function(model, EditCourse) {
                 // Let's inherit the model object from EditCourse
@@ -43,11 +64,7 @@
                 this.courseEditor.goToNext = false;
 
                 if ( ! this.model.get( 'post_title' ) ) {
-                    proceed = false;
-                    post_title.parent().addClass('cp-error');
-                    jQuery( 'html, body' ).animate({
-                        scrollTop: post_title.parent().offset().top - 20
-                    });
+                    proceed = this.setErrorMarker( post_title, proceed );
                 }
 
                 if ( 'manual' === this.model.course_type ) {
@@ -71,7 +88,8 @@
                 this.$('.datepicker').datepicker({
                     dateFormat: 'MM dd, yy',
                     showOtherMonths: true,
-                    selectOtherMonths: true
+                    selectOtherMonths: true,
+                    firstDay: window._coursepress.wp.start_of_week
                 });
                 if ( this.model.get( 'payment_paid_course') ) {
                     this.$('[name="meta_payment_paid_course"]').trigger( 'change' );

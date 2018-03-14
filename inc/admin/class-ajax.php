@@ -113,6 +113,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 				// Set permalink to the unit.
 				$unit->unit_permalink = $unit->get_permalink();
+				// Get unit permissions.
+				$unit->can_update_unit = CoursePress_Data_Capabilities::can_update_unit( $unit->ID );
+				$unit->can_delete_unit = CoursePress_Data_Capabilities::can_delete_unit( $unit->ID );
+				$unit->can_change_unit_status = CoursePress_Data_Capabilities::can_change_unit_status( $unit->ID );
 
 				$units[ $pos ] = $unit;
 			}
@@ -122,7 +126,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	public function update_course( $request ) {
-		global $CoursePress_Core;
 
 		$course_object = array(
 			'post_type' => 'course',
@@ -150,8 +153,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		if ( (int) $course_object['ID'] > 0 ) {
+
+			// Check course update capability.
+			if ( ! CoursePress_Data_Capabilities::can_update_course( (int) $course_object['ID'] ) ) {
+				return array( 'success' => false );
+			}
+
 			$course_id = wp_update_post( $course_object );
 		} else {
+
+			// Check course creation capability.
+			if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
+				return array( 'success' => false );
+			}
+
 			$course_id = wp_insert_post( $course_object );
 		}
 
@@ -186,6 +201,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$unit->menu_order = $menu_order;
 				// Get post object
 				if ( ! empty( $unit->deleted ) ) {
+					// Do not continue if no permission.
+					if ( ! CoursePress_Data_Capabilities::can_delete_unit( $unit->ID ) ) {
+						continue;
+					}
 					// Delete unit here
 					if ( ! empty( $unit->ID ) ) {
 						coursepress_delete_unit( $unit->ID );
@@ -194,6 +213,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					unset( $units->{$cid} );
 					continue;
 				}
+
+				// Check if required capability is set.
+				$can_proceed = empty( $unit->ID ) ?
+					CoursePress_Data_Capabilities::can_create_unit( $course_id ) :
+					CoursePress_Data_Capabilities::can_update_unit( $unit->ID );
+				// Do not continue if no permission.
+				if ( ! $can_proceed ) {
+					continue;
+				}
+
 				// Get post object
 				$unit_array = array(
 					'ID' => $unit->ID,
@@ -586,10 +615,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request data.
 	 */
 	public function send_email_invite( $request ) {
+
+		$proceed = true;
 		// Do not continue if empty.
 		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
+			$proceed = false;
+		} elseif ( $request->type === 'instructor' && ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+			$proceed = false;
+		} elseif ( $request->type === 'facilitator' && ! CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+			$proceed = false;
+		}
+		// If we can not continue.
+		if ( ! $proceed ) {
 			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 		}
+
 		$args = array(
 			'email' => $request->email,
 			'course_id' => $request->course_id,
@@ -613,15 +653,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
 		}
+		$success = false;
 		switch ( $request->type ) {
 			case 'instructor':
-				$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+					$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				}
 				break;
 			case 'facilitator':
-				$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
-				break;
-			default:
-				$success = false;
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+					$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
+				}
 				break;
 		}
 		// If sent, send success response back.
@@ -649,15 +693,19 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
 		}
+		$success = false;
 		switch ( $request->type ) {
 			case 'instructor':
-				$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+					$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				}
 				break;
 			case 'facilitator':
-				$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
-				break;
-			default:
-				$success = false;
+				// Make sure assign capability is there, to remove.
+				if ( CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+					$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
+				}
 				break;
 		}
 		// If sent, send success response back.
@@ -737,20 +785,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function enroll_with_passcode() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_POST, '_wpnonce' );
-		$passcode = filter_input( INPUT_POST, 'course_passcode' );
 		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error();
 		}
 		$course = coursepress_get_course( $course_id );
 		if ( ! is_wp_error( $course ) ) {
-			$course_passcode = $course->__get( 'enrollment_passcode' );
-			if ( $course_passcode == trim( $passcode ) && coursepress_add_student( get_current_user_id(), $course_id ) ) {
+			if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
 				$redirect = $course->get_units_url();
-				wp_safe_redirect( $redirect );
-				exit;
-			} else {
-				coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
-				$redirect = $course->get_permalink();
 				wp_safe_redirect( $redirect );
 				exit;
 			}
@@ -984,6 +1025,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
 			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
 			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
+			// Check for capabilities.
+			if ( empty( $alert_id ) && ! CoursePress_Data_Capabilities::can_add_notification( $request->course_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to create alert for this course.', 'cp' ) ) );
+			} elseif ( ! CoursePress_Data_Capabilities::can_update_notification( $alert_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to update this alert.', 'cp' ) ) );
+			}
 			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $receivers, $alert_id );
 		}
 		// If alert inserted return success response, else fail.
@@ -1098,6 +1145,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	public function send_student_invite( $request ) {
 		$course_id = $request->course_id;
+		// Do not continue if not capable.
+		if ( ! CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to invite students.', 'cp' ) ) );
+		}
 		$args = array(
 			'first_name' => $request->first_name,
 			'last_name' => $request->last_name,
@@ -1126,6 +1177,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$success = false;
 		// We need course id and valid email.
 		if ( $request->course_id && is_email( $request->email ) ) {
+			// Continue only if user can withdraw student.
+			if ( CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove student invitation.', 'cp' ) ) );
+			}
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
 
@@ -1177,6 +1232,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	public function add_student_to_course( $request ) {
 		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
+			// Do not continue if not capable.
+			if ( ! CoursePress_Data_Capabilities::can_add_course_student( $request->course_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to add students.', 'cp' ) ) );
+			}
 			$result = coursepress_add_student( $request->student_id, $request->course_id );
 			if ( is_wp_error( $result ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
@@ -1199,6 +1258,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function courses_bulk_action( $request ) {
 		if ( isset( $request->courses ) && is_array( $request->courses ) && isset( $request->which ) ) {
 			foreach ( $request->courses as $course_id ) {
+
+				// Make sure that the user is capable.
+				if ( in_array( $request->which, array( 'trash', 'delete' ) ) && ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+					continue;
+				} elseif ( ! CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+					continue;
+				}
+
 				coursepress_change_post( $course_id, $request->which, 'course' );
 			}
 			wp_send_json_success();
@@ -1216,6 +1283,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			|| ! is_array( $request->students )
 		) {
 			return;
+		}
+		// Do not continue if this user is not capable.
+		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
+			return array( 'success' => false, 'message' => __( 'You do not have permission to withdraw students.', 'cp' ) );
 		}
 		foreach ( $request->students as $student_id ) {
 			coursepress_delete_student( $student_id, $request->course_id );

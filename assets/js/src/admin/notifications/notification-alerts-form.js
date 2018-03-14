@@ -3,7 +3,7 @@
 (function() {
 	'use strict';
 
-	CoursePress.Define( 'NotificationAlertsForm', function( $, doc, win ) {
+	CoursePress.Define( 'NotificationAlertsForm', function( $ ) {
 		return CoursePress.View.extend({
 			template_id: 'coursepress-notification-alerts-form-tpl',
 			el: $('#notification-alerts_form'),
@@ -12,6 +12,7 @@
 				// 'click .cp-alert-cancel': 'clearForm',
 				'change #cp-alert-course': 'showHideReceivers',
 			},
+			content: '',
 
 			// Initialize.
 			initialize: function() {
@@ -22,7 +23,39 @@
 				// Update units and students based on selections.
 				this.request.on( 'coursepress:success_update_course_alert', this.showSuccess, this );
 				this.request.on( 'coursepress:error_update_course_alert', this.showError, this );
+				this.request.on( 'coursepress:success_get_course_alert', this.setAlertData, this );
 				this.render();
+			},
+
+			//get Alert Data
+			getAlertData: function( alert_id ) {
+			    //set existing alert data
+			    this.request.set( {
+				    'action': 'get_course_alert',
+				    'alert_id': alert_id,
+			    } );
+			    this.request.save();
+			},
+
+			//set Alert Data
+			setAlertData: function( data ) {
+				this.$('#alert-id').val( data.id );
+				this.$('#alert-title').val( data.title );
+				this.$('#cp-alert-course').val( data.course_id ).trigger('change');
+
+				this.initVisualEditor( data.content );
+			},
+
+			initVisualEditor: function( content ) {
+				var self = this;
+				self.content = content;
+				this.visualEditor({
+				    content: content,
+				    container: this.$('#alert_content').empty(),
+				    callback: function( content ) {
+					self.content = content;
+				    }
+				});
 			},
 
 			// Setup UI elements.
@@ -53,11 +86,7 @@
                 course_id = this.$('#cp-alert-course').val(),
                 receivers = this.$('#cp-alert-receivers').val(),
                 alert_id = this.$('#alert-id').val();
-                if ( undefined === win.tinymce.editors.alert_content ) {
-                    content = this.$('#alert_content').val();
-                } else {
-                    content = win.tinymce.editors.alert_content.getContent();
-                }
+		content = this.content;
                 if ( 0 === title.length ) {
                     new CoursePress.PopUp({
                         type: 'error',
@@ -120,11 +149,7 @@
 
 			// Clear field values.
 			clearForm: function () {
-				if ( undefined === win.tinymce.editors.alert_content ) {
-					this.$('#alert_content').val('');
-				} else {
-					win.tinymce.editors.alert_content.setContent('');
-				}
+				this.initVisualEditor( '' );
 				this.$('#alert-title').val('');
 				this.$('#alert-id').val('');
 				this.$('#cp-alert-course').val('all').trigger('change');

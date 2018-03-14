@@ -5,7 +5,15 @@
  */
 ?>
 <div class="coursepress-wrap">
-	<div class="coursepress-student-data">
+    <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
+<?php
+if ( $student->is_error() ) {
+	echo '<div class="notice notice-error"><p>';
+	_e( 'There is no student with selected ID or you try to cheet...', 'cp' );
+	echo '</p></div>';
+} else {
+?>
+    <div class="coursepress-student-data">
 		<div class="coursepress-avatar">
 			<span><?php echo get_avatar( $student->__get( 'user_email' ), 128 ); ?></span>
 		</div>
@@ -59,7 +67,7 @@
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach ( $courses as $course_id ): ?>
+		<?php foreach ( $courses as $course_id ) :  ?>
 			<?php
 			$course        = new CoursePress_Course( $course_id );
 			$progress_data = $student->get_course_progress_data( $course_id );
@@ -94,5 +102,6 @@
 		<div class="tablenav cp-admin-pagination">
 			<?php $pagination->pagination( 'bottom' ); ?>
 		</div>
-	<?php endif; ?>
+    <?php endif; ?>
+<?php } ?>
 </div>

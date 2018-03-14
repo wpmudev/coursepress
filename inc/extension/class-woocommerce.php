@@ -85,21 +85,27 @@ class CoursePress_Extension_WooCommerce {
 		 * WooCommerce payment complete -> CoursePress enroll student.
 		 */
 		add_action( 'woocommerce_payment_complete', array( $this, 'payment_complete_enroll_student' ) );
+		/**
+		 * cost for shortcode
+		 */
+		add_filter( 'coursepress_shortcode_course_cost', array( $this, 'get_course_cost_html' ), 10, 2 );
 	}
+
 
 	/**
 	 * Check if current plugin is enabled.
 	 *
 	 * @return bool
 	 */
-	function is_enabled() {
+	public function is_enabled() {
 		// Check if extension is enabled in settings.
 		$settings = coursepress_get_setting( 'woocommerce' );
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
-			$this->active = true;
-			return true;
+			$this->active = class_exists( 'WC_Product' );;
+			return $this->active;
 		}
-		return false;
+		$this->active = false;
+		return $this->active;
 	}
 
 	/**

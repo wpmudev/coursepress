@@ -16,13 +16,18 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 	 * @since  2.0.0
 	 */
 	public function init() {
-
-		( new CoursePress_Data_Shortcode_Course() )->init();
-		( new CoursePress_Data_Shortcode_CourseTemplate() )->init();
-		( new CoursePress_Data_Shortcode_Instructor() )->init();
-		( new CoursePress_Data_Shortcode_Student() )->init();
-		( new CoursePress_Data_Shortcode_Template() )->init();
-		( new CoursePress_Data_Shortcode_Unit() )->init();
+		$class_object = new CoursePress_Data_Shortcode_Course();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_CourseTemplate();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Instructor();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Student();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Template();
+		$class_object->init();
+		$class_object = new CoursePress_Data_Shortcode_Unit();
+		$class_object->init();
 	}
 
 	/**
@@ -54,32 +59,33 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 
 		$sub_types = array(
 			'course' => array(
-				'course_details'         => __( 'Course Details', 'cp' ),
-				'course_title'           => __( 'Course Title', 'cp' ),
-				'course_summary'         => __( 'Course Summary', 'cp' ),
-				'course_desc'            => __( 'Course Description', 'cp' ),
-				'course_start_date'      => __( 'Course Start Date', 'cp' ),
-				'course_end_date'        => __( 'Course End Date', 'cp' ),
-				'course_dates'           => __( 'Course Dates', 'cp' ),
-				'course_enr_start'       => __( 'Course Enrollment Start', 'cp' ),
-				'course_enr_end'         => __( 'Course Enrollment End', 'cp' ),
-				'course_enr_dates'       => __( 'Course Enrollment Dates', 'cp' ),
-				'course_enr_type'        => __( 'Course Enrollment Type', 'cp' ),
-				'course_time_estimation' => __( 'Course Time Estimation', 'cp' ),
-				'course_class_size'      => __( 'Course Class Size', 'cp' ),
-				'course_cost'            => __( 'Course Cost', 'cp' ),
-				'course_lang'            => __( 'Course Language', 'cp' ),
-				'course_list_img'        => __( 'Course List Image', 'cp' ),
-				'course_feat_video'      => __( 'Course Featured Video', 'cp' ),
-				'course_thumb'           => __( 'Course Thumbnail', 'cp' ),
-				'course_media'           => __( 'Course Media', 'cp' ),
-				'course_join_btn'        => __( 'Course Join Button', 'cp' ),
-				'course_action_links'    => __( 'Course Action Links', 'cp' ),
-				'course_cal'             => __( 'Course Calendar', 'cp' ),
-				'course_list'            => __( 'Course List', 'cp' ),
+				'course_details'         => __( 'Details', 'cp' ),
+				'course_title'           => __( 'Title', 'cp' ),
+				'course_summary'         => __( 'Summary', 'cp' ),
+				'course_desc'            => __( 'Description', 'cp' ),
+				'course_start_date'      => __( 'Start Date', 'cp' ),
+				'course_end_date'        => __( 'End Date', 'cp' ),
+				'course_dates'           => __( 'Dates', 'cp' ),
+				'course_enr_start'       => __( 'Enrollment Start', 'cp' ),
+				'course_enr_end'         => __( 'Enrollment End', 'cp' ),
+				'course_enr_dates'       => __( 'Enrollment Dates', 'cp' ),
+				'course_enr_type'        => __( 'Enrollment Type', 'cp' ),
+				'course_time_estimation' => __( 'Time Estimation', 'cp' ),
+				'course_class_size'      => __( 'Class Size', 'cp' ),
+				'course_cost'            => __( 'Cost', 'cp' ),
+				'course_lang'            => __( 'Language', 'cp' ),
+				'course_list_img'        => __( 'List Image', 'cp' ),
+				'course_feat_video'      => __( 'Featured Video', 'cp' ),
+				'course_thumb'           => __( 'Thumbnail', 'cp' ),
+				'course_media'           => __( 'Media', 'cp' ),
+				'course_join_btn'        => __( 'Join Button', 'cp' ),
+				'course_action_links'    => __( 'Action Links', 'cp' ),
+				'course_cal'             => __( 'Calendar', 'cp' ),
+				'course_list'            => __( 'List', 'cp' ),
 				'course_featured'        => __( 'Featured Course', 'cp' ),
-				'course_structure'       => __( 'Course Structure', 'cp' ),
-				'course_signup_page'     => __( 'Course Signup/Login Page', 'cp' ),
+				'course_structure'       => __( 'Structure', 'cp' ),
+				'course_signup_page'     => __( 'Signup/Login Page', 'cp' ),
+				'course_social_links'    => __( 'Social Links', 'cp' ),
 			),
 			'instructors' => array(
 				'instructors_list'     => __( 'Instructors List', 'cp' ),
@@ -233,8 +239,8 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 				'optional_attr' => array(
 					array(
 						'attr'        => 'date_format',
-						'description' => __( 'PHP style date format.', 'cp' ),
-						'default'     => __( 'WordPress setting', 'cp' ),
+						'description' => __( 'PHP style date format. If empty, then date will be shown as relative.', 'cp' ),
+						'default'     => __( 'Empty', 'cp' ),
 					),
 					array(
 						'attr'        => 'label',
@@ -1113,6 +1119,34 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 						'attr'        => 'class',
 						'description' => __( 'Additional CSS classes for styling.', 'cp' ),
 						'default'     => __( 'empty', 'cp' ),
+					),
+				),
+			),
+			'course_social_links' => array(
+				'title' => __( 'COURSE SOCIAL LINKS', 'cp' ),
+				'description' => __( 'Shortcode show social icons for share.', 'cp' ),
+				'usage' => array( '[course_social_links course_id="10"]' ),
+				'required_attr' => array(
+					array(
+						'attr'        => 'course_id',
+						'description' => __( 'If outside of the WordPress loop.', 'cp' ),
+					),
+				),
+				'optional_attr' => array(
+					array(
+						'attr' => 'services',
+						'description' => __( 'Select services to show. Available: facebook, twitter, google, email.', 'cp' ),
+						'default' => '',
+					),
+					array(
+						'attr' => 'share_title',
+						'description' => 'Share title',
+						'default' => __( 'Share', 'cp' ),
+					),
+					array(
+						'attr' => 'echo',
+						'description' => 'Print shortcode?',
+						'default' => 'false',
 					),
 				),
 			),

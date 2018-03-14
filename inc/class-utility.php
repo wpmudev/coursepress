@@ -56,11 +56,11 @@ abstract class CoursePress_Utility {
 			$timestamp = (int) $date_string;
 		} elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
 			/*
-             * Convert the date-string into a timestamp; PHP assumes that the
-             * date string is in servers default timezone.
-             * We assume that date string is in "yyyy-mm-dd" format, not a
-             * relative date and also without timezone suffix.
-             */
+			 * Convert the date-string into a timestamp; PHP assumes that the
+			 * date string is in servers default timezone.
+			 * We assume that date string is in "yyyy-mm-dd" format, not a
+			 * relative date and also without timezone suffix.
+			 */
 			$timestamp = strtotime( $date_string . ' UTC' );
 		}
 
@@ -136,6 +136,32 @@ abstract class CoursePress_Utility {
 			$html .= '>' . $content . '</' . $tag . '>';
 		}
 		return $html;
+	}
+
+	/**
+	 * Mark current menu title
+	 *
+	 * @global object $wp
+	 * @param string $tag
+	 * @param array $attributes
+	 * @param string $content
+	 * @param string $href
+	 * @return string
+	 */
+	public function create_course_menu_title( $tag, $attributes = array(), $content = '', $href = '' ) {
+		global $wp;
+
+		if ( ! empty( $attributes['href'] ) ) {
+			$href = $attributes['href'];
+		}
+		if ( ! empty( $href ) && trailingslashit( home_url( $wp->request ) ) === $href ) {
+			if ( ! empty( $attributes['class'] ) ) {
+				$attributes['class'] .= ' course-current-step';
+			} else {
+				$attributes['class'] = 'course-current-step';
+			}
+		}
+		return  $this->create_html( $tag, $attributes, $content );
 	}
 
 	public function to_array( $array ) {
@@ -811,5 +837,90 @@ abstract class CoursePress_Utility {
 			$html
 		);
 		return $html;
+	}
+
+	/**
+	 * Return related date as text
+	 *
+	 * Based on: https://stackoverflow.com/a/2690541/313490
+	 *
+	 * @since 3.0.0
+	 *
+	 */
+	public function time2str( $ts ) {
+		if ( ! ctype_digit( $ts ) ) {
+			$ts = strtotime( $ts );
+		}
+		$diff = time() - $ts;
+		if ( $diff == 0 ) {
+			return __( 'now', 'cp' );
+		} elseif ( $diff > 0 ) {
+			$day_diff = floor( $diff / DAY_IN_SECONDS );
+			if ( 0 == $day_diff ) {
+				if ( $diff < MINUTE_IN_SECONDS  ) {
+					return __( 'just now', 'cp' );
+				}
+				if ( $diff < 2 * MINUTE_IN_SECONDS ) {
+					return  __( '1 minute ago', 'cp' );
+				}
+				if ( $diff < HOUR_IN_SECONDS ) {
+					return sprintf( __( '%d minutes ago', 'cp' ), floor( $diff / MINUTE_IN_SECONDS ) );
+				}
+				if ( $diff < 2 * HOUR_IN_SECONDS ) {
+					return __( '1 hour ago', 'cp' );
+				}
+				if ( $diff < DAY_IN_SECONDS ) {
+					return sprintf( __( '%d hours ago', 'cp' ), floor( $diff / HOUR_IN_SECONDS ) );
+				}
+			}
+			if ( 1 == $day_diff ) {
+				return __( 'Yesterday', 'cp' );
+			}
+			if ( $day_diff < 7 ) {
+				return sprintf( __( '%d days ago', 'cp' ),  $day_diff );
+			}
+			if ( $day_diff < 31 ) {
+				return sprintf( __( '%d weeks ago', 'cp' ), ceil( $day_diff / 7 ) );
+			}
+			if ( $day_diff < 60 ) {
+				return __( 'last month', 'cp' );
+			}
+		} else {
+			$diff = abs( $diff );
+			$day_diff = floor( $diff / DAY_IN_SECONDS );
+			if ( 0 == $day_diff ) {
+				if ( $diff < 2 * MINUTE_IN_SECONDS ) {
+					return __( 'in a minute', 'cp' );
+				}
+				if ( $diff < HOUR_IN_SECONDS ) {
+					$minutes = floor( $diff / MINUTE_IN_SECONDS );
+					return sprintf( _n( 'in a minute', 'in %s minutes', $minutes, 'cp' ), $minutes );
+				}
+				if ( $diff < 2 * HOUR_IN_SECONDS ) {
+					return __( 'in an hour', 'cp' );
+				}
+				if ( $diff < DAY_IN_SECONDS ) {
+					$hours = floor( $diff / HOUR_IN_SECONDS );
+					return sprintf( _n( 'in a hour', 'in %s hours', $hours, 'cp' ), $hours );
+				}
+			}
+			if ( 1 == $day_diff ) {
+				return __( 'Tomorrow', 'cp' );
+			}
+			if ( $day_diff < 4 ) {
+				return date_i18n( 'l', $ts );
+			}
+			if ( $day_diff < 7 + (7 - date( 'w' )) ) {
+				return __( 'next week', 'cp' );
+			}
+			if ( ceil( $day_diff / 7 ) < 5 ) {
+				$weeks = ceil( $day_diff / 7 );
+				return sprintf( _n( 'next week', 'in %s weeks', $weeks, 'cp' ), $weeks );
+			}
+			if ( $day_diff < 31 ) {
+				return __( 'next month', 'cp' );
+			}
+		}
+		return date( 'F Y', $ts );
 	}
 }

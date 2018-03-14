@@ -22,11 +22,9 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 * @uses get_column_headers().
 	 * @uses coursepress_render().
 	 */
-	function get_page() {
-
+	public function get_page() {
 		$count = 0;
 		$screen = get_current_screen();
-
 		// Set query parameters back.
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
@@ -34,7 +32,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
 		$graded = in_array( $graded, array( 'graded', 'ungraded' ) ) ? $graded : 'all';
 		$units = empty( $course_id ) ? array() : coursepress_get_course_units( $course_id );
-
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
@@ -49,7 +46,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 			'graded' => $graded,
 			'search' => $search,
 		);
-
 		// Render templates.
 		coursepress_render( 'views/admin/assessments', $args );
 		coursepress_render( 'views/admin/footer-text' );
@@ -63,12 +59,10 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 * @uses get_column_headers().
 	 * @uses coursepress_render().
 	 */
-	function get_details_page() {
-
+	public function get_details_page() {
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
 		$student_id = empty( $_GET['student_id'] ) ? 0 : $_GET['student_id'];
 		$display = empty( $_GET['display'] ) ? 'all' : $_GET['display'];
-
 		// Data for template.
 		$args = array(
 			'assessments' => $this->get_assessment_details( $student_id, $course_id, $display ),
@@ -78,7 +72,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 			'student_id' => absint( $student_id ),
 			'display' => $display,
 		);
-
 		// Render templates.
 		coursepress_render( 'views/admin/assessments-details', $args );
 		coursepress_render( 'views/admin/footer-text' );
@@ -94,15 +87,12 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_assessments( $course_id, $unit_id, $graded = 'all', &$count = 0 ) {
-
+	public function get_assessments( $course_id, $unit_id, $graded = 'all', &$count = 0 ) {
 		// We need course id.
 		if ( empty( $course_id ) ) {
 			return array();
 		}
-
 		$assessments = new CoursePress_Data_Assessments( $course_id );
-
 		return $assessments->get_assessments( $unit_id, $graded, $count );
 	}
 
@@ -116,15 +106,12 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_assessment_details( $student_id, $course_id, $progress = 'all' ) {
-
+	public function get_assessment_details( $student_id, $course_id, $progress = 'all' ) {
 		// We need course id and student id.
 		if ( empty( $course_id ) || empty( $student_id ) ) {
 			return array();
 		}
-
 		$assessments = new CoursePress_Data_Assessments( $course_id );
-
 		return $assessments->get_assessment_details( $student_id, $progress );
 	}
 
@@ -133,14 +120,11 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @uses get_current_screen().
 	 */
-	function screen_options() {
-
+	public function screen_options() {
 		$screen_id = get_current_screen()->id;
-
 		// Setup columns.
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
-
 		// Assessments per page.
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_assessments_per_page' ) );
 	}
@@ -150,15 +134,13 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_columns() {
-
+	public function get_columns() {
 		$columns = array(
 			'student' => __( 'Student', 'cp' ),
 			'last_active' => __( 'Last active', 'cp' ),
 			'grade' => __( 'Grade', 'cp' ),
 			'modules_progress' => __( 'Modules progress', 'cp' ),
 		);
-
 		/**
 		 * Trigger to allow custom column values.
 		 *
@@ -166,7 +148,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		 * @param array $columns
 		 */
 		$columns = apply_filters( 'coursepress_assessments_columns', $columns );
-
 		return $columns;
 	}
 
@@ -175,8 +156,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function hidden_columns() {
-
+	public function hidden_columns() {
 		/**
 		 * Trigger to modify hidden columns.
 		 *

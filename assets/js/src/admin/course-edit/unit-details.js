@@ -41,13 +41,11 @@
                 use_feature_img = this.model.get('meta_use_feature_image');
 
                 if ( ! title || 'Untitled' === title ) {
-                    this.$('[name="post_title"]').parent().addClass('cp-error');
-                    proceed = false;
+                    proceed = this.setErrorMarker( this.$('[name="post_title"]'), proceed );
                 }
 
                 if ( use_feature_img && ! this.model.get('meta_unit_feature_image') ) {
-                    this.$('[name="meta_unit_feature_image"]').parent().addClass('cp-error');
-                    proceed = false;
+                    proceed = this.setErrorMarker( this.$('[name="meta_unit_feature_image"]'), proceed );
                 }
 
                 if ( this.with_modules ) {
@@ -77,7 +75,7 @@
                 }
                 error_count = _.keys(errors);
 
-                if ( error_count.length > 0 ) {
+                if ( proceed && error_count.length > 0 ) {
                     proceed = false;
                     errors = _.values(errors);
                     popup = new CoursePress.PopUp({
@@ -117,7 +115,8 @@
                 this.$('.datepicker').datepicker({
                     dateFormat: 'MM dd, yy',
                     showOtherMonths: true,
-                    selectOtherMonths: true
+                    selectOtherMonths: true,
+                    firstDay: window._coursepress.wp.start_of_week
                 });
             },
 

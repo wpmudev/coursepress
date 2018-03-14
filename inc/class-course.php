@@ -285,32 +285,37 @@ class CoursePress_Course extends CoursePress_Utility {
 	/**
 	 * Get the course feature image.
 	 *
-	 * @param int $width
-	 * @param int $height
+	 * @param string|array (Optional) Image size to use. Accepts any valid
+	 * image size, or an array of width and height values in pixels (in that
+	 * order).
 	 *
 	 * @return null|string
 	 */
-	public function get_feature_image( $width = 235, $height = 235 ) {
+	//public function get_feature_image( $width = 235, $height = 235, $full = false ) {
+	public function get_feature_image( $size = null ) {
 		$id = $this->__get( 'ID' );
-		if ( ! $width ) {
-			$width = coursepress_get_setting( 'course/image_width', 235 ); }
-		if ( ! $height ) {
-			$height = coursepress_get_setting( 'course/image_height', 235 ); }
+		if ( empty( $size ) ) {
+			$size = array(
+				coursepress_get_setting( 'course/image_width', 235 ),
+				coursepress_get_setting( 'course/image_height', 235 ),
+			);
+		}
+		$classes = 'attachment-post-thumbnail size-post-thumbnail wp-post-image';
 		$listing_image = $this->get_feature_image_url();
 		// Try post-thumbnail
 		if ( ! $listing_image ) {
 			if ( has_post_thumbnail( $id ) ) {
-				$listing_image = get_the_post_thumbnail( $id, array( $width, $height ), array( 'class' => 'course-feature-image' ) ); }
+				$listing_image = get_the_post_thumbnail( $id, $size, array( 'class' => $classes.' course-feature-image' ) ); }
 		} else {
-			$listing_image = $this->create_html(
-				'img',
-				array(
+				$args = array(
 					'src' => esc_url( $listing_image ),
-					'class' => 'course-listing-image',
-					'width' => $width,
-					'height' => $height,
-				)
-			);
+					'class' => $classes.' course-listing-image',
+				);
+				if ( is_array( $size ) && 1 < count( $size ) ) {
+					$args['width'] = $size[0];
+					$attr['height'] = $size[1];
+				}
+				$listing_image = $this->create_html( 'img', $args );
 		}
 		return $listing_image;
 	}
@@ -343,7 +348,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_media( $width = 235, $height = 235 ) {
 		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
-		$image = $this->get_feature_image( $width, $height );
+		$image = $this->get_feature_image( array( $width, $height ) );
 		if ( ( 'image' == $media_type || 'default' == $media_type ) && ! empty( $image ) ) {
 			return $image;
 		}
@@ -372,9 +377,14 @@ class CoursePress_Course extends CoursePress_Utility {
 			$open = $this->__get( 'course_open_ended' );
 		}
 		if ( $open ) {
+			$start = $this->__get( 'course_start_date_timestamp' );
+			$today = strtotime( date( 'Y-m-d 23:59:59', time() ) );
+			if ( $start > $today ) {
+				return $this->time2str( $start );
+			}
 			return __( 'Open Ended', 'cp' );
 		}
-		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
+		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_end_date() ) );
 	}
 
 	public function get_enrollment_start_date() {
@@ -394,7 +404,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( $open_ended ) {
 			return __( 'Anytime', 'cp' );
 		}
-		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
+		$start = $this->get_enrollment_start_date();
+		$end = $this->get_enrollment_end_date();
+		if ( $start == $end ) {
+			return sprintf( __( 'Only %s', 'cp' ), $start );
+		}
+		return implode( $separator, array( $start, $end ) );
 	}
 
 	public function get_course_language() {
@@ -441,6 +456,9 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( empty( $openEnded )
 			&& $start_date > 0
 			&& $start_date > $time_now ) {
+			return false;
+		}
+		if ( $time_now < $start_date ) {
 			return false;
 		}
 		return true;

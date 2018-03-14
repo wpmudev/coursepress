@@ -182,8 +182,8 @@ class CoursePress_User extends CoursePress_Utility {
 		return implode( ' ', $names );
 	}
 
-	public function get_avatar( $size = 42 ) {
-		$avatar = get_avatar( $this->__get( 'user_email' ), $size );
+	public function get_avatar( $size = 42, $default = null ) {
+		$avatar = get_avatar( $this->__get( 'user_email' ), $size, $default );
 		return $avatar;
 	}
 
@@ -213,7 +213,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( $returnAll ) {
 			$args['posts_per_page'] = -1;
 		}
-		if ( $this->is_super_admin() ) {
+		if ( $this->is_super_admin()|| CoursePress_Data_Capabilities::can_view_others_course() ) {
 			$courses = coursepress_get_courses( $args, $count );
 		} elseif ( $this->is_instructor() || $this->is_facilitator() ) {
 			$args['meta_query'] = array(
@@ -229,7 +229,8 @@ class CoursePress_User extends CoursePress_Utility {
 			);
 			$courses = coursepress_get_courses( $args, $count );
 		}
-			return $courses;
+
+		return $courses;
 	}
 
 	/************************************************
@@ -298,15 +299,26 @@ class CoursePress_User extends CoursePress_Utility {
 	/**
 	 * Add student to course
 	 */
-	public function add_course_student( $course_id ) {
+	public function add_course_student( $course ) {
 		global $wpdb;
+		$course_id = $course->ID;
 		if (  $this->is_enrolled_at( $course_id ) ) {
 			return true;
 		}
 		$id = $this->__get( 'ID' );
 		if ( empty( $id ) ) {
 			return;
+		} +
+
+		$passcode = filter_input( INPUT_POST, 'course_passcode' );
+		$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
+		if ( $course_passcode != trim( $passcode ) ) {
+			coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
+			$redirect = $course->get_permalink();
+			wp_safe_redirect( $redirect );
+			exit;
 		}
+
 		$array = array(
 			'course_id' => $course_id,
 			'student_id' => $id,

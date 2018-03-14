@@ -11,7 +11,9 @@
 <div class="wrap coursepress-wrap coursepress-forums" id="coursepress-forums">
     <h1 class="wp-heading-inline">
         <?php _e( 'Forums', 'cp' ); ?>
-        <a href="<?php echo $edit_link; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Create New', 'cp' ); ?></a>
+        <?php if ( CoursePress_Data_Capabilities::can_add_discussions() ) : ?>
+            <a href="<?php echo $edit_link; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Create New', 'cp' ); ?></a>
+        <?php endif; ?>
     </h1>
     <div class="coursepress-page">
         <?php cp_subsubsub( $statuses ); ?>
@@ -70,20 +72,25 @@ if ( ! empty( $forums ) ) {
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $forum->ID ); ?>">
 <?php
+$can_delete = CoursePress_Data_Capabilities::can_delete_discussion( $forum->ID );
 switch ( $column_id ) {
 	case 'topic' :
 		echo $forum->post_title;
 		echo '<div class="row-actions">';
 		if ( 'trash' != $current_status ) {
-			printf(
-				'<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a></span>',
-				$forum->edit_link,
-				esc_attr__( 'Edit', 'cp' ),
-				esc_attr( $forum->post_title ),
-				esc_html__( 'Edit', 'cp' )
-			);
-			echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
-		} else { ?>
+            if ( CoursePress_Data_Capabilities::can_update_discussion( $forum->ID ) ) :
+                printf(
+                    '<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a></span>',
+                    $forum->edit_link,
+                    esc_attr__( 'Edit', 'cp' ),
+                    esc_attr( $forum->post_title ),
+                    esc_html__( 'Edit', 'cp' )
+                );
+            endif;
+            if ( $can_delete ) :
+			    echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
+            endif;
+		} elseif ( $can_delete ) { ?>
 			<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
 			<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
 		<?php }

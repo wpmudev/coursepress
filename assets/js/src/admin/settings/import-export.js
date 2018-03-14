@@ -43,9 +43,8 @@
                         uploadModel.set( $(this).attr('name'), $(this).is( ':checked' ) );
                     });
                     uploadModel.set( 'type', 'import_file' );
-                    uploadModel.off( 'coursepress:success_import_file' );
-                    uploadModel.once( 'success', this.uploadCourseSuccess, this );
-                    uploadModel.once( 'error', this.uploadCourseError, this );
+                    uploadModel.on( 'coursepress:success_import_file', this.uploadCourseSuccess, this );
+                    uploadModel.on( 'coursepress:error_import_file', this.uploadCourseError, this );
                     uploadModel.upload();
                 }
                 return false;
@@ -65,6 +64,7 @@
 
             uploadCourseError: function() {
                 this.uploadCourseSuccess();
+                this.errorContainer.html( win._coursepress.text.importing_failed ).show();
             },
 
             uploadCourse: function( data ) {

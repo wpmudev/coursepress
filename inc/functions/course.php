@@ -685,7 +685,12 @@ function coursepress_get_current_course_cycle() {
 	$course = coursepress_get_course();
 
 	if ( is_wp_error( $course ) ) {
-		return null; }
+		return null;
+	}
+	$is_course_started = $course->is_course_started();
+	if ( false == $is_course_started ) {
+		return __( 'Course is not available yet', 'cp' );
+	}
 
 	$unit = coursepress_get_unit();
 
@@ -1307,6 +1312,12 @@ function coursepress_get_course_facilitators( $course_id ) {
 }
 
 function coursepress_delete_course( $course_id ) {
+
+	// Continue only capable.
+	if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+		return false;
+	}
+
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
 		return $course;
@@ -1486,31 +1497,20 @@ function coursepress_is_type( $post_id, $type ) {
  *
  * @param int $post_id Post ID.
  * @param string $status New status (publish/draft/pending/trash/restore/delete).
- * @param string $type New status (alert/discussion).
+ * @param string $type post type (course/unit/alert/discussion).
+ * @param bool $caps_check Should check capability?
  *
  * @return bool
  */
-function coursepress_change_post( $post_id, $status, $type ) {
+function coursepress_change_post( $post_id, $status, $type, $caps_check = true ) {
 	/**
 	 * sanitize post id
 	 */
 	$post_id = absint( $post_id );
 	// Allowed statuses to change.
 	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
-	$capable = false;
-	// Get author of the current post.
-	$author = get_post_field( 'post_author', $post_id );
 
-	if ( ! coursepress_is_type( $post_id, $type ) ) {
-		$capable = false;
-	} elseif ( current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
-		// If current user is capable of updating any notification statuses.
-		$capable = true;
-	} elseif ( $author == get_current_user_id() && current_user_can( 'coursepress_change_my_' . $type . '_status_cap' ) ) {
-		$capable = true;
-	}
-
-	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! coursepress_is_type( $post_id, $type ) ) {
 
 		/**
 		 * Perform actions when post status not changed.
@@ -1522,6 +1522,28 @@ function coursepress_change_post( $post_id, $status, $type ) {
 		 */
 		do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
 		return false;
+	}
+
+	// If capability needs to be checked.
+	if ( $caps_check ) {
+		/**
+		 * Check capability for the post.
+		 * Remember you capability checking method name should match
+		 * following format.
+		 * For delete, trash, and restore: can_delete_POSTTYPE
+		 * For other status changes: can_change_POSTTYPE_status
+		 */
+		$cap_method = in_array( $status, array(
+			'trash',
+			'delete',
+			'restore'
+		) ) ? 'can_delete_' . $type : 'can_change_' . $type . '_status';
+		if ( method_exists( 'CoursePress_Data_Capabilities', $cap_method ) && ! CoursePress_Data_Capabilities::$cap_method( $post_id ) ) {
+			// This action hook is documented above.
+			do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
+
+			return false;
+		}
 	}
 
 	switch ( $status ) {

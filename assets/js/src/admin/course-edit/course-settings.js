@@ -43,22 +43,10 @@
                 content = this.$('.cp-course-description');
                 this.courseEditor.goToNext = true;
                 if ( ! this.model.get('post_excerpt') ) {
-                    summary.parent().addClass('cp-error');
-                    if ( proceed ) {
-                        jQuery( 'html, body' ).animate({
-                            scrollTop: summary.parent().offset().top - 20
-                        });
-                    }
-                    proceed = false;
+                    proceed = this.setErrorMarker( summary, proceed );
                 }
                 if ( ! this.model.get('post_content') ) {
-                    content.parent().addClass('cp-error');
-                    if ( proceed ) {
-                        jQuery( 'html, body' ).animate({
-                            scrollTop: content.parent().offset().top - 20
-                        });
-                    }
-                    proceed = false;
+                    proceed = this.setErrorMarker( content, proceed );
                 }
                 if ( false === proceed ) {
                     this.courseEditor.goToNext = false;
@@ -195,6 +183,10 @@
                 var target = $(ev.currentTarget);
                 var type = target.parent().data('user-type');
                 var user_id = target.data('user-id');
+                // Do not remove if no this user can not add new user.
+                if ( this.$('#cp-' + type + '-selector').length === 0 ) {
+                    return;
+                }
                 if ( '' !== user_id ) {
                     this.request.set( {
                         'action': 'remove_from_course',

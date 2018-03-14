@@ -1,214 +1,217 @@
 .coursepress-wrap,
 .coursepress-modal {
-  [type="text"],
-  [type="number"],
-  [type="email"],
-  textarea,
-  select {
-    padding: 8px 15px;
-    background-color: $grey_6;
-    border: 1px solid $grey_5;
-    @include boxshadow(none);
-    @include radius(5px);
-    height: auto;
+    [type="text"],
+    [type="number"],
+    [type="email"],
+    textarea,
+    select {
+        padding: 8px 15px;
+        background-color: $grey_6;
+        border: 1px solid $grey_5;
+        @include boxshadow(none);
+        @include radius(5px);
+        height: auto;
 
-    &:hover,
-    &:focus {
-      @include boxshadow(none);
-    }
-  }
-  input[type="number"] {
-    padding-right: 0;
-    height: auto;
-  }
-  select {
-    width: auto;
-    display: inline-block;
-  }
-  [disabled="disabled"] {
-    opacity: 0.6;
-  }
-  .select2-selection--single,
-  .select2-selection--multiple {
-    padding: 5px 15px;
-    min-height: 40px;
-    border-color: $grey_5;
-    min-width: 320px;
-  }
-  .select2-selection--multiple {
-    .select2-selection__choice {
-      padding: 5px;
-      margin-top: 0;
-      border-color: $grey_5;
-      background-color: $grey_5;
-      cursor: pointer;
-
-      span {
-        float: right;
-        border-radius: 50%;
-        padding: 0 5px;
-        margin-left: 8px;
-      }
-    }
-  }
-  .select2-container--below {
-    .select2-search--inline {
-      border: 1px solid $grey_5;
-      background-color: #ffffff;
-    }
-  }
-  .select2-container {
-    width: 100% !important;
-    * {
-      background-color: $grey_6;
-    }
-    .select2-selection__arrow {
-      height: 100%;
-      padding: 0 15px;
-      background-color: transparent;
-    }
-  }
-  .cp-input-clear {
-    position: relative;
-    display: inline-block;
-    border: 1px solid $grey_5;
-    background-color: $grey_6;
-    @include radius(4px);
-
-    input {
-      border: 0;
-    }
-    .cp-btn-clear {
-      cursor: pointer;
-      padding: 4px 8px;
-      margin-right: 2px;
-      color: $grey_4;
-      @include radius(4px);
-      @include transition(color 0.4s);
-    }
-
-    input:focus + .cp-btn-clear {
-      color: $grey_2;
-      @include transition(color 0.4s);
-    }
-  }
-
-  .cp-input-group {
-    border: 1px solid $grey_5;
-    background-color: $grey_6;
-    @include radius(6px);
-
-    input {
-      display: none;
-    }
-
-    li {
-      border: {
-        style: solid;
-        color: $grey_5;
-        width: 0 0 1px 0;
-      }
-      padding: 8px 15px;
-      margin: 0;
-
-      &:first-of-type {
-        @include radius(6px 0 0 6px);
-      }
-      &:last-of-type {
-        border: 0;
-        @include radius(0 6px 6px 0);
-      }
-
-      &.active {
-        background-color: $grey_5;
-        color: $black;
-        @include transition(background-color 0.4s);
-      }
-    }
-  }
-
-  .cp-add-image-box,
-  .cp-add-video-box {
-    display: flex;
-    .cp-thumbnail {
-      width: 50px;
-      border: 1px solid $grey_4;
-      border-right: 0;
-      background-size: cover;
-      @include radius(4px 0 0 4px);
-    }
-    .cp-div-url {
-      flex: 2;
-      border: 1px solid $grey_4;
-      background-color: $grey_6;
-      @include radius(0 4px 4px 0);
-    }
-    .cp-input-clear {
-      position: relative;
-      display: block;
-
-      [type="text"] {
-        width: 99%;
-      }
-      [type="button"] {
-        position: absolute;
-        top: 2px;
-        right: 0;
-      }
-    }
-    .cp-btn-browse {
-      margin-left: 10px;
-    }
-    .cp-input-clear,
-    .cp-image-url,
-    .cp-video-url {
-      border: 0;
-    }
-  }
-
-  .cp-add-video-box {
-    .cp-div-url {
-      @include radius(4px);
-    }
-  }
-
-  .cp-checkbox {
-    display: inline-block;
-
-    .cp-checkbox-input {
-      display: none;
-    }
-    .cp-checkbox-icon {
-      display: inline-block;
-      border: 1px solid $grey_5;
-      background-color: $grey_5;
-      width: 20px;
-      height: 20px;
-      @include radius(3px);
-    }
-
-    input:checked + .cp-checkbox-icon {
-      background-color: $blue_2;
-      color: #ffffff;
-      border-color: $blue_2;
-
-      &:before {
-        content: '\f00c';
-        color: #fff;
-        font-family: 'FontAwesome';
-      }
-    }
-  }
-
-  @media screen {
-    @media (min-width: 768px) {
-      .cp-input-group {
-        li {
-          border-width: 0 1px 0 0;
-          flex: 10;
-          text-align: center;
+        &:hover,
+        &:focus {
+            @include boxshadow(none);
         }
-      }
     }
-  }
-}
+    input[type="number"] {
+        padding-right: 0;
+        height: auto;
+    }
+    select {
+        width: auto;
+        display: inline-block;
+    }
+    [disabled="disabled"] {
+        opacity: 0.6;
+    }
+    .select2-selection--single,
+    .select2-selection--multiple {
+        padding: 5px 15px;
+        min-height: 40px;
+        border-color: $grey_5;
+        min-width: 320px;
+        @media (max-width: 800px) {
+            min-width: auto;
+        }
+    }
+    .select2-selection--multiple {
+        .select2-selection__choice {
+            padding: 5px;
+            margin-top: 0;
+            border-color: $grey_5;
+            background-color: $grey_5;
+            cursor: pointer;
+
+            span {
+                float: right;
+                border-radius: 50%;
+                padding: 0 5px;
+                margin-left: 8px;
+            }
+        }
+    }
+    .select2-container--below {
+        .select2-search--inline {
+            border: 1px solid $grey_5;
+            background-color: #ffffff;
+        }
+    }
+    .select2-container {
+        width: 100% !important;
+               * {
+                   background-color: $grey_6;
+               }
+               .select2-selection__arrow {
+                   height: 100%;
+                   padding: 0 15px;
+                   background-color: transparent;
+               }
+           }
+           .cp-input-clear {
+               position: relative;
+               display: inline-block;
+               border: 1px solid $grey_5;
+               background-color: $grey_6;
+               @include radius(4px);
+
+               input {
+                   border: 0;
+               }
+               .cp-btn-clear {
+                   cursor: pointer;
+                   padding: 4px 8px;
+                   margin-right: 2px;
+                   color: $grey_4;
+                   @include radius(4px);
+                   @include transition(color 0.4s);
+               }
+
+               input:focus + .cp-btn-clear {
+                   color: $grey_2;
+                   @include transition(color 0.4s);
+               }
+           }
+
+           .cp-input-group {
+               border: 1px solid $grey_5;
+               background-color: $grey_6;
+               @include radius(6px);
+
+               input {
+                   display: none;
+               }
+
+               li {
+                   border: {
+                       style: solid;
+                       color: $grey_5;
+                       width: 0 0 1px 0;
+                   }
+                   padding: 8px 15px;
+                   margin: 0;
+
+                   &:first-of-type {
+                       @include radius(6px 0 0 6px);
+                   }
+                   &:last-of-type {
+                       border: 0;
+                       @include radius(0 6px 6px 0);
+                   }
+
+                   &.active {
+                       background-color: $grey_5;
+                       color: $black;
+                       @include transition(background-color 0.4s);
+                   }
+               }
+           }
+
+           .cp-add-image-box,
+           .cp-add-video-box {
+               display: flex;
+               .cp-thumbnail {
+                   width: 50px;
+                   border: 1px solid $grey_4;
+                   border-right: 0;
+                   background-size: cover;
+                   @include radius(4px 0 0 4px);
+               }
+               .cp-div-url {
+                   flex: 2;
+                   border: 1px solid $grey_4;
+                   background-color: $grey_6;
+                   @include radius(0 4px 4px 0);
+               }
+               .cp-input-clear {
+                   position: relative;
+                   display: block;
+
+                   [type="text"] {
+                       width: 99%;
+                   }
+                   [type="button"] {
+                       position: absolute;
+                       top: 2px;
+                       right: 0;
+                   }
+               }
+               .cp-btn-browse {
+                   margin-left: 10px;
+               }
+               .cp-input-clear,
+               .cp-image-url,
+               .cp-video-url {
+                   border: 0;
+               }
+           }
+
+           .cp-add-video-box {
+               .cp-div-url {
+                   @include radius(4px);
+               }
+           }
+
+           .cp-checkbox {
+               display: inline-block;
+
+               .cp-checkbox-input {
+                   display: none;
+               }
+               .cp-checkbox-icon {
+                   display: inline-block;
+                   border: 1px solid $grey_5;
+                   background-color: $grey_5;
+                   width: 20px;
+                   height: 20px;
+                   @include radius(3px);
+               }
+
+               input:checked + .cp-checkbox-icon {
+                   background-color: $blue_2;
+                   color: #ffffff;
+                   border-color: $blue_2;
+
+                   &:before {
+                       content: '\f00c';
+                       color: #fff;
+                       font-family: 'FontAwesome';
+                   }
+               }
+           }
+
+           @media screen {
+               @media (min-width: 768px) {
+                   .cp-input-group {
+                       li {
+                           border-width: 0 1px 0 0;
+                           flex: 10;
+                           text-align: center;
+                       }
+                   }
+               }
+           }
+       }

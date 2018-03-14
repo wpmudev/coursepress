@@ -82,7 +82,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Main CP Page
 		$label = __( 'CoursePress Base', 'cp' );
-		$screen_id = add_menu_page( $label, $label, 'coursepress_dashboard_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
+		$screen_id = add_menu_page( $label, $label, 'coursepress_courses_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
 		// Add screen ID to the list of valid CP pages
 		array_unshift( $this->screens, $screen_id );
 		// Add preload callback
@@ -103,7 +103,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set categories page
 		$cats_label = __( 'Categories', 'cp' );
-		$this->add_submenu( $cats_label, 'coursepress_settings_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
+		$this->add_submenu( $cats_label, 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
 
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
@@ -117,7 +117,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set assessment page
 		$assessment_label = __( 'Assessments', 'cp' );
-		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessments_cap', 'coursepress_assessments', 'get_assessments_page' );
+		array_unshift( $this->screens, $assesment_screen_id );
 		// Add preload callback
 		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assessments_page' ) );
 
@@ -127,11 +128,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set Comments page
 		$comment_label = __( 'Comments', 'cp' );
-		$this->add_submenu( $comment_label, 'coursepress_comments_cap', 'coursepress_comments', 'get_comments_page' );
+		$this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
 
 		// Set reports page
 		$label = __( 'Reports', 'cp' );
-		$screen_id = $this->add_submenu( $label, 'coursepress_settings_cap', 'coursepress_reports', 'get_report_page' );
+		$screen_id = $this->add_submenu( $label, 'coursepress_reports_cap', 'coursepress_reports', 'get_report_page' );
+		array_unshift( $this->screens, $screen_id );
 
 		// Set Notification page
 		$notification_label = __( 'Notifications', 'cp' );
@@ -143,8 +145,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$settings_label = __( 'Settings', 'cp' );
 		$this->add_submenu( $settings_label, 'coursepress_settings_cap', 'coursepress_settings', 'get_settings_page' );
 
-		// Change top menu label
-		$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
+		// Rewrite the menu text when user can access course list.
+		if ( current_user_can( 'coursepress_courses_cap' ) ) {
+			// Change top menu label
+			$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
+		}
 	}
 
 	/**
@@ -261,6 +266,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
 			'plugin_url' => $CoursePress->plugin_url,
+			/**
+			 * WordPress
+			 */
+			'wp' => array(
+				'date_format' => get_option( 'date_format', 'Y-m-d' ),
+				'start_of_week' => get_option( 'start_of_week', 0 ),
+				'time_format' => get_option( 'time_format', 'H:i' ),
+				'WPLANG' => get_option( 'WPLANG', 'en' ),
+			),
 			// Common use texts
 			'text' => array(
 				'untitled' => __( 'Untitled', 'cp' ),
@@ -282,6 +296,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'deleting_course' => __( 'Deleting course... please wait', 'cp' ),
 				'deleting_courses' => __( 'Deleting courses... please wait', 'cp' ),
 				'importing_courses' => __( 'Importing courses... please wait', 'cp' ),
+				'importing_failed' => __( 'Import failed. Please check the file and try again.', 'cp' ),
 				'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this course?', 'cp' ),
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
@@ -599,6 +614,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			}
 		}
 
+		// Check capabilities before showing edit/create form.
+		$can_access = empty( $course_id )? CoursePress_Data_Capabilities::can_create_course() : CoursePress_Data_Capabilities::can_update_course( $course_id );
+		if ( ! $can_access ) {
+			$args = array(
+				'title' => __( 'Access Denied', 'cp' ),
+				'message' => __( 'Sorry, you are not allowed to do this.', 'cp' ),
+			);
+			coursepress_render( 'views/admin/error-wrong', $args );
+			return;
+		}
+
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
 			$course = coursepress_get_course( get_default_post_to_edit( $this->post_type, true ) );
@@ -728,7 +754,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'select' => __( 'Selectable', 'cp' ),
 		);
 		$this->localize_array['questions'] = $question_types;
-		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps, 'course' => $course ) );
+		$unit_args = array(
+			'steps' => $steps,
+			'course' => $course,
+			'can_create_unit' => CoursePress_Data_Capabilities::can_create_unit( $course_id ),
+		);
+		coursepress_render( 'views/tpl/course-units', $unit_args );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
 		$paged = $this->get_pagenum();
@@ -755,6 +786,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		}
 
 		$args = array(
+			'course_id'          => $course_id,
 			'total_students'     => $total_students,
 			'students'           => $students,
 			'redirect'           => remove_query_arg( 'dummy' ),

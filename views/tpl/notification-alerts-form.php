@@ -10,7 +10,9 @@
 				<option value="all"><?php _e( 'All Courses', 'cp' ); ?></option>
 				<?php if ( ! empty( $courses ) ) : ?>
 					<?php foreach ( $courses as $course ) : ?>
-						<option value="<?php echo $course->ID; ?>"><?php echo $course->post_title; ?></option>
+						<?php if ( CoursePress_Data_Capabilities::can_add_notification( $course->ID ) ) : ?>
+							<option value="<?php echo $course->ID; ?>"><?php echo $course->post_title; ?></option>
+						<?php endif; ?>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</select>
@@ -46,7 +48,7 @@
 			</div>
 		</div>
 		<div class="box-inner-content">
-			<?php coursepress_teeny_editor( '', 'alert_content', array( 'textarea_name' => 'alert_content', 'textarea_rows' => 5 ) ); ?>
+			<div id="alert_content"></div>
 		</div>
 	</div>
 

@@ -17,13 +17,13 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			'pdf' => 'application/pdf',
 			'zip' => 'application/zip',
 		);
-
 		$allowed = $this->__get( 'allowed_file_types' );
-
+		if ( empty( $allowed ) || ! is_array( $allowed ) ) {
+			$allowed = array();
+		}
 		if ( in_array( 'image', $allowed ) ) {
 			array_push( $allowed, 'jpeg', 'jpg', 'png' );
 		}
-
 		if ( ! empty( $allowed ) ) {
 			foreach ( $mimes as $type => $label ) {
 				if ( ! in_array( $type, $allowed ) ) {
@@ -31,7 +31,6 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 				}
 			}
 		}
-
 		return apply_filters(
 			'coursepress_allowed_student_mimes',
 			$mimes
@@ -41,10 +40,8 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 	public function get_answer_template( $user_id = 0 ) {
 		$response = $this->get_user_response( $user_id );
 		$template = '';
-
 		if ( ! empty( $response ) ) {
 			$template = parent::get_answer_template( $user_id );
-
 			$file = $this->create_html(
 				'a',
 				array(
@@ -55,7 +52,6 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			);
 			$template .= $this->create_html( 'p', array( 'class' => 'chosen-answer correct' ), $file );
 		}
-
 		return $template;
 	}
 
@@ -110,7 +106,6 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		$types   = $this->__get( 'allowed_file_types' );
 		$types   = is_array( $types ) ? implode( ',', $types ) : $types;
 		$name    = sprintf( 'module[%d]', $step_id );
-
 		$attr = array(
 			'type' => 'file',
 			'name' => $name,
@@ -120,9 +115,7 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 			$attr['readonly'] = 'readonly';
 			$attr['disabled'] = 'disabled';
 		}
-
 		$input = coursepress_create_html( 'input', $attr );
-
 		return $input;
 	}
 }

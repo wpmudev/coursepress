@@ -20,7 +20,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	function columns() {
 		$columns = array(
 			'ID' => __( 'ID', 'cp' ),
-			'student' => __( 'Student Name', 'cp' ),
+			'student' => __( '<span>Student </span>Name', 'cp' ),
 			'responses' => __( 'Responses', 'cp' ),
 			'average' => __( 'Average', 'cp' ),
 			'download' => __( 'Download', 'cp' ),
@@ -105,7 +105,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			$tmp = array_keys( $courses );
 			$this->course_id = array_shift( $tmp );
 		} else {
-			$this->course_id = (int) $_REQUEST['course_id'];
+			$this->course_id = (int) ( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 0 );
 		}
 
 		$args = array(
@@ -186,7 +186,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				$student->course_answered = $course_answered;
 				$student->course_total = $course_total;
 				$student->average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-				$student->course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
+				$student->course_average = $course_assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
 
 			$args = array(
 				'page' => $this->slug,

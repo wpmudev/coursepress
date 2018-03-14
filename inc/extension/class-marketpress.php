@@ -58,6 +58,15 @@ class CoursePress_Extension_MarketPress {
 		add_action( 'coursepress_course_status_changed', array( $this, 'change_product_status' ), 10, 2 );
 		// Set a flag that MarketPress is active.
 		add_filter( 'coursepress_is_marketpress_active', '__return_true' );
+		/**
+		 * cost for shortcode
+		 */
+		add_filter( 'coursepress_shortcode_course_cost', array( $this, 'coursepress_shortcode_course_cost' ), 10, 2 );
+	}
+
+	public function coursepress_shortcode_course_cost( $content, $course_id ) {
+		$course = coursepress_get_course( $course_id );
+		return $this->course_cost( $content, null, $course );
 	}
 
 	/**
@@ -134,7 +143,9 @@ class CoursePress_Extension_MarketPress {
 		// If paid course, get the product shortcode.
 		if ( $is_paid_course ) {
 			$product_id = $course->get_product_id();
-			return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
+			if ( ! empty( $product_id ) ) {
+				return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
+			}
 		}
 		return $price_html;
 	}
@@ -423,7 +434,7 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function redirect_to_product() {
 		global $post, $wp_query;
-		if ( !$post || self::$product_ctp != $post->post_type ) {
+		if ( ! $post || self::$product_ctp != $post->post_type ) {
 			return;
 		}
 		if ( ! $wp_query->is_single || ! $wp_query->is_singular ) {

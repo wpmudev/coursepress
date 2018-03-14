@@ -92,6 +92,19 @@
 																		<?php endif; ?>
 																	</th>
 																</tr>
+                                                                    <?php
+																	if ( $step->type === 'fileupload' ) {  ?>
+																		<tr>
+																			<td colspan="3">
+																				<?php $uploaded_files = $step->get_user_response( $student_id ); ?>
+																				<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
+																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
+																				<?php else : ?>
+																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																				<?php endif; ?>
+																			</td>
+                                                                        </tr>
+																	<?php } ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
@@ -102,6 +115,14 @@
 																			<td><?php echo $question['title']; ?></td>
 																			<td>
 																				<?php $response = $step->get_user_response( $student_id ); ?>
+																				<?php if ( $question['type'] == 'written' ) :  ?>
+																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][ $qkey ]; ?>
+																						<?php if ( $written_answer ) :  ?>
+																							<?php echo stripslashes( $written_answer ); ?>
+																						<?php else : ?>
+																							<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																						<?php endif; ?>
+																				<?php else : ?>
 																				<?php if ( isset( $response[ $qkey ] ) ) : ?>
 																					<ul class="cp-assessments-answers">
 																						<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
@@ -122,6 +143,7 @@
 																					<ul class="cp-assessments-answers">
 																						<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
 																					</ul>
+																				<?php endif; ?>
 																				<?php endif; ?>
 																			</td>
 																		</tr>

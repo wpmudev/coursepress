@@ -359,6 +359,9 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		);
 		$post = get_posts( $post_params );
 		$course = coursepress_get_course( $course_id );
+		if ( is_wp_error( $course ) ) {
+			return false;
+		}
 		$is_override = $course->__get( 'basic_certificate' );
 		$is_override = ! empty( $is_override );
 		if ( count( $post ) > 0 || $is_override ) {
@@ -398,7 +401,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					/**
 					 * Default Background
 					 */
-					$background = $CoursePress->plugin_path .'asset/images/certificate/certificate-background-p.png';
+					$background = $CoursePress->plugin_path .'assets/images/certificate/certificate-background-p.png';
 					/**
 					 * default orientation
 					 */
@@ -407,7 +410,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					 * CP Logo
 					 */
 					$logo = array(
-						'file' => $CoursePress->plugin_path . 'asset/images/certificate/certificate-logo-coursepress.png',
+						'file' => $CoursePress->plugin_path . 'assets/images/certificate/certificate-logo-coursepress.png',
 						'x' => 95,
 						'y' => 15,
 						'w' => 100,
@@ -539,16 +542,42 @@ class CoursePress_Certificate extends CoursePress_Utility {
 	 * @return string/boolean Returns encoded URL or false if file do not * exists.
 	 */
 	public function url_prepare( $file, $course_id, $student_id ) {
-
 		if ( is_file( $file ) && is_readable( $file ) ) {
 			$upload_dir = wp_upload_dir();
 			$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 			$url = $this->encode( $url );
 			$url = add_query_arg( array( 'fdcpf' => $url, 'c' => $course_id, 'u' => $student_id ), home_url() );
-
 			return $url;
 		}
-
 		return $this->get_pdf_file_url( $course_id, $student_id );
+	}
+
+	public function try_to_regenerate( $filename ) {
+		$args = array(
+			'post_type' => $this->post_type,
+			'post_status' => 'any',
+			'meta_query' => array(
+				'filename' => array(
+					'key' => self::CUSTOM_FIELD_NAME_FOR_PDF_FILE,
+					'value' => $filename,
+					'compare' => 'LIKE',
+				),
+			),
+		);
+		$query = new WP_Query( $args );
+		if ( isset( $query->posts ) ) {
+			$length = count( $query->posts );
+			if ( 1 === $length ) {
+				$post = array_shift( $query->posts );
+				$course_id = $post->post_parent;
+				$student_id = $post->post_author;
+				$filename = $this->get_pdf_file_name( $course_id, $student_id );
+				if ( ! is_file( $filename ) ) {
+					$this->generate_pdf_certificate( $course_id, $student_id, false );
+				}
+				return is_file( $filename );
+			}
+		}
+		return false;
 	}
 }
