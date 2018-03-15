@@ -717,18 +717,13 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int
 	 */
 	public function is_students_full() {
-
 		$course_id = $this->__get( 'ID' );
-
 		$limited = coursepress_is_true( coursepress_course_get_setting( $course_id, 'class_limited' ) );
-
 		if ( $limited ) {
 			$limit = coursepress_course_get_setting( $course_id, 'class_size' );
 			$students = $this->count_students();
-
 			return $limit <= $students;
 		}
-
 		return false;
 	}
 
@@ -1308,6 +1303,25 @@ class CoursePress_Course extends CoursePress_Utility {
 					esc_html( $email )
 				)
 			);
+		}
+		/**
+		 * check students
+		 */
+		$user = get_user_by( 'email', $email );
+		if ( is_a( $user, 'WP_User' ) ) {
+			$user = new CoursePress_User( $user );
+			if ( ! is_wp_error( $user ) ) {
+				$is_enrolled = $user->is_enrolled_at( $this->ID );
+				if ( $is_enrolled ) {
+					return new WP_Error(
+						'error',
+						sprintf(
+							__( 'User with email %s is already enrolled to this course and can not be invited again', 'cp' ),
+							esc_html( $email )
+						)
+					);
+				}
+			}
 		}
 		return true;
 	}
