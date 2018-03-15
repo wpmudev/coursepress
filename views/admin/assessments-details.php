@@ -45,7 +45,7 @@
 							<?php
 							$details_args = array(
 								'tab' => 'details',
-								'student_id' => $student->ID,
+								'student_id' => $assessments['student']->ID,
 							);
 							// Remove unwanted items from details link.
 							$details_link = remove_query_arg( array( 's', 'student_progress', 'graded_ungraded' ) );
@@ -88,7 +88,7 @@
 									 * @param string $column_id
 									 * @param CoursePress_Student object $student
 									 */
-									do_action( 'coursepress_studentlist_column', $column_id, $student );
+									do_action( 'coursepress_studentlist_column', $column_id, $assessments['student'] );
 									break;
 							endswitch;
 							?>
