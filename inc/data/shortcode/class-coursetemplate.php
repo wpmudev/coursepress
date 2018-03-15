@@ -979,21 +979,11 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$deep = coursepress_is_true( sanitize_text_field( $atts['deep'] ) );
 		$view_mode = coursepress_course_get_setting( $course_id, 'course_view', 'normal' );
 		$content = '';
-		if ( empty( $course_id ) ) {
-			return '';
-		}
-		$structure_visible = coursepress_is_true( coursepress_course_get_setting( $course_id, 'structure_visible' ) );
-		if ( ! $structure_visible ) {
-			return '';
-		}
 		$time_estimates = coursepress_is_true( coursepress_course_get_setting( $course_id, 'structure_show_duration' ) );
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$visibility = CoursePress_Data_Course::structure_visibility( $course_id );
 		$structure_level = coursepress_course_get_setting( $course_id, 'structure_level' );
 		$is_unit_only = 'unit' === $structure_level;
-		if ( ! $visibility['has_visible'] ) {
-			return '';
-		}
 		$student_id = is_user_logged_in() ? get_current_user_id() : 0;
 		$student = coursepress_get_user( $student_id );
 		$course = coursepress_get_course( $course_id );
