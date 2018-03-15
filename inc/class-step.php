@@ -123,11 +123,11 @@ class CoursePress_Step extends CoursePress_Unit {
 				$module = $modules[ $module_number ];
 				return $module['url'] . trailingslashit( $post_name );
 			}
-		} else {
-			if ( $unit ) {
-				return $unit->get_permalink() . trailingslashit( $post_name );
-			}
+		} else if ( $unit ) {
+			$slug = coursepress_get_setting( 'slugs/step', 'step' );
+			return $unit->get_permalink() . trailingslashit( $slug ) . trailingslashit( $post_name );
 		}
+		return '';
 	}
 
 	public function is_answerable() {
