@@ -342,7 +342,14 @@ class CoursePress_User extends CoursePress_Utility {
 			if ( $progress_id > 0 ) {
 				$wpdb->delete( $this->progress_table, array( 'ID' => $progress_id ), array( '%d' ) );
 			}
+			/**
+			 * certificate
+			 */
+			$certificate = new CoursePress_Certificate();
+			$certificate->delete_certificate( $id, $course_id );
+			return true;
 		}
+		return false;
 	}
 
 	public function add_student_progress( $course_id = 0, $progress = array() ) {

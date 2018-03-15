@@ -15,6 +15,32 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		add_filter( 'coursepress_default_settings', array( $this, 'default_certificate_settings' ) );
 	}
 
+	/**
+	 * delete certificate file
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $student_id The WP user-ID.
+	 * @param integer $course_id The course-ID that was completed.
+	 */
+	public function delete_certificate( $student_id, $course_id ) {
+		/**
+		 * delete certificate file
+		 */
+		$filename = $this->get_pdf_file_name( $course_id, $student_id );
+		if ( file_exists( $filename ) ) {
+			unlink( $filename );
+		}
+		/**
+		 * delete certificate entry
+		 */
+		$filename = basename( $filename );
+		$post = $this->get_certificate_by_filename( $filename );
+		if ( ! is_wp_error( $post ) ) {
+			wp_delete_post( $post->ID, true );
+		}
+	}
+
 	public function default_certificate_settings( $settings ) {
 		$settings['basic_certificate'] = array(
 			'enabled' => true,
@@ -552,7 +578,15 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		return $this->get_pdf_file_url( $course_id, $student_id );
 	}
 
-	public function try_to_regenerate( $filename ) {
+	/**
+	 * Get certificate post entry by file name.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $filename Certificate File name.
+	 */
+	private function get_certificate_by_filename( $filename ) {
+		$post = null;
 		$args = array(
 			'post_type' => $this->post_type,
 			'post_status' => 'any',
@@ -568,16 +602,30 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		if ( isset( $query->posts ) ) {
 			$length = count( $query->posts );
 			if ( 1 === $length ) {
-				$post = array_shift( $query->posts );
-				$course_id = $post->post_parent;
-				$student_id = $post->post_author;
-				$filename = $this->get_pdf_file_name( $course_id, $student_id );
-				if ( ! is_file( $filename ) ) {
-					$this->generate_pdf_certificate( $course_id, $student_id, false );
-				}
-				return is_file( $filename );
+				return array_shift( $query->posts );
 			}
 		}
-		return false;
+		return new WP_Error();
+	}
+
+	/**
+	 * Try to regenerate missing certificate file
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $filename Certificate file name.
+	 */
+	public function try_to_regenerate( $filename ) {
+		$post = $this->get_certificate_by_filename( $filename );
+		if ( is_wp_error( $post ) ) {
+			return false;
+		}
+		$course_id = $post->post_parent;
+		$student_id = $post->post_author;
+		$filename = $this->get_pdf_file_name( $course_id, $student_id );
+		if ( ! is_file( $filename ) ) {
+			$this->generate_pdf_certificate( $course_id, $student_id, false );
+		}
+		return is_file( $filename );
 	}
 }

@@ -773,9 +773,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	private function withdraw_student( $request ) {
 		$course_id = filter_var( $request->course_id, FILTER_VALIDATE_INT );
 		$student_id = filter_var( $request->student_id, FILTER_VALIDATE_INT );
-		coursepress_delete_student( $student_id, $course_id );
-		$result = array( 'student_id' => $student_id );
-		wp_send_json_success( $result );
+		$result = coursepress_delete_student( $student_id, $course_id );
+		if ( is_wp_error( $result ) ) {
+			$data = array(
+				'message' => $result->get_error_message(),
+			);
+			wp_send_json_error( $data );
+		}
+		$data = array( 'student_id' => $student_id );
+		wp_send_json_success( $data );
 	}
 
 	public function register_user() {}

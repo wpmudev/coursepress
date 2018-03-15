@@ -181,10 +181,22 @@
                     model.set( 'action', 'withdraw_student' );
                     model.set('course_id', this.model.get('ID' ) );
                     model.set('student_id', target.data('id' ) );
+                    model.off( 'coursepress:error_withdraw_student' );
+                    model.off( 'coursepress:success_withdraw_student' );
+                    model.on( 'coursepress:error_withdraw_student', this.withdrawStudentError, this );
                     model.on( 'coursepress:success_withdraw_student', this.withdrawStudentSuccess, this );
                     model.save();
                 }
                 return false;
+            },
+
+            withdrawStudentError: function( data ) {
+                if ( 'string' === typeof( data.message ) ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                }
             },
 
             withdrawStudentSuccess: function( data ) {
