@@ -63,5 +63,9 @@
     "gulp-zip": "^4.0.0",
     "load-grunt-tasks": "~0.2.0",
     "time-grunt": "~0.2.3"
+  },
+  "dependencies": {
+    "grunt-sass": "^2.1.0",
+    "node-sass": "^4.7.2"
   }
 }
