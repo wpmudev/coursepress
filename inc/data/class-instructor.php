@@ -164,4 +164,73 @@ class CoursePress_Data_Instructor {
 
 		return false;
 	}
+
+	/**
+	 * Get instructor by md5 hash.
+	 *
+	 * @param string $hash MD% hash.
+	 *
+	 * @return bool|false|WP_User
+	 */
+	public static function instructor_by_hash( $hash ) {
+
+		global $wpdb;
+		// Check cache first!
+		$user_id = wp_cache_get( $hash, 'coursepress_userhash' );
+		if ( is_multisite() ) {
+			$hash = $wpdb->prefix . $hash;
+		}
+		// Not in cache, so retrieve.
+		if ( empty( $user_id ) ) {
+			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
+			$user_id = $wpdb->get_var( $sql );
+			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
+		}
+
+		return empty( $user_id ) ? false : get_userdata( $user_id );
+	}
+
+	/**
+	 * Create md5 hash for the user.
+	 *
+	 * @param int|WP_User $user
+	 */
+	public static function create_hash( $user ) {
+
+		$user_id = coursepress_get_user_id( $user );
+		$user = get_userdata( $user_id );
+		if ( empty( $user ) ) {
+			return;
+		}
+		$hash = md5( $user->user_login );
+		$global_option = ! is_multisite();
+		/**
+		 * Just in case someone is actually using this hash for something,
+		 * we'll populate it with current value. Will be an empty array if
+		 * nothing exists. We're only interested in the key anyway.
+		 */
+		update_user_option( $user_id, $hash, time(), $global_option );
+		// Put it in cache.
+		wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
+	}
+
+	/**
+	 * Get md5 hash for the user.
+	 *
+	 * @param int|WP_User $user
+	 *
+	 * @return bool|string
+	 */
+	public static function get_hash( $user ) {
+
+		$user_id = coursepress_get_user_id( $user );
+		$user = get_userdata( $user_id );
+		$hash = md5( $user->user_login );
+		$option = get_user_option( $hash, $user_id );
+		if ( empty( $option ) ) {
+			self::create_hash( $user_id );
+		}
+
+		return null === $option ? false : $hash;
+	}
 }
