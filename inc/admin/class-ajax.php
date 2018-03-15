@@ -1152,7 +1152,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// We need course id and valid email.
 		if ( $request->course_id && is_email( $request->email ) ) {
 			// Continue only if user can withdraw student.
-			if ( CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
+			if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove student invitation.', 'cp' ) ) );
 			}
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
