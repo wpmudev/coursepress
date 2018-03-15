@@ -19,11 +19,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// Hook to search for select2 data.
 		add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
 		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
-
 		// Hook to enrollment request
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
-
 		// Register user
 		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
 		// Update profile
@@ -69,23 +67,18 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$with_modules = filter_input( INPUT_GET, 'with_modules', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
 		$error = array( 'error_code' => 'cannot_get_units', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
-
 		if ( ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error( $error );
 		}
-
 		$course = new CoursePress_Course( $course_id );
 		$units = $course->get_units( false );
-
 		if ( ! empty( $units ) ) {
 			foreach ( $units as $pos => $unit ) {
 				if ( $with_modules ) {
 					$modules = $unit->get_modules_with_steps( false );
-
 					if ( $modules ) {
 						foreach ( $modules as $mpos => $module ) {
 							$mini_desc = '';
-
 							if ( ! empty( $module['description'] ) ) {
 								$mini_desc = wp_strip_all_tags( $module['description'] );
 								$mini_desc = substr( $mini_desc, 0, 50 );
@@ -104,29 +97,27 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 							),
 						);
 					}
-
 					$unit->__set( 'modules', $modules );
 				} else {
 					$steps = $unit->get_steps( false );
 					$unit->__set( 'steps', $steps );
 				}
-
 				// Set permalink to the unit.
 				$unit->unit_permalink = $unit->get_permalink();
 				// Get unit permissions.
 				$unit->can_update_unit = CoursePress_Data_Capabilities::can_update_unit( $unit->ID );
 				$unit->can_delete_unit = CoursePress_Data_Capabilities::can_delete_unit( $unit->ID );
 				$unit->can_change_unit_status = CoursePress_Data_Capabilities::can_change_unit_status( $unit->ID );
-
 				$units[ $pos ] = $unit;
 			}
 		}
-
 		wp_send_json_success( $units );
 	}
 
+	/**
+	 * Update course data.
+	 */
 	public function update_course( $request ) {
-
 		$course_object = array(
 			'post_type' => 'course',
 			'post_status' => 'pending',
@@ -138,56 +129,41 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'menu_order' => 0,
 			'comment_status' => 'closed', // Alway closed comment status
 		);
-
 		// Fill course object
 		foreach ( $course_object as $key => $value ) {
 			if ( isset( $request->{$key} ) ) {
 				$course_object[ $key ] = $request->{$key};
 			}
 		}
-
 		$course_object['post_name'] = wp_unique_post_slug( $course_object['post_name'], $course_object['ID'], 'publish', 'course', 0 );
-
 		if ( 'auto-draft' == $course_object['post_status'] ) {
 			$course_object['post_status'] = 'draft';
 		}
-
 		if ( (int) $course_object['ID'] > 0 ) {
-
 			// Check course update capability.
 			if ( ! CoursePress_Data_Capabilities::can_update_course( (int) $course_object['ID'] ) ) {
 				return array( 'success' => false );
 			}
-
 			$course_id = wp_update_post( $course_object );
 		} else {
-
 			// Check course creation capability.
 			if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
 				return array( 'success' => false );
 			}
-
 			$course_id = wp_insert_post( $course_object );
 		}
-
 		$course_meta = array();
-
 		foreach ( $request as $key => $value ) {
 			$_key = str_replace( 'meta_', '', $key );
-
 			if ( preg_match( '%meta_%', $key ) ) {
-
 				$course_meta[ $_key ] = $value;
 			}
 		}
-
 		$course = coursepress_get_course( $course_id );
 		$course->update_setting( true, $course_meta );
 		$course->save_course_number( $course_id, $course_object['post_title'] );
-
 		// Retrieve the course object back
 		$course = coursepress_get_course( $course_id, false );
-
 		return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
 	}
 
@@ -213,7 +189,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					unset( $units->{$cid} );
 					continue;
 				}
-
 				// Check if required capability is set.
 				$can_proceed = empty( $unit->ID ) ?
 					CoursePress_Data_Capabilities::can_create_unit( $course_id ) :
@@ -222,7 +197,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				if ( ! $can_proceed ) {
 					continue;
 				}
-
 				// Get post object
 				$unit_array = array(
 					'ID' => $unit->ID,
@@ -396,7 +370,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$request = get_object_vars( $request );
 			$request = array_map( array( $this, 'to_array' ), $request );
 		}
-
 		/**
 		 * remove some keys
 		 */
@@ -406,15 +379,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				unset( $request[ $key ] );
 			}
 		}
-
 		/**
 		 * check extensions settings
 		 */
 		global $CoursePress_Extension;
 		$CoursePress_Extension->active_extensions();
-
 		coursepress_update_setting( true, $request );
-
 		return array( 'success' => true );
 	}
 
@@ -615,7 +585,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request data.
 	 */
 	public function send_email_invite( $request ) {
-
 		$proceed = true;
 		// Do not continue if empty.
 		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
@@ -629,7 +598,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! $proceed ) {
 			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 		}
-
 		$args = array(
 			'email' => $request->email,
 			'course_id' => $request->course_id,
@@ -1183,12 +1151,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			}
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
-
 		// Success resoponse with email.
 		if ( $success ) {
 			wp_send_json_success( $success );
 		}
-
 		wp_send_json_error( true );
 	}
 
