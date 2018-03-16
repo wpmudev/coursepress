@@ -33,37 +33,81 @@
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
 				<tr>
-					<th class="column-student">
-						<div class="cp-flex">
-							<span class="gravatar"><?= get_avatar( $student_id, 30 ) ?></span>
-							<span class="user_login"><?= $assessments['student']->user_login ?></span>
-							<span class="display_name">(<?= $assessments['student']->get_name() ?>)</span>
-						</div>
-					</th>
-					<th class="column-course">
-						<div class="cp-flex">
-							<h3><?= $assessments['course']->get_the_title() ?></h3>
-						</div>
-					</th>
-					<th class="column-grade">
-						<div class="cp-flex">
-							<h3><?= $assessments['grade'] ? : 0; ?>%</h3>
-						</div>
-					</th>
+					<?php foreach ( $columns as $column_id => $column_label ) : ?>
+						<th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+							<?php echo $column_label; ?>
+						</th>
+					<?php endforeach; ?>
+				</tr>
+				<tr>
+					<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
+						<td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+							<?php
+							$details_args = array(
+								'tab' => 'details',
+								'student_id' => $assessments['student']->ID,
+							);
+							// Remove unwanted items from details link.
+							$details_link = remove_query_arg( array( 's', 'student_progress', 'graded_ungraded' ) );
+							$details_link = add_query_arg( $details_args, $details_link );
+							switch ( $column_id ) :
+								// @todo Add profile link if required.
+								case 'student' :
+									echo '<div class="cp-flex">';
+									echo '<span class="gravatar">';
+									echo get_avatar( $assessments['student']->ID, 30 );
+									echo '</span>';
+									echo ' ';
+									echo '<span class="user_login">';
+									echo $assessments['student']->user_login;
+									echo '</span>';
+									echo ' ';
+									echo '<span class="display_name">(';
+									echo $assessments['student']->get_name();
+									echo ')</span>';
+									echo '</div>';
+									break;
+								case 'last_active' :
+									// Last activity time.
+									$last_active = $assessments['student']->get_last_activity_time();
+									echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+									break;
+								case 'grade' :
+									$grade = $assessments['student']->grade;
+									echo ( empty( $grade ) ? 0 : $grade ) . '%';
+									break;
+								case 'modules_progress' :
+									echo '<div class="cp-assessment-progress-hidden">';
+									echo '</div>';
+									break;
+								default :
+									/**
+									 * Trigger to allow custom column value
+									 *
+									 * @since 3.0
+									 * @param string $column_id
+									 * @param CoursePress_Student object $student
+									 */
+									do_action( 'coursepress_studentlist_column', $column_id, $assessments['student'] );
+									break;
+							endswitch;
+							?>
+						</td>
+					<?php endforeach; ?>
 				</tr>
 			</thead>
 			<tbody>
 			<?php if ( ! empty( $assessments['units'] ) ) : ?>
 				<tr class="cp-assessments-details">
-					<td colspan="3" class="cp-tr-expanded">
+					<td colspan="4" class="cp-tr-expanded">
 						<ul class="cp-assessments-units-expanded">
 							<?php foreach ( $assessments['units'] as $unit ) : ?>
 								<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 								<li>
-									<span class="pull-left cp-title"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
+									<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<?php if ( $unit->is_graded ) : ?>
 										<span class="pull-right">
-											<span class="cp-title"><?= $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ? : 0 ?>%</span>
+											<span class="cp-cross-icon"><?= $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ? : 0 ?>%</span>
 											<span class="cp-minus-icon"></span>
 										</span>
 									<?php endif; ?>
@@ -77,11 +121,11 @@
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
 																<?php if ( $step_count == 0 ) : ?>
 																	<tr>
-																		<th colspan="2"><?php echo $module['title']; ?></th>
+																		<th colspan="3"><?php echo $module['title']; ?></th>
 																	</tr>
 																<?php endif; ?>
 																<tr class="cp-question-title">
-																	<th colspan="2">
+																	<th colspan="3">
 																		<span class="cp-title"><?= $step->get_the_title() ?></span>
 																		<?php if ( $step->is_graded ) : ?>
 																			<span class="pull-right cp-title">
@@ -92,22 +136,12 @@
 																		<?php endif; ?>
 																	</th>
 																</tr>
-                                                                    <?php
-																	if ( $step->type === 'fileupload' ) {  ?>
-																		<tr>
-																			<td colspan="3">
-																				<?php $uploaded_files = $step->get_user_response( $student_id ); ?>
-																				<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
-																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
-																				<?php else : ?>
-																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
-																				<?php endif; ?>
-																			</td>
-                                                                        </tr>
-																	<?php } ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
+																	<?php if ( $step->type != 'written' ) :  ?>
+																		<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+																	<?php endif; ?>
 																</tr>
 																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																	<?php foreach ( $step->questions as $qkey => $question ) : ?>
@@ -127,14 +161,14 @@
 																					<ul class="cp-assessments-answers">
 																						<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
 																							<li>
-																								<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
+																								<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? '' : 'cp-right-answer'; ?>
 																								<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																							</li>
 																						<?php elseif ( $question['type'] == 'multiple' ) : ?>
 																							<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
 																								<li>
-																									<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
-																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																									<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? '':'cp-right-answer'; ?>
+																									- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
 																								</li>
 																							<?php endforeach; ?>
 																						<?php endif; ?>
@@ -145,6 +179,20 @@
 																					</ul>
 																				<?php endif; ?>
 																				<?php endif; ?>
+																			</td>
+																			<td>
+																				<ul class="cp-assessments-answers">
+																					<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
+																					<?php if ( $question['options'] ) :  ?>
+																					<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
+																						<?php if ( ! empty( $checked ) ) : ?>
+																							<li>
+																								<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
+																							</li>
+																						<?php endif; ?>
+																					<?php endforeach; ?>
+																					<?php endif; ?>
+																				</ul>
 																			</td>
 																		</tr>
 																	<?php endforeach; ?>
