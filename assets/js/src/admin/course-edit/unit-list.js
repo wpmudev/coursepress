@@ -27,6 +27,7 @@
             meta_force_current_unit_completion: false,
             meta_force_current_unit_successful_completion: false,
             count: 0,
+            menu_order: 0,
             steps: false,
             unit_permalink: '',
             can_update_unit: true,

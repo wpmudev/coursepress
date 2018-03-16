@@ -19,7 +19,8 @@
                 'click .column-unit': 'editModule',
                 'click .column-step': 'editModule',
                 'click .delete-unit': 'deleteUnit',
-                'change [name]': 'updatePreviewStatus'
+                'change [name]': 'updatePreviewStatus',
+                'drop': 'updateSort'
             },
 
             updatePreviewStatus: function (ev) {
@@ -62,8 +63,37 @@
                 if ( with_modules || ! model.get('steps' ) ) {
                     model.set('steps', false);
                 }
-
+                this.on( 'view_rendered', this.setDrag, this );
                 this.render();
+            },
+            updateSort: function() {
+              var map = [];
+              var items = document.getElementById('units-container').childNodes;
+              items.forEach(function (item,index) {
+                  map[item.attributes.cid.nodeValue]=index;
+              });
+              this.collection.each(function (model) {
+                model.set('menu_order', map[model.cid]);
+              });
+            },
+            setDrag: function() {
+                var units, unit_steps;
+
+                this.stepContainer = this.$('#units-container');
+
+                units =  this.$('#units-container');
+
+                if ( units ) {
+                    _.delay(function() {
+                        unit_steps = $('#units-container');
+                        unit_steps.sortable({
+                            axis: 'y',
+                            stop: function(event, ui) {
+                                ui.item.trigger('drop', ui.item.index());
+                            }
+                        });
+                    }, 200 );
+                }
             },
 
             toggleListing: function( ev ) {
@@ -157,6 +187,7 @@
                 this.editCourse.on('coursepress:validate-course-units', this.validateUnits, this);
                 this.editCourse.unitCollection.on( 'coursepress:unit_collection_loaded', this.maybeSetUnit, this );
                 this.on('view_rendered', this.setUI, this);
+                this.on( 'drag', this.updateSort, this );
                 this.render();
             },
 
