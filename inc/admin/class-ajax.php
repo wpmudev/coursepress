@@ -171,7 +171,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request->units ) {
 			$course_id = (int) $request->course_id;
 			$units = $request->units;
-			$menu_order = $request->menu_order;
+			$menu_order = empty( $request->menu_order ) ? 0 : (int) $request->menu_order;
 			$unit_ids = array();
 			foreach ( $units as $cid => $unit ) {
 				// Get post object
