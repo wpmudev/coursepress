@@ -1742,6 +1742,11 @@ class CoursePress_Data_Capabilities {
 		// Very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
 
+		// Let the user access the dashboard in case if they do not have default wp role.
+		if ( ! $user_obj->has_cap( 'read') ) {
+			$user_obj->add_cap( 'read' );
+		}
+
 		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
 		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
@@ -1971,8 +1976,10 @@ class CoursePress_Data_Capabilities {
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
 
-		// no need to add READ capability as all WP users have this up to Subscriber level
-		// $user_obj->add_cap( 'read' );
+		// Let the user access the dashboard in case if they do not have default wp role.
+		if ( ! $user_obj->has_cap( 'read') ) {
+			$user_obj->add_cap( 'read' );
+		}
 
 		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
