@@ -283,6 +283,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 										$step_metas[ $matches[2] ] = $step_value;
 									}
 								}
+								// Let's keep course id too.
+								$step_metas['course_id'] = $course_id;
 								$stepId = coursepress_create_step( $step_array, $step_metas );
 								$step_object = coursepress_get_course_step( $stepId );
 								$new_steps[ $step_cid ] = $step_object;
@@ -322,6 +324,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 									$step_metas[ $_step_key ] = $step_value;
 								}
 							}
+							// Let's keep course id too.
+							$step_metas['course_id'] = $course_id;
 							$stepId = coursepress_create_step( $step_array, $step_metas );
 							$step_object = coursepress_get_course_step( $stepId );
 							$unit->steps->{$step_cid} = $step_object;
