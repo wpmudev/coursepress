@@ -171,10 +171,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request->units ) {
 			$course_id = (int) $request->course_id;
 			$units = $request->units;
-			$menu_order = 0;
+			$menu_order = $request->menu_order;
 			$unit_ids = array();
 			foreach ( $units as $cid => $unit ) {
-				$unit->menu_order = $menu_order;
 				// Get post object
 				if ( ! empty( $unit->deleted ) ) {
 					// Do not continue if no permission.
@@ -202,7 +201,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					'ID' => $unit->ID,
 					'post_title' => $unit->post_title,
 					'post_content' => $unit->post_content,
-					'menu_order' => $menu_order,
+					'menu_order' => $unit->menu_order,
 					'post_parent' => $course_id,
 					'post_status' => 'pending',
 					'post_type' => 'unit',
