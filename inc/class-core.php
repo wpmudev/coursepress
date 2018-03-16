@@ -21,16 +21,16 @@ final class CoursePress_Core extends CoursePress_Utility {
 	public function __construct() {
 		// Register CP post types
 		add_action( 'init', array( $this, 'register_post_types' ) );
-
 		// Set capabilities.
 		CoursePress_Data_Capabilities::init();
-
+		// If front end set schema.
+		if ( ! is_admin() ) {
+			CoursePress_Data_Schema::init();
+		}
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
-
 		// Initialize email alerts.
 		add_action( 'init', array( $this, 'init_email_alerts' ) );
-
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -41,6 +41,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		 * try to regenerate missing pdf
 		 */
 		add_action( 'template_redirect', array( $this, 'regenerate_pdf' ) );
+		add_action( 'parse_request', array( $this, 'course_signup' ), 1 );
 	}
 
 	/**
@@ -104,9 +105,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 				),
 			)
 		);
-
 		$category_slug = coursepress_get_setting( 'slugs/category', 'course_category' );
-
 		register_taxonomy( $this->category_type,
 			array( $this->course_post_type ),
 			array(
@@ -133,7 +132,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 				),
 			)
 		);
-
 		// Unit
 		register_post_type( $this->unit_post_type, array(
 			'public' => false,
@@ -145,7 +143,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 			//'show_ui' => true,
 			'hierarchical' => true,
 		) );
-
 		// Module
 		register_post_type( $this->step_post_type, array(
 			'public' => false,
@@ -157,14 +154,12 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'support' => array( 'comments' ),
 			'hierarchical' => true,
 		) );
-
 		// Certificate
 		register_post_type( 'cp_certificate', array(
 			'public' => false,
 			'show_ui' => false,
 			'can_export' => false,
 		) );
-
 		// Notifications.
 		register_post_type( $this->notification_post_type, array(
 			'public' => true,
@@ -175,7 +170,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable' => false,
 		) );
-
 		// Discussions
 		register_post_type( $this->discussions_post_type, array(
 			'public' => false,
@@ -194,7 +188,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 	 *
 	 * @return void
 	 */
-	function init_unsubscribe() {
+	public function init_unsubscribe() {
 		$unsubscribe_helper = new CoursePress_Data_Unsubscribe();
 		$unsubscribe_helper->init();
 	}
@@ -204,18 +198,15 @@ final class CoursePress_Core extends CoursePress_Utility {
 	 *
 	 * @return void
 	 */
-	function init_email_alerts() {
-
+	public function init_email_alerts() {
 		global $CoursePress;
-
 		// Initialize Email alerts
 		$emailAlerts = $CoursePress->get_class( 'CoursePress_Cron_EmailAlert' );
-
 		// Initialize email alert crons.
 		$emailAlerts->init();
 	}
 
-	function add_query_vars( $vars ) {
+	public function add_query_vars( $vars ) {
 		$vars[] = 'coursepress';
 		$vars[] = 'unit';
 		$vars[] = 'coursename';
@@ -224,13 +215,13 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$vars[] = 'instructor';
 		$vars[] = 'topic';
 		$vars[] = 'notification';
-
 		return $vars;
 	}
 
-	function add_rewrite_rules( $rules ) {
+	public function add_rewrite_rules( $rules ) {
 		$course_slug = coursepress_get_setting( 'slugs/course', 'courses' );
 		$unit_slug = coursepress_get_setting( 'slugs/units', 'units' );
+		$step_slug = coursepress_get_setting( 'slugs/step', 'step' );
 		$workbook_slug = coursepress_get_setting( 'slugs/workbook', 'workbook' );
 		$notification_slug = coursepress_get_setting( 'slugs/notifications', 'notifications' );
 		$discussion_slug = coursepress_get_setting( 'slugs/discussions', 'discussions' );
@@ -241,7 +232,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
 		$student_login = coursepress_get_setting( 'slugs/login', 'student-login' );
 		$base = '^' . $course_slug . '/([^/]*)/';
-
 		$new_rules = array(
 			// Course completion
 			$base . 'completion/almost-there/?' => 'index.php?coursename=$matches[1]&coursepress=completion-status',
@@ -253,20 +243,22 @@ final class CoursePress_Core extends CoursePress_Utility {
 			$base . $unit_slug . '/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&coursepress=module',
 			$base . $unit_slug . '/([^/]*)/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&step=$matches[4]&coursepress=step',
 			$base . $unit_slug . '/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&coursepress=module',
-			// Units archive
+			// nits archive
 			$base . $unit_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=unit-archive',
+			/**
+			 * no module course
+			 */
+			$base . $step_slug .'/([^/]+)/?$' => 'index.php?coursename=$matches[1]&module=$matches[2]&coursepress=step',
 			// Workbook
 			$base . $workbook_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=workbook',
 			// Notifications
 			$base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
-
 			/**
 			 * Forum | Discussions
 			 */
 			$base . $discussion_slug . '/?$' => 'index.php?coursename=$matches[1]&coursepress=forum',
 			$base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
 			$base . $discussion_slug . '/([^/]*)/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=$matches[2]',
-
 			// Grades
 			$base . $grade_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=grades',
 			// Course Instructor Profile
@@ -278,18 +270,58 @@ final class CoursePress_Core extends CoursePress_Utility {
 			// Student Login
 			'^' . $student_login . '/?' => 'index.php?coursepress=student-login',
 		);
-
 		return array_merge( $new_rules, $rules );
 	}
 
-	function comments_open( $is_open, $object_id ) {
+	public function comments_open( $is_open, $object_id ) {
 		$post_type = get_post_type( $object_id );
 		$post_types = array( 'course', 'unit', 'module', 'discussions' );
-
 		if ( in_array( $post_type, $post_types ) ) {
 			return true;
 		}
-
 		return $is_open;
+	}
+
+	/**
+	 * Login user - we need do it in parse_request action, because when
+	 * shortcode is parsed, then it is too late to set auth cookie.
+	 */
+	public static function course_signup() {
+		if ( ! isset( $_POST['log'] ) || ! isset( $_POST['pwd'] ) ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			return;
+		}
+		// Attempt a login if submitted.
+		$user = $_POST['log'];
+		if ( preg_match( '/@/', $user ) ) {
+			$userdata = get_user_by( 'email', $user );
+			$user = $userdata->user_login;
+		}
+		$credentials = array(
+			'user_login' => $user,
+			'user_password' => $_POST['pwd'],
+		);
+		$auth = wp_signon( $credentials );
+		if ( ! is_wp_error( $auth ) ) {
+			/**
+			 * redirect contributors+ to dashboard
+			 */
+			$userdata = get_user_by( 'login', $user );
+			if ( user_can( $userdata, 'edit_posts' ) ) {
+				wp_safe_redirect( admin_url() );
+				exit;
+			}
+			if ( isset( $_POST['redirect_url'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else if ( isset( $_POST['redirect_to'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_to'] ) ) );
+			} else {
+				wp_redirect( esc_url_raw( coursepress_get_dashboard_url() ) );
+			}
+			exit;
+		}
+		add_filter( 'cp_course_signup_form_show_messages', '__return_true' );
 	}
 }

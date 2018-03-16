@@ -128,7 +128,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set Comments page
 		$comment_label = __( 'Comments', 'cp' );
-		$this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
+		$comments_screen_id = $this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
+		// Add preload callback
+		add_action( 'load-' . $comments_screen_id, array( $this, 'process_commentlist_page' ) );
 
 		// Set reports page
 		$label = __( 'Reports', 'cp' );
@@ -451,6 +453,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	/**
+	 * Set custom screen options for the comments listing page.
+	 */
+	function process_commentlist_page() {
+		global $CoursePress;
+
+		$comments = $CoursePress->get_class( 'CoursePress_Admin_Comments' );
+		if ( $comments ) {
+			return $comments->screen_options();
+		}
+	}
+
+	/**
 	 * Set custom screen options for the listing page.
 	 */
 	function process_notifications_list_page() {
@@ -491,6 +505,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'coursepress_students_per_page',
 			'coursepress_assessments_per_page',
 			'coursepress_notifications_per_page',
+			'coursepress_comments_per_page',
 		);
 
 		// Return value for our custom option.

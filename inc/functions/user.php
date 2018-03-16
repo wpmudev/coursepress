@@ -273,21 +273,48 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
  * @return void
  */
 function coursepress_delete_student( $user_id = 0, $course_id = 0 ) {
+	/**
+	 * Check required data
+	 */
 	if ( empty( $user_id ) || empty( $course_id ) ) {
-		return null; // Don't allow empty param
+		return new WP_Error(
+			'error',
+			__( 'Required data was not provided.', 'cp' )
+		);
 	}
+	/**
+	 * check user
+	 */
 	$user = coursepress_get_user( $user_id );
-	if ( is_wp_error( $user ) ) {
-		return null;
+	if ( $user->is_error() ) {
+		return new WP_Error(
+			'error',
+			__( 'Student is not enroled to this course.', 'cp' )
+		);
 	}
+	/**
+	 * check course
+	 */
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
-		return null;
+		return $course;
 	}
 	if ( ! $user->is_enrolled_at( $course_id ) ) {
-		return null; // User is not enrolled? bail!
+		return new WP_Error(
+			'error',
+			__( 'Student is not enroled to this course.', 'cp' )
+		);
 	}
-	$user->remove_course_student( $course_id );
+	/**
+	 * remove student from course
+	 */
+	$result = $user->remove_course_student( $course_id );
+	if ( ! $result ) {
+		return new WP_Error(
+			'error',
+			__( 'Something went wrong. We can not withdraw student from this course.', 'cp' )
+		);
+	}
 	/**
 	 * Fired whenever an student is removed from a course.
 	 *
@@ -653,7 +680,7 @@ function coursepress_get_redirect_to() {
 			$redirect_to = $_REQUEST['redirect_to'];
 		}
 	}
-	
+
 	return $redirect_to;
 }
 

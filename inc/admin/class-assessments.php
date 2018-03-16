@@ -60,12 +60,16 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 * @uses coursepress_render().
 	 */
 	public function get_details_page() {
+
+		$screen = get_current_screen();
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
 		$student_id = empty( $_GET['student_id'] ) ? 0 : $_GET['student_id'];
 		$display = empty( $_GET['display'] ) ? 'all' : $_GET['display'];
 		// Data for template.
 		$args = array(
 			'assessments' => $this->get_assessment_details( $student_id, $course_id, $display ),
+			'columns' => get_column_headers( $screen ),
+			'hidden_columns' => get_hidden_columns( $screen ),
 			'courses' => coursepress_get_accessible_courses(),
 			'page' => $this->slug,
 			'course_id' => absint( $course_id ),

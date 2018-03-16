@@ -22,13 +22,28 @@
                 if ( email ) {
                     this.model.set( 'action', 'remove_student_invite' );
                     this.model.set( 'course_id', this.course_id );
-                    this.model.on( 'coursepress:success_remove_student_invite', this.invitationRemoved, this );
+                    this.model.off( 'coursepress:success_remove_student_invite' );
+                    this.model.off( 'coursepress:error_remove_student_invite' );
+                    this.model.on( 'coursepress:success_remove_student_invite', this.invitationRemovedSuccess, this );
+                    this.model.on( 'coursepress:error_remove_student_invite', this.invitationRemovedError, this );
                     this.model.save();
                 }
             },
 
+            /**
+             * Remove fail in some reason, try to show it.
+             */
+            invitationRemovedError: function( data ) {
+                if ( 'string' === typeof( data.message ) ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                }
+            },
+
             // Remove removed student from list.
-            invitationRemoved: function( data ) {
+            invitationRemovedSuccess: function( data ) {
                 if ( data.email ) {
                     var btn =  this.$( 'button, input[type="button"], .remove-invite' );
                     // Remove closese tr.
@@ -166,10 +181,22 @@
                     model.set( 'action', 'withdraw_student' );
                     model.set('course_id', this.model.get('ID' ) );
                     model.set('student_id', target.data('id' ) );
+                    model.off( 'coursepress:error_withdraw_student' );
+                    model.off( 'coursepress:success_withdraw_student' );
+                    model.on( 'coursepress:error_withdraw_student', this.withdrawStudentError, this );
                     model.on( 'coursepress:success_withdraw_student', this.withdrawStudentSuccess, this );
                     model.save();
                 }
                 return false;
+            },
+
+            withdrawStudentError: function( data ) {
+                if ( 'string' === typeof( data.message ) ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                }
             },
 
             withdrawStudentSuccess: function( data ) {

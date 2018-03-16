@@ -27,6 +27,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$this->__set( 'post_name', $unit->post_name );
 		$this->__set( 'post_parent', $unit->post_parent );
 		$this->__set( 'post_status', $unit->post_status );
+		$this->__set( 'menu_order', $unit->menu_order );
 		$this->__set( 'course_id', $unit->post_parent );
 		// Setup meta-data
 		$this->setUpMeta();

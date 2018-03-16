@@ -102,9 +102,12 @@ foreach ( $bulk_actions as $value => $label ) {
                                     <?php
 									switch ( $column_id ) :
 										case 'units' :
+											$count_published = $course->count_units( true );
 											$count = $course->count_units( false );
 
 											printf( _n( __( '%d Unit', 'cp' ), __( '%d Units', 'cp' ), $count ), $count );
+                      echo ", ";
+											printf( _n( __( '%d Published', 'cp' ), __( '%d Published', 'cp' ), $count_published ), $count_published );
 											break;
 										case 'students' :
 											echo $course->count_students();

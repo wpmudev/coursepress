@@ -342,7 +342,14 @@ class CoursePress_User extends CoursePress_Utility {
 			if ( $progress_id > 0 ) {
 				$wpdb->delete( $this->progress_table, array( 'ID' => $progress_id ), array( '%d' ) );
 			}
+			/**
+			 * certificate
+			 */
+			$certificate = new CoursePress_Certificate();
+			$certificate->delete_certificate( $id, $course_id );
+			return true;
 		}
+		return false;
 	}
 
 	public function add_student_progress( $course_id = 0, $progress = array() ) {
@@ -1154,7 +1161,14 @@ class CoursePress_User extends CoursePress_Utility {
 			return null;
 		}
 		$slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
-		return site_url( '/' ) . trailingslashit( $slug ) . $this->__get( 'user_login' );
+		$show_username = coursepress_is_true( coursepress_get_setting( 'instructor_show_username', true ) );
+		$hash = md5( $this->__get( 'user_login' ) );
+		$instructor_hash = CoursePress_Data_Instructor::get_hash( $this->__get( 'ID' ) );
+		if ( empty( $instructor_hash ) ) {
+			CoursePress_Data_Instructor::create_hash( $this->__get( 'ID' ) );
+		}
+		$user_login = $show_username ? $this->__get( 'user_login' ) : $hash;
+		return site_url( '/' ) . trailingslashit( $slug ) . $user_login;
 	}
 
 	/******************************************

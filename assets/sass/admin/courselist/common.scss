@@ -34,12 +34,16 @@
         .hidden {
             display: none;
         }
+        td {
+          color: $grey_13;
+        }
         .column-title {
             display: table-cell;
             @media screen {
                 @media (min-width: 1020px) {
                     a {
                         color: $black;
+                        font-weight: 500;
                         cursor: default;
                     }
                 }
@@ -49,7 +53,7 @@
         .column-students,
         .column-certified,
         .column-actions {
-            text-align: center;
+            text-align: left;
         }
         .check-column {
             padding: 12px 0 12px 15px;
@@ -63,9 +67,9 @@
 
             a {
                 display: inline-block;
-                font-size: 95%;
+                font-size: 90%;
                 margin: 0 15px;
-
+                color: $blue_6;
                 &:first-of-type {
                     margin-left: 0;
                 }
@@ -76,10 +80,12 @@
 
                 .cp-dropdown-btn {
                     position: relative;
+                    color: $grey_13;
                     background-color: transparent;
                     border: {
                         style: solid;
                         width: 1px 1px;
+                        color: $grey_14;
                     }
                     @include radius(3px);
                     cursor: pointer;

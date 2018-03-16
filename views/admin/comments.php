@@ -27,7 +27,7 @@ foreach ( $courses as $course_id => $course ) {
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
         </form>
 
-        <table class="coursepress-table wp-list-table widefat fixed striped comments">
+        <table class="coursepress-table wp-list-table widefat comments">
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
