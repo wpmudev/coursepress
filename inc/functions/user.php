@@ -541,18 +541,7 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
  */
 function coursepress_get_available_users( $course_id = 0, $type = '', $search = '' ) {
 	$args = array();
-	// Do not include already assigned users.
-	if ( ! empty( $course_id ) && ! empty( $type ) && in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
-		$args['meta_query'] = array(
-			array(
-				'relation' => 'AND',
-				array(
-					'key'     => $type . '_' . $course_id,
-					'compare' => 'NOT EXISTS',
-				)
-			),
-		);
-	}
+	
 	// Search user fields.
 	if ( ! empty( $search ) ) {
 		$args['search'] = '*' . $search . '*';
