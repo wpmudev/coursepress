@@ -308,7 +308,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		if ( empty( $id ) ) {
 			return;
-		} +
+		}
 
 		$passcode = filter_input( INPUT_POST, 'course_passcode' );
 		$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
