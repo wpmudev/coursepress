@@ -569,7 +569,7 @@ function coursepress_get_course_submenu() {
 	$menus = array(
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
-			'url' => coursepress_get_course_units_archive_url( $course_id ),
+			'url' => $course->get_units_url(),
 			'classes' => array( 'submenu-units' ),
 		),
 	);
@@ -649,25 +649,6 @@ function coursepress_get_course_submenu() {
 	 */
 	$menus = apply_filters( 'coursepress_course_submenu', $menus, $course );
 	return $menus;
-}
-
-/**
- * Returns the course's units archive link.
- *
- * @param int $course_id
- *
- * @return string|null
- */
-function coursepress_get_course_units_archive_url( $course_id = 0 ) {
-	$course_url = coursepress_get_course_permalink( $course_id );
-
-	if ( ! $course_url ) {
-		return null;
-	}
-
-	$units_slug = coursepress_get_setting( 'slugs/units', 'units' );
-
-	return $course_url . trailingslashit( $units_slug );
 }
 
 /**
@@ -1057,6 +1038,15 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 
 					if ( $nextModule ) {
 						$next = $nextModule['url'];
+					} else {
+						// Try next unit
+						$nextUnit = $unit->get_next_unit();
+
+						if ( $nextUnit ) {
+							$next = $nextUnit->get_unit_url();
+						} else {
+							$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
+						}
 					}
 				}
 			}

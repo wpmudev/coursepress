@@ -248,9 +248,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 	public function get_unit_url() {
 		$course = $this->get_course();
 		if ( $course ) {
-			$unit_slug = coursepress_get_setting( 'slugs/units', 'units' );
+			$unit_slug = $course->get_units_url();
 			$post_name = $this->__get( 'post_name' );
-			return $course->get_permalink() . trailingslashit( $unit_slug ) . trailingslashit( $post_name );
+			return $unit_slug . trailingslashit( $post_name );
 		}
 		return null;
 	}
