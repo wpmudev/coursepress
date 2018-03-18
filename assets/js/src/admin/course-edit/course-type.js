@@ -23,23 +23,26 @@
                 'focus [name]': 'removeErrorMarker',
                 'click .sample-course-btn': 'selectSampleCourse'
             },
-	    getDate: function( ev ) {
-		var date;
-		date = this.$(ev.currentTarget).datepicker('getDate');
-		return date;
-	    },
-	    changeMinEndDate: function( ev ) {
-                this.$('[name=meta_course_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
-	    },
-	    changeMaxStartDate: function( ev ) {
-                this.$('[name=meta_course_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
-	    },
-	    changeMinEnrollmentEndDate: function( ev ) {
-                this.$('[name=meta_enrollment_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
-	    },
-	    changeMaxEnrollmentStarDate: function( ev ) {
-                this.$('[name=meta_enrollment_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
-	    },
+			getDate: function( ev ) {
+			var date;
+				date = this.$(ev.currentTarget).datepicker('getDate');
+				return date;
+			},
+			setMaxStartDate: function( date ) {
+				this.$('[name=meta_course_start_date]').datepicker( 'option', 'maxDate', date );
+			},
+			changeMinEndDate: function( ev ) {
+				this.$('[name=meta_course_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+			},
+			changeMaxStartDate: function( ev ) {
+				this.setMaxStartDate( this.getDate( ev ) );
+			},
+			changeMinEnrollmentEndDate: function( ev ) {
+				this.$('[name=meta_enrollment_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+			},
+			changeMaxEnrollmentStarDate: function( ev ) {
+				this.$('[name=meta_enrollment_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
+			},
 
             initialize: function(model, EditCourse) {
                 // Let's inherit the model object from EditCourse
@@ -160,8 +163,10 @@
                 var target = this.$('[name=meta_course_end_date]');
                 if ( status ) {
                     target.attr( 'disabled', 'disabled' );
+					this.setMaxStartDate( null );
                 } else {
                     target.removeAttr( 'disabled', 'disabled' );
+					this.setMaxStartDate( target.datepicker('getDate') );
                 }
 
             },
