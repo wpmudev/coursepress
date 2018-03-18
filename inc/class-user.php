@@ -260,7 +260,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$offset = $per_page * ($paged - 1);
 		$limit = $per_page * $paged;
 		if ( ! $id ) {
-			return null;
+			return array();
 		}
 		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
 		if ( $per_page > 0 ) {
