@@ -718,9 +718,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function is_students_full() {
 		$course_id = $this->__get( 'ID' );
-		$limited = coursepress_is_true( coursepress_course_get_setting( $course_id, 'class_limited' ) );
-		if ( $limited ) {
-			$limit = coursepress_course_get_setting( $course_id, 'class_size' );
+		$limit = coursepress_course_get_setting( $course_id, 'class_size' );
+		if ( $limit ) {
 			$students = $this->count_students();
 			return $limit <= $students;
 		}
