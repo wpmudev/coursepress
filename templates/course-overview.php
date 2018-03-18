@@ -47,7 +47,7 @@ if ( ! empty( $price ) ) {
 }
 ?>
             <p class="course-button">
-                <?php coursepress_get_course_enrollment_button(); ?>
+                <?php echo do_shortcode( '[course_join_button ]' ) ?>
             </p>
 		</div>
         </div>

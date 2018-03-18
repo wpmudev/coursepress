@@ -338,27 +338,14 @@ function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = '
 	return $course->get_enrollment_dates( $separator );
 }
 
-/**
- * Returns course enrollment button.
- *
- * @param int $course_id
- *
- * @return string
- */
-function coursepress_get_course_enrollment_button( $course_id = 0, $args = array() ) {
-	$course = coursepress_get_course( $course_id );
-
-	if ( is_wp_error( $course ) ) {
-		return null;
-	}
-
-	$defaults = array(
+function coursepress_get_button_default_attrs() {
+	$texts = array(
+		'course_id' => coursepress_get_course_id(),
 		'access_text' => __( 'Start Learning', 'cp' ),
 		'class' => '',
 		'continue_learning_text' => __( 'Continue Learning', 'cp' ),
 		'course_expired_text' => __( 'Not available', 'cp' ),
 		'course_full_text' => __( 'Course Full', 'cp' ),
-		'course_not_started' => __( 'Not yet available', 'cp' ),
 		'details_text' => __( 'Details', 'cp' ),
 		'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
 		'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
@@ -370,6 +357,27 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
 		'signup_text' => __( 'Enroll Now!', 'cp' ),
 	);
+
+	return $texts;
+}
+
+/**
+ * Returns course enrollment button.
+ *
+ * @deprecated 1.0.0 Use course_join_button shortcode
+ * @see CoursePress_Data_Shortcode_CourseTemplate::get_course_join_button()
+ * @param int $course_id
+ *
+ * @return string
+ */
+function coursepress_get_course_enrollment_button( $course_id = 0, $args = array() ) {
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return null;
+	}
+
+	$defaults = coursepress_get_button_default_attrs();
 
 	$args = wp_parse_args( $args, $defaults );
 	$button_option = 'enroll';
@@ -426,6 +434,8 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 					$link_text = '';
 					$args = array(
 						'course_id' => $course_id,
+						'label_text' => __( 'Enter passcode', 'cp' ),
+						'button_text' => __( 'Enroll', 'cp' ),
 						'cookie_name' => 'cp_incorrect_passcode_' . COOKIEHASH,
 					);
 
