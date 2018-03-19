@@ -7,10 +7,9 @@
  */
 $course = coursepress_get_course();
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'course-overview' ); ?>>
-    <header class="page-header">
-        <h1 class="page-title"><?php _e( 'Course', 'cp' ); ?></h1>
-        <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
+<article id="post-<?php the_ID(); ?>" <?php post_class( '' ); ?>>
+    <header class="entry-header">
+        <h1 class="entry-title"><?php echo coursepress_get_course_title(); ?></h1>
     </header>
     <div class="entry-content">
         <div class="course-details">
@@ -31,10 +30,14 @@ if ( ! empty( $media ) ) {
 				<span class="meta-title"><?php _e( 'Enrollment:', 'cp' ); ?></span>
 				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_dates(); ?></span>
 			</p>
-            <p class="course-meta">
-                <span class="meta-title"><?php _e( 'Language:', 'cp' ); ?></span>
-                <span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
-            </p>
+			<p class="course-meta">
+				<span class="meta-title"><?php _e( 'Who can Enroll:', 'cp' ); ?></span>
+				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_type(); ?></span>
+			</p>
+      <p class="course-meta">
+          <span class="meta-title"><?php _e( 'Language:', 'cp' ); ?></span>
+          <span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
+      </p>
 <?php
 $price = $course->get_course_cost();
 if ( ! empty( $price ) ) {
@@ -49,22 +52,25 @@ if ( ! empty( $price ) ) {
             <p class="course-button">
                 <?php coursepress_get_course_enrollment_button(); ?>
             </p>
-		</div>
-        </div>
 
-        <div class="additional-summary">
             <div class="social-shares">
                 <?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
             </div>
+		</div>
         </div>
 
         <div class="course-description">
+            <h3 class="sub-title course-sub-title"><?php _e( 'About this course', 'cp' ); ?></h3>
             <?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
         </div>
 
         <div class="course-structure">
             <h3 class="sub-title course-sub-title"><?php _e( 'Course Structure', 'cp' ); ?></h3>
             <?php echo coursepress_get_course_structure(); ?>
+        </div>
+
+        <div class="course-instructors">
+          <?php echo do_shortcode('[course_instructors course_id="' . $course->ID . '"]'); ?>
         </div>
     </div>
 </article>

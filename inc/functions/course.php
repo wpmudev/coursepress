@@ -339,6 +339,22 @@ function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = '
 }
 
 /**
+ * Returns course enrollment start and end date, separated by set separator.
+ *
+ * @param int $course_id
+ * @param string $separator
+ *
+ * @return string|null
+ */
+function coursepress_get_course_enrollment_type( $course_id = 0) {
+	$course = coursepress_get_course( $course_id );
+	if ( is_wp_error( $course ) ) {
+		return null;
+	}
+	return $course->get_course_enrollment_type( $separator );
+}
+
+/**
  * Returns course enrollment button.
  *
  * @param int $course_id
