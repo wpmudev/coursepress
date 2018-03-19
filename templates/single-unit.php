@@ -10,6 +10,7 @@ $unit = coursepress_get_unit();
 $student = coursepress_get_user();
 $unit_progress = $student->get_unit_progress( $course->ID, $unit->ID );
 $coursep = $student->get_completion_data( $course->ID );
+$show_progress = $student->is_enrolled_at( $course->ID );
 //error_log( print_r( $coursep, true ) );
 get_header(); ?>
 
@@ -31,14 +32,16 @@ get_header(); ?>
 
                     <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
 
-                    <div class="course-unit-progress">
-                        <?php echo coursepress_progress_wheel( array(
-                                'class' => 'per-unit-progress',
-                                'data-value' => $unit_progress,
-                                'data-size' => 62,
-                            ) );
-                        ?>
-                    </div>
+					<?php if ( $show_progress ) { ?>
+						<div class="course-unit-progress">
+							<?php echo coursepress_progress_wheel( array(
+									'class' => 'per-unit-progress',
+									'data-value' => $unit_progress,
+									'data-size' => 62,
+								) );
+							?>
+						</div>
+					<?php } ?>
 
 	                <?php coursepress_breadcrumb(); ?>
                 </header>

@@ -162,7 +162,7 @@
              */
             assignSuccess: function ( data ) {
                 // If user assigned, add them to the tags.
-                if ( typeof data.name !== 'undefined' && typeof data.id !== 'undefined' ) {
+                if ( typeof data.name !== 'undefined' && typeof data.id !== 'undefined' && ! this.course.$('ul#cp-list-' + this.type + ' li[data-user-id=' + data.id + ']').length ) {
                     this.course.$('ul#cp-list-' + this.type).append('<li data-user-id="' + data.id + '">' + data.name + '</li>');
                 }
                 if ( this.course.$('#cp-no-' + this.type).length ) {

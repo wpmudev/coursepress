@@ -5,16 +5,6 @@
         }
         .cp-shortcode-table {
             width: 100%;
-            .cp-code,
-            .cp-code-box {
-                background-color: $grey_5;
-                border: 1px solid $grey_11;
-                color: $dark_2;
-                font-family: monospace;
-                font-size: .8em;
-                @include radius( 10px );
-                padding: 10px 5px;
-            }
             td {
                 padding: 10px;
                 vertical-align: top;
@@ -37,5 +27,15 @@
         ul {
             height: 220px;
         }
+    }
+    .cp-code,
+    .cp-code-box {
+        background-color: $grey_5;
+        border: 1px solid $grey_11;
+        color: $dark_2;
+        font-family: monospace;
+        font-size: .8em;
+        @include radius( 5px );
+        padding: 10px 5px;
     }
 }

@@ -229,6 +229,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		$params['student_id'] = $student_id;
 		$params['course_id'] = $course_id;
 		$params['email'] = sanitize_email( $student->user_email );
+		$params['display_name'] = $student->display_name;
 		$params['first_name'] = $student->first_name;
 		$params['last_name'] = $student->last_name;
 		$params['completion_date'] = $completion_date;
@@ -285,7 +286,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 			}
 		}
 		$vars = array(
-			'FIRST_NAME' => sanitize_text_field( $data['first_name'] ),
+			'FIRST_NAME' => sanitize_text_field( ( $data['first_name'] || $data['last_name'] ) ? $data['first_name'] : $data['display_name'] ),
 			'LAST_NAME' => sanitize_text_field( $data['last_name'] ),
 			'COURSE_NAME' => sanitize_text_field( $data['course_name'] ),
 			'COMPLETION_DATE' => sanitize_text_field( $data['completion_date'] ),

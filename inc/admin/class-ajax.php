@@ -171,7 +171,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $request->units ) {
 			$course_id = (int) $request->course_id;
 			$units = $request->units;
-			$menu_order = $request->menu_order;
+			$menu_order = empty( $request->menu_order ) ? 0 : (int) $request->menu_order;
 			$unit_ids = array();
 			foreach ( $units as $cid => $unit ) {
 				// Get post object
@@ -283,6 +283,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 										$step_metas[ $matches[2] ] = $step_value;
 									}
 								}
+								// Let's keep course id too.
+								$step_metas['course_id'] = $course_id;
 								$stepId = coursepress_create_step( $step_array, $step_metas );
 								$step_object = coursepress_get_course_step( $stepId );
 								$new_steps[ $step_cid ] = $step_object;
@@ -322,6 +324,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 									$step_metas[ $_step_key ] = $step_value;
 								}
 							}
+							// Let's keep course id too.
+							$step_metas['course_id'] = $course_id;
 							$stepId = coursepress_create_step( $step_array, $step_metas );
 							$step_object = coursepress_get_course_step( $stepId );
 							$unit->steps->{$step_cid} = $step_object;
@@ -851,6 +855,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		$progress = $user->validate_completion_data( $course_id, $progress );
 		//error_log(print_r($progress,true));
+		if ( empty( $redirect_url ) ) {
+			$course = coursepress_get_course( $course_id );
+			$redirect_url = !empty( $referer ) ? $referer : $course->get_units_url() ;
+		}
 		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );
 		exit;

@@ -32,19 +32,26 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 
 		$course_id = ( isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
 		if ( !empty( $course_id ) ) {
-			$discussions = get_children( array(
+
+			$discussions = get_posts( array(
 				'fields' => 'ids',
-				'post_parent' => $course_id,
-				'post_type' => $CoursePress_Core->discussions_post_type,
+				'meta_query' => array(
+					array(
+						'key' => 'course_id',
+						'value' => $course_id,
+					),
+				),
+				'post_type'	=> $CoursePress_Core->step_post_type,
+				'posts_per_page' => -1
 			));
 			if ( empty( $discussions ) ) {
 				return;
 			}
 		} else {
 			$discussions = get_posts( array(
-				'fields'			=> 'ids',
-				'post_type'			=> $CoursePress_Core->discussions_post_type,
-				'posts_per_page'	=> -1
+				'fields' => 'ids',
+				'post_type'	=> $CoursePress_Core->step_post_type,
+				'posts_per_page' => -1
 			));
 			if ( empty( $discussions ) ) {
 				return;

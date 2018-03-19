@@ -180,6 +180,10 @@ class CoursePress_Step extends CoursePress_Unit {
 		return $this->__get( 'show_title' );
 	}
 
+	public function is_show_content() {
+		return $this->__get( 'show_content' );
+	}
+
 	public function is_required() {
 		return $this->__get( 'mandatory' );
 	}
@@ -328,9 +332,11 @@ class CoursePress_Step extends CoursePress_Unit {
 				$error
 			);
 		}
-		$attr = array( 'class' => 'course-module-step-description' );
-		$description = apply_filters( 'the_content', $this->__get( 'post_content' ) );
-		$template .= $this->create_html( 'div', $attr, $description );
+		if ( $this->is_show_content() ) {
+			$attr        = array( 'class' => 'course-module-step-description' );
+			$description = apply_filters( 'the_content', $this->__get( 'post_content' ) );
+			$template   .= $this->create_html( 'div', $attr, $description );
+		}
 		$question = $this->get_question();
 		if ( ! empty( $question ) ) {
 			$attr = array( 'class' => 'course-module-step-question' );
