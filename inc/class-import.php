@@ -60,15 +60,16 @@ class CoursePress_Import extends CoursePress_Utility
 		$user = $blog_id = null;
 		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
 			$user = get_user_by( 'email', $user_data->user_email );
-		} else if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
+		}
+		else if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
 			$user = get_user_by( 'login', $user_data->user_login );
 		}
 		/**
 		 * user exist
 		 */
-		if ( ! empty( $user ) ) {
-			if ( is_multisite() ) {
-				coursepress_add_user_to_blog( $user->ID, $role );
+		if (!empty($user)) {
+			if (is_multisite()) {
+				coursepress_add_user_to_blog($user->ID, $role);
 			}
 			return $user->ID;
 		}
@@ -80,8 +81,8 @@ class CoursePress_Import extends CoursePress_Utility
 		unset( $user_data->ID );
 		$user_id = wp_insert_user( $user_data );
 		if ( ! is_wp_error( $user_id ) ) {
-			if ( is_multisite() ) {
-				coursepress_add_user_to_blog( $user_id, $role );
+			if (is_multisite()) {
+				coursepress_add_user_to_blog($user_id, $role);
 			}
 			return $user_id;
 		}
@@ -165,8 +166,7 @@ class CoursePress_Import extends CoursePress_Utility
 					&& is_array( $this->meta->$key )
 					&& ! empty( $this->meta->$key )
 				) {
-					$value = array_shift( $this->meta->$key );
-					$this->visible[ $key ] = maybe_unserialize( $value );
+					$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
 				}
 			}
 		}
@@ -216,9 +216,6 @@ class CoursePress_Import extends CoursePress_Utility
 		}
 	}
 
-	/**
-	 * Import course units
-	 */
 	private function import_course_units() {
 		global $CoursePress_Core;
 		if ( ! empty( $this->units ) ) {
@@ -228,29 +225,6 @@ class CoursePress_Import extends CoursePress_Utility
 					$the_unit = get_object_vars( $unit->unit );
 				}
 				if ( isset( $unit->meta ) ) {
-					/**
-					 * CP 2 import fix:
-					 * - use_feature_image switch
-					 * - use_description switch
-					 */
-					if ( isset( $unit->pages ) ) {
-						if (
-							isset( $unit->meta->unit_feature_image )
-							&& is_array( $unit->meta->unit_feature_image )
-						) {
-							$value = $unit->meta->unit_feature_image;
-							$value = array_shift( $value );
-							if ( ! empty( $value ) ) {
-								$unit->meta->use_feature_image = array( true );
-							}
-						}
-						if ( isset( $unit->unit->post_content ) && ! empty( $unit->unit->post_content ) ) {
-							$unit->meta->use_description  = array( true );
-						}
-					}
-					/**
-					 * assign meta to new unit
-					 */
 					if ( is_object( $the_unit ) ) {
 						$the_unit->meta_input = $this->convert_meta( $unit->meta );
 					} else {
@@ -276,14 +250,14 @@ class CoursePress_Import extends CoursePress_Utility
 				/**
 				 * CP3 Import Modules
 				 */
-				if ( isset( $unit->modules ) ) {
-					foreach ( $unit->modules as $module ) {
-						if ( isset( $module->steps ) ) {
-							$this->import_steps( $course_id, $unit_id, $module->steps );
+				if (isset($unit->modules)) {
+					foreach ($unit->modules as $module) {
+						if (isset($module->steps)) {
+							$this->import_steps($course_id, $unit_id, $module->steps);
 						}
 					}
-				} else if ( isset( $unit->steps ) ) {
-					$this->import_steps( $course_id, $unit_id, $unit->steps );
+				} else if (isset($unit->steps)) {
+					$this->import_steps($course_id, $unit_id, $unit->steps);
 				}
 				/**
 				 * CP 2 import
@@ -326,6 +300,8 @@ class CoursePress_Import extends CoursePress_Utility
 							$module->meta_input->module_page = $i;
 							$module = $this->maybe_convert_module( $module );
 							unset( $module->ID );
+							// Remove content from post as we have already added in module.
+							$module->post_content = '';
 							wp_insert_post( $module );
 						}
 						$i++;
@@ -456,11 +432,7 @@ class CoursePress_Import extends CoursePress_Utility
 				$checked = array();
 				$max = count( $answers );
 				for ( $i = 0; $i < $max; $i++ ) {
-					if ( is_array( $module->meta_input->answers_selected ) ) {
-						$checked[] = in_array( $i, $module->meta_input->answers_selected );
-					} else {
-						$checked[] = $i === intval( $module->meta_input->answers_selected );
-					}
+					$checked[] = $i === intval( $module->meta_input->answers_selected );
 				}
 				$step_type = 'unknown';
 				switch ( $type ) {
@@ -468,7 +440,7 @@ class CoursePress_Import extends CoursePress_Utility
 						$step_type = 'single';
 					break;
 					case 'input-checkbox':
-						$step_type = 'multiple';
+						$step_type = 'multi';
 					break;
 					case 'input-select':
 						$step_type = 'select';
@@ -511,11 +483,12 @@ class CoursePress_Import extends CoursePress_Utility
 	 * @param $unit_id
 	 * @param $steps
 	 */
-	private function import_steps( $course_id, $unit_id, $steps ) {
+	private function import_steps($course_id, $unit_id, $steps)
+	{
 		global $CoursePress_Core;
 		$step_post_type = $CoursePress_Core->step_post_type;
 		$matches = array();
-		foreach ( $steps as $step ) {
+		foreach ($steps as $step) {
 			$data = array(
 				'post_type'    => $step_post_type,
 				'post_title'   => $step->post_title,
@@ -528,13 +501,13 @@ class CoursePress_Import extends CoursePress_Utility
 					'unit_id'   => $unit_id,
 				),
 			);
-			foreach ( $step as $key => $value ) {
-				if ( preg_match( '/^meta_(.+)$/', $key, $matches ) ) {
+			foreach ($step as $key => $value) {
+				if (preg_match('/^meta_(.+)$/', $key, $matches)) {
 					$data['meta_input'][ $matches[1] ] = $value;
 				}
 			}
 			$data['meta_input']['module_order'] = $step->menu_order;
-			wp_insert_post( $data );
+			wp_insert_post($data);
 		}
 	}
 }
