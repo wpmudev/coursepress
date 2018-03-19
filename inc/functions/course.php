@@ -346,7 +346,7 @@ function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = '
  *
  * @return string|null
  */
-function coursepress_get_course_enrollment_type( $course_id = 0) {
+function coursepress_get_course_enrollment_type( $course_id = 0, $separator = '' ) {
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
 		return null;
@@ -1542,7 +1542,7 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 		$cap_method = in_array( $status, array(
 			'trash',
 			'delete',
-			'restore'
+			'restore',
 		) ) ? 'can_delete_' . $type : 'can_change_' . $type . '_status';
 		if ( method_exists( 'CoursePress_Data_Capabilities', $cap_method ) && ! CoursePress_Data_Capabilities::$cap_method( $post_id ) ) {
 			// This action hook is documented above.

@@ -407,7 +407,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $courses;
 	}
 
-	public function get_course_enrollment_type() {
+	public function get_course_enrollment_type( $atts ) {
 		$enrollment_text = '';
 		$enrollment_type = $this->__get( 'enrollment_type' );
 

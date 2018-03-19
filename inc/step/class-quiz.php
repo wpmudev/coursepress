@@ -154,7 +154,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					} else {
 						$ratio = 100 / $checked_count;
 					}
-					$grade = $correct * round( $ratio, 2 );
+					$grade = $correct * $ratio;
 					/**
 					 * normalize grade: 0 <= $grade <= 100
 					 */
