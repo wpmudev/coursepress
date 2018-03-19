@@ -855,6 +855,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		$progress = $user->validate_completion_data( $course_id, $progress );
 		//error_log(print_r($progress,true));
+		if ( empty( $redirect_url ) ) {
+			$course = coursepress_get_course( $course_id );
+			$redirect_url = !empty( $referer ) ? $referer : $course->get_units_url() ;
+		}
 		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );
 		exit;
