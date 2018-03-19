@@ -1035,6 +1035,8 @@ class CoursePress_Course extends CoursePress_Utility {
 				$structure .= $this->create_html( 'li', false, $unit_structure );
 			}
 			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );
+		} else {
+			$structure = $this->create_html( 'p', array(), __( 'There is no Units yet.', 'cp' ) );
 		}
 		return $structure;
 	}
