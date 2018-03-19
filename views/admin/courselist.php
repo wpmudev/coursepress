@@ -119,13 +119,13 @@ foreach ( $bulk_actions as $value => $label ) {
 											echo $course->course_start_date ? $course->course_start_date : '-';
 											break;
 										case 'end_date' :
-											echo $course->course_end_date ? $course->course_end_date : '-';
+											echo $course->course_end_date && ! $course->meta_course_open_ended ? $course->course_end_date : '-';
 											break;
 										case 'enrollment_start' :
-											echo $course->enrollment_start_date ? $course->enrollment_start_date : '-';
+											echo $course->enrollment_start_date && ! $course->meta_enrollment_open_ended ? $course->enrollment_start_date : '-';
 											break;
 										case 'enrollment_end' :
-											echo $course->enrollment_end_date ? $course->enrollment_end_date : '-';
+											echo $course->enrollment_end_date && ! $course->meta_enrollment_open_ended ? $course->enrollment_end_date : '-';
 											break;
 										case 'category' :
 											$categories = $course->get_category();
