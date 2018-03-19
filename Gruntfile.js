@@ -428,7 +428,7 @@ module.exports = function(grunt) {
 			sniff: {
 				src: conf.php_files,
 				options: {
-					bin: '../../../../vendor/bin/phpcbf',
+					bin: '/usr/bin/phpcbf',
 					standard: 'WordPress-Core',
 					verbose: true
 				}
@@ -438,7 +438,7 @@ module.exports = function(grunt) {
 		phpcbf: {
 			options: {
 				noPatch: true,
-				bin: '../../../../vendor/bin/phpcbf',
+				bin: '/usr/bin/phpcbf',
 				standard: 'WordPress-Core'
 			},
 			main: {

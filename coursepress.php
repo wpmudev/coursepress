@@ -105,7 +105,7 @@ class CoursePressUpgrade {
 		/**
 		 * load translations
 		 */
-		add_action('plugins_loaded', array( __CLASS__, 'load_l10n' ) );
+		add_action( 'plugins_loaded', array( __CLASS__, 'load_l10n' ) );
 	}
 
 	/** Use to reset CP into 1.x version */
@@ -142,7 +142,7 @@ class CoursePressUpgrade {
 		);
 		$courses = get_posts( $args );
 
-		return count( $courses ) > 0 || intval(get_option('students_to_upgrade_to_2.0', 0)) > 0;
+		return count( $courses ) > 0 || intval( get_option( 'students_to_upgrade_to_2.0', 0 ) ) > 0;
 	}
 
 	private static function get_coursepress( $version ) {
@@ -248,8 +248,8 @@ class CoursePressUpgrade {
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
 
-			if ( class_exists( 'CoursePress_Upgrade' ) )
-				CoursePress_Upgrade::init();
+			if ( class_exists( 'CoursePress_Upgrade' ) ) {
+				CoursePress_Upgrade::init(); }
 
 			//@todo: wrap this
 			flush_rewrite_rules();
