@@ -165,8 +165,7 @@ class CoursePress_Import extends CoursePress_Utility
 					&& is_array( $this->meta->$key )
 					&& ! empty( $this->meta->$key )
 				) {
-					$value = array_shift( $this->meta->$key );
-					$this->visible[ $key ] = maybe_unserialize( $value );
+					$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
 				}
 			}
 		}
@@ -216,9 +215,6 @@ class CoursePress_Import extends CoursePress_Utility
 		}
 	}
 
-	/**
-	 * Import course units
-	 */
 	private function import_course_units() {
 		global $CoursePress_Core;
 		if ( ! empty( $this->units ) ) {
@@ -228,29 +224,6 @@ class CoursePress_Import extends CoursePress_Utility
 					$the_unit = get_object_vars( $unit->unit );
 				}
 				if ( isset( $unit->meta ) ) {
-					/**
-					 * CP 2 import fix:
-					 * - use_feature_image switch
-					 * - use_description switch
-					 */
-					if ( isset( $unit->pages ) ) {
-						if (
-							isset( $unit->meta->unit_feature_image )
-							&& is_array( $unit->meta->unit_feature_image )
-						) {
-							$value = $unit->meta->unit_feature_image;
-							$value = array_shift( $value );
-							if ( ! empty( $value ) ) {
-								$unit->meta->use_feature_image = array( true );
-							}
-						}
-						if ( isset( $unit->unit->post_content ) && ! empty( $unit->unit->post_content ) ) {
-							$unit->meta->use_description  = array( true );
-						}
-					}
-					/**
-					 * assign meta to new unit
-					 */
 					if ( is_object( $the_unit ) ) {
 						$the_unit->meta_input = $this->convert_meta( $unit->meta );
 					} else {
@@ -326,6 +299,8 @@ class CoursePress_Import extends CoursePress_Utility
 							$module->meta_input->module_page = $i;
 							$module = $this->maybe_convert_module( $module );
 							unset( $module->ID );
+							// Remove content from post as we have already added in module.
+							$module->post_content = '';
 							wp_insert_post( $module );
 						}
 						$i++;
@@ -456,11 +431,7 @@ class CoursePress_Import extends CoursePress_Utility
 				$checked = array();
 				$max = count( $answers );
 				for ( $i = 0; $i < $max; $i++ ) {
-					if ( is_array( $module->meta_input->answers_selected ) ) {
-						$checked[] = in_array( $i, $module->meta_input->answers_selected );
-					} else {
-						$checked[] = $i === intval( $module->meta_input->answers_selected );
-					}
+					$checked[] = $i === intval( $module->meta_input->answers_selected );
 				}
 				$step_type = 'unknown';
 				switch ( $type ) {
@@ -468,7 +439,7 @@ class CoursePress_Import extends CoursePress_Utility
 						$step_type = 'single';
 					break;
 					case 'input-checkbox':
-						$step_type = 'multiple';
+						$step_type = 'multi';
 					break;
 					case 'input-select':
 						$step_type = 'select';
@@ -512,6 +483,7 @@ class CoursePress_Import extends CoursePress_Utility
 	 * @param $steps
 	 */
 	private function import_steps( $course_id, $unit_id, $steps ) {
+
 		global $CoursePress_Core;
 		$step_post_type = $CoursePress_Core->step_post_type;
 		$matches = array();

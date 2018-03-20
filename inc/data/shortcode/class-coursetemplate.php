@@ -103,7 +103,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$student_id = false;
 		$is_instructor = false;
 		$is_custom_login = coursepress_is_true( coursepress_get_setting( 'general/use_custom_login', true ) );
-		$course_link = esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( coursepress_get_setting( 'slugs/units', 'units' ) ) );
+		$course_link = esc_url( $course->get_units_url() );
 		$continue_learning_link = null;
 		$enroll_course_url = add_query_arg(
 			array(
@@ -1849,7 +1849,6 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$course_name = $course->get_the_title();
 		$course_url = $course->get_permalink();
 		$course_home = coursepress_get_main_courses_url();
-		$units_slug = coursepress_get_setting( 'slugs/units', 'units' );
 		switch ( $type ) {
 			case 'unit_archive':
 				$units_breadcrumbs = sprintf(
@@ -1867,7 +1866,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					esc_html__( 'Courses', 'cp' ),
 					esc_url( $course_url ),
 					esc_html( $course_name ),
-					esc_url( $course_url . $units_slug ),
+					esc_url( $course->get_units_url() ),
 					esc_html__( 'Units', 'cp' )
 				);
 				break;

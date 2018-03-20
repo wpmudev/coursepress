@@ -389,6 +389,70 @@ class CoursePress_Course extends CoursePress_Utility {
 		return implode( $separator, array( $start, $end ) );
 	}
 
+	public function get_prerequisites() {
+		$courses = $this->__get( 'enrollment_prerequisite' );
+		if ( empty( $courses ) ) {
+			return array();
+		}
+		if ( ! is_array( $courses ) ) {
+			$courses = array( $courses );
+		}
+		/**
+		 * remove $course_id
+		 */
+		$courses = array_diff( $courses, array( $this->__get( 'ID' ) ) );
+		/**
+		 * return array of courses ids
+		 */
+		return $courses;
+	}
+
+	public function get_course_enrollment_type( $atts ) {
+		$enrollment_text = '';
+		$enrollment_type = $this->__get( 'enrollment_type' );
+
+		extract( shortcode_atts( array(
+			'anyone_text' => __( 'Anyone', 'cp' ),
+			'manual_text' => __( 'Students are added by instructors.', 'cp' ),
+			'passcode_text' => __( 'A passcode is required to enroll.', 'cp' ),
+			'prerequisite_text' => __( 'Students need to complete %s first.', 'cp' ),
+			'registered_text' => __( 'Registered users.', 'cp' ),
+		), $atts, 'course_enrollment_type' ) );
+
+		switch ( $enrollment_type ) {
+			case 'anyone':
+				$enrollment_text = $anyone_text;
+				break;
+
+			case 'registered':
+				$enrollment_text = $registered_text;
+				break;
+
+			case 'passcode':
+				$enrollment_text = $passcode_text;
+				break;
+
+			case 'prerequisite':
+				$prereq = $this->get_prerequisites();
+				$prereq_courses = array();
+				foreach ( $prereq as $prereq_id ) {
+					$prereq_courses[] = sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( get_permalink( $prereq_id ) ),
+						get_the_title( $prereq_id )
+					);
+				}
+				$enrollment_text = sprintf( $prerequisite_text, implode( ', ', $prereq_courses ) );
+				break;
+
+			case 'manually':
+				$enrollment_text = $manual_text;
+				break;
+		}
+		$enrollment_text = apply_filters( 'coursepress_course_enrollment_type_text', $enrollment_text );
+		return $enrollment_text;
+	}
+
 	public function get_course_language() {
 		return $this->__get( 'course_language' );
 	}
@@ -718,9 +782,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function is_students_full() {
 		$course_id = $this->__get( 'ID' );
-		$limited = coursepress_is_true( coursepress_course_get_setting( $course_id, 'class_limited' ) );
-		if ( $limited ) {
-			$limit = coursepress_course_get_setting( $course_id, 'class_size' );
+		$limit = coursepress_course_get_setting( $course_id, 'class_size' );
+		if ( $limit ) {
 			$students = $this->count_students();
 			return $limit <= $students;
 		}
@@ -971,6 +1034,8 @@ class CoursePress_Course extends CoursePress_Utility {
 				$structure .= $this->create_html( 'li', false, $unit_structure );
 			}
 			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );
+		} else {
+			$structure = $this->create_html( 'p', array(), __( 'There is no Units yet.', 'cp' ) );
 		}
 		return $structure;
 	}

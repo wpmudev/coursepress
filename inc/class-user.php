@@ -260,7 +260,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$offset = $per_page * ($paged - 1);
 		$limit = $per_page * $paged;
 		if ( ! $id ) {
-			return null;
+			return array();
 		}
 		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
 		if ( $per_page > 0 ) {
@@ -308,11 +308,11 @@ class CoursePress_User extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		if ( empty( $id ) ) {
 			return;
-		} +
+		}
 
 		$passcode = filter_input( INPUT_POST, 'course_passcode' );
 		$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
-		if ( $course_passcode != trim( $passcode ) ) {
+		if ( $course_passcode != trim( $passcode ) && ! CoursePress_Data_Capabilities::can_add_course_student( $course_id )  ) {
 			coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
 			$redirect = $course->get_permalink();
 			wp_safe_redirect( $redirect );
@@ -579,14 +579,14 @@ class CoursePress_User extends CoursePress_Utility {
 							if ( ! $prev_passed ) {
 								$prev_passed = array();
 							}
-							$passed = array_merge( $prev_passed, $steps_completion['passed'] );
+							$passed = array_unique( array_merge( $prev_passed, $steps_completion['passed'] ) );
 							$unit_completion = coursepress_set_array_val( $unit_completion, 'passed', $passed );
 						}
 						if ( ! empty( $steps_completion['progress'] ) ) {
 							$unit_progress += $steps_completion['progress'];
 						}
 						if ( ! empty( $steps_completion['module_progress'] ) ) {
-							$module_progress = $module_progress + (int) $steps_completion['module_progress'];
+							$module_progress = $module_progress + $steps_completion['module_progress'];
 						}
 						if ( ! empty( $steps_completion['steps'] ) ) {
 							foreach ( $steps_completion['steps'] as $step_id => $_step ) {
@@ -606,7 +606,7 @@ class CoursePress_User extends CoursePress_Utility {
 					if ( ! $prev_passed ) {
 						$prev_passed = array();
 					}
-					$passed = array_merge( $prev_passed, $steps_completion['passed'] );
+					$passed = array_unique( array_merge( $prev_passed, $steps_completion['passed'] ) );
 					$unit_completion = coursepress_set_array_val( $unit_completion, 'passed', $passed );
 				}
 				if ( ! empty( $steps_completion['progress'] ) ) {
@@ -646,7 +646,6 @@ class CoursePress_User extends CoursePress_Utility {
 		$passed = array();
 		$answered = array();
 		$seen = array();
-		$gradable = 0;
 		$completed = array();
 		$steps_grades = array();
 		$unit = coursepress_get_unit( $unit_id );
@@ -754,7 +753,6 @@ class CoursePress_User extends CoursePress_Utility {
 			'passed' => $passed,
 			'answered' => $answered,
 			'average' => $steps_grade,
-			'gradable' => $gradable,
 			'completed_steps' => $completed,
 			'steps_grades' => $steps_grades,
 			'steps' => $steps_completion,
@@ -821,7 +819,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	public function get_course_grade( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
-		return coursepress_get_array_val( $progress, 'completion/average' );
+		return coursepress_get_array_val( $progress, 'completion/progress' );
 	}
 	/**
 	 * Returns user's course progress percentage.
@@ -895,7 +893,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	public function get_unit_grade( $course_id, $unit_id ) {
 		$progress = $this->get_completion_data( $course_id );
-		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/average' );
+		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
 	}
 
 	/**
@@ -956,7 +954,7 @@ class CoursePress_User extends CoursePress_Utility {
 			return false;
 		}
 		$progress = $this->get_completion_data( $course_id );
-		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/completed' );
+		return 100 <= coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
 	}
 
 	/**
@@ -1001,7 +999,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	public function is_module_completed( $course_id, $unit_id, $module_id ) {
 		$module_progress = $this->get_module_progress( $course_id, $unit_id, $module_id );
-		return (int) $module_progress >= 100;
+		return (int) $module_progress > 99;
 	}
 
 	/**
@@ -1041,7 +1039,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$progress = $this->get_completion_data( $course_id );
 		$path = 'completion/' . $unit_id . '/steps/' . $step_id . '/progress';
 		$step_progress = coursepress_get_array_val( $progress, $path );
-		return (int) $step_progress >= 100;
+		return (int) $step_progress > 99;
 	}
 
 	public function get_step_status( $course_id, $unit_id, $step_id ) {

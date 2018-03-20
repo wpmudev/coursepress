@@ -904,17 +904,11 @@ abstract class CoursePress_Utility {
 					return sprintf( _n( 'in a hour', 'in %s hours', $hours, 'cp' ), $hours );
 				}
 			}
-			if ( 1 == $day_diff ) {
-				return __( 'Tomorrow', 'cp' );
-			}
-			if ( $day_diff < 4 ) {
+			if ( $day_diff < 7 ) {
 				return date_i18n( 'l', $ts );
 			}
-			if ( $day_diff < 7 + (7 - date( 'w' )) ) {
-				return __( 'next week', 'cp' );
-			}
-			if ( ceil( $day_diff / 7 ) < 5 ) {
-				$weeks = ceil( $day_diff / 7 );
+			$weeks = ceil( $day_diff / 7 );
+			if ( $weeks < 5 ) {
 				return sprintf( _n( 'next week', 'in %s weeks', $weeks, 'cp' ), $weeks );
 			}
 			if ( $day_diff < 31 ) {

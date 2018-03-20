@@ -1495,7 +1495,7 @@ final class CoursePress_Data_Course {
 
 		if ( false === $is_admin ) {
 			$enrollment_ended_courses = self::get_enrollment_ended_courses();
-			$enrolled_courses = (array) CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+			$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 
 			if ( ! empty( $enrollment_ended_courses ) ) {
 				foreach ( $enrollment_ended_courses as $pos => $post_id ) {
@@ -1541,7 +1541,7 @@ final class CoursePress_Data_Course {
 
 		$course_ids = get_option( 'cp_expired_courses', false );
 		$last_update = get_option( 'cp_expired_date', false );
-		$now = $CoursePress_Core->get_time();
+		$now = $CoursePress_Core->date_time_now( '00:00:00' );
 		$date = date( 'MdY' );
 
 		if ( $last_update != $date ) {
@@ -1550,37 +1550,29 @@ final class CoursePress_Data_Course {
 		}
 
 		if ( false === $course_ids && false == $last_update || $refresh ) {
-			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-				WHERE p.`post_type`='course' AND (m.`meta_key`='course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
+			$sql = "SELECT m.`post_id`, p.`ID`, m.`meta_value` AS end_date FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p, {$wpdb->postmeta} AS m2
+				WHERE p.`post_type`='course' AND m.`meta_key`='cp_course_end_date'
 				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+				AND ( p.ID=m2.post_id AND m2.meta_key='cp_course_open_ended' AND m2.meta_value!='1' )
 			";
-			$sql = $wpdb->prepare( $sql, $now );
 
-			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+			$results = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array();
+			foreach ( $results as $course ) {
+				$time = strtotime( $course['end_date'] );
+				if ( $time < $now ) {
+					$course_ids[] = $course['post_id'];
+				}
+			}
 
 			update_option( 'cp_expired_courses', $course_ids );
 			update_option( 'cp_expired_date', $date );
 			return $course_ids;
+		} elseif ( empty( $course_ids ) ) {
+			$course_ids = array();
 		}
 
-		return array();
-	}
-
-	/**
-	 * Return id from callback.
-	 *
-	 * @param $a
-	 *
-	 * @return int|mixed
-	 */
-	public static function return_id( $a ) {
-
-		if ( is_array( $a ) && isset( $a['post_id'] ) ) {
-			return $a['post_id'];
-		}
-
-		return 0;
+		return $course_ids;
 	}
 
 	/**
@@ -1603,7 +1595,7 @@ final class CoursePress_Data_Course {
 
 		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
 		$last_update = get_option( 'cp_enrollment_ended_date', false );
-		$now = $CoursePress_Core->get_time();
+		$now = $CoursePress_Core->date_time_now( '00:00:00' );
 		$date = date( 'MdY' );
 
 		if ( $last_update != $date ) {
@@ -1612,17 +1604,25 @@ final class CoursePress_Data_Course {
 		}
 
 		if ( false === $course_ids && false == $last_update || $refresh ) {
-			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-				WHERE p.`post_type`='course' AND (m.`meta_key`='enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
+			$sql = "SELECT m.`post_id`, p.`ID`, m.`meta_value` AS end_date  FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p, {$wpdb->postmeta} AS m2
+				WHERE p.`post_type`='course' AND m.`meta_key`='cp_enrollment_end_date'
 				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+				AND ( p.ID=m2.post_id AND m2.meta_key='cp_enrollment_open_ended' AND m2.meta_value!='1' )
 			";
-			$sql = $wpdb->prepare( $sql, $now );
 
-			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+			$results = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array();
+			foreach ( $results as $course ) {
+				$time = strtotime( $course['end_date'] );
+				if ( $time < $now ) {
+					$course_ids[] = $course['post_id'];
+				}
+			}
 
 			update_option( 'cp_enrollment_ended_courses', $course_ids );
 			update_option( 'cp_enrollment_ended_date', $date );
+		} elseif ( empty( $course_ids ) ) {
+			$course_ids = array();
 		}
 
 		return $course_ids;
