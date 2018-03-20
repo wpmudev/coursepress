@@ -993,14 +993,9 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 	global $CoursePress_VirtualPage, $_course_module, $_course_step;
 
 	$course = coursepress_get_course();
-
-	if ( is_wp_error( $course ) ) {
-		return false;
-	}
-
 	$unit = coursepress_get_unit();
 
-	if ( is_wp_error( $unit ) ) {
+	if ( is_wp_error( $course ) || is_wp_error( $unit ) ) {
 		return false;
 	}
 
@@ -1009,137 +1004,71 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 	$vp = $CoursePress_VirtualPage;
 	$vp_type = $vp->__get( 'type' );
 	$with_modules = $course->is_with_modules();
-	$previous = $course->get_units_url();
-	$next = '';
 	$has_access = $user->has_access_at( $course->__get( 'ID' ) );
+	$module_id = !empty( $_course_module['id'] ) ? $_course_module['id'] : false;
+	$module_url = !empty( $_course_module['url'] ) ? $_course_module['url'] : false;
+	$steps = $unit->get_steps( ! $has_access, $with_modules, $module_id );
+	$link = '';
 
-	if ( $with_modules ) {
-		if ( 'unit' == $vp_type ) {
-			if ( 'previous' == $type ) {
-				$previousUnit = $unit->get_previous_unit();
-
-				if ( $previousUnit ) {
-					$previous = $previousUnit->get_unit_url();
-				}
-			} else {
-				$modules = $unit->get_modules();
-				$module = array_shift( $modules );
-
-				if ( $module ) {
-					$next = $module['url'];
-				}
+	if ( 'previous' === $type ) {
+		$previousUnit = $unit->get_previous_unit();
+		$prevModule = $unit->get_previous_module( $module_id );
+		$prevModuleID = !empty( $prevModule['id'] ) ? $prevModule['id'] : false;
+		$prevStep = $_course_step ? $_course_step->get_previous_step() : false;
+		if ( $prevStep ) {
+			$link = $prevStep->get_permalink();
+		} elseif ( $module_url && 'module' !== $vp_type && 'unit' !== $vp_type ) {
+			$link = $module_url;
+		} elseif ( $prevModule ) {
+			$link = $prevModule['url'];
+			$prevSteps = $unit->get_steps( ! $has_access, $with_modules, $prevModuleID );
+			if ( $prevSteps ) {
+				$lastSteps = array_pop( $prevSteps );
+				$link = $lastSteps->get_permalink();
 			}
-		} elseif ( 'module' == $vp_type ) {
-			$module_id = $_course_module['id'];
-
-			if ( 'previous' == $type ) {
-				$prevModule = $unit->get_previous_module( $module_id );
-
-				if ( $prevModule ) {
-					$prevSteps = $unit->get_steps( ! $has_access, true, (int) $prevModule['id'] );
-
-					if ( $prevSteps ) {
-						$prevStep = array_pop( $prevSteps );
-						$previous = $prevStep->get_permalink();
-					} else {
-						$previous = $prevModule['url'];
-					}
-				} else {
-					// Try previous unit
-					$prevUnit = $unit->get_previous_unit();
-
-					if ( $prevUnit ) {
-						$previous = $prevUnit->get_unit_url();
-					}
+		} elseif ( 'unit' !== $vp_type ) {
+			$link = $unit->get_permalink();
+		} elseif ( $previousUnit ) {
+			$link = $previousUnit->get_unit_url();
+			$prevModules = $previousUnit->get_modules_with_steps();
+			$prevSteps = $previousUnit->get_steps();
+			if ( $prevModules ) {
+				$lastModule = array_pop( $prevModules );
+				$link = $lastModule['url'];
+				if ( !empty( $lastModule['steps'] ) ) {
+					$lastStep = array_pop( $lastModule['steps'] );
+					$link = $lastStep->get_permalink();
 				}
-			} else {
-				$nextSteps = $unit->get_steps( ! $has_access, true, $module_id );
 
-				if ( $nextSteps ) {
-					$nextStep = array_shift( $nextSteps );
-					$next = $nextStep->get_permalink();
-				} else {
-					// Try next module
-					$nextModule = $unit->get_next_module( $module_id );
-
-					if ( $nextModule ) {
-						$next = $nextModule['url'];
-					} else {
-						// Try next unit
-						$nextUnit = $unit->get_next_unit();
-
-						if ( $nextUnit ) {
-							$next = $nextUnit->get_unit_url();
-						} else {
-							$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
-						}
-					}
-				}
+			} elseif ( $prevSteps ) {
+				$prevStep = array_pop( $prevSteps );
+				$link = $prevStep->get_permalink();
 			}
 		} else {
-			if ( 'previous' == $type ) {
-				$prevStep = $_course_step->get_previous_step();
-
-				if ( $prevStep ) {
-					$previous = $prevStep->get_permalink();
-				} else {
-					$previous = $_course_module['url'];
-				}
-			} else {
-				$nextStep = $_course_step->get_next_step();
-
-				if ( $nextStep ) {
-					$next = $nextStep->get_permalink();
-				} else {
-					$nextModule = $unit->get_next_module( $_course_module['id'] );
-
-					if ( $nextModule ) {
-						$next = $nextModule['url'];
-					} else {
-						// Try next unit
-						$nextUnit = $unit->get_next_unit();
-
-						if ( $nextUnit ) {
-							$next = $nextUnit->get_unit_url();
-						} else {
-							$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
-						}
-					}
-				}
-			}
+			$link = $course->get_units_url();
 		}
 	} else {
-		if ( 'previous' == $type ) {
-			$prevStep = $_course_step->get_previous_step();
-
-			if ( $prevStep ) {
-				$previous = $prevStep->get_permalink();
-			} else {
-				$previous = $_course_module['url'];
-			}
+		// for Next link
+		$nextUnit = $unit->get_next_unit();
+		$nextModule = $unit->get_next_module( $module_id );
+		$nextStep = $_course_step ? $_course_step->get_next_step() : false;
+		if ( $nextStep ) {
+			$link = $nextStep->get_permalink();
+		} elseif ( $module_url && 'unit' === $vp_type ) {
+			$link = $module_url;
+		} elseif ( $steps && 'step' !== $vp_type ) {
+			$firstStep = array_shift( $steps );
+			$link = $firstStep->get_permalink();
+		} elseif ( $nextModule ) {
+			$link = $nextModule['url'];
+		} elseif ( $nextUnit ) {
+			$link = $nextUnit->get_unit_url();
 		} else {
-			$nextStep = $_course_step->get_next_step();
-
-			if ( $nextStep ) {
-				$next = $nextStep->get_permalink();
-			} else {
-				// Try next unit
-				$nextUnit = $unit->get_next_unit();
-
-				if ( $nextUnit ) {
-					$next = $nextUnit->get_unit_url();
-				} else {
-					$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
-				}
-			}
+			$link = $course->get_permalink() . trailingslashit( 'completion/validate' );
 		}
 	}
 
-	if ( 'previous' == $type ) {
-		return $previous;
-	} else {
-		return $next;
-	}
+	return $link;
 }
 
 /**
