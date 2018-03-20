@@ -31,6 +31,26 @@
             @include preview();
         }
 
+        .fold {
+          display: inline-block;
+          width: 25px;
+          float: left;
+          height: 25px;
+          margin-right: 15px;
+          cursor: pointer;
+
+          &:before {
+            content: '\f140';
+            font-family: Dashicons;
+            font-size: 20px;
+            line-height: 1.2;
+          }
+
+          &.folded:before {
+            content: '\f139';
+          }
+        }
+
         .timer {
             float: right;
             font-size: 10px;
@@ -48,17 +68,20 @@
                 margin: 0 5px;
             }
         }
-
+        .unit-title, .module-title, .course-step {
+          border: 0;
+          border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
         .unit-title {
             display: block;
-            background-color: $grey_6;
-            margin-bottom: 3px;
             padding: 5px 0 5px 15px;
             color: $grey_1;
             @include clearfix;
 
             a {
-                color: $grey_1;
+                color: $dark_1;
+                font-weight: 600;
+                box-shadow: none;
             }
 
             .unit-feature-image {
@@ -95,6 +118,9 @@
             display: block;
             font-size: 96%;
             padding: 5px 0 5px 30px;
+            a {
+              box-shadow: none;
+            }
             &:hover {
                 .preview {
                     opacity: 1;
@@ -123,7 +149,10 @@
         .course-step {
             display: block;
             font-size: 94%;
-            padding: 6px 0 4px 50px;
+            padding: 5px 0 5px 50px;
+            a {
+              box-shadow: none;
+            }
         }
     }
 
