@@ -25,6 +25,8 @@ get_header(); ?>
                  coursepress_get_template( 'course', 'submenu' );
                 ?>
 
+                <?php echo do_shortcode('[course_instructors style="list" course_id="' . $course->ID . '"]'); ?>
+
                 <div class="course-structure">
                     <?php echo coursepress_get_course_structure( false, true ); ?>
                 </div>
