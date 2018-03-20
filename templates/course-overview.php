@@ -56,6 +56,9 @@ if ( ! empty( $price ) ) {
             <div class="social-shares">
                 <?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
             </div>
+
+            <?php echo do_shortcode('[course_instructors course_id="' . $course->ID . '"]'); ?>
+
 		</div>
         </div>
 
@@ -69,8 +72,5 @@ if ( ! empty( $price ) ) {
             <?php echo coursepress_get_course_structure(); ?>
         </div>
 
-        <div class="course-instructors">
-          <?php echo do_shortcode('[course_instructors course_id="' . $course->ID . '"]'); ?>
-        </div>
     </div>
 </article>
