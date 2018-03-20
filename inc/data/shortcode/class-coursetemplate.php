@@ -51,24 +51,9 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 	 */
 	public function get_course_join_button( $atts ) {
 		global $enrollment_process_url, $signup_url;
-		$atts = shortcode_atts( array(
-			'course_id' => coursepress_get_course_id(),
-			'access_text' => __( 'Start Learning', 'cp' ),
-			'class' => '',
-			'continue_learning_text' => __( 'Continue Learning', 'cp' ),
-			'course_expired_text' => __( 'Not available', 'cp' ),
-			'course_full_text' => __( 'Course Full', 'cp' ),
-			'details_text' => __( 'Details', 'cp' ),
-			'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
-			'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
-			'enroll_text' => __( 'Enroll Now!', 'cp' ),
-			'instructor_text' => __( 'Access Course', 'cp' ),
-			'list_page' => false,
-			'not_started_text' => __( 'Not Available', 'cp' ),
-			'passcode_text' => __( 'Passcode Required', 'cp' ),
-			'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
-			'signup_text' => __( 'Enroll Now!', 'cp' ),
-		), $atts, 'course_join_button' );
+
+		$defaults = coursepress_get_button_default_attrs();
+		$atts = shortcode_atts( $defaults, $atts, 'course_join_button' );
 		// Check course ID.
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
@@ -91,36 +76,45 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		// @todo Use permission check.
 		$can_update_course = true;
 		if ( $can_update_course ) {
-			$enroll_text = __( 'Enroll', 'cp' );
 		}
-		$now = $this->date_time_now();
-		$general_settings = coursepress_get_setting( 'general' );
+		$now = $this->date_time_now( '00:00:00' );
 		$course->enroll_type = coursepress_course_get_setting( $course_id, 'enrollment_type' );
 		$course->course_start_date = coursepress_course_get_setting( $course_id, 'course_start_date' );
-		$course->course_start_date = $this->strtotime( $course->course_start_date );
 		$course->course_end_date = coursepress_course_get_setting( $course_id, 'course_end_date' );
 		$course->enrollment_start_date = coursepress_course_get_setting( $course_id, 'enrollment_start_date' );
 		$course->enrollment_end_date = coursepress_course_get_setting( $course_id, 'enrollment_end_date' );
+		$course_start_date = $this->strtotime( $course->course_start_date );
+		$course_end_date = $this->strtotime( $course->course_end_date );
+		$enrollment_start_date = $this->strtotime( $course->enrollment_start_date );
+		$enrollment_end_date = $this->strtotime( $course->enrollment_end_date );
 		$course->open_ended_course = coursepress_is_true( coursepress_course_get_setting( $course_id, 'course_open_ended' ) );
 		$course->open_ended_enrollment = coursepress_is_true( coursepress_course_get_setting( $course_id, 'enrollment_open_ended' ) );
 		$course->prerequisite = coursepress_get_enrollment_prerequisite( $course_id );
 		$course->is_paid = coursepress_is_true( coursepress_course_get_setting( $course_id, 'payment_paid_course' ) );
-		$course->course_started = ! $course->open_ended_course && ! empty( $course->course_end_date ) && $this->strtotime( $course->course_start_date ) <= $now ? true : false;
-		$course->enrollment_started = $this->strtotime( $course->enrollment_start_date ) <= $now ? true : false;
-		$course->course_expired = ! $course->open_ended_course && ! empty( $course->course_end_date ) && $this->strtotime( $course->course_end_date ) <= $now ? true : false;
-		$course->enrollment_expired = ! empty( $course->enrollment_end_date ) && $this->strtotime( $course->enrollment_end_date ) <= $now ? true : false;
+		$course->course_started = ! $course->open_ended_course && $course_start_date <= $now ? true : false;
+		$course->enrollment_started = $enrollment_start_date <= $now ? true : false;
+		$course->course_expired = ! $course->open_ended_course && $course_end_date <= $now ? true : false;
+		$course->enrollment_expired = $enrollment_end_date <= $now ? true : false;
 		$course->full = $course->is_students_full();
 		$button = '';
 		$button_option = '';
 		$button_url = $enrollment_process_url;
-		$is_form = false;
 		$student_enrolled = false;
 		$student_id = false;
 		$is_instructor = false;
 		$is_custom_login = coursepress_is_true( coursepress_get_setting( 'general/use_custom_login', true ) );
 		$course_link = esc_url( $course->get_units_url() );
 		$continue_learning_link = null;
+		$enroll_course_url = add_query_arg(
+			array(
+				'course_id' => $course_id,
+				'action' => 'coursepress_enroll',
+				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+			),
+			$course_url
+		);
 		if ( is_user_logged_in() ) {
+			$signup_url = $enroll_course_url;
 			$student_id = get_current_user_id();
 			$student_enrolled = $student->is_enrolled_at( $course_id );
 			$is_instructor = $student->is_instructor_at( $course_id );
@@ -139,130 +133,115 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				}
 			}
 		} else {
-			$course_url = add_query_arg(
-				array(
-					'action' => 'coursepress_enroll',
-					'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
-				),
-				$course_url
-			);
 			if ( false === $is_custom_login ) {
-				$signup_url = wp_login_url( $course_url );
+				$signup_url = wp_login_url( $enroll_course_url );
 			} else {
 				$signup_url = coursepress_get_student_login_url();
 				$signup_url = add_query_arg(
 					array(
-						'redirect_to' => urlencode( $course_url ),
+						'redirect_to' => urlencode( $enroll_course_url ),
 						'_wpnonce' => wp_create_nonce( 'redirect_to' ),
 					),
 					$signup_url
 				);
 			}
 		}
-		$buttons = apply_filters(
-			'coursepress_course_enrollment_button_options',
-			array(
-				'full' => array(
-					'label' => sanitize_text_field( $atts['course_full_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-full ' . $class,
-					),
-					'type' => 'label',
+		$buttons = array(
+			'full' => array(
+				'label' => sanitize_text_field( $atts['course_full_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-full ' . $class,
 				),
-				'expired' => array(
-					'label' => sanitize_text_field( $atts['course_expired_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-finished ' . $class,
-					),
-					'type' => 'label',
-				),
-				'enrollment_finished' => array(
-					'label' => sanitize_text_field( $atts['enrollment_finished_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrollment-finished ' . $class,
-					),
-					'type' => 'label',
-				),
-				'enrollment_closed' => array(
-					'label' => sanitize_text_field( $atts['enrollment_closed_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrollment-closed ' . $class,
-					),
-					'type' => 'label',
-				),
-				'enroll' => array(
-					'label' => sanitize_text_field( $enroll_text ),
-					'attr' => array(
-						'class' => $can_update_course ? 'apply-button' : 'apply-button enroll ' . $class,
-						'data-link' => esc_url( $signup_url . '?course_id=' . $course_id ),
-						'data-course-id' => $course_id,
-					),
-					'type' => 'form_button',
-				),
-				'signup' => array(
-					'label' => sanitize_text_field( $atts['signup_text'] ),
-					'attr' => array(
-						'class' => 'apply-button signup ' . ( $is_custom_login ? 'cp-custom-login ' : '' ) . $class,
-						'data-link-old' => $signup_url,//esc_url( $signup_url . '?course_id=' . $course_id ),
-						'data-course-id' => $course_id,
-						'data-link' => $signup_url,
-					),
-					'type' => 'link',
-				),
-				'details' => array(
-					'label' => sanitize_text_field( $atts['details_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-details ' . $class,
-						'data-link' => esc_url( $course_url ),
-					),
-					'type' => 'button',
-				),
-				'prerequisite' => array(
-					'label' => sanitize_text_field( $atts['prerequisite_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-prerequisite ' . $class,
-					),
-					'type' => 'label',
-				),
-				'passcode' => array(
-					'label' => sanitize_text_field( $atts['passcode_text'] ),
-					'button_pre' => '<div class="passcode-box"><label>' . esc_html( $atts['passcode_text'] ) . ' <input type="password" name="passcode" /></label></div>',
-					'attr' => array(
-						'class' => 'apply-button apply-button-passcode ' . $class,
-					),
-					'type' => 'form_submit',
-				),
-				'not_started' => array(
-					'label' => sanitize_text_field( $atts['not_started_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-not-started  ' . $class,
-					),
-					'type' => 'label',
-				),
-				'access' => array(
-					'label' => ! $is_instructor ? sanitize_text_field( $atts['access_text'] ) : sanitize_text_field( $atts['instructor_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
-						'data-link' => $course_link,
-					),
-					'type' => 'link',
-				),
-				'continue' => array(
-					'label' => ! $is_instructor ? sanitize_text_field( $atts['continue_learning_text'] ) : sanitize_text_field( $atts['instructor_text'] ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => empty( $continue_learning_link )? CoursePress_Data_Student::get_last_visited_url( $course_id ) : $continue_learning_link,
-					),
-					'type' => 'link',
-				),
+				'type' => 'label',
 			),
-			$course_id
+			'expired' => array(
+				'label' => sanitize_text_field( $atts['course_expired_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-finished ' . $class,
+				),
+				'type' => 'label',
+			),
+			'enrollment_finished' => array(
+				'label' => sanitize_text_field( $atts['enrollment_finished_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-enrollment-finished ' . $class,
+				),
+				'type' => 'label',
+			),
+			'enrollment_closed' => array(
+				'label' => sanitize_text_field( $atts['enrollment_closed_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-enrollment-closed ' . $class,
+				),
+				'type' => 'label',
+			),
+			'enroll' => array(
+				'label' => sanitize_text_field( $atts['enroll_text'] ),
+				'attr' => array(
+					'class' => $can_update_course ? 'apply-button' : 'apply-button enroll ' . $class,
+					'data-link' => esc_url( $signup_url ),
+					'data-course-id' => $course_id,
+				),
+				'type' => 'link',
+			),
+			'signup' => array(
+				'label' => sanitize_text_field( $atts['signup_text'] ),
+				'attr' => array(
+					'class' => 'apply-button signup ' . ( $is_custom_login ? 'cp-custom-login ' : '' ) . $class,
+					'data-link-old' => $signup_url,
+					'data-course-id' => $course_id,
+					'data-link' => $signup_url,
+				),
+				'type' => 'link',
+			),
+			'details' => array(
+				'label' => sanitize_text_field( $atts['details_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-details ' . $class,
+					'data-link' => esc_url( $course_url ),
+				),
+				'type' => 'button',
+			),
+			'prerequisite' => array(
+				'label' => sanitize_text_field( $atts['prerequisite_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-prerequisite ' . $class,
+				),
+				'type' => 'label',
+			),
+			'passcode' => array(
+				'label' => sanitize_text_field( $atts['passcode_text'] ),
+				'button' => sanitize_text_field( $atts['enroll_text'] ),
+				'type' => 'passcode',
+			),
+			'not_started' => array(
+				'label' => sanitize_text_field( $atts['not_started_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-not-started  ' . $class,
+				),
+					'type' => 'label',
+			),
+			'access' => array(
+				'label' => ! $is_instructor ? sanitize_text_field( $atts['access_text'] ) : sanitize_text_field( $atts['instructor_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
+					'data-link' => $course_link,
+				),
+				'type' => 'link',
+			),
+			'continue' => array(
+				'label' => ! $is_instructor ? sanitize_text_field( $atts['continue_learning_text'] ) : sanitize_text_field( $atts['instructor_text'] ),
+				'attr' => array(
+					'class' => 'apply-button apply-button-enrolled ' . $class,
+					'data-link' => empty( $continue_learning_link )? CoursePress_Data_Student::get_last_visited_url( $course_id ) : $continue_learning_link,
+				),
+				'type' => 'link',
+			),
 		);
-		$buttons = apply_filters( 'coursepress_coursetemplate_join_button', $buttons );
+		$buttons = apply_filters( 'coursepress_course_enrollment_button_options', $buttons,	$course_id );
 		// Determine the button option.
 		if ( ! $student_enrolled && ! $is_instructor ) {
 			// For vistors and non-enrolled students.
-			$enrollment_start_date = $this->strtotime( $course->enrollment_start_date );
 			if ( $enrollment_start_date > $now && false === $course->open_ended_enrollment ) {
 				return ''; // Bail do not show the button
 			}
@@ -379,7 +358,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			if ( $course->course_expired && ! $course->open_ended_course ) {
 				// COURSE EXPIRED
 				$button_option = 'expired';
-			} elseif ( $course->course_start_date > $now ) {
+			} elseif ( $course_start_date > $now ) {
 				// COURSE HASN'T STARTED
 				$button_option = 'not_started';
 			} elseif ( ! is_single() && false === strpos( $_SERVER['REQUEST_URI'], coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' ) ) ) {
@@ -424,15 +403,6 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				case 'label':
 					$button = $this->create_html( 'span', $buttons[ $button_option ]['attr'], $tag_content );
 					break;
-				case 'form_button':
-					$button = $this->create_html( 'button', $buttons[ $button_option ]['attr'], $tag_content );
-					$is_form = true;
-					break;
-				case 'form_submit':
-					$buttons[ $button_option ]['attr']['type'] = 'submit';
-					$button = $this->create_html( 'input', $buttons[ $button_option ]['attr'], $tag_content );
-					$is_form = true;
-					break;
 				case 'button':
 					$button = $this->create_html( 'button', $buttons[ $button_option ]['attr'], $tag_content );
 					break;
@@ -446,19 +416,19 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					}
 					$button = $this->create_html( $tag, $buttons[ $button_option ]['attr'], $tag_content );
 					break;
+				case 'passcode':
+					$args = array(
+						'course_id' => $course_id,
+						'label_text' => esc_html( $buttons['passcode']['label'] ),
+						'button_text' => esc_html( $buttons['passcode']['button'] ),
+						'cookie_name' => 'cp_incorrect_passcode_' . COOKIEHASH,
+					);
+					$button = coursepress_render( 'views/front/passcode-form', $args, false );
+					break;
 			}
 			$button = $button_pre . $button . $button_post;
 		}
-		// Wrap button in form if needed.
-		if ( $is_form ) {
-			$button = '<form name="enrollment-process" method="post" data-type="'. $button_option . '" action="' . $button_url . '">' . $button;
-			$button .= sprintf( '<input type="hidden" name="student_id" value="%s" />', get_current_user_id() );
-			if ( 'enroll' == $button_option ) {
-				$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
-			}
-			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
-			$button .= '</form>';
-		}
+
 		return apply_filters( 'coursepress_enroll_button', $button, $course_id, $student_id, $button_option );
 	}
 
