@@ -9,9 +9,9 @@
 
       foldButton = $( '<span class="fold"></span>' ).insertBefore( $('.unit') );
 
-      target = $('.fold').next().find('.module-tree');
-
       foldMenu = function() {
+
+        target = $(this).next().find('.module-tree');
 
         $('.fold').toggleClass('folded');
 

@@ -7,14 +7,15 @@
 
   li {
     display: inline-block;
-    font-size: 13px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    font-size: 0.9em;
 
     &:before {
       content: '\f139';
       font-family: 'Dashicons';
       display: inline-block;
-      vertical-align: middle;
-      font-size: 16px;
+      vertical-align: top;
     }
 
     &:first-of-type:before {
