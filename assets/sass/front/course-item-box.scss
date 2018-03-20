@@ -18,6 +18,68 @@
         flex: 1;
     }
 
+    .course-info {
+      transform-style: preserve-3d;
+      overflow: hidden;
+      clear: both;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      background-color: #FFF;
+      padding: 15px 15px 15px 25px;
+
+      .course-listing-image {
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        padding: 8px;
+        background-color: $grey_9;
+      }
+
+      .course-instructors {
+        display: block;
+        margin: 15px 0;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        border-width: 1px 0;
+        padding: 8px 0;
+
+        h3.label {
+          display: inline;
+          margin-right: 15px;
+          font-size: 16px;
+        }
+      }
+
+      .quick-course-info {
+        font-size: 1rem;
+        .course-start-date, .course-time, .course-language, .course-lang, .course-cost {
+          display: inline;
+          margin-right: 20px;
+
+          &:before {
+              font-family: 'Dashicons';
+              display: inline-block;
+              vertical-align: bottom;
+              margin: 1px 5px;
+          }
+        }
+        .course-time {
+          &:before {
+              content: '\f469';
+          }
+        }
+
+        .course-lang {
+          &:before {
+              content: '\f319';
+          }
+        }
+
+        .course-cost {
+          &:before {
+              content: '\f0d6';
+              font-family: fontawesome;
+          }
+        }
+      }
+    }
+
     @media screen {
         @media (min-width: 768px) {
             display: flex;
@@ -32,7 +94,7 @@
             }
             .course-info {
                 flex: 2;
-                padding-left: 25px;
+                padding-left: 15px;
             }
             .course-title {
                 margin-top: 0;

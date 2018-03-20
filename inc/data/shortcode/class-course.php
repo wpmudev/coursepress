@@ -918,6 +918,23 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		return '';
 	}
 
+	private function set_external_js( $id, $src, $version = false ) {
+		global $CoursePress;
+
+		if ( false === $version ) {
+			$version = $CoursePress->version;
+		}
+		$plugin_url = $CoursePress->plugin_url;
+		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
+	}
+
+	private function set_external_css( $id, $src ) {
+		global $CoursePress;
+
+		$plugin_url = $CoursePress->plugin_url;
+		wp_enqueue_style( $id, $plugin_url . 'assets/external/css/' . $src );
+	}
+
 	/**
 	 * Shows the course featured video.
 	 *
@@ -950,9 +967,74 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				'class' => $class,
 				'src' => esc_url_raw( $course->featured_video ),
 			);
-			// @todo: apply CP video.js
+
+			// set css & js for video.js
+			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
+
+			$this->set_external_js( 'coursepress-video', 'video.min.js' );
+			$this->set_external_js( 'coursepress-video-youtube', 'video-youtube.min.js' );
+			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js', '3.0.0' );
+
+		// no js
+		$html5 = $this->create_html( 'a',
+			array(
+				'href' => 'http://videojs.com/html5-video-support/',
+				'target' => '_blank',
+			)
+		);
+
+		$inner .= $this->create_html( 'p',
+			array(
+				'class' => 'vjs-no-js'
+			),$html5);
+
+		// videojs attributes
+		$player_attr = array();
+		$mimeType = '';
+
+		$featured = parse_url($course->featured_video);
+
+		// source: YouTube
+		if (strstr($featured['host'],'youtube') !== FALSE) {
+			$player_attr = '{"techOrder":["youtube"],"sources":[{"type":"video/youtube","src":"'.esc_attr($course->featured_video).'"}]}';
+		} elseif (strstr($featured['host'],'vimeo') !== FALSE) {
+			$player_attr = '{"techOrder":["vimeo"],"sources":[{"type":"video/vimeo","src":"'.esc_attr($course->featured_video).'"}]}';
+		} else {
+			// get extension
+			$ext = pathinfo($course->featured_video, PATHINFO_EXTENSION);
+
+			switch ($ext){
+				case "mp4":
+					$mimeType = 'video/mp4';
+				break;
+				case "webm":
+					$mimeType = 'video/webm';
+				break;
+				case "ogv":
+					$mimeType = 'video/ogg';
+				break;
+			}
+
+			$inner = $this->create_html( 'source',
+				array(
+					'type' => $mimeType,
+					'src' => $course->featured_video
+				));
 		}
-		return '';
+
+		$content = $this->create_html( 'video',
+			array(
+				'id' => 'cp-video-' . $course->ID,
+				'class' => 'video-js',
+				'width' => $atts['width'],
+				'height' => $atts['height'],
+				'controls' => '',
+				'preload' => 'auto',
+				'poster' => $course->listing_image,
+				'data-setup' => ($player_attr)
+			), $inner );
+		return $content;
+	}
 	}
 
 	/**

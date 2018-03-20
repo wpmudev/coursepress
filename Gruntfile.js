@@ -148,6 +148,7 @@ module.exports = function(grunt) {
                 'assets/js/src/front/course-overview.js',
                 'assets/js/src/front/comment-reply.js',
                 'assets/js/src/front/steps.js',
+                'assets/js/src/front/fold-unit.js',
 				'assets/js/src/front/email-unsubscribe.js',
 			]
 		},
