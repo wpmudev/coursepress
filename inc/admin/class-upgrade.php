@@ -110,9 +110,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	}
 
 	public function upgrade_course_by_id( $course_id ) {
-
 		$meta = get_post_meta( $course_id );
-		        l( $meta );
 		$result = array(
 			'students' => array(
 				'total' => 0,
@@ -122,19 +120,34 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			'message' => __( 'Course was upgraded successfully.', 'cp' ),
 		);
 		/**
+		 * Instructors
+		 */
+		$value = get_post_meta( $course_id, 'upgrade_3_instructors', true );
+		if ( empty( $value ) || 'upgraded' !== $value ) {
+
+		}
+		/**
+		 * Facilitators
+		 */
+		/**
 		 * course_enrolled_student_id
 		 */
+		$course = new CoursePress_Course( $course_id );
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
 			foreach ( $students as $student_id ) {
 				$student = new CoursePress_User( $student_id );
-				if ( $student->add_course_student( $course_id ) ) {
+				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
+					$meta_name = sprintf( 'course_%d_progress', $course_id );
+					$progress = get_user_meta( $student_id, $meta_name, true );
+					if ( ! empty( $progress ) ) {
+						$student->add_student_progress( $course_id, $progress );
+					}
 				}
 			}
 		}
-
 		/**
 		 * Visibility
 		 */
@@ -153,7 +166,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			) {
 				$visible[ $key ] = maybe_unserialize( $meta[ $key ][0] );
 			}
-			l( $visible );
 		}
 
 		return $result;
