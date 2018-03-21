@@ -1274,6 +1274,41 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Withdraw students from all their courses.
+	 *
+	 * @param object $request Request data.
+	 *
+	 * @return json
+	 */
+	public function withdraw_students_from_all( $request ) {
+
+		// Don't continue if students id(s) not given.
+		if ( empty( $request->students ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not withdraw as students id is empty.', 'cp' ) ) );
+		}
+		// Make sure it is array.
+		$student_ids = (array) $request->students;
+		// Loop through each students and process.
+		foreach ( $student_ids as $student_id ) {
+			// Get students enrolled course ids.
+			$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+			if ( empty( $course_ids ) ) {
+				continue;
+			}
+			// Loop through each enrolled course.
+			foreach ( $course_ids as $course_id ) {
+				// Do not continue if instructor do not have permission.
+				if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $course_id ) ) {
+					continue;
+				}
+				// Finally remove student from course.
+				coursepress_delete_student( $student_id, $course_id );
+			}
+		}
+		return wp_send_json_success();
+	}
+
+	/**
 	 * Duplicate single course and units.
 	 *
 	 * @param object $request Request.

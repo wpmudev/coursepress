@@ -13,6 +13,24 @@
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
             <div class="cp-flex">
+                <div class="cp-div" id="bulk-actions">
+                    <label class="label"><?php _e( 'Bulk actions', 'cp' ); ?></label>
+                    <div class="cp-input-clear">
+                        <select id="bulk-action-selector-top">
+                            <option value="-1"><?php esc_attr_e( 'Bulk Actions', 'cp' ); ?></option>
+                            <?php
+                            foreach ( $bulk_actions as $value => $label ) {
+                                printf(
+                                    '<option value="%s">%s</option>',
+                                    esc_attr( $value ),
+                                    esc_html( $label )
+                                );
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Apply', 'cp' ); ?></button>
+                </div>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <select name="course_id">
@@ -43,6 +61,7 @@
         <table class="coursepress-table cp-user" cellspacing="0">
             <thead>
             <tr>
+                <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                 <?php foreach ( $columns as $column_id => $column_label ) : ?>
                     <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
                         <?php echo $column_label; ?>
@@ -58,7 +77,7 @@
 				foreach ( $students as $student ) {
 ?>
 <tr class="<?php echo esc_attr( $odd ? 'odd' : 'even' ); ?>" data-studetnt-id="<?php echo esc_attr( $student->ID ); ?>">
-
+    <th scope="row" class="check-column check-column-value"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $student->ID ); ?>"></th>
     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 <?php
