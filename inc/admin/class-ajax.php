@@ -108,7 +108,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					'student_id'          => $student_id,
 					'course_id'           => $course_id,
 					'unit_id'             => $unit_id,
-					'module_id'           => $module_id,
+					'module_id'           => $step_id,
 					'instructor_feedback' => $feedback_text,
 				);
 
@@ -125,6 +125,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$json_data['success']      = true;
 		$json_data['unit_grade']   = (int) $unit_grade;
 		$json_data['course_grade'] = $student->get_course_grade( $course_id );
+		$json_data['has_pass_course_unit'] = $student->has_pass_course_unit( $course_id, $unit_id );
 		return $json_data;
 	}
 
