@@ -15,4 +15,11 @@
   .comment-notification {
     float: left;
   }
+  .children {
+    .comment-author {
+      .avatar {
+        left: 0;
+      }
+    }
+  }
 }

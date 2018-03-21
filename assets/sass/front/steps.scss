@@ -151,16 +151,7 @@
 
     .coursepress-next-cycle,
     .coursepress-previous-cycle {
-        @include reset();
-        display: inline-block;
-        text-transform: uppercase;
-        padding: 8px 15px;
-        background-color: $blue_1;
-        color: #ffffff;
-
-        &:hover {
-            background-color: $blue_2;
-        }
+        @include button;
     }
 
     .coursepress-previous-cycle {

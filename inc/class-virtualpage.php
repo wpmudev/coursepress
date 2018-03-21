@@ -224,7 +224,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				}
 				$step = $this->__get( 'step' );
 				if ( ! $with_modules ) {
-					$this->__set( 'type', 'step' );
+					$this->__set( 'type', $type );
 					$_coursepress_type_now = 'step';
 				}
 				$step_id = null;

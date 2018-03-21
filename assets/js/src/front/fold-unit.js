@@ -9,13 +9,13 @@
 
       foldButton = $( '<span class="fold"></span>' ).insertBefore( $('.unit') );
 
-      target = $('.fold').next().find('.module-tree');
-
       foldMenu = function() {
 
-        $('.fold').toggleClass('folded');
+        target = $(this).next().find('.module-tree');
 
-        if ($('.fold').is( '.folded' )) {
+        $(this).toggleClass('folded');
+
+        if ($(this).is( '.folded' )) {
           target.slideUp();
         } else {
           target.slideDown();
