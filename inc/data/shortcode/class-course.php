@@ -678,7 +678,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'class' => '',
 			'label_delimeter' => ': ',
 			'label_tag' => 'strong',
-			'label' => __( 'Price:&nbsp;', 'cp' ),
+			'label' => __( 'Price', 'cp' ),
 			'no_cost_text' => __( 'FREE', 'cp' ),
 			'show_icon' => 'no',
 		), $atts, 'course_cost' );

@@ -9,6 +9,10 @@
         list-style: none;
     }
 
+    .unit {
+          padding-bottom: 25px;
+    }
+
     @mixin preview {
             background-color: #ffffff;
             border: 1.5px solid $grey_3;

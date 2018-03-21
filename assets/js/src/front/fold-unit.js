@@ -13,9 +13,9 @@
 
         target = $(this).next().find('.module-tree');
 
-        $('.fold').toggleClass('folded');
+        $(this).toggleClass('folded');
 
-        if ($('.fold').is( '.folded' )) {
+        if ($(this).is( '.folded' )) {
           target.slideUp();
         } else {
           target.slideDown();
