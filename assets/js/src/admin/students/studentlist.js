@@ -29,7 +29,7 @@
             },
             // Process bulk actions.
             bulkAction: function() {
-                var items, action, ids, request;
+                var items, ids, request;
                 items = $('.check-column-value input:checked');
                 // Process withdraw action.
                 if ( 'withdraw' === $('#bulk-action-selector-top').val() ) {
