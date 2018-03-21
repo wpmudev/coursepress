@@ -49,6 +49,31 @@
             };
         };
 
+         self.progressIndicator = function() {
+            var progress = $( '<span class="cp-progress-indicator"><i class="fa fa-spinner fa-spin"></i></span>' ),
+               check = '<i class="fa fa-check"></i>',
+               error = '<i class="fa fa-remove"></i>'
+            ;
+
+            return {
+               icon: progress,
+               success: function( message ) {
+                  message = ! message ? '' : message;
+                  progress.addClass( 'success' ).html( check + message );
+                  progress.fadeOut( 3500, progress.remove );
+
+                  win.CoursePress.Events.trigger( 'coursepress:progress:success' );
+               },
+               error: function( message ) {
+                  message = ! message ? '' : message;
+                  progress.addClass( 'error' ).html( error + message );
+                  progress.fadeOut( 3500, progress.remove );
+
+                  win.CoursePress.Events.trigger( 'coursepress:progress:error' );
+               }
+            };
+         };
+
         return self;
     }(jQuery, document, window));
 })();
