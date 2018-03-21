@@ -11,11 +11,12 @@
         <h2><?php esc_html_e( 'Courses to upgrade', 'cp' ); ?></h2>
 <ol>
 <?php
+$status = __( 'waiting for upgrade', 'cp' );
 foreach ( $courses as $course ) {
-	$status = $status_class = '';
+	$status_class = '';
 	if ( isset( $course->cp3_upgraded ) && 'done' === $course->cp3_upgraded ) {
 		$status_class = 'done';
-		$status = esc_html__( 'upgreded', 'cp' );
+		$status = esc_html__( 'upgraded', 'cp' );
 	}
 	printf(
 		'<li id="course-id-%d" data-course-id="%s" class="course-to-upgrade status-%s" >',

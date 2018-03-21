@@ -21,6 +21,22 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
 		add_action( 'admin_notices', array( $this, 'upgrade_is_needed_notice' ) );
 		add_filter( 'coursepress_admin_menu_screens', array( $this, 'add_admin_submenu' ), 11 );
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'i18n' ) );
+	}
+
+	/**
+	 * Add i18n to JavaScript _coursepress object.
+	 *
+	 * @since 3.0.0
+	 */
+	public function i18n( $data ) {
+		$data['text']['upgrade'] = array(
+			'status' => array(
+				'in_progress' => __( 'Upgrading in progress, please wait.', 'cp' ),
+				'upgraded' => __( 'Upgraded.', 'cp' ),
+			),
+		);
+		return $data;
 	}
 
 	public function add_admin_submenu( $screens ) {

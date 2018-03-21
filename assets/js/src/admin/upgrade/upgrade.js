@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _coursepress */
 
 (function(){
     'use strict';
@@ -25,13 +25,14 @@
 
             // Setup UI elements.
             setupUI: function () {
-                this.courses = $('#coursepress-upgrade li.course-to-upgrade');
             },
 
             ajaxUpgrade: function() {
                 var processing = false;
                 var self = this;
-                _.each( this.courses, function( element ) {
+                var courses = $('#coursepress-upgrade li.course-to-upgrade');
+                $('#coursepress-upgrade-button').attr('disabled', 'disabled' );
+                _.each( courses, function( element ) {
                     var $element = $(element);
                     if ( processing ) {
                         return;
@@ -41,20 +42,30 @@
                             'action' : 'upgrade_course',
                             'course_id' : $element.data('course-id' )
                         } );
-                        self.request.save();
                         processing = true;
+                        $('.status', $element ).html( _coursepress.text.upgrade.status.in_progress );
+                        $element.addClass( 'status-in-progress' );
+                        self.request.save();
                     }
                 });
             },
+
             upgradError: function( data ) {
                 new CoursePress.PopUp({
                     type: 'error',
                     message: data.message
                 });
             },
+
             upgradSuccess: function( data ) {
-                window.console.log( 'upgradSuccess' );
-                window.console.log( data );
+                this.setStatus( data.course_id, _coursepress.text.upgrade.status.upgraded, 'status-done' );
+                this.ajaxUpgrade();
+            },
+
+            setStatus: function( course_id, message, css_class ) {
+                var el = $('#coursepress-upgrade #course-id-'+course_id );
+                el.addClass( css_class );
+                $('.status', el ).html( message );
             }
         });
 

@@ -1,0 +1,33 @@
+@import "../common/mixin.scss";
+
+.coursepress-wrap {
+    &.coursepress-upgrade {
+        ol {
+            span {
+                &.status {
+                    display: inline-block;
+                    opacity: .8;
+                    font-size: .9em;
+                    border: 1px solid #aaa;
+                    @include radius( $default_radius );
+                    padding: 5px;
+                    background-color: #ddd;
+                }
+            }
+            .status-in-progress {
+                span {
+                    &.status {
+                        background-color: #fa7;
+                    }
+                }
+            }
+            .status-done {
+                span {
+                    &.status {
+                        background-color: #ada;
+                    }
+                }
+            }
+        }
+    }
+}
