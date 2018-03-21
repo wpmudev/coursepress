@@ -60,6 +60,41 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Update assessment grade and feedback.
+	 *
+	 * @param  array $request Request data.
+	 * @return array          Response.
+	 */
+	public function update_assessments_grade( $request ) {
+		$course_id     = $request->course_id;
+		$unit_id       = $request->unit_id;
+		$step_id       = $request->step_id;
+		$student_id    = $request->student_id;
+		$grade         = (int) $request->student_grade;
+		$with_feedback = ! empty( $request->with_feedback );
+		$feedback_text = ! empty( $request->feedback_content ) ? self::filter_content( $request->feedback_content ) : '';
+
+		$student          = new CoursePress_User( $student_id );
+		$student_progress = $student->get_completion_data( $course_id );
+		$feedback         = $student->get_instructor_feedback( $student_id, $course_id, $unit_id, $step_id, false, $student_progress );
+		$old_feedback     = ! empty( $feedback['feedback'] ) ? $feedback['feedback'] : '';
+		$draft_feedback   = ! empty( $feedback['draft'] );
+
+		$response          = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $step_id );
+		$response['grade'] = $grade;
+
+		// Record new grade and get the progress back.
+		$progress                  = $student->record_response( $course_id, $unit_id, $step_id, $response, get_current_user_id() );
+		$is_completed              = coursepress_get_array_val( $student_progress, 'completion/completed' );
+		$unit_grade                = $student->get_unit_grade( $course_id, $unit_id );
+		$json_data['completed']    = coursepress_is_true( $is_completed );
+		$json_data['success']      = true;
+		$json_data['unit_grade']   = (int) $unit_grade;
+		$json_data['course_grade'] = $student->get_course_grade( $course_id );
+		return $json_data;
+	}
+
+	/**
 	 * Get the course units for editing
 	 */
 	public function get_course_units() {
