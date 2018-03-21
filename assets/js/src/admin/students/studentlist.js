@@ -29,17 +29,28 @@
             },
             // Process bulk actions.
             bulkAction: function() {
-                var items = $('.check-column-value input:checked');
-                var action = $('#bulk-action-selector-top').val();
+                var items, action, ids, request;
+                items = $('.check-column-value input:checked');
                 // Process withdraw action.
-                if ( 'withdraw' === action ) {
-                    var ids = [];
+                if ( 'withdraw' === $('#bulk-action-selector-top').val() ) {
+                    if ( 0 === items.length ) {
+                        window.alert( win._coursepress.text.course.students.no_items );
+                        return;
+                    }
+                    if ( ! window.confirm( win._coursepress.text.course.students.confirm + '\n' ) ) {
+                        return;
+                    }
+                    ids = [];
                     items.each(function () {
-                        ids.push($(this).val());
+                        var value = parseInt($(this).val());
+                        if ( 0 < value ) {
+                            ids .push( value );
+                        }
                     });
-                    var request = new CoursePress.Request();
+                    request = new CoursePress.Request();
                     request.set('action', 'withdraw_students_from_all');
                     request.set('students', ids);
+                    request.set( '_wpnonce',  win._coursepress._wpnonce );
                     request.on('coursepress:success_withdraw_students_from_all', this.reloadStudents, this);
                     request.save();
                 }
