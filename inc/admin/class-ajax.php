@@ -79,18 +79,84 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$feedback         = $student->get_instructor_feedback( $student_id, $course_id, $unit_id, $step_id, false, $student_progress );
 		$old_feedback     = ! empty( $feedback['feedback'] ) ? $feedback['feedback'] : '';
 		$draft_feedback   = ! empty( $feedback['draft'] );
+		$current_user_id  = get_current_user_id();
+		$date             = current_time( 'mysql' );
 
 		$response          = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $step_id );
 		$response['grade'] = $grade;
 
+		$is_feedback_new = false;
+
+		if ( $with_feedback ) {
+			$is_feedback_new = empty( $old_feedback );
+
+			if ( ! empty( $old_feedback ) ) {
+				$is_feedback_new = $draft_feedback || trim( $feedback_text ) !== trim( $old_feedback );
+			}
+
+			if ( $is_feedback_new ) {
+				$response['feedback'][] = array(
+					'feedback_by' => $current_user_id,
+					'feedback'    => $feedback_text,
+					'date'        => $date,
+					'draft'       => $draft_feedback,
+				);
+
+				$student    = new CoursePress_User( $student_id );
+				$email_args = array(
+					'email'               => $student->user_email,
+					'student_id'          => $student_id,
+					'course_id'           => $course_id,
+					'unit_id'             => $unit_id,
+					'module_id'           => $module_id,
+					'instructor_feedback' => $feedback_text,
+				);
+
+				// New feedback, send email.
+			}
+		}
+
 		// Record new grade and get the progress back.
-		$progress                  = $student->record_response( $course_id, $unit_id, $step_id, $response, get_current_user_id() );
+		$progress = $student->record_response( $course_id, $unit_id, $step_id, $response, $current_user_id );
+
 		$is_completed              = coursepress_get_array_val( $student_progress, 'completion/completed' );
 		$unit_grade                = $student->get_unit_grade( $course_id, $unit_id );
 		$json_data['completed']    = coursepress_is_true( $is_completed );
 		$json_data['success']      = true;
 		$json_data['unit_grade']   = (int) $unit_grade;
 		$json_data['course_grade'] = $student->get_course_grade( $course_id );
+		return $json_data;
+	}
+
+	/**
+	 * Save feedback to draft.
+	 *
+	 * @param  array $request Request data.
+	 * @return array          Response.
+	 */
+	public function save_draft_feedback( $request ) {
+		$course_id  = $request->course_id;
+		$unit_id    = $request->unit_id;
+		$step_id    = $request->step_id;
+		$student_id = $request->student_id;
+
+		$feedback_text    = self::filter_content( $request->feedback_content );
+		$student          = new CoursePress_User( $student_id );
+		$student_progress = $student->get_completion_data( $course_id );
+		$response         = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $step_id );
+		$current_user_id  = get_current_user_id();
+		$date             = current_time( 'mysql' );
+
+		$response['feedback'][] = array(
+			'feedback_by' => $current_user_id,
+			'feedback'    => $feedback_text,
+			'date'        => $date,
+			'draft'       => true,
+		);
+
+		$progress = $student->record_response( $course_id, $unit_id, $step_id, $response, $current_user_id );
+
+		$json_data['success'] = true;
 		return $json_data;
 	}
 
