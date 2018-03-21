@@ -164,6 +164,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page'           => $this->slug,
 			'search'         => $search,
+			'bulk_actions'   => $this->get_bulk_actions(),
 		);
 		// Render templates.
 		coursepress_render( 'views/admin/students', $args );
@@ -208,5 +209,17 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		$per_page = empty( $per_page ) ? coursepress_get_option( 'posts_per_page', 20 ) : $per_page;
 
 		return $per_page;
+	}
+
+	/**
+	 * Get bulk actions for students listing page.
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+		$actions = array(
+			'withdraw' => __( 'Withdraw', 'cp' ),
+		);
+		return $actions;
 	}
 }
