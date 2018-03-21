@@ -177,7 +177,7 @@ class CoursePress_View_Admin_Instructor {
 			<div class="course-liquid-right">
 				<div class="course-holder-wrap">
 					<div class="sidebar-name no-movecursor">
-						<h3><?php esc_html_e( 'Profle', 'CP_TD' ); ?></h3>
+						<h3><?php esc_html_e( 'Profile', 'CP_TD' ); ?></h3>
 					</div>
 					<div class="instructor-profile-holder" id="sidebar-levels">
 						<div class="sidebar-inner">
