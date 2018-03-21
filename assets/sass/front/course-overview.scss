@@ -12,4 +12,19 @@
             }
         }
     }
+    .course-instructors {
+      h3.label {
+        display:inline-block;
+        font-size: 1.5rem;
+        margin-right: 5px;
+      }
+    }
+    .page-header {
+      padding-bottom: 0;
+    }
+    .course-content {
+      h3 {
+        padding: 0;
+      }
+    }
 }

@@ -12,7 +12,8 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php echo coursepress_get_course_title(); ?></h1>
+                    <h1 class="page-title"><?php _e( 'Units', 'cp' ); ?></h1>
+                    <h2 class="entry-title course-title"><?php echo coursepress_get_course_title(); ?></h2>
                 </header>
 
                 <?php
@@ -24,6 +25,8 @@ get_header(); ?>
                  */
                  coursepress_get_template( 'course', 'submenu' );
                 ?>
+
+                <?php echo do_shortcode('[course_instructors style="list" course_id="' . $course->ID . '"]'); ?>
 
                 <div class="course-structure">
                     <?php echo coursepress_get_course_structure( false, true ); ?>
