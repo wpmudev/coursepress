@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _coursepress */
 
 (function(){
     'use strict';
@@ -16,7 +16,8 @@
                 'click .edit-no-feedback, .edit-with-feedback': 'editNoFeedback',
                 'click .cp-cancel': 'cancelEdit',
                 'change .module-grade': 'enableSubmitButton',
-                'click .cp-submit-grade': 'updateModuleGrade'
+                'click .cp-submit-grade': 'updateModuleGrade',
+                'click .cp-save-as-draft': 'saveFeedbackAsDraft'
             },
             activeUnit: 'all',
 
@@ -63,9 +64,9 @@
          			nextButton = btn.siblings( 'button' ),
          			with_feedback = btn.is( '.edit-no-feedback' ) ? false : true,
          			parentTr = btn.parents( '.cp-question-title' ).next( 'tr.cp-grade-editor' ),
-         			// grade_box = $( '.module-grade', parentTr ),
-         			// editor_container = $( '.cp-feedback-editor', parentTr ).hide(),
-         			// editor_id = 'cp_editor_' + grade_box.data( 'module' ) + '_' + grade_box.data( 'student' ),
+         			grade_box = $( '.module-grade', parentTr ),
+         			editor_container = $( '.cp-feedback-editor', parentTr ),
+         			editor_id = 'cp_editor_' + grade_box.data( 'module' ) + '_' + grade_box.data( 'student' ),
          			// editor_box = $( '.cp-grade-editor', parentTr ),
          			// unitDiv = parentTr.parents( '.cp-unit-div' ).first(),
          			// edit_grade_box = $( '.cp-edit-grade-box', parentTr ),
@@ -76,20 +77,45 @@
          			// Don't process anything if button is disabled
          			return;
          		}
-
+               $('.cp-cancel').click();
          		parentTr.slideDown();
          		nextButton.addClass('disabled' );
 
          		if ( with_feedback ) {
-         		// 	editor_container.show();
-         		// 	enableFeedbackEditor( editor_id, editor_container, parentTr );
+         			editor_container.show();
+         			this.enableFeedbackEditor( editor_id, editor_container, parentTr );
          		// 	edit_grade_box.appendTo( editor_container );
-         		// 	save_as_draft.show();
+         			save_as_draft.show();
          		} else {
          		// 	edit_grade_box.prependTo( editor_box );
          			save_as_draft.hide();
          		}
             },
+            enableFeedbackEditor: function( editor_id, editor_container, container ) {
+         		var textbox = $( '.cp_feedback_content', editor_container ),
+         			old_content = textbox.val(),
+         			has_editor = $( '.wp-editor-container', editor_container ).length > 0,
+         			submitButton = $( '.cp-submit-grade', container ),
+         			save_as_draft = $( '.cp-save-as-draft', container );
+
+         		if ( ! has_editor ) {
+         			CoursePress.Events.off( 'editor:keyup' );
+         			CoursePress.Events.on( 'editor:keyup', function( ed ) {
+         				var content = undefined !== typeof ed.getContent && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
+
+         				if ( content !== old_content ) {
+         					textbox.val( content );
+         					submitButton.removeClass( 'disabled' );
+         					save_as_draft.removeClass( 'disabled' );
+         				}
+         			});
+                  new CoursePress.Editor({
+                     editor_id: editor_id,
+                     editor_container: editor_container,
+                     content: old_content
+                  });
+         		}
+         	},
          	updateModuleGrade: function(ev) {
          		var btn = $( ev.currentTarget ),
                   me = this,
@@ -108,9 +134,11 @@
          			// gradeInfo = parentTr.prev('.cp-question-title').find( '.cp-module-grade-info' ),
          			withFeedbackButton = parentTr.prev('.cp-question-title').find( '.edit-with-feedback' ),
          			noFeedbackButton = parentTr.prev('.cp-question-title').find( '.edit-no-feedback' ),
-         			unit_id = module.data( 'unit' ),
+                  unit_id = module.data( 'unit' ),
+         			course_id = module.data( 'courseid' ),
          			module_id = module.data( 'module' ),
          			student_id = module.data( 'student' ),
+                  feedback_content = feedback.val(),
          			unitDiv = $( '.cp-unit-div' ).filter(function(){
             				var data = $(this).data();
 
@@ -123,30 +151,20 @@
          			return;
          		}
 
-         		var progress = CoursePress.progressIndicator(),
-         			 param = {
-         				course_id: module.data( 'courseid' ),
-         				unit_id: unit_id,
-         				module_id: module_id,
-         				student_id: student_id,
-         				with_feedback: with_feedback,
-         				feedback_content: feedback.val(),
-         				student_grade: grade,
-         				action: 'update'
-         			};
-               // console.log(param);
+         		var progress = CoursePress.progressIndicator();
+
          		progress.icon.insertAfter( ev.currentTarget );
                var model = new CoursePress.Request();
                model.set( 'action', 'update_assessments_grade' );
-               model.set( 'course_id', module.data( 'courseid' ) );
+               model.set( 'course_id', course_id );
                model.set( 'unit_id', unit_id );
                model.set( 'step_id', module_id );
                model.set( 'with_feedback', with_feedback );
                model.set( 'feedback_content', feedback.val() );
                model.set( 'student_grade', grade );
                model.set( 'student_id', student_id );
-               model.off( 'coursepress:success_assessments_update' );
-               model.on( 'coursepress:success_assessments_update', function(data){
+               model.off( 'coursepress:success_update_assessments_grade' );
+               model.on( 'coursepress:success_update_assessments_grade', function(data){
                   CoursePress.Events.on( 'coursepress:progress:success', function() {
                      module.attr( 'data-grade', grade ).data( 'grade', grade );
                      cancelButton.trigger( 'click' );
@@ -161,25 +179,75 @@
 
                      me.calculateFinalGrade( student_id, data.course_grade );
                      unitDiv.html( data.unit_grade + '%' );
-
-                        if ( with_feedback && '' !== param.feedback_content.trim() ) {
+                     if(data.has_pass_course_unit){
+                        unitDiv.removeClass('cp-cross-icon').addClass('cp-tick-icon');
+                     } else{
+                        unitDiv.removeClass('cp-tick-icon').addClass('cp-cross-icon');
+                     }
+                        if ( with_feedback && '' !== feedback_content.trim() ) {
             					var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show(),
             						draft_icon = $( '.cp-draft-icon', feedback_editor )
             					;
 
             					draft_icon[ with_feedback ? 'hide' : 'show']();
             					$( '.description', feedback_editor ).hide(); // Hide no feedback info
-            					$( '.cp-feedback-details', feedback_editor ).html( param.feedback_content );
+            					$( '.cp-feedback-details', feedback_editor ).html( feedback_content );
             					$( 'cite', feedback_editor ).html( '- ' + win._coursepress.instructor_name );
             				}
                   });
                   progress.success();
                }, this );
-               model.on( 'coursepress:error_assessments_update', function(){
+               model.on( 'coursepress:error_update_assessments_grade', function(){
          			progress.error( win._coursepress.server_error );
          		}, this );
                model.save();
 
+         	},
+            saveFeedbackAsDraft: function(ev) {
+         		var btn = $( ev.currentTarget ),
+                  parentTr = btn.parents( 'tr.cp-grade-editor' ),
+                  moduleDiv = btn.parents( '.cp-module' ),
+         			feedback = $( '.cp_feedback_content', parentTr ),
+         			cancelButton = $( '.cp-cancel', parentTr ),
+         			module = $( '.module-grade', parentTr ),
+         			course_id = module.data( 'courseid' ),
+         			unit_id = module.data( 'unit' ),
+         			module_id = module.data( 'module' ),
+         			student_id = module.data( 'student' ),
+                  feedback_content = feedback.val();
+
+         		if ( btn.is( '.disabled' ) ) {
+         			// Nothing to save
+         			return;
+         		}
+
+         		var progress = CoursePress.progressIndicator();
+
+               progress.icon.insertAfter( ev.currentTarget );
+               var model = new CoursePress.Request();
+               model.set( 'action', 'save_draft_feedback' );
+               model.set( 'course_id', course_id );
+               model.set( 'unit_id', unit_id );
+               model.set( 'step_id', module_id );
+               model.set( 'feedback_content', feedback.val() );
+               model.set( 'student_id', student_id );
+               model.off( 'coursepress:success_save_draft_feedback' );
+               model.on( 'coursepress:success_save_draft_feedback', function(){
+                  CoursePress.Events.on( 'coursepress:progress:success', function() {
+                     btn.addClass( 'disabled' );
+         				var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show();
+         				$( '.cp-draft-icon', feedback_editor ).show();
+         				$( '.description', feedback_editor ).hide(); // Hide no feedback info
+         				$( '.cp-feedback-details', feedback_editor ).html( feedback_content );
+         				$( 'cite', feedback_editor ).html( '- ' + _coursepress.instructor_name );
+         				cancelButton.trigger( 'click' );
+                  });
+                  progress.success();
+               }, this );
+               model.on( 'coursepress:error_save_draft_feedback', function(){
+         			progress.error( win._coursepress.server_error );
+         		}, this );
+               model.save();
          	},
          	cancelEdit: function(ev) {
          		var btn = $( ev.currentTarget ),
