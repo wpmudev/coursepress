@@ -15,6 +15,40 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	protected $slug = 'coursepress_assessments';
 
 	/**
+	 * CoursePress_Admin_Notifications constructor.
+	 */
+	public function __construct() {
+
+		// Initialize parent class.
+		parent::__construct();
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
+	}
+
+	/**
+	 * JS localized sstrings.
+	 *
+	 * @since 3.0.0
+	 */
+	function change_localize_array( $localize_array ) {
+		$localize_array['assessment_labels'] = array(
+			'pass' => __( 'Pass', 'cp' ),
+			'fail' => __( 'Fail', 'cp' ),
+			'add_feedback' => __( 'Add Feedback', 'cp' ),
+			'edit_feedback' => __( 'Edit Feedback', 'cp' ),
+			'cancel_feedback' => __( 'Cancel', 'cp' ),
+			'success' => __( 'Success', 'cp' ),
+			'error' => __( 'Unable to save feedback!', 'cp' ),
+			'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'cp' ),
+			'minimum_help' => __( 'You may change this minimum grade from course setting.', 'cp' ),
+			'submit_with_feedback' => __( 'Submit grade with feedback', 'cp' ),
+			'submit_no_feedback' => __( 'Submit grade without feedback', 'cp' ),
+			'edit_with_feedback' => __( 'Edit grade with feedback', 'cp' ),
+			'edit_no_feedback' => __( 'Edit grade without feedback', 'cp' ),
+		);
+		return $localize_array;
+	}
+
+	/**
 	 * Get assessments listing page content and set pagination.
 	 *
 	 * @uses get_current_screen().

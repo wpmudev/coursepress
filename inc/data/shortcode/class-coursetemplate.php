@@ -94,7 +94,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$course->course_started = ! $course->open_ended_course && $course_start_date <= $now ? true : false;
 		$course->enrollment_started = $enrollment_start_date <= $now ? true : false;
 		$course->course_expired = ! $course->open_ended_course && $course_end_date <= $now ? true : false;
-		$course->enrollment_expired = $enrollment_end_date <= $now ? true : false;
+		$course->enrollment_expired = $enrollment_end_date < $now ? true : false;
 		$course->full = $course->is_students_full();
 		$button = '';
 		$button_option = '';

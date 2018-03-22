@@ -1095,9 +1095,10 @@ class CoursePress_User extends CoursePress_Utility {
 		$previous_response = $this->get_response( $course_id, $unit_id, $step_id );
 		$response['attempts'] = ! isset( $previous_response['attempts'] ) ? 1 : intval( $previous_response['attempts'] ) + 1;
 		$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/' . $step_id, $response );
+		$progress = $this->validate_completion_data( $course_id, $progress );
 		$this->add_student_progress( $course_id, $progress );
-		$this->validate_completion_data( $course_id, $progress );
 		do_action( 'coursepress_record_response', $step_id );
+		return $progress;
 	}
 
 	/**
