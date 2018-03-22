@@ -348,6 +348,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
+			'editor_visual' => __( 'Visual', 'cp' ),
+			'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'cp' ),
 		) );
 		/**
 		 * External scripts: select2

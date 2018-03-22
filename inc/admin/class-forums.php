@@ -23,6 +23,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			$localize_array['text']['forums'] = array();
 		}
 		$localize_array['text']['forums']['forum_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
+		$localize_array['text']['forums']['no_items'] = __( 'Please select at lease one forum.', 'cp' );
+		$localize_array['text']['forums']['delete_confirm'] = __( 'Are you sure to delete selected forums?', 'cp' );
+		$localize_array['text']['forums']['deleting_forums'] = __( 'Deleting forums... please wait', 'cp' );
 		return $localize_array;
 	}
 
@@ -59,6 +62,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'statuses' => coursepress_get_post_statuses( $this->post_type, $current_status, $this->slug ),
 			'current_status' => $current_status,
 			'pagination' => $this->set_pagination( $count, 'coursepress_forums_per_page' ),
+			'bulk_actions' => $this->get_bulk_actions(),
 		);
 		coursepress_render( 'views/admin/forums', $args );
 		coursepress_render( 'views/tpl/common' );
@@ -259,5 +263,29 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			return $wp_query->posts;
 		}
 		return array();
+	}
+
+	/**
+	 * Get bulk actions for students listing page.
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+
+		$status = $this->get_status();
+		if ( 'trash' == $status ) {
+			$actions = array(
+				'restore' => __( 'Restore', 'cp' ),
+				'delete' => __( 'Delete Permanently', 'cp' ),
+			);
+		} else {
+			$actions = array(
+				'publish' => __( 'Publish', 'cp' ),
+				'draft' => __( 'Draft', 'cp' ),
+				'trash' => __( 'Move to trash', 'cp' ),
+			);
+		}
+
+		return $actions;
 	}
 }

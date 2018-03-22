@@ -38,7 +38,8 @@ module.exports = function(grunt) {
                 'assets/js/src/common/add-image.js',
                 'assets/js/src/common/add-video.js',
                 'assets/js/src/common/dropdown-menu.js',
-                'assets/js/src/common/popup.js',
+					 'assets/js/src/common/popup.js',
+                'assets/js/src/common/editor.js',
                 'assets/js/src/common/upload.js',
                 'assets/js/src/common/add-media.js',
                 'assets/js/src/cp-search-form.js',
@@ -150,6 +151,7 @@ module.exports = function(grunt) {
                 'assets/js/src/front/steps.js',
                 'assets/js/src/front/fold-unit.js',
 				'assets/js/src/front/email-unsubscribe.js',
+                'assets/js/src/front/enroll-button.js',
 			]
 		},
 

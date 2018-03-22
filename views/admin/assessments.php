@@ -202,7 +202,8 @@
 																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
                                                                <?php
-                                                              if ( $is_assessable ) :
+                                                               $response = $step->get_user_response( $student->ID );
+                                                              if ( ! empty( $response ) && $is_assessable ) :
                                                                   $no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
                                                 						$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
@@ -215,7 +216,7 @@
                                                                ?>
                                                                   <span>
                                                                      <button type="button" class="button-primary edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
-                                                                     <!-- <button type="button" class="button-primary edit-with-feedback"><?php echo $with_feedback_button_label; ?></button> -->
+                                                                     <button type="button" class="button-primary edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
                                                                   </span>
                                                                <?php endif;?>
 																				</span>
@@ -232,6 +233,14 @@
                                                       <td colspan="3">
                                                          <?php
                                                          $feedback   = $student->get_instructor_feedback( $course_id, $unit->ID, $step_id );
+                                          					$has_feedback = ! empty( $feedback['feedback'] );
+                                          					$feedback_class = $has_feedback ? ' cp-active' : '';
+                                          					$feedback_text = $has_feedback ? $feedback['feedback'] : '';
+                                          					$feedback_by = '';
+                                                         if ( $has_feedback ) {
+                                                            $feedback_user = new CoursePress_User( $feedback['feedback_by'] );
+                                                            $feedback_by = $feedback_user->get_name();
+                                                         }
                                                          $student_id = $student->ID;
                                                          $min_grade  = empty( $step->minimum_grade ) ? 0 : (int) $step->minimum_grade;
                                                          $pass_label = sprintf( __( 'The minimum grade to pass: %s', 'cp' ), $min_grade );
@@ -239,17 +248,19 @@
                                        						$pass_label .= __( 'You can change this minimum score from course settings.', 'cp' );
                                                          ?>
                                                          <div class="cp-grade-editor-box">
+                                                           <div class="cp-feedback-editor" style="display:none;">
+                                                               <label class="cp-feedback-title"><?php _e( 'Feedback', 'cp' ); ?></label>
+                                                               <p class="description"><?php _e( 'Your feedback will be emailed to the student after submission.', 'cp' ); ?></p>
+                                                               <textarea class="cp_feedback_content" style="display:none;"><?php echo esc_textarea( $feedback_text ); ?></textarea>
+                                                           </div>
                                                              <div class="coursepress-tooltip pull-right cp-edit-grade-box">
                                                                  <label class="cp-assess-label"><?php _e( 'Grade', 'cp' ); ?></label>
                                                                  <input type="number" name="module-grade" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-minimum="<?php echo esc_attr( $min_grade ); ?>" data-student="<?php echo $student_id; ?>" class="module-grade small-text" data-grade="<?= round( $grade ) ?>" value="<?= round( $grade ) ?>" min="0" max="100" />
+                                                                 <button type="button" class="button-primary cp-right cp-save-as-draft disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
                                                                  <button type="button" class="button-primary cp-submit-grade disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
                                                                  <button type="button" class="button cp-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
                                                                  <p class="description"><?php echo $pass_label; ?></p>
                                                              </div>
-                                                            <div class="cp-feedback-editor" style="display:none;">
-                                                                <label class="cp-feedback-title"><?php _e( 'Feedback', 'cp' ); ?></label>
-                                                                <p class="description"><?php _e( 'Your feedback will be emailed to the student after submission.', 'cp' ); ?></p>
-                                                            </div>
                                                          </div>
                                                       </td>
                                                    </tr>
@@ -335,6 +346,26 @@
 																			</td>
 																		</tr>
 																	<?php endif; ?>
+                                                   <?php
+                                                   $response = $step->get_user_response( $student->ID );
+                                                   if ( ! empty( $response ) && $is_assessable ) {
+                                                      $hide = ' style="display:none;"';
+                                 							$is_draft = $has_feedback && ! empty( $feedback['draft'] );
+                                                   ?>
+                                                   <tr class="cp-instructor-feedback" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-student="<?php echo $student_id; ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
+                                                      <td colspan="3">
+                                                         <div class="cp-instructor-feedback" style="display: <?php echo ( ! empty( $feedback ) ? 'block' : 'none' ); ?>">
+                                                         <h4><?php _e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php _e( 'Draft', 'cp' ); ?>]</span></h4>
+                                                         <?php
+                                                         printf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
+                                                         printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
+                                                         ?>
+                                                         </div>
+                                                   </td>
+                                                   </tr>
+                                                      <?php
+                                 						}
+                                                   ?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
 															<?php endif; ?>
