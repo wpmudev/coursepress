@@ -113,6 +113,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				);
 
 				// New feedback, send email.
+				$sent = CoursePress_Data_Email::send_email(
+					CoursePress_Data_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION,
+					$email_args
+				);
 			}
 		}
 
