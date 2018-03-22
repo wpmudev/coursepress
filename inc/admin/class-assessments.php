@@ -30,6 +30,10 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	function change_localize_array( $localize_array ) {
+		$courseinstructor_id = get_current_user_id();
+		$user                = new CoursePress_User( $courseinstructor_id );
+		$localize_array['courseinstructor_id'] = $courseinstructor_id;
+		$localize_array['instructor_name'] = $user->get_name();
 		$localize_array['assessment_labels'] = array(
 			'pass' => __( 'Pass', 'cp' ),
 			'fail' => __( 'Fail', 'cp' ),
