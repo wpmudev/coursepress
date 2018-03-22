@@ -239,7 +239,7 @@
                                           					$feedback_by = '';
                                                          if ( $has_feedback ) {
                                                             $feedback_user = new CoursePress_User( $feedback['feedback_by'] );
-                                                            $feedback_by = $feedback_user->get_name();
+                                                            $feedback_by = '- ' . $feedback_user->get_name();
                                                          }
                                                          $student_id = $student->ID;
                                                          $min_grade  = empty( $step->minimum_grade ) ? 0 : (int) $step->minimum_grade;
