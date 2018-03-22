@@ -129,13 +129,32 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * Instructors
 		 */
-		$value = get_post_meta( $course_id, 'upgrade_3_instructors', true );
-		if ( empty( $value ) || 'upgraded' !== $value ) {
-			l( $course );
+		$users = get_post_meta( $course_id, 'cp_instructors', true );
+		if ( ! empty( $users )  ) {
+			foreach ( $users as $user_id ) {
+				coursepress_add_course_instructor( $user_id, $course_id );
+			}
+			delete_post_meta( $course_id, 'cp_instructors' );
 		}
 		/**
 		 * Facilitators
 		 */
+		$users = get_post_meta( $course_id, 'course_facilitator', false );
+		if ( ! empty( $users )  ) {
+			foreach ( $users as $user_id ) {
+				coursepress_add_course_facilitator( $user_id, $course_id );
+			}
+			delete_post_meta( $course_id, 'course_facilitator' );
+		}
+		/**
+		 * get course with modules
+		 */
+		$course_units = $course->get_units( false );
+		$units = array();
+		$data = array_keys( $course->structure_visible_pages );
+		foreach ( $course_units as $unit ) {
+			$units[ $unit->ID ] = $unit->get_steps( false, true );
+		}
 		/**
 		 * course_enrolled_student_id
 		 */
@@ -144,10 +163,75 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$result['students']['total'] = count( $students );
 			foreach ( $students as $student_id ) {
 				$student = new CoursePress_User( $student_id );
+				$user = new WP_User( $student_id );
+				$user->add_role( 'coursepress_student' );
 				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
 					$meta_name = sprintf( 'course_%d_progress', $course_id );
 					$progress = get_user_meta( $student_id, $meta_name, true );
+					if ( isset( $progress['completion'] ) ) {
+						foreach ( $progress['completion'] as $unit_id => $data ) {
+							$completed = isset( $data['completed'] ) && coursepress_is_true( $data['completed'] );
+							/**
+							 * upgrade step progress
+							 */
+							if ( isset( $progress['completion'][ $unit_id ]['answered'] ) ) {
+								foreach ( $progress['completion'][ $unit_id ]['answered'] as $step_id => $value ) {
+									$answered = coursepress_is_true( $value );
+									if ( $answered ) {
+										$value = array(
+											'progress' => 100,
+										);
+										$progress = coursepress_set_array_val( $progress, 'completion/' . $unit_id . '/steps/'.$step_id, $value );
+									}
+								}
+							}
+							/**
+							 * upgrade passed
+							 */
+							$passed = coursepress_get_array_val( $progress, 'completion/'.$unit_id.'/passed' );
+							if ( ! empty( $passed ) && is_array( $passed ) ) {
+								$value = array();
+								foreach ( $passed as $step_id => $p ) {
+									if ( $p ) {
+										$value[] = $step_id;
+									}
+								}
+								$progress = coursepress_set_array_val( $progress, 'completion/' . $unit_id . '/passed', $value );
+							}
+							/**
+							 * upgrade responses
+							 */
+							$responses = coursepress_get_array_val( $progress, 'units/'.$unit_id.'/responses' );
+							if ( ! empty( $responses ) && is_array( $responses ) ) {
+								foreach ( $responses as $step_id => $step_response ) {
+									/**
+									 * TODO: check where is last answer
+									 */
+									$response = array_shift( $step_response );
+									if ( isset( $response['response'] ) ) {
+										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id, $response );
+										$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );
+										/**
+										 * TODO: multi quiz recalculate value
+										 */
+										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response', array( $fixed_response ) );
+									}
+									/**
+									 * TODO: check where is last grade
+									 */
+									if ( isset( $response['grades'] ) ) {
+										$value = array_shift( $response['grades'] );
+										foreach ( array( 'graded_by', 'grade', 'date' ) as $key ) {
+											if ( isset( $value[ $key ] ) ) {
+												$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/'.$key, $value[ $key ] );
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 					if ( ! empty( $progress ) ) {
 						$student->add_student_progress( $course_id, $progress );
 					}
