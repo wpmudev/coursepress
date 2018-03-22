@@ -79,7 +79,7 @@
          		}
                $('.cp-cancel').click();
          		parentTr.slideDown();
-         		nextButton.addClass('disabled' );
+         		nextButton.removeClass('cp-btn-active').addClass('disabled cp-btn-default' );
 
          		if ( with_feedback ) {
          			editor_container.show();
@@ -105,8 +105,8 @@
 
          				if ( content !== old_content ) {
          					textbox.val( content );
-         					submitButton.removeClass( 'disabled' );
-         					save_as_draft.removeClass( 'disabled' );
+         					submitButton.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
+         					save_as_draft.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
          				}
          			});
                   new CoursePress.Editor({
@@ -233,7 +233,7 @@
                model.off( 'coursepress:success_save_draft_feedback' );
                model.on( 'coursepress:success_save_draft_feedback', function(){
                   CoursePress.Events.on( 'coursepress:progress:success', function() {
-                     btn.addClass( 'disabled' );
+                     btn.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
          				var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show();
          				$( '.cp-draft-icon', feedback_editor ).show();
          				$( '.description', feedback_editor ).hide(); // Hide no feedback info
@@ -256,10 +256,10 @@
          			submitButton = $( '.cp-submit-grade', parentTr )
          		;
 
-         		submitButton.addClass( 'disabled' );
+         		submitButton.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
          		parentTr.slideUp();
                module.val( module.data( 'grade' ) );
-         		buttons.removeClass( 'disabled' );
+         		buttons.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
          	},
             enableSubmitButton: function(ev) {
                var module = $( ev.currentTarget ),
@@ -276,8 +276,12 @@
          			val = 0;
          		}
          		module.val( val );
-
-         		submitButton[ val >= 0 ? 'removeClass' : 'addClass' ]('disabled');
+               if( val >=0 ) {
+                  submitButton.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
+               } else {
+                  submitButton.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
+               }
+         		// submitButton[ val >= 0 ? 'removeClass' : 'addClass' ]('disabled');
             },
          	calculateFinalGrade: function( student_id, course_grade ) {
          		var finalDiv = $( '.final-grade[data-student="' + student_id + '"], [data-student="' + student_id + '"] .final-grade' );
