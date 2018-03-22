@@ -83,6 +83,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		// Render templates.
 		coursepress_render( 'views/admin/assessments', $args );
 		coursepress_render( 'views/admin/footer-text' );
+		coursepress_render( 'views/tpl/editor-without-media' );
 	}
 
 	/**
