@@ -202,7 +202,8 @@
 																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
                                                                <?php
-                                                              if ( $is_assessable ) :
+                                                               $response = $step->get_user_response( $student->ID );
+                                                              if ( ! empty( $response ) && $is_assessable ) :
                                                                   $no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
                                                 						$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
@@ -345,6 +346,26 @@
 																			</td>
 																		</tr>
 																	<?php endif; ?>
+                                                   <?php
+                                                   $response = $step->get_user_response( $student->ID );
+                                                   if ( ! empty( $response ) && $is_assessable ) {
+                                                      $hide = ' style="display:none;"';
+                                 							$is_draft = $has_feedback && ! empty( $feedback['draft'] );
+                                                   ?>
+                                                   <tr class="cp-instructor-feedback" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-student="<?php echo $student_id; ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
+                                                      <td colspan="3">
+                                                         <div class="cp-instructor-feedback" style="display: <?php echo ( ! empty( $feedback ) ? 'block' : 'none' ); ?>">
+                                                         <h4><?php _e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php _e( 'Draft', 'cp' ); ?>]</span></h4>
+                                                         <?php
+                                                         printf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
+                                                         printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
+                                                         ?>
+                                                         </div>
+                                                   </td>
+                                                   </tr>
+                                                      <?php
+                                 						}
+                                                   ?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
 															<?php endif; ?>
