@@ -19,6 +19,24 @@
         <?php cp_subsubsub( $statuses ); ?>
         <form method="get" class="cp-search-form" id="cp-search-form">
             <div class="cp-flex">
+                <div class="cp-div" id="bulk-actions">
+                    <label class="label"><?php _e( 'Bulk actions', 'cp' ); ?></label>
+                    <div class="cp-input-clear">
+                        <select id="bulk-action-selector-top">
+                            <option value="-1"><?php esc_attr_e( 'Bulk Actions', 'cp' ); ?></option>
+				            <?php
+				            foreach ( $bulk_actions as $value => $label ) {
+					            printf(
+						            '<option value="%s">%s</option>',
+						            esc_attr( $value ),
+						            esc_html( $label )
+					            );
+				            }
+				            ?>
+                        </select>
+                    </div>
+                    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Apply', 'cp' ); ?></button>
+                </div>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
@@ -46,6 +64,7 @@ foreach ( $courses as $course_id => $course ) {
         <table class="coursepress-table" id="cp-forums-table" cellspacing="0">
             <thead>
                 <tr>
+                    <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
                         <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
 <?php
@@ -69,6 +88,7 @@ if ( ! empty( $forums ) ) {
 ?>
                         <tr class="<?php echo $i % 2? 'odd' : 'even'; ?>">
 
+                            <th scope="row" class="check-column check-column-value"><input type="checkbox" name="forums[]" value="<?php esc_attr_e( $forum->ID ); ?>"></th>
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $forum->ID ); ?>">
 <?php
@@ -137,7 +157,7 @@ switch ( $column_id ) {
 } else {
 ?>
                     <tr class="odd">
-                        <td>
+                        <td colspan="5">
                             <?php _e( 'No forums found.', 'cp' ); ?>
                         </td>
                     </tr>
