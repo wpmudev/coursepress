@@ -797,3 +797,33 @@ function coursepress_can_access_course( $course_id ) {
 	exit;
 
 }
+
+/**
+ * Site vars.
+ *
+ * @since 2.0.7
+ *
+ * @param array $vars Array of site vars.
+ * @return array Array of site vars.
+ */
+function coursepress_add_site_vars( $vars = array() ) {
+	/**
+	 * Get login url.
+	 */
+	$login_url = wp_login_url();
+	if ( coursepress_get_setting( 'general/use_custom_login', true ) ) {
+		$login_url = coursepress_get_setting( 'slugs/login', true );
+	}
+	$vars['BLOG_ADDRESS']    = site_url();
+	$vars['BLOG_NAME']       = $vars['WEBSITE_NAME'] = get_bloginfo( 'name' );
+	$vars['LOGIN_ADDRESS']   = $login_url;
+	$vars['WEBSITE_ADDRESS'] = home_url();
+	/**
+	 * Allow to change site vars.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param array $vars Array of site vars.
+	 */
+	return apply_filters( 'coursepress_site_vars', $vars );
+}
