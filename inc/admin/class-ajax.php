@@ -1344,6 +1344,30 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Change selected forums statuses.
+	 *
+	 * @param object $request Request data.
+	 *
+	 * @return json
+	 */
+	public function change_forums_status( $request ) {
+
+		// Don't continue if forum id(s) not given.
+		if ( empty( $request->forums ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not continue as forum id is empty.', 'cp' ) ) );
+		}
+		// Make sure it is array.
+		$forum_ids = (array) $request->forums;
+		// Loop through each forums and process.
+		foreach ( $forum_ids as $forum_id ) {
+			// Finally change the forum status.
+			// Capability check will be handled here.
+			coursepress_change_post( $forum_id, $request->cp_action, 'discussion' );
+		}
+		return wp_send_json_success();
+	}
+
+	/**
 	 * Duplicate single course and units.
 	 *
 	 * @param object $request Request.
