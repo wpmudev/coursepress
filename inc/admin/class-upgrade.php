@@ -110,6 +110,13 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	}
 
 	public function upgrade_course_by_id( $course_id ) {
+		/**
+		 * check course
+		 */
+		$course = new CoursePress_Course( $course_id );
+		if ( is_wp_error( $course ) ) {
+			return $course;
+		}
 		$meta = get_post_meta( $course_id );
 		$result = array(
 			'students' => array(
@@ -124,7 +131,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		 */
 		$value = get_post_meta( $course_id, 'upgrade_3_instructors', true );
 		if ( empty( $value ) || 'upgraded' !== $value ) {
-
+			l( $course );
 		}
 		/**
 		 * Facilitators
@@ -132,7 +139,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * course_enrolled_student_id
 		 */
-		$course = new CoursePress_Course( $course_id );
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
