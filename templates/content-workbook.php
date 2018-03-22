@@ -7,9 +7,9 @@ $workbook_data = coursepress_get_student_workbook_data( $user_id, $course_id );
 
 if ( ! empty( $workbook_data ) ) : ?>
 
-<table class="coursepress-table table-workbook">
+<table class="coursepress-table workbook-table">
 	<?php foreach ( $workbook_data as $data ) : ?>
-		<tr class="data-<?php echo $data['type']; ?>">
+		<tr class="data-<?php echo $data['type']; ?> row-<?php echo $data['type']; ?>">
 			<td><?php echo $data['title']; ?></td>
 			<td></td>
 			<td>

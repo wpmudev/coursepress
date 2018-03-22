@@ -689,9 +689,10 @@ function coursepress_replace_vars( $content, $vars ) {
 
 function coursepress_html_select( $data, $echo = false ) {
 	$content = sprintf(
-		'<select name="%s" id="%s">',
+		'<select name="%s" id="%s" class="%s">',
 		isset( $data['name'] )? $data['name']:'',
-		isset( $data['id'] )? $data['id']:''
+		isset( $data['id'] )? $data['id']:'',
+		isset( $data['class'] )? $data['class']:''
 	);
 	if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
 		foreach ( $data['options'] as $one ) {

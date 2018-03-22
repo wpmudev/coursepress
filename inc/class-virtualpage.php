@@ -130,6 +130,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			$wp_query->set_404();
 			status_header( 404 );
 		}
+
 	}
 
 	/**

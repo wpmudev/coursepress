@@ -9,10 +9,26 @@
         list-style: none;
         .menu-item {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 4px 12px;
+            text-decoration: none;
+            outline: 0;
+            border: 0;
+            box-shadow: none;
+            font-size: 22px;
+            a {
+              color: $grey_3;
+            }
+            &.submenu-active {
+
+            }
         }
         .current-menu-item {
-            background-color: $grey_5;
+          a {
+            color: $blue_6;
+          }
+          &:before {
+            opacity: 0.6;
+          }
         }
     }
 }
