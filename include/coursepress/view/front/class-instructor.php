@@ -20,15 +20,13 @@ class CoursePress_View_Front_Instructor {
 	public static function render_instructor_page() {
 		CoursePress_Core::$is_cp_page = true;
 
-		if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
-		} else {
+		$theme_file = locate_template( array( 'instructor-single.php' ) );
 
-			if ( locate_template( array( 'instructor-single.php' ) ) ) {
-				// add custom content in the single template ONLY if the post type doesn't already has its own template
-				// just output the content
-			} else {
-				$content = CoursePress_Template_User::render_instructor_page();
-			}
+		if ( $theme_file ) {
+			CoursePress_View_Front_Course::$template = $theme_file;
+			$content = '';
+		} else {
+			$content = CoursePress_Template_User::render_instructor_page();
 		}
 
 		return $content;

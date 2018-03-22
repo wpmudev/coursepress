@@ -29,7 +29,7 @@ class CoursePress_View_Front_Course {
 	 *
 	 * @var string
 	 */
-	protected static $template = false;
+	public static $template = false;
 
 	/**
 	 * Initialize the module, hook up our functions.
