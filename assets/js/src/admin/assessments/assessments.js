@@ -120,7 +120,6 @@
          		var btn = $( ev.currentTarget ),
                   me = this,
          			parentTr = btn.parents( 'tr.cp-grade-editor' ),
-         			moduleDiv = btn.parents( '.cp-module' ),
          			cancelButton = $( '.cp-cancel', parentTr ),
          			// draftButton = $( '.cp-save-as-draft', parentTr ),
          			module = $( '.module-grade', parentTr ),
@@ -185,7 +184,7 @@
                         unitDiv.removeClass('cp-tick-icon').addClass('cp-cross-icon');
                      }
                         if ( with_feedback && '' !== feedback_content.trim() ) {
-            					var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show(),
+            					var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show(),
             						draft_icon = $( '.cp-draft-icon', feedback_editor )
             					;
 
@@ -206,7 +205,7 @@
             saveFeedbackAsDraft: function(ev) {
          		var btn = $( ev.currentTarget ),
                   parentTr = btn.parents( 'tr.cp-grade-editor' ),
-                  moduleDiv = btn.parents( '.cp-module' ),
+                  // moduleDiv = btn.parents( '.cp-module' ),
          			feedback = $( '.cp_feedback_content', parentTr ),
          			cancelButton = $( '.cp-cancel', parentTr ),
          			module = $( '.module-grade', parentTr ),
@@ -235,7 +234,7 @@
                model.on( 'coursepress:success_save_draft_feedback', function(){
                   CoursePress.Events.on( 'coursepress:progress:success', function() {
                      btn.addClass( 'disabled' );
-         				var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show();
+         				var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show();
          				$( '.cp-draft-icon', feedback_editor ).show();
          				$( '.description', feedback_editor ).hide(); // Hide no feedback info
          				$( '.cp-feedback-details', feedback_editor ).html( feedback_content );
