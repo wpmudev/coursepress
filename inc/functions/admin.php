@@ -35,6 +35,10 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 		);
 	}
 	$course_id = intval( $args['course_id'] );
+	$course = new CoursePress_Course( $course_id );
+	if ( is_wp_error( $course ) ) {
+		return $course;
+	}
 
 	// Create new invite code and hash.
 	$invite_data = CoursePress_Data_Course::create_invite_code_hash( $email );
@@ -59,8 +63,34 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 
 	// Fire off the email based on type.
 	if ( $type === 'instructor' ) {
+		/**
+		 * check instructors
+		 */
+		$instructors = $course->get_instructors_emails();
+		if ( in_array( $email, $instructors ) ) {
+			return new WP_Error(
+				'error',
+				sprintf(
+					__( 'User with email %s is the instructor of this course and this email can not be invited again.', 'cp' ),
+					esc_html( $email )
+				)
+			);
+		}
 		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::INSTRUCTOR_INVITATION, $args );
 	} elseif ( $type === 'facilitator'  ) {
+		/**
+		 * check facilitators
+		 */
+		$facilitators = $course->get_facilitators_emails();
+		if ( in_array( $email, $facilitators ) ) {
+			return new WP_Error(
+				'error',
+				sprintf(
+					__( 'User with email %s is the facilitator of this course and this email can not be invited again.', 'cp' ),
+					esc_html( $email )
+				)
+			);
+		}
 		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::FACILITATOR_INVITATION, $args );
 	} else {
 		return new WP_Error(

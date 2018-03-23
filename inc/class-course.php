@@ -652,7 +652,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array $emails Array of emails.
 	 */
-	private function _get_instructors_emails() {
+	public function get_instructors_emails() {
 		$emails = array();
 		$ids = $this->_get_instructors();
 		foreach ( $ids as $id ) {
@@ -711,7 +711,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array $emails Array of emails.
 	 */
-	private function _get_facilitators_emails() {
+	public function get_facilitators_emails() {
 		$emails = array();
 		$ids = $this->_get_facilitators();
 		foreach ( $ids as $id ) {
@@ -1355,7 +1355,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * check instructors
 		 */
-		$instructors = $this->_get_instructors_emails();
+		$instructors = $this->get_instructors_emails();
 		if ( in_array( $email, $instructors ) ) {
 			return new WP_Error(
 				'error',
@@ -1368,7 +1368,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * check facilitators
 		 */
-		$facilitators = $this->_get_facilitators_emails();
+		$facilitators = $this->get_facilitators_emails();
 		if ( in_array( $email, $facilitators ) ) {
 			return new WP_Error(
 				'error',
