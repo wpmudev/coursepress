@@ -21,6 +21,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
 		// Hook to enrollment request
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
+		add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'unenroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
 		// Register user
 		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
@@ -713,8 +714,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'first_name' => empty( $request->first_name ) ? '' : $request->first_name,
 			'last_name' => empty( $request->last_name ) ? '' : $request->last_name,
 		);
+		$result = coursepress_send_email_invite( $args, $request->type );
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
 		// Send email invitation.
-		if ( coursepress_send_email_invite( $args, $request->type ) ) {
+		if ( $result ) {
 			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
@@ -857,6 +862,26 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Withdraw from course, but as selfaction
+	 */
+	public function unenroll() {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			die( __( 'Cheatin&#8217; uh?', 'cp' ) );
+		}
+		$student_id = get_current_user_id();
+		$user = new CoursePress_User( $student_id );
+		if ( is_wp_error( $user ) || $user->is_error() ) {
+			die( __( 'Cheatin&#8217; uh?', 'cp' ) );
+		}
+		coursepress_delete_student( $student_id, $course_id );
+		if ( isset( $_REQUEST['redirect'] ) ) {
+			wp_safe_redirect( $_REQUEST['redirect'] );
+		}
+	}
+
+	/**
 	 * Enroll user with password to course
 	 */
 	public function enroll_with_passcode() {
@@ -963,7 +988,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		//error_log(print_r($progress,true));
 		if ( empty( $redirect_url ) ) {
 			$course = coursepress_get_course( $course_id );
-			$redirect_url = !empty( $referer ) ? $referer : $course->get_units_url() ;
+			$redirect_url = ! empty( $referer ) ? $referer : $course->get_units_url();
 		}
 		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );

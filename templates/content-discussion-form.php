@@ -8,6 +8,7 @@
 $options_unit = array(
 	'name' => 'unit_id',
 	'id' => 'unitID',
+	'class' => 'units_dropdown',
 	'value' => $section,
 	'options' => array(),
 );
@@ -34,10 +35,13 @@ coursepress_html_select( $options_unit, true );
 $button = $id ? esc_html__( 'Update discussion', 'cp' ) : esc_html__( 'Add discussion', 'cp' );
 $cancel_link = $course->get_discussion_url();
 ?>
-    <input class="discussion-title" name="title" type="text" placeholder="<?php esc_attr_e( 'Title of the discussion', 'cp' ); ?>" value="" />
-    <textarea class="discussion-content" name="content" placeholder="<?php esc_attr_e( 'Type your discussion or question here…', 'cp' ); ?>"></textarea>
-    <div class="button-links">
-        <a href="<?php echo esc_url( $cancel_link ); ?>" class="button"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
-        <button type="submit" class="button submit-discussion"><?php echo $button; ?></button>
+    <div class="new_question">
+      <div class="rounded"><span>Q</span></div>
+      <input class="discussion-title" name="title" type="text" placeholder="<?php esc_attr_e( 'Title of the discussion', 'cp' ); ?>" value="" />
+      <textarea class="discussion-content" name="content" placeholder="<?php esc_attr_e( 'Type your discussion or question here…', 'cp' ); ?>"></textarea>
+      <div class="button-links">
+          <input type="submit" class="button_submit" name="new_question_submit" value="<?php esc_html_e( 'Ask this Question', 'cp' ); ?>" />
+          <a href="<?php echo esc_url( $cancel_link ); ?>" class="button_cancel"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
+      </div>
     </div>
 </form>

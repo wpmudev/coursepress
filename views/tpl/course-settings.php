@@ -182,7 +182,7 @@
                     <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
                     <div class="cp-box"><input type="text" id="cp-invite-first-name-instructor" placeholder="<?php _e( 'First Name' ); ?>" /></div>
                     <div class="cp-box"><input type="text" id="cp-invite-last-name-instructor" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
-                    <div class="cp-box"><input type="text" id="cp-invite-email-instructor" placeholder="<?php _e( 'Email' ); ?>" /></div>
+                    <div class="cp-box"><input type="email" id="cp-invite-email-instructor" placeholder="<?php _e( 'Email' ); ?>" /></div>
                     <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
                     <p class="cp-invitation-response-instructor inactive">ss</p>
                 </div>
@@ -213,7 +213,7 @@
                     <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
                     <div class="cp-box"><input type="text" id="cp-invite-first-name-facilitator" placeholder="<?php _e( 'First Name' ); ?>" /></div>
                     <div class="cp-box"><input type="text" id="cp-invite-last-name-facilitator" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
-                    <div class="cp-box"><input type="text" id="cp-invite-email-facilitator" placeholder="<?php _e( 'Email' ); ?>" /></div>
+                    <div class="cp-box"><input type="email" id="cp-invite-email-facilitator" placeholder="<?php _e( 'Email' ); ?>" /></div>
                     <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
                     <p class="cp-invitation-response-facilitator inactive">ss</p>
                 </div>

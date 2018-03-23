@@ -800,9 +800,19 @@ class CoursePress_User extends CoursePress_Utility {
 		return $course_progress >= 100;
 	}
 
-	public function get_date_enrolled( $course_id ) {
+	/**
+	 * Format date & time to WP settings
+	 *
+	 * @since 3.0.0
+	 *
+	 */
+	private function date_format( $date ) {
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
+		return date_i18n( $date_format . ' ' . $time_format, strtotime( $date ) );
+	}
+
+	public function get_date_enrolled( $course_id ) {
 		$date_enrolled = get_user_meta( $this->__get( 'ID' ), 'enrolled_course_date_' . $course_id );
 		if ( is_array( $date_enrolled ) ) {
 			$date_enrolled = array_pop( $date_enrolled );
@@ -810,8 +820,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( empty( $date_enrolled ) ) {
 			return esc_html__( 'Unknown enrolled date.', 'CP_TD' );
 		}
-		$date_enrolled = date_i18n( $date_format . ' ' . $time_format, strtotime( $date_enrolled ) );
-		return $date_enrolled;
+		return $this->date_format( $date_enrolled );
 	}
 
 	/**
@@ -1200,7 +1209,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return string
 	 */
 	public function get_last_activity_time() {
-		return $this->latest_activity;
+		return $this->date_format( $this->latest_activity );
 	}
 
 	/**

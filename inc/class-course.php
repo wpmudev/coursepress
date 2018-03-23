@@ -307,15 +307,15 @@ class CoursePress_Course extends CoursePress_Utility {
 			if ( has_post_thumbnail( $id ) ) {
 				$listing_image = get_the_post_thumbnail( $id, $size, array( 'class' => $classes.' course-feature-image' ) ); }
 		} else {
-				$args = array(
-					'src' => esc_url( $listing_image ),
-					'class' => $classes.' course-listing-image',
-				);
-				if ( is_array( $size ) && 1 < count( $size ) ) {
-					$args['width'] = $size[0];
-					$attr['height'] = $size[1];
-				}
-				$listing_image = $this->create_html( 'img', $args );
+			$args = array(
+				'src' => esc_url( $listing_image ),
+				'class' => $classes.' course-listing-image',
+			);
+			if ( is_array( $size ) && 1 < count( $size ) ) {
+				$args['width'] = $size[0];
+				$attr['height'] = $size[1];
+			}
+			$listing_image = $this->create_html( 'img', $args );
 		}
 		return $listing_image;
 	}
@@ -445,15 +445,15 @@ class CoursePress_Course extends CoursePress_Utility {
 		switch ( $enrollment_type ) {
 			case 'anyone':
 				$enrollment_text = $anyone_text;
-				break;
+			break;
 
 			case 'registered':
 				$enrollment_text = $registered_text;
-				break;
+			break;
 
 			case 'passcode':
 				$enrollment_text = $passcode_text;
-				break;
+			break;
 
 			case 'prerequisite':
 				$prereq = $this->get_prerequisites();
@@ -466,11 +466,11 @@ class CoursePress_Course extends CoursePress_Utility {
 					);
 				}
 				$enrollment_text = sprintf( $prerequisite_text, implode( ', ', $prereq_courses ) );
-				break;
+			break;
 
 			case 'manually':
 				$enrollment_text = $manual_text;
-				break;
+			break;
 		}
 		$enrollment_text = apply_filters( 'coursepress_course_enrollment_type_text', $enrollment_text );
 		return $enrollment_text;
@@ -675,7 +675,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array $emails Array of emails.
 	 */
-	private function _get_instructors_emails() {
+	public function get_instructors_emails() {
 		$emails = array();
 		$ids = $this->_get_instructors();
 		foreach ( $ids as $id ) {
@@ -734,7 +734,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array $emails Array of emails.
 	 */
-	private function _get_facilitators_emails() {
+	public function get_facilitators_emails() {
 		$emails = array();
 		$ids = $this->_get_facilitators();
 		foreach ( $ids as $id ) {
@@ -1056,7 +1056,7 @@ class CoursePress_Course extends CoursePress_Utility {
 				$unit_structure = $unit->get_unit_structure( false, $show_details );
 				$structure .= $this->create_html( 'li', false, $unit_structure );
 			}
-			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );
+			$structure = $this->create_html( 'ul', array( 'class' => 'units-archive-list tree unit-tree' ), $structure );
 		} else {
 			$structure = $this->create_html( 'p', array(), __( 'There is no Units yet.', 'cp' ) );
 		}
@@ -1333,6 +1333,15 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function can_invite_email( $email ) {
 		/**
+		 * check email
+		 */
+		if ( ! is_email( $email ) ) {
+			return new WP_Error(
+				'error',
+				__( 'Entered email is not valid.', 'cp' )
+			);
+		}
+		/**
 		 * check current user
 		 */
 		$id = get_current_user_id();
@@ -1369,7 +1378,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * check instructors
 		 */
-		$instructors = $this->_get_instructors_emails();
+		$instructors = $this->get_instructors_emails();
 		if ( in_array( $email, $instructors ) ) {
 			return new WP_Error(
 				'error',
@@ -1382,7 +1391,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * check facilitators
 		 */
-		$facilitators = $this->_get_facilitators_emails();
+		$facilitators = $this->get_facilitators_emails();
 		if ( in_array( $email, $facilitators ) ) {
 			return new WP_Error(
 				'error',

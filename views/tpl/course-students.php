@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="cp-box">
                                     <label class="label"><?php esc_html_e( 'Email', 'cp' ); ?></label>
-                                    <input type="text" name="email" class="widefat" placeholder="johnsmith@example.net" />
+                                    <input type="email" name="email" class="widefat" placeholder="johnsmith@example.net" />
                                 </div>
                                 <button type="button" class="cp-btn cp-btn-active send-invite"><i class="fa fa-circle-o-notch fa-spin"></i><?php esc_html_e( 'Send Invite', 'cp' ); ?></button>
                             </td>
