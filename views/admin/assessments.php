@@ -167,7 +167,7 @@
 										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 										<span class="pull-right">
 											<?php $unit_grade = $student->get_unit_grade( $course_id, $unit->ID ); ?>
-											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?php echo empty( $unit_grade ) ? 0 : round( $unit_grade ); ?>%</span>
+											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?php echo empty( $unit_grade ) ? 0 : floor( $unit_grade ); ?>%</span>
 											<span class="cp-plus-icon"></span>
 										</span>
 										<?php if ( ! empty( $unit->modules ) ) : ?>
