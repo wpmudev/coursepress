@@ -116,7 +116,7 @@ $student = $assessments['student'];
 									<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<?php if ( $unit->is_graded ) : ?>
 										<span class="pull-right">
-											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?= round( $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ) ? : 0 ?>%</span>
+											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?= floor( $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ) ? : 0 ?>%</span>
 											<span class="cp-minus-icon"></span>
 										</span>
 									<?php endif; ?>
@@ -209,6 +209,7 @@ $student = $assessments['student'];
 																		</div>
 																	</td>
 																</tr>
+																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
@@ -216,7 +217,6 @@ $student = $assessments['student'];
 																		<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																	<?php endif; ?>
 																</tr>
-																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																	<?php foreach ( $step->questions as $qkey => $question ) : ?>
 																		<tr>
 																			<td><?php echo $question['title']; ?></td>
