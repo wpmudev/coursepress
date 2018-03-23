@@ -18,14 +18,14 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 *
 	 * @var (string)
 	 **/
-	static $form_message = '';
+	var $form_message = '';
 
 	/**
 	 * Form class to render on registration form.
 	 *
 	 * @var (string)
 	 **/
-	static $form_message_class = '';
+	var $form_message_class = '';
 
 	/**
 	 * Register the shortcodes.
@@ -1111,8 +1111,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
         if ( ! is_user_logged_in() ) {
             $user_login = new CoursePress_UserLogin();
             $user_login->process_registration_form();
-				self::$form_message       = $user_login::$form_message;
-				self::$form_message_class = $user_login::$form_message_class;
+						$this->form_message       = $user_login::$form_message;
+						$this->form_message_class = $user_login::$form_message_class;
         }
     }
 
@@ -1166,8 +1166,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			$signup_url = add_query_arg( 'redirect_url', urlencode( $_POST['redirect_url'] ), $signup_url );
 		}
 
-		$form_message       = apply_filters( 'signup_form_message', self::$form_message );
-		$form_message_class = apply_filters( 'signup_form_message_class', self::$form_message_class );
+		$form_message       = apply_filters( 'signup_form_message', $this->form_message );
+		$form_message_class = apply_filters( 'signup_form_message_class', $this->form_message_class );
 
 		set_query_var( 'form_message', $form_message );
 		set_query_var( 'form_message_class', $form_message_class );
