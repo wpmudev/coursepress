@@ -46,7 +46,7 @@ $student = $assessments['student'];
 					<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 						<?php
 						$column_class = '';
-						if( 'grade' === $column_id ) {
+						if ( 'grade' === $column_id ) {
 							$column_class .= 'final-grade';
 						}
 						?>
@@ -78,8 +78,7 @@ $student = $assessments['student'];
 									break;
 								case 'last_active' :
 									// Last activity time.
-									$last_active = $assessments['student']->get_last_activity_time();
-									echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+									echo $assessments['student']->get_last_activity_time();
 									break;
 								case 'grade' :
 									$grade = $assessments['grade'];
@@ -148,7 +147,7 @@ $student = $assessments['student'];
 																				<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
 																				<?php
 																				$response = $step->get_user_response( $student->ID );
-																			  if ( ! empty( $response ) && $is_assessable ) :
+																				if ( ! empty( $response ) && $is_assessable ) :
 																					$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
 																					$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
@@ -158,7 +157,7 @@ $student = $assessments['student'];
 																						$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
 																						$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
 																					}
-																				?>
+																					?>
 																					<span>
 																						<button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
 																						<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>

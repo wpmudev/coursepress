@@ -125,8 +125,7 @@
 										break;
 									case 'last_active' :
 										// Last activity time.
-										$last_active = $student->get_last_activity_time();
-										echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+										echo $student->get_last_activity_time();
 										break;
 									case 'grade' :
 										$grade = $student->grade;
