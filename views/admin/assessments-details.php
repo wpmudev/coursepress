@@ -136,43 +136,44 @@ $student = $assessments['student'];
 																<tr class="cp-question-title">
 																	<th colspan="3">
 																		<span class="cp-title"><?= $step->get_the_title() ?></span>
-																		<?php
-																		$grade = $student->get_step_grade( $course_id, $unit->ID, $step_id );
-																		$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
-																		?>
-																		<?php // No need to show grade if not entered by instructor -->
-																		if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
-																			<span class="pull-right cp-title cp-module-grade-info">
-																				<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
-																				<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-																				<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
-																				<?php
-																				$response = $step->get_user_response( $student->ID );
-																			  if ( ! empty( $response ) && $is_assessable ) :
-																					$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
-																					$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
+																		<span class="pull-right">
+																			<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
+																			<?php // No need to show grade if not entered by instructor -->
+																			if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
+																				<span class="cp-title cp-module-grade-info">
+																					<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
+																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																				</span>
+																			<?php endif; ?>
+																			<?php
+																			$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
+																			// Will only allow feedback for 'written','fileupload'.
+																			$allowed_for_feedback = array( 'written', 'fileupload' );
+																			$response = $step->get_user_response( $student->ID );
+																			if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
+																				$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
+																				$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
-																					$response = $student->get_response( $course_id, $unit->ID, $step_id );
-																					$graded_by = coursepress_get_array_val( $response, 'graded_by' );
-																					if ( ! empty( $graded_by ) && 'auto' !== $graded_by ) {
-																						$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
-																						$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
-																					}
+																				$response = $student->get_response( $course_id, $unit->ID, $step_id );
+																				$graded_by = coursepress_get_array_val( $response, 'graded_by' );
+																				if ( ! empty( $graded_by ) && 'auto' !== $graded_by ) {
+																					$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
+																					$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
+																				}
 																				?>
-																					<span>
-																						<button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
-																						<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
-																					</span>
-																				<?php endif;?>
-																			</span>
-																		<?php endif; ?>
+																				<span>
+																					<button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
+																					<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
+																				</span>
+																			<?php endif;?>
+																		</span>
 																	</th>
 																</tr>
 																<?php
 																$module_assessable_class = '';
-																if ( $is_assessable ) {
+																if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
 																	$module_assessable_class .= ' module-assessable';
-																}
 																?>
 																<tr class="cp-grade-editor <?php echo $module_assessable_class; ?>" style="display:none;">
 																	<td colspan="3">
@@ -209,6 +210,7 @@ $student = $assessments['student'];
 																		</div>
 																	</td>
 																</tr>
+																<?php endif; ?>
 																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
@@ -291,7 +293,7 @@ $student = $assessments['student'];
 																<?php endif; ?>
 																<?php
 																$response = $step->get_user_response( $student->ID );
-																if ( ! empty( $response ) && $is_assessable ) {
+																if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) {
 																	$hide = ' style="display:none;"';
 																	$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 																?>
@@ -304,7 +306,7 @@ $student = $assessments['student'];
 																		printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
 																		?>
 																		</div>
-																</td>
+																	</td>
 																</tr>
 																	<?php
 																}
