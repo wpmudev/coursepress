@@ -3,52 +3,59 @@
 @import "common/cp-search-form";
 
 .coursepress-wrap {
-  .coursepress-student-data {
-    display: table;
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    .coursepress-student-data {
+        display: table;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
 
-    .coursepress-avatar,
-    .coursepress-data-table {
-      display: table-cell;
-      vertical-align: top;
-    }
-
-    .coursepress-avatar {
-      width: 150px;
-
-      img {
-        @include radius(100%);
-      }
-    }
-
-    .coursepress-data-table {
-      background: #ffffff;
-      @include radius(6px);
-
-      ul {
-        margin: 0;
-      }
-
-      li {
-        padding: 10px 15px;
-        margin: 0;
-
-        &:nth-child(2n) {
-          background: rgba(0, 0, 0, 0.03);
+        .coursepress-avatar,
+        .coursepress-data-table {
+            display: table-cell;
+            vertical-align: top;
         }
 
-        &:last-child {
-          @include radius(0 0 6px 6px);
-          border-bottom: 1px solid #ddd;
+        .coursepress-avatar {
+            width: 150px;
+            img {
+                @include radius(100%);
+            }
         }
 
-        span {
-          display: inline-block;
-          width: 220px;
+        .coursepress-data-table {
+            background: #ffffff;
+            @include radius(6px);
+
+            ul {
+                margin: 0;
+            }
+
+            li {
+                padding: 10px 15px;
+                margin: 0;
+
+                &:nth-child(2n) {
+                    background: rgba(0, 0, 0, 0.03);
+                }
+
+                &:last-child {
+                    @include radius(0 0 6px 6px);
+                    border-bottom: 1px solid #ddd;
+                }
+                span {
+                    display: inline-block;
+                    width: 220px;
+                }
+            }
         }
-      }
     }
-  }
+    &.coursepress-student {
+        .coursepress-table {
+            tbody {
+                .column-progress {
+                    text-align: right;
+                }
+            }
+        }
+    }
 }
