@@ -713,8 +713,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'first_name' => empty( $request->first_name ) ? '' : $request->first_name,
 			'last_name' => empty( $request->last_name ) ? '' : $request->last_name,
 		);
+		$result = coursepress_send_email_invite( $args, $request->type );
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
 		// Send email invitation.
-		if ( coursepress_send_email_invite( $args, $request->type ) ) {
+		if ( $result ) {
 			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
@@ -963,7 +967,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		//error_log(print_r($progress,true));
 		if ( empty( $redirect_url ) ) {
 			$course = coursepress_get_course( $course_id );
-			$redirect_url = !empty( $referer ) ? $referer : $course->get_units_url() ;
+			$redirect_url = ! empty( $referer ) ? $referer : $course->get_units_url();
 		}
 		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );

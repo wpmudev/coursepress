@@ -1310,6 +1310,15 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function can_invite_email( $email ) {
 		/**
+		 * check email
+		 */
+		if ( ! is_email( $email ) ) {
+			return new WP_Error(
+				'error',
+				__( 'Entered email is not valid.', 'cp' )
+			);
+		}
+		/**
 		 * check current user
 		 */
 		$id = get_current_user_id();

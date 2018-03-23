@@ -83,6 +83,7 @@
 .coursepress-modal {
     @extend .coursepress-popup;
     background-color: rgba(221, 221, 221, 0.72);
+    font-size: 100%;
 
     .coursepress-popup-body {
         border-radius: $default_radius;
@@ -127,10 +128,6 @@
             }
         }
     }
-}
-
-.coursepress-modal {
-    font-size: 100%;
 
     .cp-content-nopad {
         padding: 0;
@@ -145,6 +142,7 @@
     }
 
     [type="text"],
+    [type="email"],
     select {
         margin: 6px 0px;
         display: block;

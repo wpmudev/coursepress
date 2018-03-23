@@ -1,9 +1,9 @@
 <?php
 function coursepress_visual_editor( $content, $id, $settings = array() ) {
-    if ( empty( $settings['editor_height'] ) ) {
-        $settings['editor_height'] = 300;
-    }
-    wp_editor( $content, $id, $settings );
+	if ( empty( $settings['editor_height'] ) ) {
+		$settings['editor_height'] = 300;
+	}
+	wp_editor( $content, $id, $settings );
 }
 
 //function coursepress_teeny_editor( $content, $id, $settings = array() ) {
@@ -25,6 +25,15 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 
 	// Sanitize email address.
 	$email = sanitize_email( $args['email'] );
+	/**
+	 * check email
+	 */
+	if ( ! is_email( $email ) ) {
+		return new WP_Error(
+			'error',
+			__( 'Entered email is not valid!', 'cp' )
+		);
+	}
 	$course_id = intval( $args['course_id'] );
 
 	// Create new invite code and hash.
@@ -54,7 +63,10 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 	} elseif ( $type === 'facilitator'  ) {
 		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::FACILITATOR_INVITATION, $args );
 	} else {
-		return false;
+		return new WP_Error(
+			'error',
+			__( 'Wrong invitation type!', 'cp' )
+		);
 	}
 
 	// Update post meta only if new invite and email sent.
@@ -78,7 +90,10 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 			$meta_name,
 			$invites
 		);
+		return true;
 	}
-
-	return $sent;
+	return new WP_Error(
+		'error',
+		__( 'Could not send email invitation.', 'cp' )
+	);
 }
