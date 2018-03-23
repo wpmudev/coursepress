@@ -185,16 +185,15 @@
                      } else{
                         unitDiv.removeClass('cp-tick-icon').addClass('cp-cross-icon');
                      }
-                        if ( with_feedback && '' !== feedback_content.trim() ) {
-            					var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show(),
-            						draft_icon = $( '.cp-draft-icon', feedback_editor )
-            					;
+                    if ( with_feedback && '' !== feedback_content.trim() ) {
+                      var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show(),
+                          draft_icon = $( '.cp-draft-icon', feedback_editor );
 
-            					draft_icon[ with_feedback ? 'hide' : 'show']();
-            					$( '.description', feedback_editor ).hide(); // Hide no feedback info
-            					$( '.cp-feedback-details', feedback_editor ).html( feedback_content );
-            					$( 'cite', feedback_editor ).html( '- ' + win._coursepress.instructor_name );
-            				}
+                          draft_icon[ with_feedback ? 'hide' : 'show']();
+                          $( '.description', feedback_editor ).hide(); // Hide no feedback info
+                          $( '.cp-feedback-details', feedback_editor ).html( feedback_content );
+                          $( 'cite', feedback_editor ).html( '- ' + win._coursepress.instructor_name );
+                    }
                   });
                   progress.success();
                }, this );

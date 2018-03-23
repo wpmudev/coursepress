@@ -354,7 +354,7 @@
                                                    ?>
                                                    <tr class="cp-instructor-feedback" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-student="<?php echo $student_id; ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
                                                       <td colspan="3">
-                                                         <div class="cp-instructor-feedback" style="display: <?php echo ( ! empty( $feedback ) ? 'block' : 'none' ); ?>">
+                                                         <div class="cp-instructor-feedback">
                                                          <h4><?php _e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php _e( 'Draft', 'cp' ); ?>]</span></h4>
                                                          <?php
                                                          printf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
