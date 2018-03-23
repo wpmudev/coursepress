@@ -11,16 +11,17 @@ class CoursePress_View_Front_Dashboard {
 	}
 
 	public static function render_dashboard_page() {
-		// if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
-		// } else {
-		// wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
-		// if ( locate_template( array( 'instructor-single.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-		// just output the content
-		// } else {
-		$content = CoursePress_Template_Dashboard::render_dashboard_page();
+		CoursePress_Core::$is_cp_page = true;
 
-		// }
-		// }
+		$theme_file = locate_template( array( 'cp-dashboard.php' ) );
+
+		if ( $theme_file ) {
+			CoursePress_View_Front_Course::$template = $theme_file;
+			$content = '';
+		} else {
+			$content = CoursePress_Template_Dashboard::render_dashboard_page();
+		}
+
 		return $content;
 	}
 

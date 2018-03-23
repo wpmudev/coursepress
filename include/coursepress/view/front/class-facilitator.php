@@ -18,14 +18,15 @@ class CoursePress_View_Front_Facilitator {
 	}
 
 	public static function render_facilitator_page() {
-		if ( $theme_file = locate_template( array( 'facilitator-single.php' ) ) ) {
+		CoursePress_Core::$is_cp_page = true;
+
+		$theme_file = locate_template( array( 'facilitator-single.php' ) );
+
+		if ( $theme_file ) {
+			CoursePress_View_Front_Course::$template = $theme_file;
+			$content = '';
 		} else {
-			if ( locate_template( array( 'facilitator-single.php' ) ) ) {
-				// add custom content in the single template ONLY if the post type doesn't already has its own template
-				// just output the content
-			} else {
-				$content = CoursePress_Template_User::render_facilitator_page();
-			}
+			$content = CoursePress_Template_User::render_facilitator_page();
 		}
 
 		return $content;
