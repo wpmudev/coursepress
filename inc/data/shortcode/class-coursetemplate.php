@@ -124,7 +124,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				'action' => 'coursepress_enroll',
 				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 			),
-			$course_url
+			admin_url( 'admin-ajax.php' )
 		);
 		if ( is_user_logged_in() ) {
 			$signup_url = $enroll_course_url;

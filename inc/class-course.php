@@ -284,15 +284,15 @@ class CoursePress_Course extends CoursePress_Utility {
 			if ( has_post_thumbnail( $id ) ) {
 				$listing_image = get_the_post_thumbnail( $id, $size, array( 'class' => $classes.' course-feature-image' ) ); }
 		} else {
-				$args = array(
-					'src' => esc_url( $listing_image ),
-					'class' => $classes.' course-listing-image',
-				);
-				if ( is_array( $size ) && 1 < count( $size ) ) {
-					$args['width'] = $size[0];
-					$attr['height'] = $size[1];
-				}
-				$listing_image = $this->create_html( 'img', $args );
+			$args = array(
+				'src' => esc_url( $listing_image ),
+				'class' => $classes.' course-listing-image',
+			);
+			if ( is_array( $size ) && 1 < count( $size ) ) {
+				$args['width'] = $size[0];
+				$attr['height'] = $size[1];
+			}
+			$listing_image = $this->create_html( 'img', $args );
 		}
 		return $listing_image;
 	}
@@ -422,15 +422,15 @@ class CoursePress_Course extends CoursePress_Utility {
 		switch ( $enrollment_type ) {
 			case 'anyone':
 				$enrollment_text = $anyone_text;
-				break;
+			break;
 
 			case 'registered':
 				$enrollment_text = $registered_text;
-				break;
+			break;
 
 			case 'passcode':
 				$enrollment_text = $passcode_text;
-				break;
+			break;
 
 			case 'prerequisite':
 				$prereq = $this->get_prerequisites();
@@ -443,11 +443,11 @@ class CoursePress_Course extends CoursePress_Utility {
 					);
 				}
 				$enrollment_text = sprintf( $prerequisite_text, implode( ', ', $prereq_courses ) );
-				break;
+			break;
 
 			case 'manually':
 				$enrollment_text = $manual_text;
-				break;
+			break;
 		}
 		$enrollment_text = apply_filters( 'coursepress_course_enrollment_type_text', $enrollment_text );
 		return $enrollment_text;

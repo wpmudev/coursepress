@@ -21,6 +21,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
 		// Hook to enrollment request
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
+		add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'unenroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
 		// Register user
 		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
@@ -858,6 +859,26 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			exit;
 		}
 		wp_send_json_error( true );
+	}
+
+	/**
+	 * Withdraw from course, but as selfaction
+	 */
+	public function unenroll() {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			die( __( 'Cheatin&#8217; uh?', 'cp' ) );
+		}
+		$student_id = get_current_user_id();
+		$user = new CoursePress_User( $student_id );
+		if ( is_wp_error( $user ) || $user->is_error() ) {
+			die( __( 'Cheatin&#8217; uh?', 'cp' ) );
+		}
+		coursepress_delete_student( $student_id, $course_id );
+		if ( isset( $_REQUEST['redirect'] ) ) {
+			wp_safe_redirect( $_REQUEST['redirect'] );
+		}
 	}
 
 	/**
