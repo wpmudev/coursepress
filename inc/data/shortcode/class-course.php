@@ -1382,7 +1382,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @return int The course ID or 0 if not called inside a course/unit/module.
 	 */
-	public function get_parent_course_id() {
+	public function get_get_parent_course_id() {
 		return CoursePress_Data_Course::get_current_course_id();
 	}
 }
