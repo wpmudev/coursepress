@@ -43,6 +43,9 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 	 * @return array
 	 */
 	public function get_assessments( $unit_id, $graded = 'all', &$count = 0 ) {
+		if ( is_wp_error( $this->course ) ) {
+			return array();
+		}
 		$course_settings = $this->course->get_settings();
 		// Minimum grade required.
 		$minimum_grade = isset( $course_settings['minimum_grade_required'] ) ? $course_settings['minimum_grade_required'] : 100;
@@ -141,6 +144,9 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 	 * @return arary
 	 */
 	public function get_assessment_details( $student_id, $display = 'all' ) {
+		if ( is_wp_error( $this->course ) ) {
+			return array();
+		}
 		$course_settings = $this->course->get_settings();
 		// Minimum grade required.
 		$minimum_grade = isset( $course_settings['minimum_grade_required'] ) ? $course_settings['minimum_grade_required'] : 100;
@@ -162,7 +168,10 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			return array();
 		}
 		// Set the user object to main array.
-		$assessment['student'] = $student;
+		if ( ! is_wp_error( $student ) && $student->is_enrolled_at( $course_id ) ) {
+			$assessment['student'] = $student;
+		}
+
 		$grade = $student->get_course_grade( $course_id );
 		// Set unit data under user.
 		$assessment['units'] = $units;

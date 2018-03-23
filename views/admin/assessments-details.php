@@ -1,10 +1,19 @@
-<?php
-$student = $assessments['student'];
-?>
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
 	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
 
-	<div class="coursepress-page">
+    <div class="coursepress-page">
+<?php
+if ( empty( $assessments ) ) {
+	echo '<div class="error"><p>';
+	_e( 'Course does not exists.', 'cp' );
+	echo '</p></div>';
+} elseif ( ! isset( $assessments['student'] ) || $assessments['student']->is_error() ) {
+	echo '<div class="error"><p>';
+	_e( 'Student does not exists or is not enrolled to this course.', 'cp' );
+	echo '</p></div>';
+} else {
+	$student = $assessments['student'];
+?>
 		<form method="get" class="cp-search-form" id="cp-search-form">
 			<div class="cp-flex">
 
@@ -318,6 +327,7 @@ $student = $assessments['student'];
 				</tr>
 			<?php endif; ?>
 			</tbody>
-		</table>
+        </table>
+<?php } ?>
 	</div>
 </div>
