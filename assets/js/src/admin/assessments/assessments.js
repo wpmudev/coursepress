@@ -77,44 +77,46 @@
          			// Don't process anything if button is disabled
          			return;
          		}
-               $('.cp-cancel').click();
-         		parentTr.slideDown();
-         		nextButton.removeClass('cp-btn-active').addClass('disabled cp-btn-default' );
 
-         		if ( with_feedback ) {
-         			editor_container.show();
-         			this.enableFeedbackEditor( editor_id, editor_container, parentTr );
-         		// 	edit_grade_box.appendTo( editor_container );
-         			save_as_draft.show();
-         		} else {
-         		// 	edit_grade_box.prependTo( editor_box );
-         			save_as_draft.hide();
-         		}
+            $('.cp-cancel').click();
+         		parentTr.slideDown();
+         		nextButton.removeClass('cp-btn-active').addClass('disabled' ).attr('disabled', true);
+
+            if ( with_feedback ) {
+                editor_container.show();
+                editor_container.next().removeClass('pull-right');
+                this.enableFeedbackEditor( editor_id, editor_container, parentTr );
+                save_as_draft.show();
+              } else {
+                editor_container.hide();
+                editor_container.next().addClass('pull-right');
+                save_as_draft.hide();
+              }
             },
             enableFeedbackEditor: function( editor_id, editor_container, container ) {
-         		var textbox = $( '.cp_feedback_content', editor_container ),
-         			old_content = textbox.val(),
-         			has_editor = $( '.wp-editor-container', editor_container ).length > 0,
-         			submitButton = $( '.cp-submit-grade', container ),
-         			save_as_draft = $( '.cp-save-as-draft', container );
+           		var textbox = $( '.cp_feedback_content', editor_container ),
+           			old_content = textbox.val(),
+           			has_editor = $( '.wp-editor-container', editor_container ).length > 0,
+           			submitButton = $( '.cp-submit-grade', container ),
+           			save_as_draft = $( '.cp-save-as-draft', container );
 
-         		if ( ! has_editor ) {
-         			CoursePress.Events.off( 'editor:keyup' );
-         			CoursePress.Events.on( 'editor:keyup', function( ed ) {
-         				var content = undefined !== typeof ed.getContent && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
+           		if ( ! has_editor ) {
+           			CoursePress.Events.off( 'editor:keyup' );
+           			CoursePress.Events.on( 'editor:keyup', function( ed ) {
+           				var content = undefined !== typeof ed.getContent && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
 
-         				if ( content !== old_content ) {
-         					textbox.val( content );
-         					submitButton.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
-         					save_as_draft.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
-         				}
-         			});
-                  new CoursePress.Editor({
-                     editor_id: editor_id,
-                     editor_container: editor_container,
-                     content: old_content
-                  });
-         		}
+           				if ( content !== old_content ) {
+           					textbox.val( content );
+           					submitButton.removeClass( 'disabled' ).removeAttr('disabled').addClass('cp-btn-active');
+           					save_as_draft.removeClass( 'disabled' ).removeAttr('disabled').addClass('cp-btn-active');
+           				}
+           			});
+                    new CoursePress.Editor({
+                       editor_id: editor_id,
+                       editor_container: editor_container,
+                       content: old_content
+                    });
+           		}
          	},
          	updateModuleGrade: function(ev) {
          		var btn = $( ev.currentTarget ),
@@ -222,7 +224,7 @@
 
          		var progress = CoursePress.progressIndicator();
 
-               progress.icon.insertAfter( ev.currentTarget );
+               progress.icon.insertAfter( ev.currentTarget ).addClass('pull-right');
                var model = new CoursePress.Request();
                model.set( 'action', 'save_draft_feedback' );
                model.set( 'course_id', course_id );
@@ -233,7 +235,7 @@
                model.off( 'coursepress:success_save_draft_feedback' );
                model.on( 'coursepress:success_save_draft_feedback', function(){
                   CoursePress.Events.on( 'coursepress:progress:success', function() {
-                     btn.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
+                     btn.removeClass('cp-btn-active').addClass( 'disabled' ).attr('disabled', true);
          				var feedback_editor = $( '.cp-instructor-feedback[data-courseid="' + course_id + '"][data-unit="' + unit_id + '"][data-module="' + module_id + '"][data-student="' + student_id + '"]' ).show();
          				$( '.cp-draft-icon', feedback_editor ).show();
          				$( '.description', feedback_editor ).hide(); // Hide no feedback info
@@ -256,10 +258,10 @@
          			submitButton = $( '.cp-submit-grade', parentTr )
          		;
 
-         		submitButton.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
+         		submitButton.removeClass('cp-btn-active').addClass( 'disabled' ).attr( 'disabled', true);
          		parentTr.slideUp();
                module.val( module.data( 'grade' ) );
-         		buttons.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
+         		buttons.removeClass( 'disabled' ).removeAttr('disabled').addClass('cp-btn-active');
          	},
             enableSubmitButton: function(ev) {
                var module = $( ev.currentTarget ),
@@ -277,9 +279,9 @@
          		}
          		module.val( val );
                if( val >=0 ) {
-                  submitButton.removeClass( 'disabled cp-btn-default' ).addClass('cp-btn-active');
+                  submitButton.removeClass( 'disabled' ).removeAttr('disabled').addClass('cp-btn-active');
                } else {
-                  submitButton.removeClass('cp-btn-active').addClass( 'disabled cp-btn-default' );
+                  submitButton.removeClass('cp-btn-active').addClass( 'disabled' ).attr( 'disabled', true );
                }
          		// submitButton[ val >= 0 ? 'removeClass' : 'addClass' ]('disabled');
             },
