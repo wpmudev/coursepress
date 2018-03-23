@@ -256,8 +256,8 @@
                                                              <div class="coursepress-tooltip pull-right cp-edit-grade-box">
                                                                  <label class="cp-assess-label"><?php _e( 'Grade', 'cp' ); ?></label>
                                                                  <input type="number" name="module-grade" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-minimum="<?php echo esc_attr( $min_grade ); ?>" data-student="<?php echo $student_id; ?>" class="module-grade small-text" data-grade="<?= round( $grade ) ?>" value="<?= round( $grade ) ?>" min="0" max="100" />
-                                                                 <button type="button" class="cp-btn cp-btn-default cp-right cp-save-as-draft disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
-                                                                 <button type="button" class="cp-btn cp-btn-default cp-submit-grade disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
+                                                                 <button type="button" class="cp-btn pull-right cp-save-as-draft disabled" disabled="disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
+                                                                 <button type="button" class="cp-btn cp-submit-grade disabled" disabled="disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
                                                                  <button type="button" class="cp-btn cp-btn-default cp-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
                                                                  <p class="description"><?php echo $pass_label; ?></p>
                                                              </div>
