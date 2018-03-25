@@ -62,7 +62,7 @@ foreach ( $bulk_actions as $value => $label ) {
         <table class="coursepress-table">
             <thead>
                 <tr>
-                <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
+                <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <th class="column-title"><?php _e( 'Title', 'cp' ); ?></th>
                     <?php foreach ( $columns as $column_id => $column_label ) : ?>
                         <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">

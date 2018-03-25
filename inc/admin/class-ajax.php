@@ -1440,6 +1440,30 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Change selected notifications statuses.
+	 *
+	 * @param object $request Request data.
+	 *
+	 * @return json
+	 */
+	public function change_notifications_status( $request ) {
+
+		// Don't continue if notification id(s) not given.
+		if ( empty( $request->items ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not continue as notification id is empty.', 'cp' ) ) );
+		}
+		// Make sure it is array.
+		$items = (array) $request->items;
+		// Loop through each notifications and process.
+		foreach ( $items as $item_id ) {
+			// Finally change the notification status.
+			// Capability check will be handled here.
+			coursepress_change_post( $item_id, $request->sub_action, 'notification' );
+		}
+		return wp_send_json_success();
+	}
+
+	/**
 	 * Change selected forums statuses.
 	 *
 	 * @param object $request Request data.

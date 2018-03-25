@@ -88,9 +88,6 @@
                 .column-responses {
                     width: 5em;
                 }
-                .column-id {
-                    width: 3em;
-                }
             }
             .column-download,
             .column-view {
@@ -100,10 +97,8 @@
                     font-size: 2em;
                 }
             }
-            .column-id,
-            .check-column {
-                width: 2.2em;
-                padding: 11px 0 0 3px;
+            .column-id {
+                width: 1em;
             }
             &.coursepress-table-summary {
                 .column-answered,
