@@ -12,6 +12,7 @@
                     'click .row-actions .cp-delete': 'deleteNotification',
                     'click .row-actions .cp-restore': 'restoreNotification',
                     'click .row-actions .cp-trash': 'trashNotification',
+					'click #bulk-actions .cp-btn': 'bulkActions',
             },
 
             initialize: function() {
@@ -21,6 +22,7 @@
                     this.request.on( 'coursepress:error_alert_status_toggle', this.revertStatusToggle, this );
                     // On trash, delete, restore or duplicate notification.
                     this.request.on( 'coursepress:success_change_post', this.reloadAlerts, this );
+					this.request.on( 'coursepress:success_change_notifications_status', this.reloadAlerts, this );
 
                     this.render();
             },
@@ -107,6 +109,51 @@
                     this.request.save();
                 }
             },
+
+			// Process bulk actions.
+			bulkActions: function( ev ) {
+				var action = this.$( 'select', this.$( ev.currentTarget ).parent() ).val();
+				if ( '-1' === action ) {
+					return;
+				}
+				var ids = [];
+				this.$('.check-column input[type=checkbox]:checked').each( function() {
+					var value = parseInt( $(this).val() );
+					if ( 0 < value ) {
+						ids .push( value );
+					}
+				});
+				this.action = action;
+				this.ids = ids;
+				if ( 'delete' === action ) {
+					var confirm = new CoursePress.PopUp({
+						type: 'warning',
+						message: win._coursepress.text.notifications.delete_confirm
+					});
+					confirm.on( 'coursepress:popup_ok', this.bulkActionsSave, this );
+				} else {
+					this.bulkActionsSave( this );
+				}
+				return;
+			},
+
+			// Process bulk actions ajax.
+			bulkActionsSave: function( ) {
+				if ( this.ids && this.action ) {
+					if ( 'delete' === this.action ) {
+						new CoursePress.PopUp({
+							type: 'info',
+							message: win._coursepress.text.notifications.deleting_items
+						});
+					}
+					this.request.set({
+						action: 'change_notifications_status',
+						sub_action: this.action,
+						items: this.ids,
+					});
+					this.request.save();
+				}
+			},
 
             /**
              * Reload the current page.

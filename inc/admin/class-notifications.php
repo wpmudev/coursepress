@@ -46,6 +46,9 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		$localize_array['text']['notifications']['notification_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
 		$localize_array['text']['notifications']['alert_content_is_empty'] = __( 'You should add somehing to the alert  body before save.', 'cp' );
 		$localize_array['text']['notifications']['alert_title_is_empty'] = __( 'You should add title before save.', 'cp' );
+		$localize_array['text']['notifications']['no_items'] = __( 'Please select at least one notifications.', 'cp' );
+		$localize_array['text']['notifications']['delete_confirm'] = __( 'Are you sure to delete selected notifications?', 'cp' );
+		$localize_array['text']['notifications']['deleting_items'] = __( 'Deleting notifications... please wait', 'cp' );
 		return $localize_array;
 	}
 
@@ -78,6 +81,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 			'list_table' => $this->set_pagination( $count, 'coursepress_notifications_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
+			'bulk_actions'   => $this->get_bulk_actions(),
 		);
 
 		// Data for alert form.

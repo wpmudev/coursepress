@@ -77,7 +77,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @access private
 	 */
-	function set_admin_menus() {
+	public function set_admin_menus() {
 		global $submenu;
 
 		// Main CP Page
@@ -162,7 +162,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @param string $slug
 	 * @param string $callback
 	 */
-	function add_submenu( $label = '', $cap, $slug, $callback = '' ) {
+	public function add_submenu( $label = '', $cap, $slug, $callback = '' ) {
 
 		// Check if callback given.
 		$callback = empty( $callback ) ? '' : array( $this, $callback );
@@ -180,7 +180,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return string
 	 */
-	function set_category_menu_parent( $parent_file ) {
+	public function set_category_menu_parent( $parent_file ) {
 
 		global $submenu_file, $current_screen;
 
@@ -201,7 +201,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @access private
 	 */
-	function set_admin_css() {
+	public function set_admin_css() {
 		$coursepress_pagenow = coursepress_is_admin();
 
 		// Global, all pages use stylesheet
@@ -248,7 +248,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_style( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version );
 	}
 
-	function set_admin_scripts() {
+	public function set_admin_scripts() {
 		global $CoursePress;
 
 		$coursepress_pagenow = coursepress_is_admin();
@@ -329,7 +329,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
 				'course' => array(
 					'students' => array(
-						'no_items' => __( 'Please select at lease one student to withdraw.', 'cp' ),
+						'no_items' => __( 'Please select at least one student to withdraw.', 'cp' ),
 						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
@@ -397,14 +397,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_script( $handle, $src, $deps, $version, true );
 	}
 
-	function add_coursepress_class( $class ) {
+	public function add_coursepress_class( $class ) {
 	    if ( coursepress_is_admin() ) {
 	        $class .= ' coursepress';
 		}
 		return $class;
 	}
 
-	function courselist_columns() {
+	public function courselist_columns() {
 		$columns = array(
 			'category' => __( 'Categories', 'cp' ),
 			'units' => __( 'Units', 'cp' ),
@@ -423,14 +423,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return array
 	 */
-	function hidden_columns() {
+	public function hidden_columns() {
 		return array( 'category', 'start_date', 'end_date', 'enrollment_start', 'enrollment_end' );
 	}
 
 	/**
 	 * Custom screen options for course listing page.
 	 */
-	function process_courselist_page() {
+	public function process_courselist_page() {
 
 		$screen_id = get_current_screen()->id;
 
@@ -444,7 +444,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Set custom screen options for the students listing page.
 	 */
-	function process_studentlist_page() {
+	public function process_studentlist_page() {
 		global $CoursePress;
 
 		$students = $CoursePress->get_class( 'CoursePress_Admin_Students' );
@@ -457,7 +457,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Set custom screen options for the comments listing page.
 	 */
-	function process_commentlist_page() {
+	public function process_commentlist_page() {
 		global $CoursePress;
 
 		$comments = $CoursePress->get_class( 'CoursePress_Admin_Comments' );
@@ -469,7 +469,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Set custom screen options for the listing page.
 	 */
-	function process_notifications_list_page() {
+	public function process_notifications_list_page() {
 		global $CoursePress;
 
 		$notifications = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
@@ -482,7 +482,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Process assesment listing page screen.
 	 */
-	function process_assessments_page() {
+	public function process_assessments_page() {
 		global $CoursePress;
 
 		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
@@ -501,7 +501,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return mixed
 	 */
-	function set_courselist_options( $status, $option, $value ) {
+	public function set_courselist_options( $status, $option, $value ) {
 		$options = array(
 			'coursepress_course_per_page',
 			'coursepress_students_per_page',
@@ -519,7 +519,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		return $status;
 	}
 
-	function get_courselist_page() {
+	public function get_courselist_page() {
 		global $CoursePress_User, $CoursePress_Core;
 
 		$count = 0;
@@ -557,12 +557,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @return array $actions Bulk actions for courses.
 	 */
 	public function get_bulk_actions() {
-		$actions = array( 'publish', 'draft' );
 		$status = $this->get_status();
-		if ( 'trash' == $status ) {
+		if ( 'trash' === $status ) {
 			$actions = array( 'restore', 'delete' );
 		} else {
-			$actions[] = 'trash';
+			$actions = array( 'publish', 'draft', 'trash', );
 		}
 		$a = array();
 		foreach ( $actions as $action ) {
@@ -843,7 +842,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		return $links;
 	}
 
-	function get_students_page() {
+	public function get_students_page() {
 		$students = new CoursePress_Admin_Students();
 		$students->get_page();
 	}
@@ -853,13 +852,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$instructors->get_page();
 	}
 
-	function get_forum_page() {
+	public function get_forum_page() {
 		$this->lib3();
 		$forums = new CoursePress_Admin_Forums();
 		$forums->get_page();
 	}
 
-	function get_comments_page() {
+	public function get_comments_page() {
 		$students = new CoursePress_Admin_Comments();
 		$students->get_page();
 	}
@@ -867,12 +866,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Assessments listing page cotent.
 	 */
-	function get_assessments_page() {
+	public function get_assessments_page() {
 		global $CoursePress;
-
 		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
-
-		if ( $assessments ) {
+		if ( is_wp_error( $assessments ) ) {
+			echo $assessments->get_error_message();
+		} elseif ( $assessments ) {
 			// If it is details page
 			if ( isset( $_GET['tab'] ) && 'details' === $_GET['tab'] ) {
 				return $assessments->get_details_page();
@@ -882,7 +881,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		}
 	}
 
-	function get_notification_page() {
+	public function get_notification_page() {
 		global $CoursePress;
 
 		$students = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
@@ -892,7 +891,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		}
 	}
 
-	function get_report_page() {
+	public function get_report_page() {
 		global $CoursePress;
 		$instance = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
 		if ( $instance ) {
@@ -900,7 +899,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		}
 	}
 
-	function get_settings_page() {
+	public function get_settings_page() {
 		global $CoursePress;
 
 		// Include wp.media

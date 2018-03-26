@@ -1,10 +1,19 @@
-<?php
-$student = $assessments['student'];
-?>
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
 	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
 
-	<div class="coursepress-page">
+    <div class="coursepress-page">
+<?php
+if ( empty( $assessments ) ) {
+	echo '<div class="error"><p>';
+	_e( 'Course does not exists.', 'cp' );
+	echo '</p></div>';
+} elseif ( ! isset( $assessments['student'] ) || $assessments['student']->is_error() ) {
+	echo '<div class="error"><p>';
+	_e( 'Student does not exists or is not enrolled to this course.', 'cp' );
+	echo '</p></div>';
+} else {
+	$student = $assessments['student'];
+?>
 		<form method="get" class="cp-search-form" id="cp-search-form">
 			<div class="cp-flex">
 
@@ -115,7 +124,7 @@ $student = $assessments['student'];
 									<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<?php if ( $unit->is_graded ) : ?>
 										<span class="pull-right">
-											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?= round( $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ) ? : 0 ?>%</span>
+											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?= floor( $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ) ? : 0 ?>%</span>
 											<span class="cp-minus-icon"></span>
 										</span>
 									<?php endif; ?>
@@ -135,19 +144,22 @@ $student = $assessments['student'];
 																<tr class="cp-question-title">
 																	<th colspan="3">
 																		<span class="cp-title"><?= $step->get_the_title() ?></span>
-																		<?php
-																		$grade = $student->get_step_grade( $course_id, $unit->ID, $step_id );
-																		$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
-																		?>
+																		<span class="pull-right">
+																		<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
 																		<?php // No need to show grade if not entered by instructor -->
-																		if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
-																			<span class="pull-right cp-title cp-module-grade-info">
-																				<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
-																				<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-																				<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																			if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
+																				<span class="cp-title cp-module-grade-info">
+																					<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
+																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																				</span>
+																			<?php endif; ?>
 																				<?php
+																				$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
+																				// Will only allow feedback for 'written','fileupload'.
+																				$allowed_for_feedback = array( 'written', 'fileupload' );
 																				$response = $step->get_user_response( $student->ID );
-																				if ( ! empty( $response ) && $is_assessable ) :
+																				if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
 																					$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
 																					$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
@@ -163,15 +175,13 @@ $student = $assessments['student'];
 																						<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
 																					</span>
 																				<?php endif;?>
-																			</span>
-																		<?php endif; ?>
+																				</span>
 																	</th>
 																</tr>
 																<?php
 																$module_assessable_class = '';
-																if ( $is_assessable ) {
+																if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
 																	$module_assessable_class .= ' module-assessable';
-																}
 																?>
 																<tr class="cp-grade-editor <?php echo $module_assessable_class; ?>" style="display:none;">
 																	<td colspan="3">
@@ -200,14 +210,16 @@ $student = $assessments['student'];
 																			 <div class="coursepress-tooltip pull-right cp-edit-grade-box">
 																				  <label class="cp-assess-label"><?php _e( 'Grade', 'cp' ); ?></label>
 																				  <input type="number" name="module-grade" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-minimum="<?php echo esc_attr( $min_grade ); ?>" data-student="<?php echo $student_id; ?>" class="module-grade small-text" data-grade="<?= round( $grade ) ?>" value="<?= round( $grade ) ?>" min="0" max="100" />
-																				  <button type="button" class="cp-btn cp-btn-default cp-right cp-save-as-draft disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
-																				  <button type="button" class="cp-btn cp-btn-default cp-submit-grade disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
+																				  <button type="button" class="cp-btn pull-right cp-save-as-draft disabled" disabled="disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
+																				  <button type="button" class="cp-btn cp-submit-grade disabled" disabled="disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
 																				  <button type="button" class="cp-btn cp-btn-default cp-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
 																				  <p class="description"><?php echo $pass_label; ?></p>
 																			 </div>
 																		</div>
 																	</td>
 																</tr>
+																<?php endif; ?>
+																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
@@ -215,7 +227,6 @@ $student = $assessments['student'];
 																		<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																	<?php endif; ?>
 																</tr>
-																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																	<?php foreach ( $step->questions as $qkey => $question ) : ?>
 																		<tr>
 																			<td><?php echo $question['title']; ?></td>
@@ -268,6 +279,17 @@ $student = $assessments['student'];
 																			</td>
 																		</tr>
 																	<?php endforeach; ?>
+																<?php elseif ( $step->type === 'fileupload' ) :  ?>
+																	<tr>
+																		<td colspan="3">
+																			<?php $uploaded_files = $step->get_user_response( $student->ID ); ?>
+																			<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
+																				<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
+																			<?php else : ?>
+																				<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																			<?php endif; ?>
+																		</td>
+																	</tr>
 																<?php else : ?>
 																<tr>
 																	<td colspan="3">
@@ -279,20 +301,20 @@ $student = $assessments['student'];
 																<?php endif; ?>
 																<?php
 																$response = $step->get_user_response( $student->ID );
-																if ( ! empty( $response ) && $is_assessable ) {
+																if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) {
 																	$hide = ' style="display:none;"';
 																	$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 																?>
 																<tr class="cp-instructor-feedback" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-student="<?php echo $student_id; ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
 																	<td colspan="3">
-																		<div class="cp-instructor-feedback" style="display: <?php echo ( ! empty( $feedback ) ? 'block' : 'none' ); ?>">
+																		<div class="cp-instructor-feedback">
 																		<h4><?php _e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php _e( 'Draft', 'cp' ); ?>]</span></h4>
 																		<?php
 																		printf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
 																		printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
 																		?>
 																		</div>
-																</td>
+																	</td>
 																</tr>
 																	<?php
 																}
@@ -318,6 +340,7 @@ $student = $assessments['student'];
 				</tr>
 			<?php endif; ?>
 			</tbody>
-		</table>
+        </table>
+<?php } ?>
 	</div>
 </div>

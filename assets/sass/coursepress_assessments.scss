@@ -215,6 +215,43 @@
                 }
             }
         }
+        .cp-instructor-feedback {
+          h4 {
+            font-size: 16px;
+            border-bottom: 1px #DDD solid;
+            padding-bottom: 10px;
+
+            .cp-draft-icon {
+              text-transform: uppercase;
+              font-size: 14px;
+              font-weight: bold;
+              margin-right: 5px;
+              color: #fe0000;
+              float: left;
+            }
+          }
+        }
+
+        .cp-grade-editor {
+          .cp-grade-editor-box{
+            .cp-feedback-title{
+              display: inline-block;
+              font-weight: 700;
+              font-size: 18px;
+            }
+            .description {
+              margin-bottom: -25px;
+              font-style: italic;
+              font-size: 13px;
+              line-height: 1.5em;
+            }
+          }
+          .cp-edit-grade-box {
+            margin: 15px 0;
+            padding-bottom: 20px;
+            clear: both;
+          }
+        }
         @media screen {
             @media (max-width: $wp_admin_width_to_hide_left_menu) {
                 .column-last_active {
