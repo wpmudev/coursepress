@@ -18,8 +18,17 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		if ( 'need to be upgraded' !== $this->status ) {
 			return;
 		}
-		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
+		/**
+		 * always try to upgrade settings, independly of courses
+		 */
 		add_action( 'admin_init', array( $this, 'upgrade_settings' ) );
+		/**
+		 * try to upgrade courses
+		 */
+		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
+		if ( 0 === $this->count ) {
+			return;
+		}
 		add_action( 'admin_notices', array( $this, 'upgrade_is_needed_notice' ) );
 		add_filter( 'coursepress_admin_menu_screens', array( $this, 'add_admin_submenu' ), 11 );
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'i18n' ) );
@@ -129,6 +138,9 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			if ( 0 < version_compare( 3, $course->coursepress_version ) ) {
 				$this->count++;
 			}
+		}
+		if ( 0 === $this->count ) {
+			update_option( 'coursepress_upgrade', 'no upgrade required' );
 		}
 	}
 
