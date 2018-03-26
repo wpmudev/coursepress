@@ -322,7 +322,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
 				'course' => array(
 					'students' => array(
-						'no_items' => __( 'Please select at lease one student to withdraw.', 'cp' ),
+						'no_items' => __( 'Please select at least one student to withdraw.', 'cp' ),
 						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
@@ -550,12 +550,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @return array $actions Bulk actions for courses.
 	 */
 	public function get_bulk_actions() {
-		$actions = array( 'publish', 'draft' );
 		$status = $this->get_status();
-		if ( 'trash' == $status ) {
+		if ( 'trash' === $status ) {
 			$actions = array( 'restore', 'delete' );
 		} else {
-			$actions[] = 'trash';
+			$actions = array( 'publish', 'draft', 'trash', );
 		}
 		$a = array();
 		foreach ( $actions as $action ) {

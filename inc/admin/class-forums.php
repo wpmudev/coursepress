@@ -23,7 +23,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			$localize_array['text']['forums'] = array();
 		}
 		$localize_array['text']['forums']['forum_title_is_empty'] = __( 'You should add title before sending.', 'cp' );
-		$localize_array['text']['forums']['no_items'] = __( 'Please select at lease one forum.', 'cp' );
+		$localize_array['text']['forums']['no_items'] = __( 'Please select at least one forum.', 'cp' );
 		$localize_array['text']['forums']['delete_confirm'] = __( 'Are you sure to delete selected forums?', 'cp' );
 		$localize_array['text']['forums']['deleting_forums'] = __( 'Deleting forums... please wait', 'cp' );
 		return $localize_array;
