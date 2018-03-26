@@ -68,7 +68,7 @@ class CoursePress_Data_Instructor {
 	 */
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 
-		global $wpdb;
+		global $wpdb, $CoursePress_Core;
 
 		$assigned_courses = array();
 
@@ -110,7 +110,7 @@ class CoursePress_Data_Instructor {
 		if ( ! empty( $assigned_courses ) ) {
 			// Filter the course IDs, make sure courses exists and are not deleted
 			$args = array(
-				'post_type' => 'course',
+				'post_type' => $CoursePress_Core->course_post_type,
 				'post_status' => 'any',
 				'suppress_filters' => true,
 				'fields' => 'ids',
@@ -134,9 +134,10 @@ class CoursePress_Data_Instructor {
 	 * @return array List of course IDs.
 	 */
 	public static function get_created_courses_ids( $user, $status = 'any' ) {
+		global $CoursePress_Core;
 		// Filter the course IDs, make sure courses exists and are not deleted
 		$args = array(
-			'post_type' => 'course',
+			'post_type' => $CoursePress_Core->course_post_type,
 			'post_status' => $status,
 			'suppress_filters' => true,
 			'fields' => 'ids',
