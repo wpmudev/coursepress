@@ -289,8 +289,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * update course CoursePress version
 		 */
-		$result = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
-		if ( false == $result ) {
+		$value = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
+		if ( false == $value ) {
 			update_post_meta( $course->ID, 'coursepress_version', $CoursePress->version );
 		}
 		return $result;
