@@ -137,6 +137,11 @@ module.exports = function(grunt) {
 				'assets/js/src/admin/settings/import-export.js',
 				'assets/js/src/admin/settings/settings.js'
 			],
+			'assets/js/coursepress_upgrade.js': [
+				// Add JS that will be loaded at upgrade page
+				// assets/js/src/admin/upgrade/...
+				'assets/js/src/admin/upgrade/upgrade.js'
+			],
 			'assets/js/coursepress-front.js': [
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
@@ -172,7 +177,8 @@ module.exports = function(grunt) {
 			'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
 			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss',
 			'assets/css/coursepress_comments.css': 'assets/sass/coursepress_comments.scss',
-			'assets/css/coursepress_reports.css': 'assets/sass/coursepress_reports.scss'
+			'assets/css/coursepress_reports.css': 'assets/sass/coursepress_reports.scss',
+			'assets/css/coursepress_upgrade.css': 'assets/sass/admin/upgrade.scss'
 		},
 
 		// PHP files to validate.

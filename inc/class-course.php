@@ -56,6 +56,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		add_filter( 'coursepress_replace_placeholders', array( $this, 'replace_placeholders' ), 10, 3 );
 	}
 
+	/**
+	 * Update course CoursePress version.
+	 *
+	 * @since 3.0.0
+	 */
+	public function update_coursepress_version() {
+		global $CoursePress;
+		$course_id = $this->__get( 'ID' );
+		$result = add_post_meta( $course_id, 'coursepress_version', $CoursePress->version, true );
+		if ( false === $result ) {
+			update_post_meta( $course_id, 'coursepress_version', $CoursePress->version );
+		}
+	}
+
 	public function wp_error() {
 		return new WP_Error( 'wrong_param', __( 'Invalid course ID!', 'cp' ) );
 	}
@@ -96,6 +110,11 @@ class CoursePress_Course extends CoursePress_Utility {
 			$this->__set( 'with_modules', true );
 			$this->__set( 'course_type', 'auto-moderated' );
 		}
+		/**
+		 * Course CoursePress Version
+		 */
+		$version = get_post_meta( $course_id, 'coursepress_version', true );
+		$this->__set( 'coursepress_version', $version );
 	}
 
 	public function get_settings() {
@@ -219,6 +238,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		 * @param array $course_meta
 		 */
 		do_action( 'coursepress_course_updated', $course_id, $settings );
+		/**
+		 * update CoursePress version
+		 */
+		$this->update_coursepress_version();
 		return true;
 	}
 
