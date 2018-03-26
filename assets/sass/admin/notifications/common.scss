@@ -16,11 +16,6 @@
                 }
             }
 
-            .cp-input-clear {
-                width: 45%;
-                margin-right: 10px;
-            }
-
             .clear-bottom {
                 margin: 20px;
             }
@@ -99,5 +94,10 @@
                 }
             }
         }
+
+		#notification-emails .cp-input-clear {
+			width: 45%;
+			margin-right: 10px;
+		}
     }
 }

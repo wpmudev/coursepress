@@ -4,7 +4,7 @@
  * @var $courses array
  */
 ?>
-<div class="coursepress-wrap">
+<div class="coursepress-wrap coursepress-student">
     <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
 <?php
 if ( $student->is_error() ) {
@@ -55,10 +55,7 @@ if ( $student->is_error() ) {
 			<th class="column-last-active">
 				<?php esc_html_e( 'Last Active', 'cp' ); ?>
 			</th>
-			<th class="column-average">
-				<?php esc_html_e( 'Average', 'cp' ); ?>
-			</th>
-			<th class="column-average">
+			<th class="column-progress">
 				<?php esc_html_e( 'Progress', 'cp' ); ?>
 			</th>
 			<th class="column-certificate">
@@ -76,8 +73,7 @@ if ( $student->is_error() ) {
 				<td><?php echo $course->get_the_title(); ?></td>
 				<td><?php echo $student->get_date_enrolled( $course_id ); ?></td>
 				<td><?php echo $student->get_last_activity_time(); ?></td>
-				<td><?php echo $progress_data['completion/average']; ?></td>
-				<td><?php printf( '%s%%', $student->get_course_progress( $course_id ) ); ?></td>
+				<td class="column-progress"><?php printf( '%s%%', $student->get_course_progress( $course_id ) ); ?></td>
 				<td>
 					<?php
 					$course_completed = $student->is_course_completed( $course_id );

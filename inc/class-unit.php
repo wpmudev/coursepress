@@ -508,9 +508,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$unit_suffix = '';
 		$unit_structure = '';
 		$unit_duration = 0;
-		$unit_class = array( 'unit' );
+		$unit_class = array( 'unit unit-archive-single' );
 		if ( $has_access ) {
-			$unit_title = $this->create_html( 'a', array( 'href' => $unit_url ), $unit_title );
+			$unit_title = $this->create_html( 'a', array( 'href' => $unit_url, 'class' => 'unit-archive-single-title' ), $unit_title );
 		} elseif ( $is_student ) {
 			if ( ! $is_available ) {
 				$unit_class[] = 'unit-locked';
@@ -521,7 +521,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			} else {
 				$unit_class[]  = 'has-progress';
 				$unit_progress = $user->get_unit_progress( $course_id, $unit_id );
-				$unit_title    = $this->create_html( 'a', array( 'href' => $unit_url ), $unit_title );
+				$unit_title    = $this->create_html( 'a', array( 'href' => $unit_url, 'class' => 'unit-archive-single-title' ), $unit_title );
 				if ( $user->is_unit_completed( $course_id, $unit_id ) ) {
 					$unit_class[] = 'unit-seen unit-completed';
 				} elseif ( $user->is_unit_seen( $course_id, $unit_id ) ) {

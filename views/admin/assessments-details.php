@@ -1,10 +1,19 @@
-<?php
-$student = $assessments['student'];
-?>
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
 	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
 
-	<div class="coursepress-page">
+    <div class="coursepress-page">
+<?php
+if ( empty( $assessments ) ) {
+	echo '<div class="error"><p>';
+	_e( 'Course does not exists.', 'cp' );
+	echo '</p></div>';
+} elseif ( ! isset( $assessments['student'] ) || $assessments['student']->is_error() ) {
+	echo '<div class="error"><p>';
+	_e( 'Student does not exists or is not enrolled to this course.', 'cp' );
+	echo '</p></div>';
+} else {
+	$student = $assessments['student'];
+?>
 		<form method="get" class="cp-search-form" id="cp-search-form">
 			<div class="cp-flex">
 
@@ -46,7 +55,7 @@ $student = $assessments['student'];
 					<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 						<?php
 						$column_class = '';
-						if( 'grade' === $column_id ) {
+						if ( 'grade' === $column_id ) {
 							$column_class .= 'final-grade';
 						}
 						?>
@@ -78,8 +87,7 @@ $student = $assessments['student'];
 									break;
 								case 'last_active' :
 									// Last activity time.
-									$last_active = $assessments['student']->get_last_activity_time();
-									echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+									echo $assessments['student']->get_last_activity_time();
 									break;
 								case 'grade' :
 									$grade = $assessments['grade'];
@@ -137,8 +145,8 @@ $student = $assessments['student'];
 																	<th colspan="3">
 																		<span class="cp-title"><?= $step->get_the_title() ?></span>
 																		<span class="pull-right">
-																			<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
-																			<?php // No need to show grade if not entered by instructor -->
+																		<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
+																		<?php // No need to show grade if not entered by instructor -->
 																			if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
 																				<span class="cp-title cp-module-grade-info">
 																					<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
@@ -146,28 +154,28 @@ $student = $assessments['student'];
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
 																				</span>
 																			<?php endif; ?>
-																			<?php
-																			$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
-																			// Will only allow feedback for 'written','fileupload'.
-																			$allowed_for_feedback = array( 'written', 'fileupload' );
-																			$response = $step->get_user_response( $student->ID );
-																			if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
-																				$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
-																				$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
+																				<?php
+																				$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
+																				// Will only allow feedback for 'written','fileupload'.
+																				$allowed_for_feedback = array( 'written', 'fileupload' );
+																				$response = $step->get_user_response( $student->ID );
+																				if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
+																					$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
+																					$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
 
-																				$response = $student->get_response( $course_id, $unit->ID, $step_id );
-																				$graded_by = coursepress_get_array_val( $response, 'graded_by' );
-																				if ( ! empty( $graded_by ) && 'auto' !== $graded_by ) {
-																					$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
-																					$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
-																				}
-																				?>
-																				<span>
-																					<button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
-																					<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
+																					$response = $student->get_response( $course_id, $unit->ID, $step_id );
+																					$graded_by = coursepress_get_array_val( $response, 'graded_by' );
+																					if ( ! empty( $graded_by ) && 'auto' !== $graded_by ) {
+																						$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
+																						$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
+																					}
+																					?>
+																					<span>
+																						<button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
+																						<button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
+																					</span>
+																				<?php endif;?>
 																				</span>
-																			<?php endif;?>
-																		</span>
 																	</th>
 																</tr>
 																<?php
@@ -332,6 +340,7 @@ $student = $assessments['student'];
 				</tr>
 			<?php endif; ?>
 			</tbody>
-		</table>
+        </table>
+<?php } ?>
 	</div>
 </div>

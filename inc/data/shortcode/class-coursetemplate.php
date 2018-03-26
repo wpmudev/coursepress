@@ -94,7 +94,20 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$course->course_started = ! $course->open_ended_course && $course_start_date <= $now ? true : false;
 		$course->enrollment_started = $enrollment_start_date <= $now ? true : false;
 		$course->course_expired = ! $course->open_ended_course && $course_end_date <= $now ? true : false;
-		$course->enrollment_expired = $enrollment_end_date < $now ? true : false;
+		/**
+		 * Enrollment expired
+		 */
+		$course->enrollment_expired = false;
+		if ( $course->open_ended_enrollment ) {
+			if ( ! $course->open_ended_course && $course->course_end_date < $now ) {
+				$course->enrollment_expired = true;
+			}
+		} else if ( $enrollment_end_date < $now ) {
+			$course->enrollment_expired = true;
+		}
+		/**
+		 * Course is full? Check limit
+		 */
 		$course->full = $course->is_students_full();
 		$button = '';
 		$button_option = '';
@@ -111,7 +124,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				'action' => 'coursepress_enroll',
 				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 			),
-			$course_url
+			admin_url( 'admin-ajax.php' )
 		);
 		if ( is_user_logged_in() ) {
 			$signup_url = $enroll_course_url;

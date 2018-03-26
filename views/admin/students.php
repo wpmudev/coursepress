@@ -19,14 +19,14 @@
                         <select id="bulk-action-selector-top">
                             <option value="-1"><?php esc_attr_e( 'Bulk Actions', 'cp' ); ?></option>
                             <?php
-                            foreach ( $bulk_actions as $value => $label ) {
-                                printf(
-                                    '<option value="%s">%s</option>',
-                                    esc_attr( $value ),
-                                    esc_html( $label )
-                                );
-                            }
-                            ?>
+							foreach ( $bulk_actions as $value => $label ) {
+								printf(
+									'<option value="%s">%s</option>',
+									esc_attr( $value ),
+									esc_html( $label )
+								);
+							}
+							?>
                         </select>
                     </div>
                     <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Apply', 'cp' ); ?></button>
@@ -61,7 +61,7 @@
         <table class="coursepress-table cp-user" cellspacing="0">
             <thead>
             <tr>
-                <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
+                <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                 <?php foreach ( $columns as $column_id => $column_label ) : ?>
                     <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
                         <?php echo $column_label; ?>
@@ -103,7 +103,7 @@ switch ( $column_id ) :
 		// Last activity time.
 		$last_active = $student->get_last_activity_time();
 		if ( $last_active ) {
-			echo date_i18n( $last_active_format, $last_active );
+			echo $last_active;
 			$kind = $student->get_last_activity_kind();
 			if ( ! empty( $kind ) ) {
 				printf( '<span class="activity-kind">%s</span>', $kind );

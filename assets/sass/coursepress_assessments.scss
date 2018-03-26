@@ -42,16 +42,23 @@
                 padding: 10px
             }
         }
-        ul.cp-assessments-overview {
-            display: flex;
-            padding: 13px 17px 8px 14px;
-            background-color: $grey_10;
-            border-radius: 5px;
-            .cp-assessments-strong {
-                font-weight: 600;
-            }
-            li {
-                padding-right: 5%;
+        ul {
+            &.cp-assessments-overview {
+                background-color: $grey_10;
+                border-radius: 5px;
+                padding: 5px;
+                @media screen {
+                    @media (min-width: 500px) {
+                        display: flex;
+                        padding: 13px 17px 8px 14px;
+                    }
+                }
+                .cp-assessments-strong {
+                    font-weight: 600;
+                }
+                li {
+                    padding-right: 5%;
+                }
             }
         }
         .cp-title {
@@ -253,6 +260,14 @@
             }
             @media (max-width: 500px) {
                 .column-modules_progress {
+                    a {
+                        display: block;
+                    }
+                    .separator {
+                        display: none;
+                    }
+                }
+                .column-grade {
                     display: none;
                 }
             }
