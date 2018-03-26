@@ -914,11 +914,22 @@ class CoursePress_Data_Email {
 		$course_name = $post->post_title;
 		$course_summary = $post->post_excerpt;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
-
+		/**
+		 * Check $wp_rewrite and set it if it is needed.
+		 * This object can be not loaded in WP Cron tasks.
+		 */
+		global $wp_rewrite;
+		if ( empty( $wp_rewrite ) ) {
+			global $GLOBALS;
+			$wp_rewrite = $GLOBALS['wp_rewrite'];
+			if ( empty( $wp_rewrite ) ) {
+				$wp_rewrite = new WP_Rewrite();
+			}
+		}
 		if ( in_array( $post->post_status, $valid_stati ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
-			$course_address = get_permalink( $course_id );
+			$course_address = get_permalink( $post );
 		}
 
 		// Email Content.
