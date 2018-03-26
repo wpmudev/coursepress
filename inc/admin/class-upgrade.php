@@ -39,6 +39,11 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		return $data;
 	}
 
+	/**
+	 * Add admin submenu to upgrade courses.
+	 *
+	 * @since 3.0.0
+	 */
 	public function add_admin_submenu( $screens ) {
 		$menu = $this->add_submenu(
 			__( 'Upgrade courses', 'cp' ),
@@ -109,7 +114,13 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		echo '</div>';
 	}
 
+	/**
+	 * Upgrade course one by one.
+	 *
+	 * @since 3.0.0
+	 */
 	public function upgrade_course_by_id( $course_id ) {
+		global $CoursePress;
 		/**
 		 * check course
 		 */
@@ -158,6 +169,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * course_enrolled_student_id
 		 */
+
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
@@ -228,11 +240,28 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 											}
 										}
 									}
+									/**
+									 * fix writable answer
+									 */
+									if ( isset( $units[ $unit_id ][ $step_id ] ) && 'written' === $units[ $unit_id ][ $step_id ]->type ) {
+										$progress_key = 'units/'.$unit_id.'/responses/'.$step_id.'/response';
+										$value = coursepress_get_array_val( $progress, $progress_key );
+										$value = array(
+											$course_id => array(
+												$unit_id => array(
+													$step_id => $value,
+												),
+											),
+										);
+										$progress = coursepress_set_array_val( $progress, $progress_key, $value );
+									}
 								}
 							}
 						}
 					}
 					if ( ! empty( $progress ) ) {
+						$progress = coursepress_set_array_val( $progress, 'version_last', coursepress_get_array_val( $progress, 'version' ) );
+						$progress = coursepress_set_array_val( $progress, 'version', $CoursePress->version );
 						$student->add_student_progress( $course_id, $progress );
 					}
 				}
@@ -257,7 +286,13 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				$visible[ $key ] = maybe_unserialize( $meta[ $key ][0] );
 			}
 		}
-
+		/**
+		 * update course CoursePress version
+		 */
+		$result = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
+		if ( false == $result ) {
+			update_post_meta( $course->ID, 'coursepress_version', $CoursePress->version );
+		}
 		return $result;
 	}
 }
