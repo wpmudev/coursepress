@@ -939,6 +939,7 @@ class CoursePress_Data_Email {
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'COMMENT_MESSAGE' => $args['comment'],
 			'COURSE_DISCUSSION_ADDRESS' => $args['discussion_link'],
+			'UNSUBSCRIBE_LINK' => $args['unsubscribe_link'],
 			'COMMENT_AUTHOR' => $args['comment_author'],
 		);
 
