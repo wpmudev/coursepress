@@ -366,7 +366,6 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 	 * @param array $receipients Array of notification receipients.
 	 */
 	private function _send( $post, $message, $current_user, $comment_id, $receipients ) {
-		error_log('sending_email' );
 		if ( empty( $receipients ) ) {
 			return;
 		}
