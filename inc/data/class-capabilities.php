@@ -1199,7 +1199,7 @@ class CoursePress_Data_Capabilities {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -1266,11 +1266,16 @@ class CoursePress_Data_Capabilities {
 			return true;
 		}
 
+		$courses_created = array();
+		// Allow user to create forum for course created by themself.
+		if( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
+			$courses_created = CoursePress_Data_Instructor::get_created_courses_ids( $user_id );
+		}
 		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
-		if ( empty( $courses ) ) {
+		if ( empty( $courses_created ) && empty( $courses ) ) {
 			return false;
 		}
-
+		$courses = array_merge( $courses_created, $courses );
 		return self::can_add_discussion( $courses[0], $user_id );
 	}
 
