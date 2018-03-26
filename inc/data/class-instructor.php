@@ -124,6 +124,30 @@ class CoursePress_Data_Instructor {
 	}
 
 	/**
+	 * Return a list of courses of which the specified user is an creater.
+	 *
+	 * @since  3.0.0
+	 *
+	 * @param  int|WP_User $user The instructor/user to check.
+	 * @param  string      $status all|publish|draft.
+	 *
+	 * @return array List of course IDs.
+	 */
+	public static function get_created_courses_ids( $user, $status = 'any' ) {
+		// Filter the course IDs, make sure courses exists and are not deleted
+		$args = array(
+			'post_type' => 'course',
+			'post_status' => $status,
+			'suppress_filters' => true,
+			'fields' => 'ids',
+			'author' => $user,
+			'posts_per_page' => -1,
+		);
+		$course_ids = get_posts( $args );
+		return $course_ids;
+	}
+
+	/**
 	 * Get assigned courses count for the user.
 	 *
 	 * @param object $user WP_User object.
