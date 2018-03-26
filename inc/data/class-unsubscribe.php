@@ -28,7 +28,6 @@ class CoursePress_Data_Unsubscribe {
 		return array(
 			CoursePress_Data_Email::UNIT_STARTED_NOTIFICATION,
 			CoursePress_Data_Email::COURSE_START_NOTIFICATION,
-			CoursePress_Data_Email::DISCUSSION_NOTIFICATION,
 		);
 	}
 
