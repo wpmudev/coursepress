@@ -68,7 +68,7 @@ class CoursePress_Data_Instructor {
 	 */
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 
-		global $wpdb;
+		global $wpdb, $CoursePress_Core;
 
 		$assigned_courses = array();
 
@@ -110,7 +110,7 @@ class CoursePress_Data_Instructor {
 		if ( ! empty( $assigned_courses ) ) {
 			// Filter the course IDs, make sure courses exists and are not deleted
 			$args = array(
-				'post_type' => 'course',
+				'post_type' => $CoursePress_Core->course_post_type,
 				'post_status' => 'any',
 				'suppress_filters' => true,
 				'fields' => 'ids',
@@ -120,6 +120,31 @@ class CoursePress_Data_Instructor {
 			$course_ids = get_posts( $args );
 		}
 
+		return $course_ids;
+	}
+
+	/**
+	 * Return a list of courses of which the specified user is an creater.
+	 *
+	 * @since  3.0.0
+	 *
+	 * @param  int|WP_User $user The instructor/user to check.
+	 * @param  string      $status all|publish|draft.
+	 *
+	 * @return array List of course IDs.
+	 */
+	public static function get_created_courses_ids( $user, $status = 'any' ) {
+		global $CoursePress_Core;
+		// Filter the course IDs, make sure courses exists and are not deleted
+		$args = array(
+			'post_type' => $CoursePress_Core->course_post_type,
+			'post_status' => $status,
+			'suppress_filters' => true,
+			'fields' => 'ids',
+			'author' => $user,
+			'posts_per_page' => -1,
+		);
+		$course_ids = get_posts( $args );
 		return $course_ids;
 	}
 

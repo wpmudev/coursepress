@@ -439,7 +439,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			'orderby' => 'menu_order',
 			'order' => 'ASC',
 		);
-		if ( $with_module ) {
+		if ( $with_module && $module_id ) {
 			$args['meta_key'] = 'module_page';
 			$args['meta_value'] = intval( $module_id );
 		}

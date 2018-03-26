@@ -51,7 +51,7 @@ final class CoursePress {
 	/**
 	 * @var string Current version number.
 	 */
-	var $version = 'PLUGIN_VERSION';
+	var $version = '3';
 
 	/**
 	 * @var string Plugin name, it will be replaced by grunt build command.
@@ -140,18 +140,31 @@ final class CoursePress {
 		//wp_schedule_single_event( time(), $legacy_key );
 		/*********************************************************/
 		/**
-		 * Install on multisite too.
+		 * Install new tables.
 		 */
-		if ( is_multisite() && ! is_main_site() ) {
-			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		$install = new CoursePress_Admin_Install( $this );
+		$install->install_tables();
+		/**
+		 * upgrade site data
+		 */
+		$cp_db_version = get_option( 'coursepress_version', '0' );
+		if ( 0 > version_compare( $cp_db_version, $this->version ) ) {
+			if ( 0 > version_compare( $cp_db_version, '3.0.0' ) ) {
+				update_option( 'coursepress_upgrade', 'need to be upgraded' );
 			}
-			$plugin_file = basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ );
-			if ( is_plugin_active_for_network( $plugin_file ) ) {
-				$install = new CoursePress_Admin_Install( $this );
-				$install->install_tables();
-			}
+			add_action( 'init', array( $this, 'upgrade_flush_rewrite_rules' ) );
+			update_option( 'coursepress_version', $this->version );
 		}
+	}
+
+	/**
+	 * Do not use this so often! This should be use onlt when we upgrade the
+	 * plugin.
+	 *
+	 * @since 3.0.0
+	 */
+	public function upgrade_flush_rewrite_rules() {
+		flush_rewrite_rules();
 	}
 
 	private function class_loader( $class_name ) {
@@ -219,6 +232,12 @@ final class CoursePress {
 			false, // Deprecated. Set to false.
 			$this->plugin_path. '/languages'
 		);
+		/**
+		 * need to be upgraded?
+		 */
+		if ( is_admin() ) {
+			new CoursePress_Admin_Upgrade( $this );
+		}
 	}
 
 	function set_current_user() {
