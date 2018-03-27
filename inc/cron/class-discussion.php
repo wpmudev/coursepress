@@ -281,7 +281,6 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		if ( empty( $receipients ) ) {
 			return;
 		}
-
 		$this->_send( $post, $message, $current_user, $comment_id, $receipients );
 	}
 
@@ -444,16 +443,19 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		if ( ! empty( $receipients ) ) {
 			$object = coursepress_get_post_object( $post->ID );
 			$discussion_url = $object->get_permalink();
-
 			foreach ( $receipients as $user_id => $user_email ) {
-				$args['email'] = $user_email;
-				$args['unsubscribe_link'] = add_query_arg(
+				// Unsubscribe link.
+				$unsubscribe_link = add_query_arg(
 					array(
 						'uid' => $user_id,
 						'unsubscribe_id' => $post->ID,
 					),
 					$discussion_url
 				);
+				// Remove http and https to avoid auto linking when added this string to text editor.
+				$unsubscribe_link = preg_replace( '(^https?://)', '', $unsubscribe_link );
+				$args['email'] = $user_email;
+				$args['unsubscribe_link'] = $unsubscribe_link;
 
 				CoursePress_Data_Email::send_email(
 					CoursePress_Data_Email::DISCUSSION_NOTIFICATION,
