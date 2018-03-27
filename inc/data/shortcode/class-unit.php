@@ -122,7 +122,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 		$content .= '<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_units_url() ) . '" class="course-units-link">' . esc_html__( 'Units', 'cp' ) . '</a></li>';
 
 		$student = coursepress_get_user();
-		$enrolled = ! empty( $student_id ) ? $student->is_enrolled_at( $course_id ) : false;
+		$enrolled = ! empty( $student ) ? $student->is_enrolled_at( $course_id ) : false;
 		$is_instructor = $student->is_instructor_at( $course_id );
 
 		if ( $enrolled || $is_instructor ) {
