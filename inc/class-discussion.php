@@ -44,6 +44,7 @@ class CoursePress_Discussion extends CoursePress_Utility {
 		);
 		$comments['comment_content'] = $comments['comment'];
 		$comment_id = wp_new_comment( $comments );
+		$comment_post_id = (int) $comments['comment_post_ID'];
 
 		if ( ! empty( $comments['coursepress_subscribe'] ) ) {
 			// Send notification
@@ -51,9 +52,10 @@ class CoursePress_Discussion extends CoursePress_Utility {
 
 			if ( $discussionClass ) {
 				if ( 'do-not-subscribe' === $comments['coursepress_subscribe'] ) {
-					$discussionClass->un_subscribe( $comment_id, get_current_user_id() );
+					$discussionClass->un_subscribe( $comment_post_id, get_current_user_id() );
 				} else {
 					$discussionClass->add_comment_id( $comment_id );
+					$discussionClass->subscribe( $comment_post_id, get_current_user_id(), $comments['coursepress_subscribe'] );
 				}
 			}
 		}

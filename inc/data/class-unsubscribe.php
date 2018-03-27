@@ -68,7 +68,7 @@ class CoursePress_Data_Unsubscribe {
 		$courses_link = coursepress_get_main_courses_url();
 
 		// Include unsubscribe link
-		$unsubscribe_link = add_query_arg( array( 'uid' => $user_id, 'unsubscriber' => 1 ), $courses_link );
+		$unsubscribe_link = add_query_arg( array( 'uid' => $user_id, 'unsubscribe' => 1 ), $courses_link );
 
 		// Replace variables with actual values.
 		$message = coursepress_replace_vars( $message, array( 'UNSUBSCRIBE_LINK' => $unsubscribe_link ) );
@@ -132,7 +132,7 @@ class CoursePress_Data_Unsubscribe {
 	 **/
 	private function get_unsubscriber_id() {
 
-		if ( isset( $_GET['uid'] ) && isset( $_GET['unsubscriber'] ) ) {
+		if ( isset( $_GET['uid'] ) && ( isset( $_GET['unsubscribe_id'] ) || isset( $_GET['unsubscribe'] ) ) ) {
 			// User ID from link.
 			$user_id = (int) $_GET['uid'];
 			// Load user data.
@@ -144,6 +144,24 @@ class CoursePress_Data_Unsubscribe {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the comment ID if unsubscribing from from discussion.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed
+	 **/
+	private function get_comment_id() {
+
+		$comment_id = 0;
+		if ( isset( $_GET['uid'] ) && isset( $_GET['unsubscribe_id'] ) ) {
+			// User ID from link.
+			$comment_id = (int) $_GET['unsubscribe_id'];
+		}
+
+		return $comment_id > 0 ? $comment_id : false;
 	}
 
 	/**
@@ -171,11 +189,12 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * Update the user meta `cp_unsubscriber` to mark as unsubscriber.
 	 *
-	 * @since 2.0.0
-	 *
 	 * @param int $unsubscribe_id User ID.
+	 * @param int|bool $comment_id Comment ID.
+	 *
+	 * @since 2.0.0
 	 */
-	public function unsubscribe( $unsubscribe_id ) {
+	public function unsubscribe( $unsubscribe_id, $comment_id = false ) {
 
 		// We have an ID, unsubscribe from the list.
 		if ( (int) $unsubscribe_id > 0 ) {
@@ -189,8 +208,15 @@ class CoursePress_Data_Unsubscribe {
 			 **/
 			do_action( 'coursepress_remove_subscriber', $unsubscribe_id );
 
-			// Marked the user as unsubscriber.
-			update_user_meta( $unsubscribe_id, 'cp_unsubscriber', true );
+			if ( $comment_id ) {
+				global $CoursePress;
+				// Unsubscribe from discussion.
+				$discussionClass = $CoursePress->get_class( 'CoursePress_Cron_Discussion' );
+				$discussionClass->un_subscribe( $comment_id, $unsubscribe_id );
+			} else {
+				// Marked the user as unsubscriber.
+				update_user_meta( $unsubscribe_id, 'cp_unsubscriber', true );
+			}
 
 			/**
 			 * Fires after the user marked as unsubscriber.
@@ -214,17 +240,19 @@ class CoursePress_Data_Unsubscribe {
 
 		// Get the valid user id.
 		$subscriber_id = $this->get_unsubscriber_id();
+		// If it is discussion unsubscribe, get comment id.
+		$comment_id = $this->get_comment_id();
 
 		// Continue only is not already unsubscribed.
 		if ( (int) $subscriber_id > 0 ) {
 
 			// Do not show if already unsubscribed.
-			if ( $this->is_unsubscriber( $subscriber_id ) ) {
+			if ( $this->is_unsubscriber( $subscriber_id ) && ! $comment_id ) {
 				return;
 			}
 
 			// Process the unsubscribe action.
-			$this->unsubscribe( $subscriber_id );
+			$this->unsubscribe( $subscriber_id, $comment_id );
 
 			// Get the unsubscribe message.
 			$content = $this->unsubscribe_message();
