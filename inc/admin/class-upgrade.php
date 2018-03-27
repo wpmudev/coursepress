@@ -18,10 +18,60 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		if ( 'need to be upgraded' !== $this->status ) {
 			return;
 		}
+		/**
+		 * always try to upgrade settings, independly of courses
+		 */
+		add_action( 'admin_init', array( $this, 'upgrade_settings' ) );
+		/**
+		 * try to upgrade courses
+		 */
 		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
+		if ( 0 === $this->count ) {
+			return;
+		}
 		add_action( 'admin_notices', array( $this, 'upgrade_is_needed_notice' ) );
 		add_filter( 'coursepress_admin_menu_screens', array( $this, 'add_admin_submenu' ), 11 );
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'i18n' ) );
+	}
+
+	/**
+	 * upgrade CoursePress Settings recursive helper
+	 *
+	 * @since 3.0.0
+	 */
+	private function set_true_false( $settings ) {
+		foreach ( $settings as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$settings[ $key ] = $this->set_true_false( $value );
+			} elseif ( is_string( $value ) ) {
+				switch ( $value ) {
+					case 'on':
+						$settings[ $key ] = true;
+					break;
+					case 'off':
+						$settings[ $key ] = false;
+					break;
+				}
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * upgrade CoursePress Settings
+	 *
+	 * @since 3.0.0
+	 */
+	public function upgrade_settings() {
+		global $CoursePress;
+		$version = get_option( 'coursepress_settings_version' );
+		if ( empty( $version ) ) {
+			$settings = coursepress_get_setting();
+			$settings = $this->set_true_false( $settings );
+			$settings['general']['version'] = $CoursePress->version;
+			update_option( 'coursepress_settings_version', $CoursePress->version );
+			coursepress_update_setting( true, $settings );
+		}
 	}
 
 	/**
@@ -88,6 +138,9 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			if ( 0 < version_compare( 3, $course->coursepress_version ) ) {
 				$this->count++;
 			}
+		}
+		if ( 0 === $this->count ) {
+			update_option( 'coursepress_upgrade', 'no upgrade required' );
 		}
 	}
 
@@ -289,8 +342,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * update course CoursePress version
 		 */
-		$result = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
-		if ( false == $result ) {
+		$value = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
+		if ( false == $value ) {
 			update_post_meta( $course->ID, 'coursepress_version', $CoursePress->version );
 		}
 		return $result;

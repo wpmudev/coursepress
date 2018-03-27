@@ -77,7 +77,32 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		$this->schedule();
 	}
 
-	function un_subscribe( $comment_id, $user_id ) {
+	/**
+	 * Unsubscribe user from discussion notification.
+	 *
+	 * @param int $comment_post_id Comment Post ID.
+	 * @param int $user_id User ID.
+	 */
+	function un_subscribe( $comment_post_id, $user_id ) {
+		// Get meta key for this comment subscription.
+		$meta_key = $this->get_user_meta_name( $comment_post_id );
+		// Mark this user as an un-subscriber.
+		update_user_meta( $user_id, $meta_key, 'do-not-subscribe' );
+	}
+
+	/**
+	 * Subscribe user from discussion notification.
+	 *
+	 * @param int $comment_post_id Comment Post ID.
+	 * @param int $user_id User ID.
+	 */
+	function subscribe( $comment_post_id, $user_id, $subscribe_type = 'subscribe-reactions' ) {
+		if ( in_array( $subscribe_type, array( 'subscribe-reactions', 'subscribe-all' ) ) ) {
+			// Get meta key for this comment subscription.
+			$meta_key = $this->get_user_meta_name( $comment_post_id );
+			// Mark this user as an un-subscriber.
+			update_user_meta( $user_id, $meta_key, $subscribe_type );
+		}
 	}
 
 	/**
@@ -226,6 +251,11 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 				if ( $current_user == $instructor->ID ) {
 					continue;
 				}
+				// Do not send if unsubscribed.
+				$meta = get_user_meta( $instructor->ID, $meta_key, true );
+				if ( $meta && $meta === 'do-not-subscribe' ) {
+					continue;
+				}
 				$receipients[ $instructor->ID ] = $instructor->__get( 'user_email' );
 			}
 		}
@@ -237,6 +267,11 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		if ( ! empty( $facilitators ) ) {
 			foreach ( $facilitators as $facilitator ) {
 				if ( $current_user == $facilitator->ID ) {
+					continue;
+				}
+				// Do not send if unsubscribed.
+				$meta = get_user_meta( $facilitator->ID, $meta_key, true );
+				if ( $meta && $meta === 'do-not-subscribe' ) {
 					continue;
 				}
 				$receipients[ $facilitator->ID ] = $facilitator->__get( 'user_email' );
@@ -408,16 +443,19 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		if ( ! empty( $receipients ) ) {
 			$object = coursepress_get_post_object( $post->ID );
 			$discussion_url = $object->get_permalink();
-
 			foreach ( $receipients as $user_id => $user_email ) {
-				$args['email'] = $user_email;
-				$args['unsubscribe_link'] = add_query_arg(
+				// Unsubscribe link.
+				$unsubscribe_link = add_query_arg(
 					array(
 						'uid' => $user_id,
-						'unsubscribe' => $post->ID,
+						'unsubscribe_id' => $post->ID,
 					),
 					$discussion_url
 				);
+				// Remove http and https to avoid auto linking when added this string to text editor.
+				$unsubscribe_link = preg_replace( '(^https?://)', '', $unsubscribe_link );
+				$args['email'] = $user_email;
+				$args['unsubscribe_link'] = $unsubscribe_link;
 
 				CoursePress_Data_Email::send_email(
 					CoursePress_Data_Email::DISCUSSION_NOTIFICATION,

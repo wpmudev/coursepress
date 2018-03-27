@@ -561,6 +561,10 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 
 		if ( ! $return ) {
+			// If course is new (i.e ID is 0) then allow to add units to current user.
+			if( (int) $course_id < 1 ) {
+				return self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+			}
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 			$is_facilitator = self::is_course_facilitator( $course_id, $user_id );
