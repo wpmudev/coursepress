@@ -36,10 +36,23 @@ class CoursePress_Step_Written extends CoursePress_Step {
 			} else {
 				$data['assessable'] = true;
 			}
-			$step_id = $this->__get( 'ID' );
+			$step_id           = $this->__get( 'ID' );
+			$user              = coursepress_get_user();
+			$previous_response = $this->get_user_response( $user->ID );
 
 			foreach ( $response as $course_id => $response2 ) {
 				foreach ( $response2 as $unit_id => $response3 ) {
+					$unit_previous_response = ! empty( $previous_response[ $course_id ][ $unit_id ] ) ? $previous_response[ $course_id ][ $unit_id ] : array();
+					foreach ( $response3[ $step_id ] as $index => $ans ) {
+						if ( $this->is_required() && empty( $ans ) && empty( $unit_previous_response[ $step_id ][ $index ] ) ) {
+							// Redirect back.
+							$referer = filter_input( INPUT_POST, 'referer_url' );
+							$error   = __( 'Response is required for all fields.', 'cp' );
+							coursepress_set_cookie( 'cp_step_error', $error, time() + 120 );
+							wp_safe_redirect( $referer );
+							exit;
+						}
+					}
 					$user->record_response( $course_id, $unit_id, $step_id, $data );
 				}
 			}
