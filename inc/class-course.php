@@ -313,7 +313,11 @@ class CoursePress_Course extends CoursePress_Utility {
 			);
 			if ( is_array( $size ) && 1 < count( $size ) ) {
 				$args['width'] = $size[0];
-				$attr['height'] = $size[1];
+				$args['height'] = $size[1];
+			}
+			// Add microdata to image.
+			if ( apply_filters( 'coursepress_schema', false, 'image' ) ) {
+				$args['itemprop'] = 'image';
 			}
 			$listing_image = $this->create_html( 'img', $args );
 		}

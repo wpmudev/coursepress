@@ -20,12 +20,13 @@ $course_media = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' 
 	}
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-item-box' ); ?>>
-	<div class="course-info">
+	<div class="course-info"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope' ); ?>>
 	<?php if ( ! empty( $thumbnail ) ) {
 		printf( '<a href="%s" class="post-thumbnail" aria-hidden="true">%s</a>', esc_url( $course->get_permalink() ), $thumbnail );
 	} ?>
 <header class="entry-header course-entry-header">
-	<?php the_title( '<h3 class="entry-title course-title"><a href="' . esc_url( $course->get_permalink() ) . '" rel="bookmark">', '</a></h3>' ); ?>
+	<?php $title = apply_filters( 'coursepress_schema', get_the_title(), 'title' ); ?>
+	<h3 class="entry-title course-title"><a href="<?php esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
 </header>
 <?php if ( is_search() ) : // Only display Excerpts for Search   ?>
 <div class="entry-summary">
@@ -43,7 +44,7 @@ array(
 )
 );
 ?>
-<div class="instructors-content">
+<div class="instructors-content"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope-person' ); ?>>
 <?php
 // Flat hyperlinked list of instructors
 echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
