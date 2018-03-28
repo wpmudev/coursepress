@@ -980,7 +980,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$progress = $user->get_completion_data( $course_id );
 		if ( (int) $step_id > 0 ) {
 			$step = coursepress_get_course_step( $step_id );
-			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type ) {
+			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type) {
 				$progress = $step->validate_response( $response );
 			}
 		}
