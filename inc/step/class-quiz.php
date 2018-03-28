@@ -96,6 +96,14 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 	 * @input array $response Response.
 	 */
 	public function validate_response( $response = array() ) {
+		$user              = coursepress_get_user();
+		$previous_response = $this->get_user_response( $user->ID );
+		$course_id         = $this->__get( 'course_id' );
+		$unit_id           = $this->__get( 'unit_id' );
+		$step_id           = $this->__get( 'ID' );
+
+		$status = $user->get_step_grade_status( $course_id, $unit_id, $step_id );
+
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
 			$progress = $user->get_completion_data( $this->__get( 'course_id' ) );
@@ -147,6 +155,19 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 									}
 								}
 							}
+						} else {
+							$has_previous_answer = false;
+							if ( isset( $previous_response[ $pos ] ) ) {
+								$has_previous_answer = ( 'multiple' === $question['type'] ) ? ! empty( $previous_response[ $pos ] ) : ! is_null( $previous_response[ $pos ] );
+							}
+							if ( 'pass' !== $status && $this->is_required() && ! $has_previous_answer ) {
+								// Redirect back.
+								$referer = filter_input( INPUT_POST, 'referer_url' );
+								$error   = __( 'Response is required for all fields.', 'cp' );
+								coursepress_set_cookie( 'cp_step_error', $error, time() + 120 );
+								wp_safe_redirect( $referer );
+								exit;
+							}
 						}
 					}
 					if ( $wrong > 0 ) {
@@ -174,6 +195,13 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					exit;
 				}
 			}
+		} elseif ( 'pass' !== $status && $this->is_required() && empty( $previous_response ) ) {
+			// Redirect back.
+			$referer = filter_input( INPUT_POST, 'referer_url' );
+			$error   = __( 'Response is required for all fields.', 'cp' );
+			coursepress_set_cookie( 'cp_step_error', $error, time() + 120 );
+			wp_safe_redirect( $referer );
+			exit;
 		}
 	}
 
