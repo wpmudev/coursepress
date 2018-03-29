@@ -848,8 +848,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	public function enroll() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+		$wpnonce   = filter_input( INPUT_GET, '_wpnonce' );
+		// Note: nonce verification is removed for now. As nonce value is regenerated after login and lead to nonce verification fail. Need to find way to add back.
+		if ( ! $course_id ) {
 			wp_send_json_error( true );
 		}
 		if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
