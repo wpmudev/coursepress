@@ -2069,10 +2069,7 @@ class CoursePress_Data_Capabilities {
 
 			if ( $is_author ) {
 				$return = user_can( $user_id, 'coursepress_assign_my_course_facilitator_cap' );
-			}
-
-			// If no cap, check if user can assign facilitator to any course
-			if ( ! $return ) {
+			} else {
 				$return = user_can( $user_id, 'coursepress_assign_facilitator_cap' );
 			}
 		}
