@@ -6,7 +6,7 @@
     <?php
 	$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 	$config = array();
-    $disabled = ! CoursePress_Data_Capabilities::can_create_course();
+	$disabled = ! CoursePress_Data_Capabilities::can_create_course();
 
 	$config['import'] = array(
 		'title' => __( 'Import', 'CoursePress' ),
