@@ -24,7 +24,7 @@ class CoursePress_Data_Capabilities {
 			/* General */
 			'coursepress_dashboard_cap' => 1,
 			'coursepress_courses_cap' => 1,
-			'coursepress_instructors_cap' => 0, // DEPRECATED
+			'coursepress_instructors_cap' => 0,
 			'coursepress_students_cap' => 1,
 			'coursepress_assessments_cap' => 1,
 			'coursepress_reports_cap' => 1,
@@ -2257,5 +2257,160 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return false;
+	}
+
+	/**
+	 * can instructor view submenu helper?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 * @param string $capability Instructor capability name.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	private static function can_view_submenu( $user_id, $capability ) {
+		global $current_user;
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		/**
+		 * allways true for administrators
+		 */
+		$return = user_can( $user_id, 'manage_options' );
+		if ( $return ) {
+			return $return;
+		}
+		/**
+		 * check caps exists
+		 */
+		if (
+			! isset( $current_user->allcaps['instructor'] )
+			|| ! isset( $current_user->allcaps['instructor'][ $capability ] )
+		) {
+			return $return;
+		}
+		/**
+		 * return cap
+		 */
+		return ! empty( $current_user->allcaps['instructor'][ $capability ] );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_courses( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_courses_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_students( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_students_cap' );
+	}
+
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_instructors( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_instructors_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_assessment( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_assessment_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_reports( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_reports_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_notifications( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_notifications_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_discussions( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_discussions_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_settings( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_settings_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_comments( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_comments_cap' );
 	}
 }

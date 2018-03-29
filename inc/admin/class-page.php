@@ -78,74 +78,127 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @access private
 	 */
 	public function set_admin_menus() {
-		global $submenu;
+		global $submenu, $current_user;
+		/**
+		 * can see courses submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_courses();
+		if ( $can_see ) {
+			// Main CP Page
+			$label = __( 'CoursePress Base', 'cp' );
+			$screen_id = add_menu_page( $label, $label, 'coursepress_courses_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
+			// Add screen ID to the list of valid CP pages
+			array_unshift( $this->screens, $screen_id );
+			// Add preload callback
+			add_action( 'load-' . $screen_id, array( $this, 'process_courselist_page' ) );
 
-		// Main CP Page
-		$label = __( 'CoursePress Base', 'cp' );
-		$screen_id = add_menu_page( $label, $label, 'coursepress_courses_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
-		// Add screen ID to the list of valid CP pages
-		array_unshift( $this->screens, $screen_id );
-		// Add preload callback
-		add_action( 'load-' . $screen_id, array( $this, 'process_courselist_page' ) );
+			/**
+			 * Allow to add page to CoursePress screens.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param array $this->screens Array of CoursePress pages hooks.
+			 */
+			$this->screens = apply_filters( 'coursepress_admin_menu_screens', $this->screens );
+
+			// Set course edit page
+			$edit_label = __( 'New Course', 'cp' );
+			$this->add_submenu( $edit_label, 'coursepress_create_course_cap', 'coursepress_course', 'get_course_edit_page' );
+
+			// Set categories page
+			$cats_label = __( 'Categories', 'cp' );
+			$this->add_submenu( $cats_label, 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
+		}
 
 		/**
-		 * Allow to add page to CoursePress screens.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param array $this->screens Array of CoursePress pages hooks.
+		 * can see students submenu
 		 */
-		$this->screens = apply_filters( 'coursepress_admin_menu_screens', $this->screens );
-
-		// Set course edit page
-		$edit_label = __( 'New Course', 'cp' );
-		$this->add_submenu( $edit_label, 'coursepress_create_course_cap', 'coursepress_course', 'get_course_edit_page' );
-
-		// Set categories page
-		$cats_label = __( 'Categories', 'cp' );
-		$this->add_submenu( $cats_label, 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
-
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_students();
 		// Set students page
-		$student_label = __( 'Students', 'cp' );
-		$student_screen_id = $this->add_submenu( $student_label, 'coursepress_students_cap', 'coursepress_students', 'get_students_page' );
-		// Add preload callback
-		add_action( 'load-' . $student_screen_id, array( $this, 'process_studentlist_page' ) );
+		if ( $can_see ) {
+			$student_label = __( 'Students', 'cp' );
+			$student_screen_id = $this->add_submenu( $student_label, 'coursepress_students_cap', 'coursepress_students', 'get_students_page' );
+			// Add preload callback
+			add_action( 'load-' . $student_screen_id, array( $this, 'process_studentlist_page' ) );
+		}
 
 		// Set instructor page
-		$instructor_label = __( 'Instructors', 'cp' );
-		$this->add_submenu( $instructor_label, 'coursepress_instructors_cap', 'coursepress_instructors', 'get_instructors_page' );
+		/**
+		 * can see instructors submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_instructors();
+		if ( $can_see ) {
+			$instructor_label = __( 'Instructors', 'cp' );
+			$this->add_submenu( $instructor_label, 'coursepress_instructors_cap', 'coursepress_instructors', 'get_instructors_page' );
+		}
 
-		// Set assessment page
-		$assessment_label = __( 'Assessments', 'cp' );
-		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessments_cap', 'coursepress_assessments', 'get_assessments_page' );
-		array_unshift( $this->screens, $assesment_screen_id );
-		// Add preload callback
-		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assessments_page' ) );
+		/**
+		 * can see assessment submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_assessment();
+		if ( $can_see ) {
+			// Set assessment page
+			$assessment_label = __( 'Assessments', 'cp' );
+			$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessments_cap', 'coursepress_assessments', 'get_assessments_page' );
+			array_unshift( $this->screens, $assesment_screen_id );
+			// Add preload callback
+			add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assessments_page' ) );
+		}
 
-		// Set Forum page
-		$forum_label = __( 'Forums', 'cp' );
-		$this->add_submenu( $forum_label, 'coursepress_discussions_cap', 'coursepress_forum', 'get_forum_page' );
+		/**
+		 * can see discussions submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_discussions();
+		if ( $can_see ) {
+			// Set Forum page
+			$forum_label = __( 'Forums', 'cp' );
+			$this->add_submenu( $forum_label, 'coursepress_discussions_cap', 'coursepress_forum', 'get_forum_page' );
+		}
 
-		// Set Comments page
-		$comment_label = __( 'Comments', 'cp' );
-		$comments_screen_id = $this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
-		// Add preload callback
-		add_action( 'load-' . $comments_screen_id, array( $this, 'process_commentlist_page' ) );
+		/**
+		 * can see comments submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_comments();
+		if ( $can_see ) {
+			// Set Comments page
+			$comment_label = __( 'Comments', 'cp' );
+			$comments_screen_id = $this->add_submenu( $comment_label, 'coursepress_settings_cap', 'coursepress_comments', 'get_comments_page' );
+			// Add preload callback
+			add_action( 'load-' . $comments_screen_id, array( $this, 'process_commentlist_page' ) );
+		}
 
-		// Set reports page
-		$label = __( 'Reports', 'cp' );
-		$screen_id = $this->add_submenu( $label, 'coursepress_reports_cap', 'coursepress_reports', 'get_report_page' );
-		array_unshift( $this->screens, $screen_id );
+		/**
+		 * can see reports submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_reports();
+		if ( $can_see ) {
+			// Set reports page
+			$label = __( 'Reports', 'cp' );
+			$screen_id = $this->add_submenu( $label, 'coursepress_reports_cap', 'coursepress_reports', 'get_report_page' );
+			array_unshift( $this->screens, $screen_id );
+		}
 
-		// Set Notification page
-		$notification_label = __( 'Notifications', 'cp' );
-		$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
-		// Add preload callback
-		add_action( 'load-' . $notifications_screen_id, array( $this, 'process_notifications_list_page' ) );
+		/**
+		 * can see notifications submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_notifications();
+		if ( $can_see ) {
+			// Set Notification page
+			$notification_label = __( 'Notifications', 'cp' );
+			$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
+			// Add preload callback
+			add_action( 'load-' . $notifications_screen_id, array( $this, 'process_notifications_list_page' ) );
+		}
 
-		// Set Settings page
-		$settings_label = __( 'Settings', 'cp' );
-		$this->add_submenu( $settings_label, 'coursepress_settings_cap', 'coursepress_settings', 'get_settings_page' );
+		/**
+		 * can see settings submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_settings();
+		if ( $can_see ) {
+			// Set Settings page
+			$settings_label = __( 'Settings', 'cp' );
+			$this->add_submenu( $settings_label, 'coursepress_settings_cap', 'coursepress_settings', 'get_settings_page' );
+		}
 
 		// Rewrite the menu text when user can access course list.
 		if ( current_user_can( 'coursepress_courses_cap' ) ) {
@@ -561,7 +614,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		if ( 'trash' === $status ) {
 			$actions = array( 'restore', 'delete' );
 		} else {
-			$actions = array( 'publish', 'draft', 'trash', );
+			$actions = array( 'publish', 'draft', 'trash' );
 		}
 		$a = array();
 		foreach ( $actions as $action ) {
