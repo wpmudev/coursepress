@@ -26,6 +26,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 		// If front end set schema.
 		if ( ! is_admin() ) {
 			CoursePress_Data_Schema::init();
+			CoursePress_Data_Instructor::init();
+			CoursePress_Data_Facilitator::init();
 		}
 		// Initialize unsubscribe
 		add_action( 'init', array( $this, 'init_unsubscribe' ) );
@@ -55,7 +57,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 		if ( ! is_404() ) {
 			return;
 		}
-		if ( ! preg_match( '@(pdf-cache/)([a-z0-9\/]+\.pdf)$@', $_SERVER['REQUEST_URI'], $matches ) ) {
+		$current_url = lib3()->net->current_url();
+		if ( ! preg_match( '@(pdf-cache/)([a-z0-9\/]+\.pdf)$@', $current_url, $matches ) ) {
 			return;
 		}
 		if ( isset( $_REQUEST['try'] ) ) {
