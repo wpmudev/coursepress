@@ -68,7 +68,7 @@ class CoursePress_Admin_Actions {
 	 */
 	public function export_course( $request ) {
 		// If course id found, export.
-		if ( ! isset( $request['course_id'] ) ) {
+		if ( ! isset( $request['course_id'] ) || ! CoursePress_Data_Capabilities::can_update_course( $request['course_id'] ) ) {
 			return;
 		}
 		// Set the export data using course id.

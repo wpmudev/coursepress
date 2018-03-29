@@ -68,6 +68,10 @@
 
 	foreach ( $list as $course ) {
 		$course_id = $course->__get( 'ID' );
+		// If course is not editable by current user, do not export.
+		if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+			continue;
+		}
 		$course_title = $course->__get( 'post_title' );
 		$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 			'type' => 'checkbox',

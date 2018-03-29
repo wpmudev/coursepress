@@ -235,6 +235,10 @@ class CoursePress_Export extends CoursePress_Utility {
 	public function export_courses( $courses ) {
 		$data = array();
 		foreach ( $courses as $course_id ) {
+			// If course is not accessible, do not export.
+			if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+				continue;
+			}
 			$this->prepare_data( $course_id );
 			$data[ $course_id ] = $this->data;
 		}
