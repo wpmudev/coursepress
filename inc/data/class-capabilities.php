@@ -1070,6 +1070,12 @@ class CoursePress_Data_Capabilities {
 			return false;
 		}
 
+		// If "coursepress_create_my_assigned_notification_cap" is on then enable to add notifications.
+		$capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+		if ( user_can( $user_id, $capability_assigned ) ) {
+			return true;
+		}
+
 		return self::can_add_notification( $courses[0], $user_id );
 	}
 
