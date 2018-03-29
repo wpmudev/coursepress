@@ -43,13 +43,22 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	}
 
 	private function get_page_list() {
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$search         = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$current_status = $this->get_status();
+		// Get forums.
+		$forums              = $this->get_list( $current_status, $count );
+		$forum_courses_ids   = wp_list_pluck( $forums, 'course_id' );
+		$args['post__in']    = $forum_courses_ids;
+		$args['post_status'] = 'any';
+		// Get courses from forums.
+		$forum_courses = coursepress_get_courses( $args );
+
 		$args = array(
 			'columns' => $this->columns( $current_status ),
 			'courses' => coursepress_get_accessible_courses( false ),
+			'forum_courses' => $forum_courses,
 			'hidden_columns' => array(),
-			'forums' => $this->get_list( $current_status, $count ),
+			'forums' => $forums,
 			'page' => $this->slug,
 			'search' => $search,
 			'edit_link' => add_query_arg(
