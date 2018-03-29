@@ -73,7 +73,7 @@ class CoursePress_Menu extends CoursePress_Utility {
 		$menu = $this->get_menu_object();
 		$menu->title = __( 'Courses', 'cp' );
 		$menu->url = coursepress_get_main_courses_url();
-		$menu->ID = 'cp-courses-menu';
+		$menu->ID = 'cp-courses';
 
 		array_push( $menu_items, $menu );
 
@@ -106,12 +106,14 @@ class CoursePress_Menu extends CoursePress_Utility {
 			// Logout
 			$logout_menu = $this->get_menu_object();
 			$logout_menu->title = __( 'Logout', 'cp' );
+			$logout_menu->ID = 'cp-logout';
 			$logout_menu->url = wp_logout_url( $menu->url );
 			array_push( $menu_items, $logout_menu );
 		} else {
 			// Add login menu
 			$login_menu = $this->get_menu_object();
 			$login_menu->title = __( 'Log In', 'cp' );
+			$login_menu->ID = 'cp-login';
 			$login_menu->url = wp_login_url( $menu->url );
 
 			$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
