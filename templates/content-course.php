@@ -26,7 +26,7 @@ $course_media = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' 
 	} ?>
 <header class="entry-header course-entry-header">
 	<?php $title = apply_filters( 'coursepress_schema', get_the_title(), 'title' ); ?>
-	<h3 class="entry-title course-title"><a href="<?php esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
+	<h3 class="entry-title course-title"><a href="<?php echo esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
 </header>
 <?php if ( is_search() ) : // Only display Excerpts for Search   ?>
 <div class="entry-summary">

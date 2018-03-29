@@ -1147,8 +1147,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
 			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
 			// Check for capabilities.
-			if ( empty( $alert_id ) && ! CoursePress_Data_Capabilities::can_add_notification( $request->course_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'You do not have permission to create alert for this course.', 'cp' ) ) );
+			if ( empty( $alert_id ) ) {
+				if ( ! CoursePress_Data_Capabilities::can_add_notification( $request->course_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You do not have permission to create alert for this course.', 'cp' ) ) );
+				}
 			} elseif ( ! CoursePress_Data_Capabilities::can_update_notification( $alert_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to update this alert.', 'cp' ) ) );
 			}
