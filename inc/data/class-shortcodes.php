@@ -1153,7 +1153,7 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 			'course_signup_page'    => array(
 				'title'         => __( 'COURSE SIGNUP/LOGIN PAGE', 'cp' ),
 				'description'   => __( 'This shortcode shows a custom login or signup page for front-end user registration and login.', 'cp' ),
-				'usage'         => array( '[course_signup][course_signup signup_title="<h1>Signup Now</h1>"]' ),
+				'usage'         => array( '[course_signup][course_signup signup_title="Signup Now"]' ),
 				'add_info'      => coursepress_alert_message( __( 'This is already part of CoursePress and can be set in CoursePress Settings. Links to default pages can be found in Appearance > Menus > CoursePress', 'cp' ) ),
 				'optional_attr' => array(
 					array(
@@ -1174,7 +1174,12 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 					array(
 						'attr'        => 'signup_title',
 						'description' => __( 'Title to use for Signup section.', 'cp' ),
-						'default'     => '<h3>' . __( 'Signup', 'cp' ) . '</h3>',
+						'default'     => __( 'Signup', 'cp' ),
+					),
+					array(
+						'attr'        => 'signup_tag',
+						'description' => __( 'HTML-tag to use for Signup section.', 'cp' ),
+						'default'     => 'h3',
 					),
 					array(
 						'attr'        => 'login_title',
