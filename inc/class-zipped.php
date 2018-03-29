@@ -91,7 +91,7 @@ body {
         </style>
     </head>
     <body>
-    <div class="cp-zipped-container"><a href="<?php echo esc_url( wp_get_referer() . $append_url ); ?>"><?php esc_html_e( '&laquo; Back to Course', 'CP_TD' );?></a></div><?php
+    <div class="cp-zipped-container"><a href="<?php echo esc_url( wp_get_referer() . $append_url ); ?>"><?php esc_html_e( '&laquo; Back to Course', 'cp' );?></a></div><?php
 
 	if ( is_wp_error( $unzipfile ) ) {
 		echo '<p>&nbsp;</p>';

@@ -8,26 +8,26 @@
         $config = array();
 
         $config['course-details-page'] = array(
-            'title' => __( 'Course details page', 'CoursePress' ),
-            'description' => __( 'Specify Media to use when viewing course details.', 'CoursePress' ),
+            'title' => __( 'Course details page', 'cp' ),
+            'description' => __( 'Specify Media to use when viewing course details.', 'cp' ),
             'fields' => array(
                 'details_media_type' => array(
                     'type' => 'select',
-                    'label' => __( 'Media Type', 'CoursePress' ),
+                    'label' => __( 'Media Type', 'cp' ),
                     'field_options' => array(
-                        'default' => __( 'Priority Mode (default)', 'CP_TD' ),
-                        'video' => __( 'Featured Video', 'CP_TD' ),
-                        'image' => __( 'List Image', 'CP_TD' ),
+                        'default' => __( 'Priority Mode (default)', 'cp' ),
+                        'video' => __( 'Featured Video', 'cp' ),
+                        'image' => __( 'List Image', 'cp' ),
                     ),
                     'value' => coursepress_get_setting( 'general/details_media_type', 'default' ),
                 ),
                 'details_media_priority' => array(
                     'type' => 'select',
-                    'label' => __( 'Priority', 'CoursePress' ),
+                    'label' => __( 'Priority', 'cp' ),
                     'field_options' => array(
-                        'default' => __( 'Default', 'CP_TD' ),
-                        'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
-                        'image' => __( 'List Image (video fallback)', 'CP_TD' ),
+                        'default' => __( 'Default', 'cp' ),
+                        'video' => __( 'Featured Video (image fallback)', 'cp' ),
+                        'image' => __( 'List Image (video fallback)', 'cp' ),
                     ),
                     'value' => coursepress_get_setting( 'general/details_media_priority', 'default' ),
                 ),
@@ -36,26 +36,26 @@
 
         // Course listings
         $config['course-listings'] = array(
-            'title' => __( 'Course Listings', 'CoursePress' ),
-            'description' => __( 'Media to use when viewing course listings (e.g. Courses page or Instructor page).', 'CoursePress' ),
+            'title' => __( 'Course Listings', 'cp' ),
+            'description' => __( 'Media to use when viewing course listings (e.g. Courses page or Instructor page).', 'cp' ),
             'fields' => array(
                 'listing_media_type' => array(
                     'type' => 'select',
-                    'label' => __( 'Media Type', 'CoursePress' ),
+                    'label' => __( 'Media Type', 'cp' ),
                     'field_options' => array(
-                        'default' => __( 'Priority Mode (default)', 'CP_TD' ),
-                        'video' => __( 'Featured Video', 'CP_TD' ),
-                        'image' => __( 'List Image', 'CP_TD' ),
+                        'default' => __( 'Priority Mode (default)', 'cp' ),
+                        'video' => __( 'Featured Video', 'cp' ),
+                        'image' => __( 'List Image', 'cp' ),
                     ),
                     'value' => coursepress_get_setting( 'general/listing_media_type', 'default' ),
                 ),
                 'listing_media_priority' => array(
                     'type' => 'select',
-                    'label' => __( 'Priority', 'CoursePress' ),
+                    'label' => __( 'Priority', 'cp' ),
                     'field_options' => array(
-                        'default' => __( 'Default', 'CP_TD' ),
-                        'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
-                        'image' => __( 'List Image (video fallback)', 'CP_TD' ),
+                        'default' => __( 'Default', 'cp' ),
+                        'video' => __( 'Featured Video (image fallback)', 'cp' ),
+                        'image' => __( 'List Image (video fallback)', 'cp' ),
                     ),
                     'value' => coursepress_get_setting( 'general/listing_media_priority', 'default' ),
                 ),
@@ -64,12 +64,12 @@
 
         // Course images
         $config['course-images'] = array(
-            'title' => __( 'Course Images', 'CoursePress' ),
-            'description' => __( 'Size for (newly uploaded) course images.', 'CoursePress' ),
+            'title' => __( 'Course Images', 'cp' ),
+            'description' => __( 'Size for (newly uploaded) course images.', 'cp' ),
             'fields' => array(
                 'image_width' => array(
                     'type' => 'number',
-                    'label' => __( 'Image Width', 'CoursePress' ),
+                    'label' => __( 'Image Width', 'cp' ),
                     'value' => coursepress_get_setting( 'general/image_width', '235' ),
                     'config' => array(
                         'min' => 0,
@@ -77,7 +77,7 @@
                 ),
                 'image_height' => array(
                     'type' => 'number',
-                    'label' => __( 'Image Height', 'CoursePress' ),
+                    'label' => __( 'Image Height', 'cp' ),
                     'value' => coursepress_get_setting( 'general/image_height', '225' ),
                     'config' => array(
                         'min' => 0,
@@ -88,27 +88,27 @@
 
         // Course order
         $config['course-order'] = array(
-            'title' => __( 'Course Order', 'CoursePress' ),
-            'description' => __( 'Order of courses in admin and on front.', 'CoursePress' ),
+            'title' => __( 'Course Order', 'cp' ),
+            'description' => __( 'Order of courses in admin and on front.', 'cp' ),
             'fields' => array(
                 'order_by' => array(
                     'type' => 'select',
-                    'desc' => __( '', 'CoursePress' ),
-                    'label' => __( 'Order by', 'CoursePress' ),
+                    'desc' => __( '', 'cp' ),
+                    'label' => __( 'Order by', 'cp' ),
                     'value' => coursepress_get_setting( 'general/order_by', 'course_start_date' ),
                     'field_options' => array(
-                        'post_date' => __( 'Post Date', 'CP_TD' ),
-                        'start_date' => __( 'Course start date', 'CP_TD' ),
-                        'enrollment_start_date' => __( 'Course enrollment start date', 'CP_TD' ),
+                        'post_date' => __( 'Post Date', 'cp' ),
+                        'start_date' => __( 'Course start date', 'cp' ),
+                        'enrollment_start_date' => __( 'Course enrollment start date', 'cp' ),
                     ),
                 ),
                 'order_by_direction' => array(
                     'type' => 'select',
-                    'label' => __( 'Direction', 'CoursePress' ),
+                    'label' => __( 'Direction', 'cp' ),
                     'value' => coursepress_get_setting( 'general/order_by_direction', 'DESC' ),
                     'field_options' => array(
-                        'DESC' => __( 'Descending', 'CoursePress' ),
-                        'ASC' => __( 'Ascending', 'CoursePress' ),
+                        'DESC' => __( 'Descending', 'cp' ),
+                        'ASC' => __( 'Ascending', 'cp' ),
                     ),
                 ),
             ),
@@ -118,13 +118,13 @@
 
         // Menu items
         $config['theme-menu-items'] = array(
-            'title' => __( 'Theme Menu Items', 'CoursePress' ),
+            'title' => __( 'Theme Menu Items', 'cp' ),
             'fields' => array(
                 'show_coursepress_menu' => array(
                     'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Show menu items', 'CoursePress' ),
+                    'title' => $toggle_input . __( 'Show menu items', 'cp' ),
                     'value' => coursepress_get_setting( 'general/show_coursepress_menu', 1 ),
-                    'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'CoursePress' ),
+                    'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'cp' ),
                 ),
             ),
 
@@ -133,13 +133,13 @@
          * Login Form
          */
         $config['general/login-form'] = array(
-            'title' => __( 'Login form', 'CoursePress' ),
+            'title' => __( 'Login form', 'cp' ),
             'fields' => array(
                 'use_custom_login' => array(
                     'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Use Custom Login Form', 'CoursePress' ),
+                    'title' => $toggle_input . __( 'Use Custom Login Form', 'cp' ),
                     'value' => coursepress_get_setting( 'general/use_custom_login', 1 ),
-                    'desc' => __( 'Uses a custom Login Form to keep students on the front-end of your site.', 'CoursePress' ),
+                    'desc' => __( 'Uses a custom Login Form to keep students on the front-end of your site.', 'cp' ),
                 ),
             ),
         );
@@ -147,13 +147,13 @@
          * Privacy
          */
         $config['instructor/show_username'] = array(
-            'title' => __( 'Privacy', 'CoursePress' ),
+            'title' => __( 'Privacy', 'cp' ),
             'fields' => array(
                 'instructor_show_username' => array(
                     'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Show instructor username in URL', 'CoursePress' ),
+                    'title' => $toggle_input . __( 'Show instructor username in URL', 'cp' ),
                     'value' => coursepress_get_setting( 'instructor_show_username', 1 ),
-                    'desc' => __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'CoursePress' ),
+                    'desc' => __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'cp' ),
                 ),
             ),
         );
@@ -161,12 +161,12 @@
          * schema
          */
         $config['general/add_structure_data'] = array(
-            'title' => __( 'schema.org', 'CoursePress' ),
+            'title' => __( 'schema.org', 'cp' ),
             'fields' => array(
                 'add_structure_data' => array(
                     'type' => 'checkbox',
-                    'desc' => __( 'Add structure data to courses.', 'CoursePress' ),
-                    'title' => $toggle_input . __( 'Add microdata syntax', 'CoursePress' ),
+                    'desc' => __( 'Add structure data to courses.', 'cp' ),
+                    'title' => $toggle_input . __( 'Add microdata syntax', 'cp' ),
                     'value' => coursepress_get_setting( 'general/add_structure_data', 1 ),
                 ),
             ),
@@ -176,12 +176,12 @@
          * WordPress Login Redirect
          */
         $config['general/redirect_after_login'] = array(
-            'title' => __( 'WP Login Redirect', 'CoursePress' ),
+            'title' => __( 'WP Login Redirect', 'cp' ),
             'fields' => array(
                 'redirect_after_login' => array(
                     'type' => 'checkbox',
-                    'desc' => __( 'Redirect students to their Dashboard upon login via wp-login form.', 'CoursePress' ),
-                    'title' => $toggle_input . __( 'Redirect After Login', 'CoursePress' ),
+                    'desc' => __( 'Redirect students to their Dashboard upon login via wp-login form.', 'cp' ),
+                    'title' => $toggle_input . __( 'Redirect After Login', 'cp' ),
                     'value' => coursepress_get_setting( 'general/redirect_after_login', 1 ),
                 ),
             ),
@@ -193,12 +193,12 @@
         $default_enrollment_type = coursepress_get_default_enrollment_type();
         $default_enrollment_type = coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type );
         $config['course/enrollment_type_default'] = array(
-            'title' => __( 'Enrollment restrictions', 'CoursePress' ),
-            'description' => __( 'Select the default limitations on accessing and enrolling in this course.', 'CoursePress' ),
+            'title' => __( 'Enrollment restrictions', 'cp' ),
+            'description' => __( 'Select the default limitations on accessing and enrolling in this course.', 'cp' ),
             'fields' => array(
                 'enrollment_type_default' => array(
                     'type' => 'select',
-                    'title' => __( 'Who can enroll', 'CoursePress' ),
+                    'title' => __( 'Who can enroll', 'cp' ),
                     'value' => coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type ),
                     'field_options' => coursepress_get_enrollment_types(),
                 ),
@@ -221,12 +221,12 @@
         $fonts = apply_filters( 'coursepress_pdf_fonts', $fonts );
 
         $config['reports/font'] = array(
-            'title' => __( 'Reports', 'CoursePress' ),
-            'description' => __( 'Select font which will be used in the PDF reports.', 'CoursePress' ),
+            'title' => __( 'Reports', 'cp' ),
+            'description' => __( 'Select font which will be used in the PDF reports.', 'cp' ),
             'fields' => array(
                 'reports_font' => array(
                     'type' => 'select',
-                    'title' => __( 'Use this font', 'CoursePress' ),
+                    'title' => __( 'Use this font', 'cp' ),
                     'value' => coursepress_get_setting( 'general/reports_font', 'helvetica' ),
                     'field_options' => $fonts,
                 ),
@@ -246,7 +246,7 @@
 
 	        // Add social sharing options.
 	        $config['social_sharing'] = array(
-		        'title'  => __( 'Social Sharing', 'CoursePress' ),
+		        'title'  => __( 'Social Sharing', 'cp' ),
 		        'fields' => $fields,
 	        );
         }

@@ -58,7 +58,7 @@
 			'fields' => array(
 				'email_notification' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Enable email notification', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Enable email notification', 'cp' ),
 					'value' => $email_notification,
 				),
 				'thread_comments_depth' => array(

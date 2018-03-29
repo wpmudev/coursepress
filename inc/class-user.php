@@ -818,7 +818,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$date_enrolled = array_pop( $date_enrolled );
 		}
 		if ( empty( $date_enrolled ) ) {
-			return esc_html__( 'Unknown enrolled date.', 'CP_TD' );
+			return esc_html__( 'Unknown enrolled date.', 'cp' );
 		}
 		return $this->date_format( $date_enrolled );
 	}

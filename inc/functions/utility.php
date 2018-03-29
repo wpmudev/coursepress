@@ -600,7 +600,7 @@ function coursepress_download_file( $requested_file ) {
 		header( 'Connection: close' );
 		echo $body;
 	} else {
-		_e( 'Something went wrong.', 'CP_TD' );
+		_e( 'Something went wrong.', 'cp' );
 	}
 	exit();
 }

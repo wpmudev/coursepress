@@ -239,7 +239,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			 * PDF
 			 */
 			'args' => array(
-				'title' => __( 'CoursePress Reports', 'CP_TD' ),
+				'title' => __( 'CoursePress Reports', 'cp' ),
 				'orientation' => 'P',
 				'filename' => $filename,
 				'format' => 'F',

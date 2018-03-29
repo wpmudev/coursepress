@@ -407,7 +407,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 
 		$post_id = $this->_get_post_id( $post );
 		$course = coursepress_get_course_object( $post_id );
-		$subject = __( 'New Comment: ', 'CP_TD' );
+		$subject = __( 'New Comment: ', 'cp' );
 		$subject .= substr( $course->post_title . ' at ' . $post->post_title , 0, 50 );
 
 		/**
