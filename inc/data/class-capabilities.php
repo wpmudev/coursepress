@@ -335,17 +335,14 @@ class CoursePress_Data_Capabilities {
 	 * @return boolen
 	 **/
 	public static function can_view_others_course( $user_id = '' ) {
-
+		global $current_user;
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = user_can( $user_id, 'manage_options' );
-
 		if ( ! $return ) {
-			$return = user_can( $user_id, 'coursepress_view_others_course_cap' );
+			$return = ! empty( $current_user->allcaps['instructor']['coursepress_view_others_course_cap'] );
 		}
-
 		return $return;
 	}
 
@@ -408,7 +405,6 @@ class CoursePress_Data_Capabilities {
 				} else {
 					$return = user_can( $user_id, 'coursepress_update_my_course_cap' );
 				}
-
 			} elseif ( $is_instructor || $is_facilitator ) {
 				$return = user_can( $user_id, 'coursepress_update_course_cap' );
 			}
@@ -562,7 +558,7 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			// If course is new (i.e ID is 0) then allow to add units to current user.
-			if( (int) $course_id < 1 ) {
+			if ( (int) $course_id < 1 ) {
 				return self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
 			}
 			$course_creator = self::is_course_creator( $course_id, $user_id );
@@ -640,7 +636,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			// This filter is documented in include/coursepress/helper/class-setting.php
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_course_unit_cap' );
@@ -681,7 +676,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_course_units_cap' );
 			if ( user_can( $user_id, $capability ) ) {
@@ -720,7 +714,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			// This filter is documented in include/coursepress/helper/class-setting.php
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_course_unit_status_cap' );
@@ -1278,7 +1271,7 @@ class CoursePress_Data_Capabilities {
 
 		$courses_created = array();
 		// Allow user to create forum for course created by themself.
-		if( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
+		if ( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
 			$courses_created = CoursePress_Data_Instructor::get_created_courses_ids( $user_id );
 		}
 		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
@@ -1758,7 +1751,7 @@ class CoursePress_Data_Capabilities {
 		// self::reset_user_capabilities( $user_obj );
 
 		// Let the user access the dashboard in case if they do not have default wp role.
-		if ( ! $user_obj->has_cap( 'read') ) {
+		if ( ! $user_obj->has_cap( 'read' ) ) {
 			$user_obj->add_cap( 'read' );
 		}
 
@@ -1992,7 +1985,7 @@ class CoursePress_Data_Capabilities {
 		// self::reset_user_capabilities( $user_obj );
 
 		// Let the user access the dashboard in case if they do not have default wp role.
-		if ( ! $user_obj->has_cap( 'read') ) {
+		if ( ! $user_obj->has_cap( 'read' ) ) {
 			$user_obj->add_cap( 'read' );
 		}
 
