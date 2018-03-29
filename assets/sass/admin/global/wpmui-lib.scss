@@ -45,6 +45,12 @@
             }
         }
     }
+    .wpmui-field-checkbox:disabled + .wpmui-checkbox-caption {
+        .cp-toggle-btn {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
     .wpmui-radio-input-wrapper {
         padding-left: 25px;
     }
