@@ -100,7 +100,6 @@
 			'type' => 'checkbox',
 			'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
 			'desc' => __( 'Will include comments from Course forum and discussion modules.', 'CoursePress' ),
-			'disabled' => true,
 		),
 		'coursepress[export][button]' => array(
 			'id' => 'coursepress-export-button',
