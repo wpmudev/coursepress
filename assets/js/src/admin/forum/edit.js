@@ -45,7 +45,7 @@
                     return {
                         q: params.term, // search term
                         page: params.page,
-                        action: 'coursepress_courses_search',
+                        action: 'coursepress_discussion_courses_search',
                         _wpnonce: $(this).data('nonce')
                     };
                 },
