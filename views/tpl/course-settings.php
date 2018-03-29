@@ -42,15 +42,25 @@
             <div class="cp-box cp-course-categories">
                 <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
                 <div>
-                    <div class="cp-categories-selector">
-                        <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="meta_course_category">
+                <div class="cp-categories-selector">
+                    <select id="course-categories" multiple="multiple" 
+<?php if ( CoursePress_Data_Capabilities::can_manage_categories() ) { ?>
+data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>"
+data-can-add="yes"
+<?php } else { ?>
+data-placeholder="<?php _e( 'Pick existing categories', 'cp' ); ?>"
+data-can-add="no"
+<?php } ?>
+name="meta_course_category">
                             <?php foreach ( coursepress_get_categories() as $category ) : ?>
                                 <option value="<?php echo $category; ?>" {{_.selected('<?php echo $category; ?>', course_category)}}><?php echo $category; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <input type="hidden" id="course-categories-search" value="">
                     </div>
+<?php if ( CoursePress_Data_Capabilities::can_manage_categories() ) { ?>
                     <p class="description"><?php _e( 'To add new category, name it and use enter key.', 'cp' ); ?></p>
+<?php } ?>
                 </div>
             </div>
         </div>

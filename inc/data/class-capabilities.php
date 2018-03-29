@@ -163,7 +163,7 @@ class CoursePress_Data_Capabilities {
 
 			global $current_user;
 
-			$current_caps = CoursePress_Data_Capabilities::get_instructor_capabilities();
+			$current_caps = self::get_instructor_capabilities();
 
 			self::$current_caps = array_filter( $current_caps );
 
@@ -356,19 +356,15 @@ class CoursePress_Data_Capabilities {
 	 * @return boolean Can or can't? - this is a question.
 	 */
 	public static function can_create_course( $user_id = '' ) {
-
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = self::$is_admin;
-
 		if ( ! $return ) {
 			if ( self::can_manage_courses( $user_id ) ) {
 				$return = user_can( $user_id, 'coursepress_create_course_cap' );
 			}
 		}
-
 		return $return;
 	}
 
@@ -495,17 +491,13 @@ class CoursePress_Data_Capabilities {
 	 * @return bool
 	 */
 	public static function can_manage_categories( $user_id = '' ) {
-
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = user_can( $user_id, 'manage_options' );
-
 		if ( ! $return ) {
 			$return = user_can( $user_id, 'coursepress_course_categories_manage_terms_cap' );
 		}
-
 		return $return;
 	}
 
@@ -1857,7 +1849,7 @@ class CoursePress_Data_Capabilities {
 	 */
 	public static function get_instructor_capabilities() {
 
-		$default_capabilities = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'], 1 );
+		$default_capabilities = array_keys( self::$capabilities['instructor'], 1 );
 		$instructor_capabilities = coursepress_get_setting( 'instructor/capabilities' );
 
 		if ( empty( $instructor_capabilities ) ) {
@@ -1878,11 +1870,9 @@ class CoursePress_Data_Capabilities {
 	 * @return array
 	 */
 	public static function user_cap( $allcaps ) {
-
 		if ( ! empty( self::$current_caps ) && ( self::is_instructor() || self::is_facilitator() ) ) {
 			$allcaps = wp_parse_args( self::$current_caps, $allcaps );
 		}
-
 		return $allcaps;
 	}
 
@@ -1894,13 +1884,10 @@ class CoursePress_Data_Capabilities {
 	 * @return mixed
 	 */
 	public static function add_all_courses_cap( $allcaps ) {
-
 		$instructor_capabilities = array_keys( self::$capabilities['instructor'], 1 );
-
 		foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
 			$allcaps[ $instructor_cap ] = true;
 		}
-
 		return $allcaps;
 	}
 
@@ -1913,23 +1900,22 @@ class CoursePress_Data_Capabilities {
 	 * @return mixed
 	 */
 	public static function filter_row_actions( $actions, $tag ) {
-
 		if ( ! empty( $tag->taxonomy ) && 'course_category' == $tag->taxonomy ) {
-			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
-
-			if ( ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] ) {
+			$instructor_capabilities = self::get_instructor_capabilities();
+			if (
+				! isset( $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] )
+				|| ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap']
+			) {
 				// Remove edit link
 				if ( isset( $actions['edit'] ) ) {
 					unset( $actions['edit'] );
 				}
-
 				// Remove quick-edit
 				if ( isset( $actions['inline hide-if-no-js'] ) ) {
 					unset( $actions['inline hide-if-no-js'] );
 				}
 			}
 		}
-
 		return $actions;
 	}
 
@@ -2274,7 +2260,7 @@ class CoursePress_Data_Capabilities {
 		/**
 		 * allways true for administrators
 		 */
-		$return = user_can( $user_id, 'manage_options' );
+		$return = self::$is_admin;
 		if ( $return ) {
 			return $return;
 		}
