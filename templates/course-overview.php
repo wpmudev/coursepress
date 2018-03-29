@@ -9,7 +9,7 @@ $course = coursepress_get_course();
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( '' ); ?>>
     <header class="entry-header">
-        <h1 class="entry-title"><?php echo coursepress_get_course_title(); ?></h1>
+        <h1 class="entry-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
     </header>
     <div class="entry-content">
 	<?php $messages = apply_filters( 'coursepress_overview_messages', array() ); ?>
@@ -70,7 +70,7 @@ if ( ! empty( $price ) ) {
 		</div>
         </div>
 
-        <div class="course-description">
+        <div class="course-description"<?php echo apply_filters( 'coursepress_schema', '', 'description' ); ?>>
             <h3 class="sub-title course-sub-title"><?php _e( 'About this course', 'cp' ); ?></h3>
             <?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
         </div>

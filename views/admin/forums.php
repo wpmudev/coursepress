@@ -118,8 +118,8 @@ switch ( $column_id ) {
 		echo '</div>';
 	break;
 	case 'course' :
-		if ( isset( $courses[ $forum->course_id ] ) ) {
-			echo $courses[ $forum->course_id ]->post_title;
+		if ( isset( $forum_courses[ $forum->course_id ] ) ) {
+			echo $forum_courses[ $forum->course_id ]->post_title;
 		}
 	break;
 	case 'comments':
@@ -128,10 +128,12 @@ switch ( $column_id ) {
 	case 'status':
 		echo '<label>';
 		$active = isset( $forum->post_status ) && 'publish' === $forum->post_status;
+    $disabled = CoursePress_Data_Capabilities::can_change_discussion_status( $forum->ID ) ? '' : 'disabled="disabled"';
 		printf(
-			'<input type="checkbox" class="cp-toggle-input cp-toggle-forum-status" value="%d" %s /> <span class="cp-toggle-btn"></span>',
+			'<input type="checkbox" class="cp-toggle-input cp-toggle-forum-status" value="%d" %s %s /> <span class="cp-toggle-btn"></span>',
 			esc_attr( $forum->ID ),
-			checked( $active, true, false )
+			checked( $active, true, false ),
+      $disabled
 		);
 		echo '</label>';
 	break;
@@ -172,4 +174,3 @@ switch ( $column_id ) {
     </div>
 </div>
 <?php
-

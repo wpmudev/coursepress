@@ -188,9 +188,11 @@ foreach ( $bulk_actions as $value => $label ) {
                                                     <a href="#"><?php _e( 'Duplicate', 'cp' ); ?></a>
                                                 </li>
                                             <?php endif; ?>
+                                            <?php if ( CoursePress_Data_Capabilities::can_update_course( $course->ID ) ) : ?>
                                             <li class="menu-item-export">
                                                 <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
                                             </li>
+                                            <?php endif; ?>
                                             <li class="menu-item-view-course">
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View', 'cp' ); ?></a>
                                             </li>

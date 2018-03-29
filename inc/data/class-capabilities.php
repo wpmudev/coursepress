@@ -24,7 +24,7 @@ class CoursePress_Data_Capabilities {
 			/* General */
 			'coursepress_dashboard_cap' => 1,
 			'coursepress_courses_cap' => 1,
-			'coursepress_instructors_cap' => 0, // DEPRECATED
+			'coursepress_instructors_cap' => 0,
 			'coursepress_students_cap' => 1,
 			'coursepress_assessments_cap' => 1,
 			'coursepress_reports_cap' => 1,
@@ -163,7 +163,7 @@ class CoursePress_Data_Capabilities {
 
 			global $current_user;
 
-			$current_caps = CoursePress_Data_Capabilities::get_instructor_capabilities();
+			$current_caps = self::get_instructor_capabilities();
 
 			self::$current_caps = array_filter( $current_caps );
 
@@ -335,17 +335,14 @@ class CoursePress_Data_Capabilities {
 	 * @return boolen
 	 **/
 	public static function can_view_others_course( $user_id = '' ) {
-
+		global $current_user;
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = user_can( $user_id, 'manage_options' );
-
 		if ( ! $return ) {
-			$return = user_can( $user_id, 'coursepress_view_others_course_cap' );
+			$return = ! empty( $current_user->allcaps['instructor']['coursepress_view_others_course_cap'] );
 		}
-
 		return $return;
 	}
 
@@ -359,19 +356,15 @@ class CoursePress_Data_Capabilities {
 	 * @return boolean Can or can't? - this is a question.
 	 */
 	public static function can_create_course( $user_id = '' ) {
-
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = self::$is_admin;
-
 		if ( ! $return ) {
 			if ( self::can_manage_courses( $user_id ) ) {
 				$return = user_can( $user_id, 'coursepress_create_course_cap' );
 			}
 		}
-
 		return $return;
 	}
 
@@ -408,7 +401,6 @@ class CoursePress_Data_Capabilities {
 				} else {
 					$return = user_can( $user_id, 'coursepress_update_my_course_cap' );
 				}
-
 			} elseif ( $is_instructor || $is_facilitator ) {
 				$return = user_can( $user_id, 'coursepress_update_course_cap' );
 			}
@@ -499,17 +491,13 @@ class CoursePress_Data_Capabilities {
 	 * @return bool
 	 */
 	public static function can_manage_categories( $user_id = '' ) {
-
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = user_can( $user_id, 'manage_options' );
-
 		if ( ! $return ) {
 			$return = user_can( $user_id, 'coursepress_course_categories_manage_terms_cap' );
 		}
-
 		return $return;
 	}
 
@@ -562,7 +550,7 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			// If course is new (i.e ID is 0) then allow to add units to current user.
-			if( (int) $course_id < 1 ) {
+			if ( (int) $course_id < 1 ) {
 				return self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
 			}
 			$course_creator = self::is_course_creator( $course_id, $user_id );
@@ -640,7 +628,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			// This filter is documented in include/coursepress/helper/class-setting.php
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_course_unit_cap' );
@@ -681,7 +668,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_course_units_cap' );
 			if ( user_can( $user_id, $capability ) ) {
@@ -720,7 +706,6 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-
 		} else {
 			// This filter is documented in include/coursepress/helper/class-setting.php
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_course_unit_status_cap' );
@@ -1070,6 +1055,12 @@ class CoursePress_Data_Capabilities {
 			return false;
 		}
 
+		// If "coursepress_create_my_assigned_notification_cap" is on then enable to add notifications.
+		$capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+		if ( user_can( $user_id, $capability_assigned ) ) {
+			return true;
+		}
+
 		return self::can_add_notification( $courses[0], $user_id );
 	}
 
@@ -1272,7 +1263,7 @@ class CoursePress_Data_Capabilities {
 
 		$courses_created = array();
 		// Allow user to create forum for course created by themself.
-		if( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
+		if ( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
 			$courses_created = CoursePress_Data_Instructor::get_created_courses_ids( $user_id );
 		}
 		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
@@ -1752,7 +1743,7 @@ class CoursePress_Data_Capabilities {
 		// self::reset_user_capabilities( $user_obj );
 
 		// Let the user access the dashboard in case if they do not have default wp role.
-		if ( ! $user_obj->has_cap( 'read') ) {
+		if ( ! $user_obj->has_cap( 'read' ) ) {
 			$user_obj->add_cap( 'read' );
 		}
 
@@ -1858,7 +1849,7 @@ class CoursePress_Data_Capabilities {
 	 */
 	public static function get_instructor_capabilities() {
 
-		$default_capabilities = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'], 1 );
+		$default_capabilities = array_keys( self::$capabilities['instructor'], 1 );
 		$instructor_capabilities = coursepress_get_setting( 'instructor/capabilities' );
 
 		if ( empty( $instructor_capabilities ) ) {
@@ -1879,11 +1870,9 @@ class CoursePress_Data_Capabilities {
 	 * @return array
 	 */
 	public static function user_cap( $allcaps ) {
-
 		if ( ! empty( self::$current_caps ) && ( self::is_instructor() || self::is_facilitator() ) ) {
 			$allcaps = wp_parse_args( self::$current_caps, $allcaps );
 		}
-
 		return $allcaps;
 	}
 
@@ -1895,13 +1884,10 @@ class CoursePress_Data_Capabilities {
 	 * @return mixed
 	 */
 	public static function add_all_courses_cap( $allcaps ) {
-
 		$instructor_capabilities = array_keys( self::$capabilities['instructor'], 1 );
-
 		foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
 			$allcaps[ $instructor_cap ] = true;
 		}
-
 		return $allcaps;
 	}
 
@@ -1914,23 +1900,22 @@ class CoursePress_Data_Capabilities {
 	 * @return mixed
 	 */
 	public static function filter_row_actions( $actions, $tag ) {
-
 		if ( ! empty( $tag->taxonomy ) && 'course_category' == $tag->taxonomy ) {
-			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
-
-			if ( ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] ) {
+			$instructor_capabilities = self::get_instructor_capabilities();
+			if (
+				! isset( $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] )
+				|| ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap']
+			) {
 				// Remove edit link
 				if ( isset( $actions['edit'] ) ) {
 					unset( $actions['edit'] );
 				}
-
 				// Remove quick-edit
 				if ( isset( $actions['inline hide-if-no-js'] ) ) {
 					unset( $actions['inline hide-if-no-js'] );
 				}
 			}
 		}
-
 		return $actions;
 	}
 
@@ -1986,7 +1971,7 @@ class CoursePress_Data_Capabilities {
 		// self::reset_user_capabilities( $user_obj );
 
 		// Let the user access the dashboard in case if they do not have default wp role.
-		if ( ! $user_obj->has_cap( 'read') ) {
+		if ( ! $user_obj->has_cap( 'read' ) ) {
 			$user_obj->add_cap( 'read' );
 		}
 
@@ -2070,10 +2055,7 @@ class CoursePress_Data_Capabilities {
 
 			if ( $is_author ) {
 				$return = user_can( $user_id, 'coursepress_assign_my_course_facilitator_cap' );
-			}
-
-			// If no cap, check if user can assign facilitator to any course
-			if ( ! $return ) {
+			} else {
 				$return = user_can( $user_id, 'coursepress_assign_facilitator_cap' );
 			}
 		}
@@ -2258,5 +2240,160 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return false;
+	}
+
+	/**
+	 * can instructor view submenu helper?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 * @param string $capability Instructor capability name.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	private static function can_view_submenu( $user_id, $capability ) {
+		global $current_user;
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		/**
+		 * allways true for administrators
+		 */
+		$return = self::$is_admin;
+		if ( $return ) {
+			return $return;
+		}
+		/**
+		 * check caps exists
+		 */
+		if (
+			! isset( $current_user->allcaps['instructor'] )
+			|| ! isset( $current_user->allcaps['instructor'][ $capability ] )
+		) {
+			return $return;
+		}
+		/**
+		 * return cap
+		 */
+		return ! empty( $current_user->allcaps['instructor'][ $capability ] );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_courses( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_courses_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_students( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_students_cap' );
+	}
+
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_instructors( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_instructors_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_assessment( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_assessment_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_reports( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_reports_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_notifications( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_notifications_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_discussions( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_discussions_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_settings( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_settings_cap' );
+	}
+
+	/**
+	 * Can an instructor view curses submenu?
+	 *
+	 * @param mixed $user_id Default current user ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolen
+	 **/
+	public static function can_view_submenu_comments( $user_id = '' ) {
+		return self::can_view_submenu( $user_id, 'coursepress_comments_cap' );
 	}
 }

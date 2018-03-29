@@ -23,112 +23,117 @@
 	</div>
 
 	<?php
-    $config = array();
-    $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
+	$config = array();
+	$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 
-    // General capabilities.
-    $config['capabilities/general'] = array(
+	// General capabilities.
+	$config['capabilities/general'] = array(
 
-        'title' => __( 'General', 'cp' ),
-        'id' => 'cp-cap-general',
-        'description' => __( 'Instructor of my courses can:', 'cp' ),
-        'fields' => array(
-            'coursepress_dashboard_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'See the main CoursePress menu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_dashboard_cap', true ),
-            ),
-            'coursepress_courses_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access to Courses submenus', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_courses_cap', true ),
-            ),
-            'coursepress_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Students submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
-            ),
-            'coursepress_assessments_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Assessment submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
-            ),
-            'coursepress_reports_cap' => array(
+		'title' => __( 'General', 'cp' ),
+		'id' => 'cp-cap-general',
+		'description' => __( 'Instructor of my courses can:', 'cp' ),
+		'fields' => array(
+			'coursepress_dashboard_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'See the main CoursePress menu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_dashboard_cap', true ),
+			),
+			'coursepress_courses_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access to Courses submenus', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_courses_cap', true ),
+			),
+			'coursepress_instructors_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access to instructors submenus', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_instructors_cap', true ),
+			),
+			'coursepress_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Students submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
+			),
+			'coursepress_assessments_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Assessment submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
+			),
+			'coursepress_reports_cap' => array(
 	            'type' => 'checkbox',
 	            'title' => $toggle_input . __( 'Access the Reports submenu', 'cp' ),
 	            'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_reports_cap', true ),
-            ),
-            'coursepress_notifications_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Notifications submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_notifications_cap', true ),
-            ),
-            'coursepress_discussions_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access the Forum submenu', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_discussions_cap', true ),
-            ),
-            'coursepress_settings_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Access to the Settings page', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_settings_cap', true ),
-            ),
-        ),
-    );
+			),
+			'coursepress_notifications_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Notifications submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_notifications_cap', true ),
+			),
+			'coursepress_discussions_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Forum submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_discussions_cap', true ),
+			),
+			'coursepress_settings_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access to the Settings page', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_settings_cap', true ),
+			),
+		),
+	);
 
-    // Course capabilities.
-    $config['capabilities/courses'] = array(
+	// Course capabilities.
+	$config['capabilities/courses'] = array(
 
-        'title' => __( 'Courses', 'cp' ),
-        'id' => 'cp-cap-courses',
-        'fields' => array(
-            'coursepress_create_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Create new courses', 'cp' ),
-                //'desc' => __( 'Allow instructor to create, edit and delete own courses.', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_course_cap', true ),
-            ),
-            'coursepress_view_others_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'View other instructors course', 'cp' ),
-                //'desc' => __( 'Allow user to edit courses where user is an instructor at.', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_view_others_course_cap', true ),
-            ),
-            'coursepress_update_my_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update own courses', 'cp' ),
-                //'desc' => __( 'Allow instructor to update any course.', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_course_cap', true ),
-            ),
-            'coursepress_update_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update any assigned course', 'cp' ),
-                //'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
-            ),
-            'coursepress_delete_my_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete own courses', 'cp' ),
-                //'desc' => __( 'Allow user to delete courses where user is an instructor at.', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_cap', true ),
-            ),
-            'coursepress_delete_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete any assigned course', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_course_cap', true ),
-            ),
-            'coursepress_change_my_course_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change status of own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_course_status_cap', true ),
-            ),
-            'coursepress_change_course_status_cap' => array(
+		'title' => __( 'Courses', 'cp' ),
+		'id' => 'cp-cap-courses',
+		'fields' => array(
+			'coursepress_create_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Create new courses', 'cp' ),
+				//'desc' => __( 'Allow instructor to create, edit and delete own courses.', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_course_cap', true ),
+			),
+			'coursepress_view_others_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'View other instructors course', 'cp' ),
+				//'desc' => __( 'Allow user to edit courses where user is an instructor at.', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_view_others_course_cap', true ),
+			),
+			'coursepress_update_my_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update own courses', 'cp' ),
+				//'desc' => __( 'Allow instructor to update any course.', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_course_cap', true ),
+			),
+			'coursepress_update_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update any assigned course', 'cp' ),
+				//'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
+			),
+			'coursepress_delete_my_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete own courses', 'cp' ),
+				//'desc' => __( 'Allow user to delete courses where user is an instructor at.', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_cap', true ),
+			),
+			'coursepress_delete_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete any assigned course', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_course_cap', true ),
+			),
+			'coursepress_change_my_course_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change status of own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_course_status_cap', true ),
+			),
+			'coursepress_change_course_status_cap' => array(
 	            'type' => 'checkbox',
 	            'title' => $toggle_input . __( 'Change status of any assigned course', 'cp' ),
 	            'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_course_status_cap', true ),
-            ),
-        ),
-    );
+			),
+		),
+	);
 
 	// Course categories.
 	$config['capabilities/course_categories'] = array(
@@ -173,216 +178,216 @@
 		),
 	);
 
-    // Unit capabilities.
-    $config['capabilities/unit'] = array(
+	// Unit capabilities.
+	$config['capabilities/unit'] = array(
 
-        'title' => __( 'Units', 'cp' ),
-        'id' => 'cp-cap-units',
-        'fields' => array(
-            'coursepress_create_course_unit_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Create new course units', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_course_unit_cap', true ),
-            ),
-            'coursepress_view_all_units_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'View units in every course (also from other instructors)', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_view_all_units_cap', true ),
-            ),
-            'coursepress_update_my_course_unit_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update own units', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_course_unit_cap', true ),
-            ),
-            'coursepress_update_course_unit_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update any unit (within assigned courses)', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_unit_cap', true ),
-            ),
-            'coursepress_delete_my_course_units_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete own units', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_units_cap', true ),
-            ),
-            'coursepress_delete_course_units_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete any unit within assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_course_units_cap', true ),
-            ),
-            'coursepress_change_my_course_unit_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change status of own units', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_course_unit_status_cap', true ),
-            ),
-            'coursepress_change_course_unit_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change status of any unit within assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_course_unit_status_cap', true ),
-            ),
-        ),
-    );
+		'title' => __( 'Units', 'cp' ),
+		'id' => 'cp-cap-units',
+		'fields' => array(
+			'coursepress_create_course_unit_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Create new course units', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_course_unit_cap', true ),
+			),
+			'coursepress_view_all_units_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'View units in every course (also from other instructors)', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_view_all_units_cap', true ),
+			),
+			'coursepress_update_my_course_unit_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update own units', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_course_unit_cap', true ),
+			),
+			'coursepress_update_course_unit_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update any unit (within assigned courses)', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_unit_cap', true ),
+			),
+			'coursepress_delete_my_course_units_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete own units', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_units_cap', true ),
+			),
+			'coursepress_delete_course_units_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete any unit within assigned courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_course_units_cap', true ),
+			),
+			'coursepress_change_my_course_unit_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change status of own units', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_course_unit_status_cap', true ),
+			),
+			'coursepress_change_course_unit_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change status of any unit within assigned courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_course_unit_status_cap', true ),
+			),
+		),
+	);
 
-    // Instructors capabilities.
-    $config['capabilities/instructors'] = array(
+	// Instructors capabilities.
+	$config['capabilities/instructors'] = array(
 
-        'title' => __( 'Instructors', 'cp' ),
-        'id' => 'cp-cap-instructors',
-        'fields' => array(
-            'coursepress_assign_and_assign_instructor_my_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Assign other instructors to own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assign_and_assign_instructor_my_course_cap', true ),
-            ),
-            'coursepress_assign_and_assign_instructor_course_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Assign other instructors to any course', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assign_and_assign_instructor_course_cap', true ),
-            ),
-        ),
-    );
+		'title' => __( 'Instructors', 'cp' ),
+		'id' => 'cp-cap-instructors',
+		'fields' => array(
+			'coursepress_assign_and_assign_instructor_my_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Assign other instructors to own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assign_and_assign_instructor_my_course_cap', true ),
+			),
+			'coursepress_assign_and_assign_instructor_course_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Assign other instructors to any course', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assign_and_assign_instructor_course_cap', true ),
+			),
+		),
+	);
 
-    // Students capabilities.
-    $config['capabilities/students'] = array(
+	// Students capabilities.
+	$config['capabilities/students'] = array(
 
-        'title' => __( 'Students', 'cp' ),
-        'id' => 'cp-cap-students',
-        'fields' => array(
-            'coursepress_invite_my_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Invite students to own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_invite_my_students_cap', true ),
-            ),
-            'coursepress_invite_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Invite students to any course', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_invite_students_cap', true ),
-            ),
-            'coursepress_withdraw_my_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Withdraw students from own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_withdraw_my_students_cap', true ),
-            ),
-            'coursepress_withdraw_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Withdraw students from any course', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_withdraw_students_cap', true ),
-            ),
-            'coursepress_add_move_my_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Add students to own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_students_cap', true ),
-            ),
-            'coursepress_add_move_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Add students to any course', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_students_cap', true ),
-            ),
-            'coursepress_add_move_my_assigned_students_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Add students to assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_assigned_students_cap', true ),
-            ),
-        ),
-    );
+		'title' => __( 'Students', 'cp' ),
+		'id' => 'cp-cap-students',
+		'fields' => array(
+			'coursepress_invite_my_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Invite students to own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_invite_my_students_cap', true ),
+			),
+			'coursepress_invite_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Invite students to any course', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_invite_students_cap', true ),
+			),
+			'coursepress_withdraw_my_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Withdraw students from own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_withdraw_my_students_cap', true ),
+			),
+			'coursepress_withdraw_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Withdraw students from any course', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_withdraw_students_cap', true ),
+			),
+			'coursepress_add_move_my_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Add students to own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_students_cap', true ),
+			),
+			'coursepress_add_move_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Add students to any course', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_students_cap', true ),
+			),
+			'coursepress_add_move_my_assigned_students_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Add students to assigned courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_assigned_students_cap', true ),
+			),
+		),
+	);
 
-    // Notifications capabilities.
-    $config['capabilities/notifications'] = array(
+	// Notifications capabilities.
+	$config['capabilities/notifications'] = array(
 
 		'title' => __( 'Notifications', 'cp' ),
-        'id' => 'cp-cap-notifications',
-        'fields' => array(
-            'coursepress_create_my_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input. __( 'Create new notifications for own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_notification_cap', true ),
-            ),
-            'coursepress_create_my_assigned_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Create new notifications for assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_assigned_notification_cap', true ),
-            ),
-            'coursepress_update_my_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update own published notification', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_notification_cap', true ),
-            ),
-            'coursepress_update_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update every notification', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_notification_cap', true ),
-            ),
+		'id' => 'cp-cap-notifications',
+		'fields' => array(
+			'coursepress_create_my_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input. __( 'Create new notifications for own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_notification_cap', true ),
+			),
+			'coursepress_create_my_assigned_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Create new notifications for assigned courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_assigned_notification_cap', true ),
+			),
+			'coursepress_update_my_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update own published notification', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_notification_cap', true ),
+			),
+			'coursepress_update_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update every notification', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_notification_cap', true ),
+			),
 
-            'coursepress_delete_my_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete own notification', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_notification_cap', true ),
-            ),
-            'coursepress_delete_notification_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete any notification', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_notification_cap', true ),
-            ),
-            'coursepress_change_my_notification_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change own notification status', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_notification_status_cap', true ),
-            ),
-            'coursepress_change_notification_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change status of every notification', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_notification_status_cap', true ),
-            ),
-        ),
-    );
+			'coursepress_delete_my_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete own notification', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_notification_cap', true ),
+			),
+			'coursepress_delete_notification_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete any notification', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_notification_cap', true ),
+			),
+			'coursepress_change_my_notification_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change own notification status', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_notification_status_cap', true ),
+			),
+			'coursepress_change_notification_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change status of every notification', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_notification_status_cap', true ),
+			),
+		),
+	);
 
-    // Discussions capabilities.
-    $config['capabilities/discussions'] = array(
+	// Discussions capabilities.
+	$config['capabilities/discussions'] = array(
 
 	    'title' => __( 'Discussions', 'cp' ),
-        'id' => 'cp-cap-discussions',
-        'fields' => array(
-            'coursepress_create_my_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Create discussion from own courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_discussion_cap', true ),
-            ),
-            'coursepress_create_my_assigned_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Create new discussions for assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_assigned_discussion_cap', true ),
-            ),
-            'coursepress_update_my_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update own published discussion', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_discussion_cap', true ),
-            ),
-            'coursepress_update_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Update every discussion', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_discussion_cap', true ),
-            ),
-            'coursepress_delete_my_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete own discussions', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_discussion_cap', true ),
-            ),
-            'coursepress_delete_discussion_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Delete every discussion', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_discussion_cap', true ),
-            ),
-            'coursepress_change_my_discussion_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change statuses of own discussions', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_discussion_status_cap', true ),
-            ),
-            'coursepress_change_discussion_status_cap' => array(
-                'type' => 'checkbox',
-                'title' => $toggle_input . __( 'Change status of every discussion', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_discussion_status_cap', true ),
-            ),
-        ),
-    );
+		'id' => 'cp-cap-discussions',
+		'fields' => array(
+			'coursepress_create_my_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Create discussion from own courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_discussion_cap', true ),
+			),
+			'coursepress_create_my_assigned_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Create new discussions for assigned courses', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_assigned_discussion_cap', true ),
+			),
+			'coursepress_update_my_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update own published discussion', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_my_discussion_cap', true ),
+			),
+			'coursepress_update_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Update every discussion', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_discussion_cap', true ),
+			),
+			'coursepress_delete_my_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete own discussions', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_discussion_cap', true ),
+			),
+			'coursepress_delete_discussion_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Delete every discussion', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_discussion_cap', true ),
+			),
+			'coursepress_change_my_discussion_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change statuses of own discussions', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_my_discussion_status_cap', true ),
+			),
+			'coursepress_change_discussion_status_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Change status of every discussion', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_change_discussion_status_cap', true ),
+			),
+		),
+	);
 
 	// Add these capabilities only when MarketPress is acctive.
 	if ( $marketpress_active ) {
@@ -422,8 +427,8 @@
 		);
 	}
 
-    $options = apply_filters( 'coursepress_settings-capabilities', $config );
-    $i = 0;
+	$options = apply_filters( 'coursepress_settings-capabilities', $config );
+	$i = 0;
 	foreach ( $options as $option ) : ?>
 		<div class="cp-box-content cp-caps-fields <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $option['id']; ?>">
             <div class="cp-box cp-sep">

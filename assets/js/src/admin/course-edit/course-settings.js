@@ -70,7 +70,7 @@
                 // set category
                 var catSelect = this.$('#course-categories');
                 catSelect.select2({
-                    tags: true
+                    tags: 'yes' === catSelect.data('can-add')
                 });
 
                 enrollment_type = this.$('[name="meta_enrollment_type"]');

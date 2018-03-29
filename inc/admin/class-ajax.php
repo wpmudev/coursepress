@@ -34,6 +34,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		 * Search course
 		 */
 		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
+		add_action( 'wp_ajax_coursepress_discussion_courses_search', array( $this, 'search_discussion_course' ) );
 	}
 
 	/**
@@ -584,6 +585,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	public function import_file( $files, $request ) {
+		// Check permission before importing.
+		if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.' ) ) );
+		}
 		$import = wp_import_handle_upload();
 		if ( ! empty( $import['id'] ) ) {
 			$import_id = $import['id'];
@@ -625,6 +630,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	public function import_course( $request ) {
+		// Check permission first.
+		if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.' ) ) );
+		}
 		$import_id = $request->import_id;
 		// Let's import the course one at a time to avoid over caps
 		$courses = coursepress_get_option( $import_id );
@@ -848,8 +857,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	public function enroll() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+		$wpnonce   = filter_input( INPUT_GET, '_wpnonce' );
+		// Note: nonce verification is removed for now. As nonce value is regenerated after login and lead to nonce verification fail. Need to find way to add back.
+		if ( ! $course_id ) {
 			wp_send_json_error( true );
 		}
 		if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
@@ -980,7 +990,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$progress = $user->get_completion_data( $course_id );
 		if ( (int) $step_id > 0 ) {
 			$step = coursepress_get_course_step( $step_id );
-			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type ) {
+			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type) {
 				$progress = $step->validate_response( $response );
 			}
 		}
@@ -1138,8 +1148,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
 			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
 			// Check for capabilities.
-			if ( empty( $alert_id ) && ! CoursePress_Data_Capabilities::can_add_notification( $request->course_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'You do not have permission to create alert for this course.', 'cp' ) ) );
+			if ( empty( $alert_id ) ) {
+				if ( ! CoursePress_Data_Capabilities::can_add_notification( $request->course_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You do not have permission to create alert for this course.', 'cp' ) ) );
+				}
 			} elseif ( ! CoursePress_Data_Capabilities::can_update_notification( $alert_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to update this alert.', 'cp' ) ) );
 			}
@@ -1230,6 +1242,43 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$one['id'] = $post->ID;
 			$one['post_title'] = $post->post_title;
 			$data['items'][] = $one;
+		}
+		wp_send_json( $data );
+	}
+
+	/**
+	 * Search discussion courses.
+	 */
+	public function search_discussion_course() {
+		if (
+			! isset( $_REQUEST['_wpnonce'] )
+			|| ! isset( $_REQUEST['q'] )
+			|| ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress-course-search-nonce' )
+		) {
+			wp_send_json_error();
+		}
+		$data = array(
+			'items'       => array(),
+			'total_count' => 0,
+		);
+		$user = coursepress_get_user();
+		if ( is_wp_error( $user ) ) {
+			wp_send_json( $data );
+		}
+
+		$args = array(
+			'post_type' => 'course',
+			's'         => $_REQUEST['q'],
+		);
+		$posts               = new WP_Query( $args );
+		$data['total_count'] = $posts->post_count;
+		$posts               = $posts->posts;
+		foreach ( $posts as $post ) {
+			if ( CoursePress_Data_Capabilities::can_add_discussion( $post->ID ) ) {
+				$one['id']         = $post->ID;
+				$one['post_title'] = $post->post_title;
+				$data['items'][]   = $one;
+			}
 		}
 		wp_send_json( $data );
 	}

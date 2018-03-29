@@ -293,7 +293,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         if ( 'publish' != $course->post_status ) {
             return;
         }
-		return $this->create_html( 'div', array( 'class' => 'course-summary' ), $course->post_excerpt );
+        $args = array( 'class' => 'course-summary', );
+		if ( apply_filters( 'coursepress_schema', false, 'description' ) ) {
+			$args['itemprop'] = 'description';
+		}
+		return $this->create_html( 'div', $args, $course->post_excerpt );
 	}
 
 	/**

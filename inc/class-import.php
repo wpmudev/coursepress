@@ -165,7 +165,7 @@ class CoursePress_Import extends CoursePress_Utility
 					&& is_array( $this->meta->$key )
 					&& ! empty( $this->meta->$key )
 				) {
-					$this->visible[ $key ] = maybe_unserialize( $this->meta->$key[0] );
+					$this->visible[ $key ] = maybe_unserialize( array_shift( $this->meta->$key ) );
 				}
 			}
 		}
