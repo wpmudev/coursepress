@@ -6,6 +6,7 @@
     <?php
 	$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 	$config = array();
+    $disabled = ! CoursePress_Data_Capabilities::can_create_course();
 
 	$config['import'] = array(
 		'title' => __( 'Import', 'CoursePress' ),
@@ -16,24 +17,27 @@
 				'title' => $toggle_input . __( 'Replace course if exists', 'CoursePress' ),
 				'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'CoursePress' ),
 				'class' => 'cp-ignore-update-model',
+				'disabled' => $disabled,
 			),
 			'with_students' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
 				'desc' => __( 'Students listing must also included in your export for this to work.', 'CoursePress' ),
 				'class' => 'cp-ignore-update-model',
+				'disabled' => $disabled,
 			),
 			'with_comments' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
 				'desc' => __( 'Comments listing must also included in your export for this to work.', 'CoursePress' ),
-				'disabled' => true,
 				'class' => 'cp-ignore-update-model',
+				'disabled' => $disabled,
 			),
 			'' => array(
 				'type' => 'submit',
 				'value' => __( 'Upload file and import', 'CoursePress' ),
 				'class' => 'cp-btn cp-btn-active',
+				'disabled' => $disabled,
 			),
 		),
 	);
@@ -125,7 +129,7 @@
         <div class="box-inner-content">
             <form method="post" id="form-<?php echo $option_key; ?>" class="coursepress-form" enctype="multipart/form-data">
                 <?php if ( 'import' == $option_key ) : ?>
-                    <input type="file" name="import" />
+                    <input type="file" name="import"<?php echo $disabled ? ' disabled="disabled"' : ''; ?> />
                     <div class="cp-alert cp-alert-error"></div>
                 <?php elseif ( 'export' == $option_key ) : ?>
 
