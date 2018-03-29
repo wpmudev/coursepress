@@ -64,7 +64,6 @@
 	/**
 	 * Courses list
 	 */
-	//$list = coursepress_get_courses( array( 'posts_per_page' => -1 ) );
     $current_user = coursepress_get_user();
     $list = $current_user->get_accessible_courses();
 
