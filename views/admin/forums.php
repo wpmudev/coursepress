@@ -118,8 +118,8 @@ switch ( $column_id ) {
 		echo '</div>';
 	break;
 	case 'course' :
-		if ( isset( $courses[ $forum->course_id ] ) ) {
-			echo $courses[ $forum->course_id ]->post_title;
+		if ( isset( $forum_courses[ $forum->course_id ] ) ) {
+			echo $forum_courses[ $forum->course_id ]->post_title;
 		}
 	break;
 	case 'comments':
