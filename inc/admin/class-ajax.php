@@ -34,6 +34,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		 * Search course
 		 */
 		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
+		add_action( 'wp_ajax_coursepress_discussion_courses_search', array( $this, 'search_discussion_course' ) );
 	}
 
 	/**
@@ -1233,6 +1234,43 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$one['id'] = $post->ID;
 			$one['post_title'] = $post->post_title;
 			$data['items'][] = $one;
+		}
+		wp_send_json( $data );
+	}
+
+	/**
+	 * Search discussion courses.
+	 */
+	public function search_discussion_course() {
+		if (
+			! isset( $_REQUEST['_wpnonce'] )
+			|| ! isset( $_REQUEST['q'] )
+			|| ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress-course-search-nonce' )
+		) {
+			wp_send_json_error();
+		}
+		$data = array(
+			'items'       => array(),
+			'total_count' => 0,
+		);
+		$user = coursepress_get_user();
+		if ( is_wp_error( $user ) ) {
+			wp_send_json( $data );
+		}
+
+		$args = array(
+			'post_type' => 'course',
+			's'         => $_REQUEST['q'],
+		);
+		$posts               = new WP_Query( $args );
+		$data['total_count'] = $posts->post_count;
+		$posts               = $posts->posts;
+		foreach ( $posts as $post ) {
+			if ( CoursePress_Data_Capabilities::can_add_discussion( $post->ID ) ) {
+				$one['id']         = $post->ID;
+				$one['post_title'] = $post->post_title;
+				$data['items'][]   = $one;
+			}
 		}
 		wp_send_json( $data );
 	}
