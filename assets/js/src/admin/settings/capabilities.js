@@ -24,6 +24,7 @@
 
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
+                    this.updateDependencies( name, value );
                 }
 
                 if ( ! this.model[this.current] ) {
@@ -47,6 +48,18 @@
             setActiveItem: function(target) {
                 target.siblings().removeClass('active');
                 target.addClass( 'active' );
+            },
+
+            updateDependencies: function( name, value ) {
+                if( 'coursepress_update_course_cap' === name ) {
+                  var elViewAllUnits = $('input[name=coursepress_view_all_units_cap]');
+                  if( ! value ){
+                    elViewAllUnits.attr( 'disabled', 'disabled' ).prop( 'checked', false );
+                    this.model[this.current].coursepress_view_all_units_cap = false;
+                  } else{
+                    elViewAllUnits.removeAttr( 'disabled' );
+                  }
+                }
             }
         });
     });
