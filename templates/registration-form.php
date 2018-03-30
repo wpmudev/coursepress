@@ -18,7 +18,7 @@ $last_name          = ! empty( $_POST['last_name'] ) ? $_POST['last_name'] : '';
 $email              = ! empty( $_POST['email'] ) ? $_POST['email'] : '';
 
 $submit_button = __( 'Create an Account', 'cp' );
-$action_url    = admin_url( 'admin-ajax.php?action=coursepress_register' );
+$action_url    = '';
 
 if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) {
 	$form_message = __( 'Mismatch password!', 'cp' );
