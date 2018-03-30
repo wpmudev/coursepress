@@ -37,8 +37,16 @@ class CoursePress_Data_Forum {
 				'unit_id' => $_POST['unit_id'],
 			),
 		);
-		if ( isset( $_POST['id'] )  ) {
+		if ( isset( $_POST['id'] ) && ! empty( $_POST['id'] ) ) {
 			$args['ID'] = $_POST['id'];
+		} else {
+			/**
+			 * Check is post like this already added?
+			 */
+			$q = new WP_Query( $args );
+			if ( $q->have_posts() ) {
+				return new WP_Error( 'forum_duplicate', __( 'Duplicate forum detected; it looks as though you&#8217;ve already said that!', 'cp' ) );
+			}
 		}
 		wp_insert_post( $args );
 	}
@@ -79,13 +87,12 @@ class CoursePress_Data_Forum {
 			$post_name = get_post_field( 'post_name', $comment->comment_post_ID );
 			$location = $course->get_discussion_url(). trailingslashit( $post_name ) . '#comment-' . $comment->comment_ID;
 		}
-
 		return $location;
 	}
 
 	public function add_topic_field( $post_id ) {
 		$discussion = coursepress_get_discussion();
-		if ( !empty( $discussion ) ) {
+		if ( ! empty( $discussion ) ) {
 			printf(
 				'<input type="hidden" name="topic_id" value="%d" />',
 				esc_attr( $discussion->ID )
