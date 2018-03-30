@@ -661,6 +661,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_view_units( $course_id )  ) {
+			unset( $menu_list['course-units'] );
+		}
+
 		/**
 		 * Allow population of additional menu list.
 		 *
