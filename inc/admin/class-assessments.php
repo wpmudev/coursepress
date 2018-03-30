@@ -53,6 +53,15 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	}
 
 	/**
+	 * render error
+	 *
+	 * @since 3.0.0
+	 */
+	private function render_error() {
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Assessments' ) ) );
+	}
+
+	/**
 	 * Get assessments listing page content and set pagination.
 	 *
 	 * @uses get_current_screen().
@@ -70,6 +79,11 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
 		$graded = in_array( $graded, array( 'graded', 'ungraded' ) ) ? $graded : 'all';
 		$units = empty( $course_id ) ? array() : coursepress_get_course_units( $course_id );
+		$course = coursepress_get_course( $course_id );
+		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {
+			$this->render_error();
+			return;
+		}
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
