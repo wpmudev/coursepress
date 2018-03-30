@@ -469,7 +469,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 			 * @param (int) $student_id			The student ID the certificate is generated to.
 			 **/
 			$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, $student_id );
-			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'CP_TD' ) );
+			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'cp' ) );
 			$args = array(
 				'title' => $certificate_title,
 				'orientation' => $orientation,
@@ -499,7 +499,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		$message = coursepress_create_html(
 			'p',
 			array(),
-			sprintf( __( 'CoursePress cannot generate PDF because directory is not writable: %s', 'CP_TD' ), $cache_path )
+			sprintf( __( 'CoursePress cannot generate PDF because directory is not writable: %s', 'cp' ), $cache_path )
 		);
 		echo coursepress_create_html( 'div', array( 'class' => 'notice notice-error' ), $message );
 	}

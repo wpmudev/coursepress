@@ -534,9 +534,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 		$content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
 		$vars = array(
-			'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
-			'LAST_NAME' => __( 'Snow', 'CP_TD' ),
-			'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+			'FIRST_NAME' => __( 'Jon', 'cp' ),
+			'LAST_NAME' => __( 'Snow', 'cp' ),
+			'COURSE_NAME' => __( 'Example Course Title', 'cp' ),
 			'COMPLETION_DATE' => date_i18n( $date_format, $this->date_time_now() ),
 			'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
 		);
@@ -544,7 +544,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$text_color = $this->convert_hex_color_to_rgb( $text_color, '#000000' );
 		// Set PDF args
 		$args = array(
-			'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+			'title' => __( 'Course Completion Certificate', 'cp' ),
 			'orientation' => $orientation,
 			'image' => $background,
 			'pdf_content' => $content,

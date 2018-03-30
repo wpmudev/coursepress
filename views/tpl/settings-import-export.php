@@ -9,33 +9,33 @@
 	$disabled = ! CoursePress_Data_Capabilities::can_create_course();
 
 	$config['import'] = array(
-		'title' => __( 'Import', 'CoursePress' ),
-		'description' => __( 'Upload your exported courses to import here.', 'CoursePress' ),
+		'title' => __( 'Import', 'cp' ),
+		'description' => __( 'Upload your exported courses to import here.', 'cp' ),
 		'fields' => array(
 			'replace' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Replace course if exists', 'CoursePress' ),
-				'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'CoursePress' ),
+				'title' => $toggle_input . __( 'Replace course if exists', 'cp' ),
+				'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'with_students' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
-				'desc' => __( 'Students listing must also included in your export for this to work.', 'CoursePress' ),
+				'title' => $toggle_input . __( 'Include course students', 'cp' ),
+				'desc' => __( 'Students listing must also included in your export for this to work.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'with_comments' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
-				'desc' => __( 'Comments listing must also included in your export for this to work.', 'CoursePress' ),
+				'title' => $toggle_input . __( 'Include course thread/comments', 'cp' ),
+				'desc' => __( 'Comments listing must also included in your export for this to work.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'' => array(
 				'type' => 'submit',
-				'value' => __( 'Upload file and import', 'CoursePress' ),
+				'value' => __( 'Upload file and import', 'cp' ),
 				'class' => 'cp-btn cp-btn-active',
 				'disabled' => $disabled,
 			),
@@ -45,8 +45,8 @@
 	 * export
 	 */
 	$config['export'] = array(
-		'title' => __( 'Export', 'CoursePress' ),
-		'description' => __( 'Select courses to export to another site.', 'CoursePress' ),
+		'title' => __( 'Export', 'cp' ),
+		'description' => __( 'Select courses to export to another site.', 'cp' ),
 		'fields' => array(
 			'_wpnonce' => array(
 				'type' => 'hidden',
@@ -58,7 +58,7 @@
 			),
 			'coursepress[all]' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'All Courses', 'CoursePress' ),
+				'title' => $toggle_input . __( 'All Courses', 'cp' ),
 				'data' => array(
 					'course-id' => 'all',
 				),
@@ -79,7 +79,7 @@
 		$course_title = $course->__get( 'post_title' );
 		$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . ( empty( $course_title )? __( '-[This course has no title]-', 'CoursePress' ):$course_title ),
+			'title' => $toggle_input . ( empty( $course_title )? __( '-[This course has no title]-', 'cp' ):$course_title ),
 			'data' => array(
 				'course-id' => $course_id,
 			),
@@ -89,23 +89,23 @@
 	$config['export']['fields'] += array(
 		'coursepress[export][subtitle]' => array(
 			'type' => 'html_text',
-			'value' => sprintf( '<h4>%s</h4>', esc_html__( 'Export Options', 'CoursePress' ) ),
+			'value' => sprintf( '<h4>%s</h4>', esc_html__( 'Export Options', 'cp' ) ),
 		),
 		'coursepress[export][students]' => array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
-			'desc' => __( 'Will include course students and their course submission progress.', 'CoursePress' ),
+			'title' => $toggle_input . __( 'Include course students', 'cp' ),
+			'desc' => __( 'Will include course students and their course submission progress.', 'cp' ),
 		),
 		'coursepress[export][comments]' => array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
-			'desc' => __( 'Will include comments from Course forum and discussion modules.', 'CoursePress' ),
+			'title' => $toggle_input . __( 'Include course thread/comments', 'cp' ),
+			'desc' => __( 'Will include comments from Course forum and discussion modules.', 'cp' ),
 			'disabled' => true,
 		),
 		'coursepress[export][button]' => array(
 			'id' => 'coursepress-export-button',
 			'type' => 'submit',
-			'value' => __( 'Export Courses', 'CoursePress' ),
+			'value' => __( 'Export Courses', 'cp' ),
 			'class' => 'cp-btn cp-btn-active',
 		),
 	);

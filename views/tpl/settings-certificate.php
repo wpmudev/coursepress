@@ -13,16 +13,16 @@
 		 * Certificate Options
 		 */
 		$config['certificate-options'] = array(
-			'title' => __( 'Certificate options', 'CoursePress' ),
+			'title' => __( 'Certificate options', 'cp' ),
 			'fields' => array(
 				'enabled' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Enable basic certificate', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Enable basic certificate', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
 				),
 				'use_cp_default' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
 			),
@@ -40,7 +40,7 @@
 		$token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 
 		$config['custom-certificate'] = array(
-			'title'  => __( 'Custom Certificate', 'CoursePress' ),
+			'title'  => __( 'Custom Certificate', 'cp' ),
 			'description' => __( 'Use the editor below to create the layout of your certificate. These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER.', 'cp' ),
 			'fields' => array(
 				'content' => array(
@@ -53,7 +53,7 @@
 		 * Background Image
 		 */
 		$config['background_image'] = array(
-			'title' => __( 'Background Image', 'CoursePress' ),
+			'title' => __( 'Background Image', 'cp' ),
 			'fields' => array(
 				'background_image' => array(
 					'type' => 'text',
@@ -69,24 +69,24 @@
 		);
 
 		$config['content_margin'] = array(
-			'title' => __( 'Content Margin', 'CoursePress' ),
-			'description' => __( '', 'CoursePress' ),
+			'title' => __( 'Content Margin', 'cp' ),
+			'description' => __( '', 'cp' ),
 			'fields' => array(
 				'margin.top' => array(
 					'type' => 'number',
-					'label' => __( 'Top', 'CoursePress' ),
+					'label' => __( 'Top', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
 					'flex' => true,
 				),
 				'margin.left' => array(
 					'type' => 'number',
-					'label' => __( 'Left', 'CoursePress' ),
+					'label' => __( 'Left', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
 					'flex' => true,
 				),
 				'margin.right' => array(
 					'type' => 'number',
-					'label' => __( 'Right', 'CoursePress' ),
+					'label' => __( 'Right', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
 					'flex' => true,
 				),
@@ -139,14 +139,14 @@
 		 * Page orientation
 		 */
 		$config['page_orientation'] = array(
-			'title' => __( 'Page orientation', 'CoursePress' ),
+			'title' => __( 'Page orientation', 'cp' ),
 			'fields' => array(
 				'orientation' => array(
 					'type' => 'select',
 					'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
 					'field_options' => array(
-						'L' => $toggle_input . __( 'Landscape', 'CoursePress' ),
-						'P' => $toggle_input . __( 'Portrait', 'CoursePress' ),
+						'L' => $toggle_input . __( 'Landscape', 'cp' ),
+						'P' => $toggle_input . __( 'Portrait', 'cp' ),
 					),
 				),
 			),
@@ -155,7 +155,7 @@
 		 * Text Color
 		 */
 		$config['text_color'] = array(
-			'title' => __( 'Text Color', 'CoursePress' ),
+			'title' => __( 'Text Color', 'cp' ),
 			'fields' => array(
 				'cert_text_color' => array(
 					'type' => 'text',
@@ -167,7 +167,7 @@
 		 * Preview
 		 */
 		$config['preview'] = array(
-			'title' => __( 'Preview', 'CoursePress' ),
+			'title' => __( 'Preview', 'cp' ),
 			'fields' => array(
 				'preview_certificate' => array(
 					'type' => 'button',

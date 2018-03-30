@@ -8,7 +8,7 @@
         $fields = array(
             'from' => array(
                 'type' => 'text',
-                'label' => __( 'From name', 'CoursePress' ),
+                'label' => __( 'From name', 'cp' ),
                 'value' => '',
                 'flex' => true,
                 'class' => 'large-text',
@@ -16,7 +16,7 @@
             ),
             'email' => array(
                 'type' => 'text',
-                'label' => __( 'From email', 'CoursePress' ),
+                'label' => __( 'From email', 'cp' ),
                 'value' => '',
                 'flex' => true,
                 'class' => 'large-text',
@@ -24,7 +24,7 @@
             ),
             'subject' => array(
                 'type' => 'text',
-                'label' => __( 'Subject', 'CoursePress' ),
+                'label' => __( 'Subject', 'cp' ),
                 'value' => '',
                 'class' => 'large-text',
             ),
