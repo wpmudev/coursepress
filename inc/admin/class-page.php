@@ -917,7 +917,25 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/settings-import-export' );
 	}
 
-	public function lib3() {
+	/**
+	 * Get admin Reports page
+	 *
+	 * @since 3.0.0
+	 */
+	public function get_report_page() {
+		global $CoursePress;
+		$instance = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		if ( $instance ) {
+			$instance->get_page();
+		}
+	}
+
+	/**
+	 * Load lib3 assets files
+	 *
+	 * @since 3.0.0
+	 */
+	private function lib3() {
 		lib3()->ui->add( 'core' );
 		lib3()->ui->add( 'html' );
 	}
