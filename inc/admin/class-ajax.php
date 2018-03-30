@@ -23,8 +23,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
 		add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'unenroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
-		// Register user
-		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
 		// Update profile
 		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 		// Submit module
@@ -927,8 +925,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$data = array( 'student_id' => $student_id );
 		wp_send_json_success( $data );
 	}
-
-	public function register_user() {}
 
 	public function update_profile() {
 		$request = $_POST;
