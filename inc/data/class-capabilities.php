@@ -567,7 +567,7 @@ class CoursePress_Data_Capabilities {
 					$return = user_can( $user_id, 'coursepress_update_my_course_unit_cap' );
 				}
 			} elseif ( $is_instructor || $is_facilitator ) {
-				$return = self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+				$return = self::can_user_create_unit();
 			}
 		}
 
