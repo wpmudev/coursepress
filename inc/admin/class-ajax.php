@@ -990,7 +990,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$progress = $user->get_completion_data( $course_id );
 		if ( (int) $step_id > 0 ) {
 			$step = coursepress_get_course_step( $step_id );
-			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type) {
+			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type ) {
 				$progress = $step->validate_response( $response );
 			}
 		}
@@ -1290,11 +1290,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		global $CoursePress;
 		$data = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
 		$content = $data->get_pdf_content( $request );
-		if ( empty( $content ) ) {
-			wp_send_json_error();
+		if ( is_wp_error( $content ) ) {
+			wp_send_json_error( array( 'message' => $content->get_error_message() ) );
+		}
+		if ( empty( $content ) || ! isset( $content['pdf_content'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Oops! Some error occurred while generating the PDF file.', 'cp' ) ) );
 		}
 		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
-		$pdf->make_pdf( $content['content'], $content['args'] );
+		$pdf->make_pdf( $content['pdf_content'], $content['args'] );
 		$data = array(
 			'pdf' => $pdf->cache_url() . $content['filename'],
 		);

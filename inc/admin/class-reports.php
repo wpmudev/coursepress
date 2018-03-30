@@ -17,7 +17,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'add_i18n_messages' ) );
 	}
 
-	function columns() {
+	public function columns() {
 		$columns = array(
 			'ID' => __( 'ID', 'cp' ),
 			'student' => __( '<span>Student </span>Name', 'cp' ),
@@ -45,14 +45,14 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function hidden_columns() {
+	public function hidden_columns() {
 		return array();
 	}
 
 	/**
 	 * Custom screen options for course listing page.
 	 */
-	function process_page() {
+	public function process_page() {
 		$screen_id = get_current_screen()->id;
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'columns' ) );
@@ -60,14 +60,42 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_reports_per_page' ) );
 	}
 
+	/**
+	 * render error
+	 *
+	 * @since 3.0.0
+	 */
+	private function render_error() {
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Reports' ) ) );
+	}
+
+	/**
+	 * Get main page of reports
+	 */
 	public function get_page() {
-		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$this->course_id = $course_id;
+		$course = null;
+		if ( isset( $_GET['course_id'] ) ) {
+			$this->course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+			$course = coursepress_get_course( $this->course_id );
+			if ( is_wp_error( $course ) ) {
+				$this->render_error();
+				return;
+			}
+		}
 		$mode = filter_input( INPUT_GET, 'mode' );
 		$nonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( $course_id && 'html' == $mode ) {
+		if ( is_a( $course, 'CoursePress_Course' ) && 'html' == $mode ) {
 			if ( wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
 				$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+				if ( false === $student_id ) {
+					$this->render_error();
+					return;
+				}
+				$user = coursepress_get_user( $student_id );
+				if ( $user->is_error() ) {
+					$this->render_error();
+					return;
+				}
 				$this->students = array( $student_id );
 				$this->get_page_preview();
 			} else if ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
@@ -76,20 +104,21 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 					case 'show':
 						$this->get_page_preview();
 					break;
-
 					case 'show_summary':
 						$this->get_page_preview( true, 'summary' );
 					break;
-
 					default:
-						coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Reports' ) ) );
+						$this->render_error();
+					return;
 				}
 			} else {
-				coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Reports' ) ) );
+				$this->render_error();
+				return;
 			}
 		} else {
 			$this->get_page_list();
 		}
+		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
@@ -228,6 +257,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 
 	public function get_pdf_content( $request ) {
 		$this->course_id = $request->course_id;
+		$course = coursepress_get_course( $this->course_id );
+		if ( is_wp_error( $course ) ) {
+			return $course;
+		}
 		$filename = sprintf( 'coursepress_reports_%s.pdf', md5( serialize( $request ) ) );
 		$args = array(
 			'pdf_content' => '',
