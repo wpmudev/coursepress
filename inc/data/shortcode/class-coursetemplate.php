@@ -146,18 +146,11 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				}
 			}
 		} else {
-			if ( false === $is_custom_login ) {
-				$signup_url = wp_login_url( $enroll_course_url );
-			} else {
-				$signup_url = coursepress_get_student_login_url();
-				$signup_url = add_query_arg(
-					array(
-						'redirect_to' => urlencode( $enroll_course_url ),
-						'_wpnonce' => wp_create_nonce( 'redirect_to' ),
-					),
-					$signup_url
-				);
-			}
+			$query_args = array(
+				'redirect_to' => urlencode( $enroll_course_url ),
+				'_wpnonce' => wp_create_nonce( 'redirect_to' ),
+			);
+			$signup_url = coursepress_get_student_login_url( $enroll_course_url, $query_args );
 		}
 		$buttons = array(
 			'full' => array(
@@ -368,13 +361,14 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			}
 			$progress = $student->get_course_progress( $course_id );
 
+			$current_url = lib3()->net->current_url();
 			if ( $course->course_expired && ! $course->open_ended_course ) {
 				// COURSE EXPIRED
 				$button_option = 'expired';
 			} elseif ( $course_start_date > $now ) {
 				// COURSE HASN'T STARTED
 				$button_option = 'not_started';
-			} elseif ( ! is_single() && false === strpos( $_SERVER['REQUEST_URI'], coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' ) ) ) {
+			} elseif ( ! is_single() && false === strpos( $current_url, coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' ) ) ) {
 				// SHOW DETAILS | Dashboard
 				$button_option = 'details';
 			} else {

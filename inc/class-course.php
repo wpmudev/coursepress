@@ -649,6 +649,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			foreach ( $instructor_ids as $instructor_id ) {
 				coursepress_add_course_instructor( $instructor_id, $id );
 			}
+		} else {
+			$instructor_ids = array();
 		}
 		return $instructor_ids;
 	}

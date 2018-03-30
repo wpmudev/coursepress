@@ -465,19 +465,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 				}
 			} else {
 				$link = add_query_arg( $link_args, $course->get_permalink() );
-				// Redirect to login page??
-				$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
-				if ( $use_custom_login ) {
-					$login_page = coursepress_get_setting( 'slugs/pages/login', 0 );
-					if ( $login_page ) {
-						$link = get_permalink( $login_page );
-					} else {
-						$slug = coursepress_get_setting( 'slugs/login', 'student-login' );
-						$link = site_url( '/' ) . trailingslashit( $slug );
-					}
-				} else {
-					$link = wp_login_url( $link );
-				}
+				$link = coursepress_get_student_login_url( $link );
 			}
 		}
 	}

@@ -918,9 +918,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	public function lib3() {
-		global $CoursePress;
-		$file = $CoursePress->plugin_path.'inc/external/wpmu-lib/core.php';
-		include_once $file;
 		lib3()->ui->add( 'core' );
 		lib3()->ui->add( 'html' );
 	}
