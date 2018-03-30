@@ -25,6 +25,7 @@
 	<?php
 	$config = array();
 	$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
+	$can_update_course = coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true );
 
 	// General capabilities.
 	$config['capabilities/general'] = array(
@@ -109,7 +110,7 @@
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Update any assigned course', 'cp' ),
 				//'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
-				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
+				'value' => $can_update_course,
 			),
 			'coursepress_delete_my_course_cap' => array(
 				'type' => 'checkbox',
@@ -193,6 +194,7 @@
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'View units in every course (also from other instructors)', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_view_all_units_cap', true ),
+				'disabled' => ( ! $can_update_course ) ? true : false,
 			),
 			'coursepress_update_my_course_unit_cap' => array(
 				'type' => 'checkbox',
