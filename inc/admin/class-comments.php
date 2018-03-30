@@ -74,6 +74,15 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	}
 
 	/**
+	 * render error
+	 *
+	 * @since 3.0.0
+	 */
+	private function render_error() {
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Comments' ) ) );
+	}
+
+	/**
 	 * Get comments listing page content and set pagination.
 	 *
 	 * @uses get_current_screen().
@@ -81,6 +90,12 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	 * @uses coursepress_render().
 	 */
 	function get_page() {
+		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
+		$course    = coursepress_get_course( $course_id );
+		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {
+			$this->render_error();
+			return;
+		}
 
 		$screen = get_current_screen();
 		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : $this->slug;
