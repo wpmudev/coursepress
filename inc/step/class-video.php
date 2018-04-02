@@ -29,7 +29,7 @@ class CoursePress_Step_Video extends CoursePress_Step {
 
 	function get_question() {
 		$src = esc_url_raw( $this->__get( 'video_url' ) );
-		$hide_related_video = $this->__get( 'hide_related_video' );
+		$hide_related_video = $this->__get( 'hide_related_media' );
 		$width = $this->__get( 'video_player_width' );
 		$attempts = $this->get_user_attempts(get_current_user_id());
 		$retries_allowed = $this->__get('allow_retries');
