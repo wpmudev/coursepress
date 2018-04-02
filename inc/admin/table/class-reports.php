@@ -17,8 +17,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Reports', 'CP_TD' ),
-			'plural' => __( 'Reports', 'CP_TD' ),
+			'singular' => __( 'Reports', 'cp' ),
+			'plural' => __( 'Reports', 'cp' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 		$this->courses = coursepress_get_accessible_courses();

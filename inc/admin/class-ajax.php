@@ -23,8 +23,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
 		add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'unenroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
-		// Register user
-		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
 		// Update profile
 		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 		// Submit module
@@ -534,9 +532,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 		$content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
 		$vars = array(
-			'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
-			'LAST_NAME' => __( 'Snow', 'CP_TD' ),
-			'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+			'FIRST_NAME' => __( 'Jon', 'cp' ),
+			'LAST_NAME' => __( 'Snow', 'cp' ),
+			'COURSE_NAME' => __( 'Example Course Title', 'cp' ),
 			'COMPLETION_DATE' => date_i18n( $date_format, $this->date_time_now() ),
 			'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
 		);
@@ -544,7 +542,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$text_color = $this->convert_hex_color_to_rgb( $text_color, '#000000' );
 		// Set PDF args
 		$args = array(
-			'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+			'title' => __( 'Course Completion Certificate', 'cp' ),
 			'orientation' => $orientation,
 			'image' => $background,
 			'pdf_content' => $content,
@@ -928,8 +926,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_success( $data );
 	}
 
-	public function register_user() {}
-
 	public function update_profile() {
 		$request = $_POST;
 		$wpnonce = $request['_wpnonce'];
@@ -990,7 +986,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$progress = $user->get_completion_data( $course_id );
 		if ( (int) $step_id > 0 ) {
 			$step = coursepress_get_course_step( $step_id );
-			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type) {
+			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type || 'quiz' === $step->type ) {
 				$progress = $step->validate_response( $response );
 			}
 		}
@@ -1290,11 +1286,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		global $CoursePress;
 		$data = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
 		$content = $data->get_pdf_content( $request );
-		if ( empty( $content ) ) {
-			wp_send_json_error();
+		if ( is_wp_error( $content ) ) {
+			wp_send_json_error( array( 'message' => $content->get_error_message() ) );
+		}
+		if ( empty( $content ) || ! isset( $content['pdf_content'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Oops! Some error occurred while generating the PDF file.', 'cp' ) ) );
 		}
 		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
-		$pdf->make_pdf( $content['content'], $content['args'] );
+		$pdf->make_pdf( $content['pdf_content'], $content['args'] );
 		$data = array(
 			'pdf' => $pdf->cache_url() . $content['filename'],
 		);

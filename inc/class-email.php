@@ -637,7 +637,7 @@ The %5$s Team', 'coursepress' ),
 			<h3>%3$s</h3>
 
 			<h4>Date: %4$s</h4>
-			<small>Certificate no.: %5$s</small>', 'CP_TD'
+			<small>Certificate no.: %5$s</small>', 'cp'
 		);
 		$default_certification_content = sprintf(
 			$msg,

@@ -114,13 +114,8 @@ class CoursePress_Menu extends CoursePress_Utility {
 			$login_menu = $this->get_menu_object();
 			$login_menu->title = __( 'Log In', 'cp' );
 			$login_menu->ID = 'cp-login';
-			$login_menu->url = wp_login_url( $menu->url );
+			$login_menu->url = coursepress_get_student_login_url( $menu->url );
 
-			$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
-
-			if ( $use_custom_login ) {
-				$login_menu->url = coursepress_get_student_login_url();
-			}
 			array_push( $menu_items, $login_menu );
 		}
 

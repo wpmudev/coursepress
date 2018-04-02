@@ -567,7 +567,7 @@ class CoursePress_Data_Capabilities {
 					$return = user_can( $user_id, 'coursepress_update_my_course_unit_cap' );
 				}
 			} elseif ( $is_instructor || $is_facilitator ) {
-				$return = self::can_user_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+				$return = self::can_user_create_unit();
 			}
 		}
 
@@ -593,7 +593,8 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			if ( self::can_manage_courses( $user_id ) ) {
-				$return = self::can_update_course( $course_id );
+				$update_course = self::can_update_course( $course_id );
+				$return        = $update_course ? user_can( $user_id, 'coursepress_view_all_units_cap' ) : false;
 			}
 		}
 

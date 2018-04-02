@@ -661,6 +661,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_view_units( $course_id )  ) {
+			unset( $menu_list['course-units'] );
+		}
+
 		/**
 		 * Allow population of additional menu list.
 		 *
@@ -917,10 +922,25 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/settings-import-export' );
 	}
 
-	public function lib3() {
+	/**
+	 * Get admin Reports page
+	 *
+	 * @since 3.0.0
+	 */
+	public function get_report_page() {
 		global $CoursePress;
-		$file = $CoursePress->plugin_path.'inc/external/wpmu-lib/core.php';
-		include_once $file;
+		$instance = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		if ( $instance ) {
+			$instance->get_page();
+		}
+	}
+
+	/**
+	 * Load lib3 assets files
+	 *
+	 * @since 3.0.0
+	 */
+	private function lib3() {
 		lib3()->ui->add( 'core' );
 		lib3()->ui->add( 'html' );
 	}

@@ -175,8 +175,8 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	private function unsubscribe_message() {
 
-		$msg = sprintf( '<h3 class="cp-unsubscribe-message-head">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
-		$msg .= sprintf( '<p>%s</p>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
+		$msg = sprintf( '<h3 class="cp-unsubscribe-message-head">%s</h3>', __( 'Unsubscribe Successful!', 'cp' ) );
+		$msg .= sprintf( '<p>%s</p>', __( 'You have been removed from our subscribers list.', 'cp' ) );
 
 		/**
 		 * Filter the unsubscribe message.

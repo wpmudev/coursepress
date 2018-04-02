@@ -7,13 +7,10 @@
  */
 ?>
 <div class="wrap coursepress-wrap" id="coursepress-reports-list">
-<h1 class="wp-heading-inline"><?php
-_e( 'Report: ', 'cp' );
-echo ' ';
-echo $course->post_title;
-?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Report', 'cp' ); ?></h1>
+    <h2><?php echo $course->post_title; ?></h2>
     <div class="coursepress-page coursepress-page-report">
-    <h2><?php esc_html_e( 'Units list', 'cp' );?></h2>
+    <h4><?php esc_html_e( 'Units list', 'cp' );?></h4>
     <ul>
 <?php
 foreach ( $units as $unit ) {
@@ -21,8 +18,7 @@ foreach ( $units as $unit ) {
 }
 ?>
     </ul>
-
-    <h2><?php esc_html_e( 'Students list', 'cp' );?></h2>
+    <h4><?php esc_html_e( 'Students list', 'cp' );?></h4>
     <ul>
 <?php
 foreach ( $students as $student ) {

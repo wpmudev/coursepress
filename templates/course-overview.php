@@ -12,6 +12,14 @@ $course = coursepress_get_course();
         <h1 class="entry-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
     </header>
     <div class="entry-content">
+	<?php $messages = apply_filters( 'coursepress_overview_messages', array() ); ?>
+	<?php if ( !empty( $messages ) ) { ?>
+		<div class="cp-warning-box">
+		<?php foreach ( $messages as $message ) { ?>
+			<p><?php echo $message ?></p>
+		<?php } ?>
+		</div>
+	<?php } ?>
         <div class="course-details">
 <?php
 $media = coursepress_get_course_media( false, 420, 220 );
