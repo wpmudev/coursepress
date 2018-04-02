@@ -1206,7 +1206,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				'id' => $request->id,
 				'status' => $status,
 				'success' => true,
-				'button_text' => esc_html( $status === 'unapproved' ? __( 'Approve', 'cp' ):__( 'Unapprove', 'cp' ) ),
+				'button_text' => esc_html( $status === 'unapproved' ? __( 'Approve', 'cp' ) : __( 'Unapprove', 'cp' ) ),
 			);
 			return $response;
 		}
