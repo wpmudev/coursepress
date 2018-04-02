@@ -1111,8 +1111,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
         if ( ! is_user_logged_in() ) {
             $user_login = new CoursePress_UserLogin();
             $user_login->process_registration_form();
-						$this->form_message       = $user_login::$form_message;
-						$this->form_message_class = $user_login::$form_message_class;
+						$this->form_message       = $user_login->form_message;
+						$this->form_message_class = $user_login->form_message_class;
         }
     }
 
