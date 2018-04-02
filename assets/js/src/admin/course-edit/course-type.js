@@ -132,6 +132,10 @@
                     value = sender.val(),
                     div = this.$('#type-' + value );
 
+                if( 'auto-moderated' === value ) {
+                  $('[name=meta_course_open_ended]').prop('checked','checked').trigger('change');
+                  $('[name=meta_enrollment_open_ended]').prop('checked','checked').trigger('change');
+                }
                 sender.parents('li').siblings().removeClass('active');
                 sender.parents('li').addClass('active');
                 div.siblings('.cp-course-type').removeClass('active').addClass('inactive');
