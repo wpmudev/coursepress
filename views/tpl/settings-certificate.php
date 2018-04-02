@@ -210,7 +210,7 @@
 					);
 				}
 				if ( isset( $option['description'] ) ) {
-					printf( '<div class="cp-alert cp-alert-info"><p class="description">%s</p></div>', $option['description'] );
+					printf( '<p class="description">%s</p>', $option['description'] );
 				}
 				echo '</div>';
 			} else {
