@@ -84,7 +84,7 @@
             },
             updateModel: function(ev) {
                 var sender = $(ev.currentTarget),
-                    name = sender.attr('name'),
+                    name = sender.data('name'),
                     value = sender.val(),
                     first, model;
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
