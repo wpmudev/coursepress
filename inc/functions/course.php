@@ -1606,21 +1606,10 @@ function coursepress_get_course_object( $post_id ) {
 function coursepress_update_course_alert( $course_id, $title, $content, $receivers, $alert_id ) {
 	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
-	$capable = false;
 	// Get the course.
-	$course = coursepress_get_course( $course_id );
-	$user = coursepress_get_user( get_current_user_id() );
+	$course = $course_id === 'all' ? $course_id : coursepress_get_course( $course_id );
 	// If current user is capable of updating any notification statuses.
-	if ( is_wp_error( $course ) ) {
-		$capable = false;
-	} elseif ( $user->has_access_at( $course_id ) && current_user_can( 'coursepress_' . $action . '_notification_cap' ) ) {
-		$capable = true;
-	} elseif ( $course->post_author == get_current_user_id() && current_user_can( 'coursepress_' . $action . '_my_notification_cap' ) ) {
-		$capable = true;
-	}
-
-	if ( ! $capable ) {
-
+	if ( $course !== 'all' && is_wp_error( $course ) ) {
 		/**
 		 * Perform actions when alert could not be created/updated.
 		 *
