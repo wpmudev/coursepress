@@ -14,7 +14,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 
 	public function __construct( CoursePress $cp ) {
 		$this->status = get_option( 'coursepress_upgrade', 'no upgrade required' );
-		$this->cp = $cp;
+        $this->cp = $cp;
 		if ( 'need to be upgraded' !== $this->status ) {
 			return;
 		}
@@ -25,7 +25,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * try to upgrade courses
 		 */
-		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
+        $this->count_courses();
 		if ( 0 === $this->count ) {
 			return;
 		}
@@ -222,7 +222,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * course_enrolled_student_id
 		 */
-
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
@@ -338,7 +337,27 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			) {
 				$visible[ $key ] = maybe_unserialize( $meta[ $key ][0] );
 			}
-		}
+        }
+        /**
+         * updagre forums
+         */
+        $args = array(
+            'post_type' => 'discussions',
+            'post_status' => 'any',
+            'fields' => 'ids',
+        );
+        $query = new WP_Query( $args );
+        foreach( $query->posts as $id ) {
+            $course_id = get_post_meta( $id, 'course_id', true );
+            if ( ! empty( $course_id ) ) {
+                $args = array(
+                    'ID' => $id,
+                    'post_parent' => $course_id,
+                );
+                wp_update_post( $args );
+            }
+        }
+        return;
 		/**
 		 * update course CoursePress version
 		 */
