@@ -117,33 +117,33 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 		$course = coursepress_get_course( $course_id );
 		$subpage = CoursePress_Data_Course::$last_course_subpage;
 
-		$content = '<div class="submenu-main-container cp-submenu">';
-		$content .= '<ul id="submenu-main" class="submenu nav-submenu">';
-		$content .= '<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_units_url() ) . '" class="course-units-link">' . esc_html__( 'Units', 'cp' ) . '</a></li>';
+		$content = '<div class="submenu-main-container course-submenu-container">';
+		$content .= '<ul id="submenu-main" class="submenu course-submenu">';
+		$content .= '<li class="submenu-item menu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_units_url() ) . '" class="course-units-link">' . esc_html__( 'Units', 'cp' ) . '</a></li>';
 
 		$student = coursepress_get_user();
 		$enrolled = ! empty( $student ) ? $student->is_enrolled_at( $course_id ) : false;
 		$is_instructor = $student->is_instructor_at( $course_id );
 
 		if ( $enrolled || $is_instructor ) {
-			$content .= '<li class="submenu-item submenu-notifications ' . ( 'notifications' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_notifications_url() ) . '">' . esc_html__( 'Notifications', 'cp' ) . '</a></li>';
+			$content .= '<li class="submenu-item menu-item submenu-notifications ' . ( 'notifications' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_notifications_url() ) . '">' . esc_html__( 'Notifications', 'cp' ) . '</a></li>';
 		}
 
 		$pages = CoursePress_Data_Course::allow_pages( $course_id );
 
 		if ( $pages['course_discussion'] && ( $enrolled || $is_instructor ) ) {
-			$content .= '<li class="submenu-item submenu-discussions ' . ( 'discussions' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_discussion_url() ) . '">' . esc_html__( 'Discussions', 'cp' ) . '</a></li>';
+			$content .= '<li class="submenu-item menu-item submenu-discussions ' . ( 'discussions' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_discussion_url() ) . '">' . esc_html__( 'Discussions', 'cp' ) . '</a></li>';
 		}
 
 		if ( $pages['workbook'] && $enrolled ) {
-			$content .= '<li class="submenu-item submenu-workbook ' . ( 'workbook' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_workbook_url() ) . '">' . esc_html__( 'Workbook', 'cp' ) . '</a></li>';
+			$content .= '<li class="submenu-item menu-item submenu-workbook ' . ( 'workbook' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_workbook_url() ) . '">' . esc_html__( 'Workbook', 'cp' ) . '</a></li>';
 		}
 
 		if ( $pages['grades'] && $enrolled ) {
-			$content .= '<li class="submenu-item submenu-grades ' . ( 'grades' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_grades_url() ) . '">' . esc_html__( 'Grades', 'cp' ) . '</a></li>';
+			$content .= '<li class="submenu-item menu-item submenu-grades ' . ( 'grades' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course->get_grades_url() ) . '">' . esc_html__( 'Grades', 'cp' ) . '</a></li>';
 		}
 
-		$content .= '<li class="submenu-item submenu-info"><a href="' . esc_url_raw( $course->get_permalink() ) . '">' . esc_html__( 'Course Details', 'cp' ) . '</a></li>';
+		$content .= '<li class="submenu-item menu-item submenu-info"><a href="' . esc_url_raw( $course->get_permalink() ) . '">' . esc_html__( 'Course Details', 'cp' ) . '</a></li>';
 
 		$show_link = false;
 
@@ -158,7 +158,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 				$certificate = $CoursePress->get_class( 'CoursePress_Certificate' );
 				$certificate_link = $certificate->get_encoded_url( $course->__get( 'ID' ), $student->__get( 'ID' ) );
 
-				$content .= '<li class="submenu-item submenu-certificate ' . ( 'certificate' == $subpage ? 'submenu-active' : '') . '">' . $certificate_link . '</li>';
+				$content .= '<li class="submenu-item menu-item submenu-certificate ' . ( 'certificate' == $subpage ? 'submenu-active' : '') . '">' . $certificate_link . '</li>';
 			}
 		}
 
