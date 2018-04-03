@@ -747,22 +747,30 @@ class CoursePress_User extends CoursePress_Utility {
 					}
 				}
 			}
+			$item_progress = $this->normalize( $item_progress );
 			$steps_completion = coursepress_set_array_val( $steps_completion, $step_id . '/progress', $item_progress );
 		}
 		$completion = array(
 			'required_steps' => $required_steps,
 			'assessable_steps' => $assessable_steps,
 			'total_steps' => $total_steps,
-			'progress' => $step_progress,
+			'progress' => $this->normalize( $step_progress ),
 			'passed' => $passed,
 			'answered' => $answered,
 			'average' => $steps_grade,
 			'completed_steps' => $completed,
 			'steps_grades' => $steps_grades,
 			'steps' => $steps_completion,
-			'module_progress' => $module_progress,
+			'module_progress' => $this->normalize( $module_progress ),
 		);
 		return $completion;
+	}
+
+	/**
+	 * Normalize
+	 */
+	private function normalize( $value ) {
+		return max( 0, min( 100, $value ) );
 	}
 
 	/**
