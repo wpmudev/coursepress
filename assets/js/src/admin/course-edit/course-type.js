@@ -28,20 +28,24 @@
 				date = this.$(ev.currentTarget).datepicker('getDate');
 				return date;
 			},
+      setDate: function(selector, type, date) {
+        var oldDate = this.$(selector).val();
+				this.$(selector).datepicker( 'option', type, date ).val( oldDate );
+      },
 			setMaxStartDate: function( date ) {
-				this.$('[name=meta_course_start_date]').datepicker( 'option', 'maxDate', date );
+        this.setDate( '[name=meta_course_start_date]', 'maxDate', date );
 			},
 			changeMinEndDate: function( ev ) {
-				this.$('[name=meta_course_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+        this.setDate( '[name=meta_course_end_date]', 'minDate', this.getDate( ev ) );
 			},
 			changeMaxStartDate: function( ev ) {
 				this.setMaxStartDate( this.getDate( ev ) );
 			},
 			changeMinEnrollmentEndDate: function( ev ) {
-				this.$('[name=meta_enrollment_end_date]').datepicker( 'option', 'minDate', this.getDate( ev ) );
+        this.setDate( '[name=meta_enrollment_end_date]', 'minDate', this.getDate( ev ) );
 			},
 			changeMaxEnrollmentStarDate: function( ev ) {
-				this.$('[name=meta_enrollment_start_date]').datepicker( 'option', 'maxDate', this.getDate( ev ) );
+        this.setDate( '[name=meta_enrollment_start_date]', 'maxDate', this.getDate( ev ) );
 			},
 
             initialize: function(model, EditCourse) {
