@@ -43,8 +43,11 @@
                 <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
                 <div>
                 <div class="cp-categories-selector">
-                    <select id="course-categories" multiple="multiple" 
-<?php if ( CoursePress_Data_Capabilities::can_manage_categories() ) { ?>
+                    <select id="course-categories" multiple="multiple"
+<?php $can_manage_categories = CoursePress_Data_Capabilities::can_manage_categories(); ?>
+<?php $can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ); ?>
+<?php $can_assign_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( $course_id ); ?>
+<?php if ( $can_manage_categories ) { ?>
 data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>"
 data-can-add="yes"
 <?php } else { ?>
@@ -58,7 +61,7 @@ name="meta_course_category">
                         </select>
                         <input type="hidden" id="course-categories-search" value="">
                     </div>
-<?php if ( CoursePress_Data_Capabilities::can_manage_categories() ) { ?>
+<?php if ( $can_manage_categories ) { ?>
                     <p class="description"><?php _e( 'To add new category, name it and use enter key.', 'cp' ); ?></p>
 <?php } ?>
                 </div>
@@ -149,7 +152,7 @@ name="meta_course_category">
                         <p class="description" id="cp-no-instructor"><?php _e( 'This course currently have no instructors', 'cp' ); ?></p>
                     <?php endif; ?>
                 </div>
-                <?php if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) : ?>
+                <?php if ( $can_assign_instructor ) : ?>
                     <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-instructor-selector"><?php _e( 'Add Instructor', 'cp' ); ?></button>
                 <?php endif; ?>
             </div>
@@ -169,13 +172,71 @@ name="meta_course_category">
                         <p class="description" id="cp-no-facilitator"><?php _e( 'This course currently have no facilitators', 'cp' ); ?></p>
                     <?php endif; ?>
                 </div>
-                <?php if ( CoursePress_Data_Capabilities::can_assign_facilitator( $course_id ) ) : ?>
+                <?php if ( $can_assign_facilitator ) : ?>
                     <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-facilitator-selector"><?php _e( 'Add Facilitators', 'cp' ); ?></button>
                 <?php endif; ?>
             </div>
         </div>
+
+		<div class="cp-flex clear cp-invited-container">
+
+			<div class="cp-content-box" id="invited-instructors">
+				<table class="coursepress-table">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Instructor Name', 'cp' ); ?></th>
+							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
+							<?php if ( $can_assign_instructor ) : ?><th></th><?php endif; ?>
+						</tr>
+					</thead>
+					<tbody id="invited-instructor-list">
+						<tr class="no-invites <?php echo empty( false ) ? '' : 'inactive'; ?>">
+							<td colspan="4"><?php esc_html_e( 'No invited instructors found...', 'cp' ); ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="cp-content-box" id="invited-facilitators">
+				<table class="coursepress-table">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Facilitator Name', 'cp' ); ?></th>
+							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
+							<?php if ( $can_assign_facilitator ) : ?><th></th><?php endif; ?>
+						</tr>
+					</thead>
+					<tbody id="invited-facilitator-list">
+						<tr class="no-invites <?php echo empty( false ) ? '' : 'inactive'; ?>">
+							<td colspan="4"><?php esc_html_e( 'No invited facilitators found...', 'cp' ); ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
     </div>
 
+</script>
+
+<script type="text/template" id="coursepress-invited-instructor">
+    <td>{{first_name}} {{last_name}}</td>
+    <td>{{email}}</td>
+    <?php if ( $can_assign_instructor ) : ?>
+        <td>
+            <button data-code="{{code}}" class="cp-btn cp-btn-xs cp-btn-active remove-invite" title="<?php _e( 'Remove invitation', 'cp' ); ?>"><?php _e( 'Remove', 'cp' ); ?></button>
+        </td>
+    <?php endif; ?>
+</script>
+
+<script type="text/template" id="coursepress-invited-facilitator">
+    <td>{{first_name}} {{last_name}}</td>
+    <td>{{email}}</td>
+    <?php if ( $can_assign_facilitator ) : ?>
+        <td>
+            <button data-code="{{code}}" class="cp-btn cp-btn-xs cp-btn-active remove-invite" title="<?php _e( 'Remove invitation', 'cp' ); ?>"><?php _e( 'Remove', 'cp' ); ?></button>
+        </td>
+    <?php endif; ?>
 </script>
 
 <script type="text/template" id="coursepress-course-instructor-selection-tpl">

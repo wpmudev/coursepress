@@ -83,7 +83,7 @@
                                 case 'course' :
                                     // Get course name.
                                     $course_id = get_post_meta( $notification->ID, 'alert_course', true );
-                                    echo empty( $course_id ) ? __( 'All Courses', 'cp' ) : get_the_title( $course_id );
+                                    echo ( empty( $course_id ) || $course_id === 'all' ) ? __( 'All Courses', 'cp' ) : get_the_title( $course_id );
                                     break;
                                 case 'status':
                                     echo '<label>';

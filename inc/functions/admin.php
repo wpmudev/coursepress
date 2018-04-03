@@ -120,7 +120,7 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 			$meta_name,
 			$invites
 		);
-		return true;
+		return $args['invite_code'];
 	}
 	return new WP_Error(
 		'error',
