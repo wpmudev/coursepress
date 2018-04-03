@@ -44,18 +44,21 @@ class CoursePress_Data_Facilitator {
 			true
 		);
 
+		$return = false;
 		if ( $facilitator_invites ) {
 			$keys = array_keys( $facilitator_invites );
 			if ( in_array( $invite_code, $keys ) ) {
 				unset( $facilitator_invites[ $invite_code ] );
+				update_post_meta(
+					$course_id,
+					'facilitator_invites',
+					$facilitator_invites
+				);
+				$return = true;
 			}
 		}
 
-		update_post_meta(
-			$course_id,
-			'facilitator_invites',
-			$facilitator_invites
-		);
+		return $return;
 	}
 
 	/**
