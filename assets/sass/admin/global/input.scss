@@ -94,6 +94,10 @@
                    color: $grey_2;
                    @include transition(color 0.4s);
                }
+
+               .select2-selection {
+                   border: 0;
+               }
            }
 
            .cp-input-group {

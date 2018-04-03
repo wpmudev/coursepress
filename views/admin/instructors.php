@@ -10,7 +10,7 @@
 <div class="wrap coursepress-wrap coursepress-instructors" id="coursepress-instructors">
 	<h1 class="wp-heading-inline"><?php _e( 'Instructors', 'cp' ); ?></h1>
     <div class="coursepress-page">
-        <form method="get" class="cp-search-form" id="cp-search-form">
+        <form method="get" class="cp-action-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>

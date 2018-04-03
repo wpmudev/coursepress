@@ -30,7 +30,18 @@
                 this.request.on( 'coursepress:success_change_post', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_duplicate_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_courses_bulk_action', this.reloadCourseList, this );
+
+                this.on( 'view_rendered', this.setUI, this );
+                this.render();
             },
+
+            // Setup UI.
+            setUI: function() {
+                this.$('select').select2({
+                    width: 100,
+                });
+            },
+
             getModel: function() {
                 return this.model;
             },

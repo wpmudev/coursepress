@@ -16,16 +16,22 @@
             },
 
             initialize: function() {
-                    this.request = new CoursePress.Request();
+	            this.request = new CoursePress.Request();
 
-                    // On status toggle fail.
-                    this.request.on( 'coursepress:error_alert_status_toggle', this.revertStatusToggle, this );
-                    // On trash, delete, restore or duplicate notification.
-                    this.request.on( 'coursepress:success_change_post', this.reloadAlerts, this );
-					this.request.on( 'coursepress:success_change_notifications_status', this.reloadAlerts, this );
+	            // On status toggle fail.
+	            this.request.on( 'coursepress:error_alert_status_toggle', this.revertStatusToggle, this );
+	            // On trash, delete, restore or duplicate notification.
+	            this.request.on( 'coursepress:success_change_post', this.reloadAlerts, this );
+	            this.request.on( 'coursepress:success_change_notifications_status', this.reloadAlerts, this );
 
-                    this.render();
+	            this.on( 'view_rendered', this.setUI, this );
+	            this.render();
             },
+
+	        // Setup UI.
+	        setUI: function() {
+		        this.$('select').select2();
+	        },
 
             /**
              * Toggle course status.
