@@ -13,6 +13,13 @@
             },
 
             initialize: function() {
+                this.on( 'view_rendered', this.setUI, this );
+                this.render();
+            },
+
+            // Setup UI.
+            setUI: function() {
+                this.$('select').select2();
             },
 
             /**

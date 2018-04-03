@@ -25,7 +25,13 @@
                 this.request.on( 'coursepress:success_change_post', this.reloadForums, this );
                 this.request.on( 'coursepress:success_change_forums_status', this.reloadForums, this );
 
+                this.on( 'view_rendered', this.setUI, this );
                 this.render();
+            },
+
+            // Setup UI.
+            setUI: function() {
+                this.$('select').select2();
             },
 
             // Toggle discussion status.
