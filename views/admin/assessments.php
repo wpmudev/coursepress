@@ -6,7 +6,7 @@
 	<p><?php esc_html_e( 'No courses found.', 'cp' ); ?></p>
 </div>
 <?php } else { ?>
-		<form method="get" class="cp-search-form" id="cp-search-form">
+		<form method="get" class="cp-action-form" id="cp-search-form">
 			<div class="cp-flex cp-students">
 				<div class="cp-div">
 					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
