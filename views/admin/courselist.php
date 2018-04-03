@@ -169,7 +169,9 @@ foreach ( $bulk_actions as $value => $label ) {
                                         <?php $can_update = CoursePress_Data_Capabilities::can_update_course( $course->ID ); ?>
                                         <?php if ( $can_update ) : ?>
                                             <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |
+                                            <?php if ( CoursePress_Data_Capabilities::can_view_units( $course->ID )  ) : ?>
                                             <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
+                                            <?php endif; ?>
                                             <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
                                         <?php endif; ?>
 

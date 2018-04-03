@@ -18,14 +18,14 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 		 *
 		 * @var (string)
 		 **/
-		static $form_message = '';
+		var $form_message = '';
 
 		/**
 		 * Form class to render on registration form.
 		 *
 		 * @var (string)
 		 **/
-		static $form_message_class = '';
+		var $form_message_class = '';
 
 		/**
 		 * Process user registration submission.
@@ -53,47 +53,47 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 
 				if ( $username && $firstname && $lastname && $email && $passwd && $passwd2 ) {
 					if ( username_exists( $username ) ) {
-						self::$form_message = __( 'Username already exists. Please choose another one.', 'cp' );
+						$this->form_message = __( 'Username already exists. Please choose another one.', 'cp' );
 						$found_errors++;
 					}
 					elseif ( ! validate_username( $username ) ) {
-						self::$form_message = __( 'Invalid username!', 'cp' );
+						$this->form_message = __( 'Invalid username!', 'cp' );
 						$found_errors++;
 					}
 					elseif ( ! is_email( $email ) ) {
-						self::$form_message = __( 'E-mail address is not valid.', 'cp' );
+						$this->form_message = __( 'E-mail address is not valid.', 'cp' );
 						$found_errors++;
 					}
 					elseif( email_exists( $email ) ) {
-						self::$form_message = __( 'Sorry, that email address is already used!', 'cp' );
+						$this->form_message = __( 'Sorry, that email address is already used!', 'cp' );
 						$found_errors++;
 					}
 					elseif ( $passwd != $passwd2 ) {
-						self::$form_message = __( 'Passwords don\'t match', 'cp' );
+						$this->form_message = __( 'Passwords don\'t match', 'cp' );
 						$found_errors++;
 					}
 					elseif ( ! $this->is_password_strong() ) {
 						if( $this->is_password_strength_meter_enabled() )
 						{
-							self::$form_message = __('Your password is too weak.', 'cp');
+							$this->form_message = __('Your password is too weak.', 'cp');
 						}
 						else {
-							self::$form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'cp'), $min_password_length);
+							$this->form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'cp'), $min_password_length);
 						}
 						$found_errors++;
 					}
 					elseif ( isset( $_POST['tos_agree'] ) && ! coursepress_is_true( $_POST['tos_agree'] ) ) {
-						self::$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'cp' );
+						$this->form_message = __( 'You must agree to the Terms of Service in order to signup.', 'cp' );
 						$found_errors++;
 					}
 				}
 				else {
-					self::$form_message = __( 'All fields are required.', 'cp' );
+					$this->form_message = __( 'All fields are required.', 'cp' );
 					$found_errors++;
 				}
 
 				if ( $found_errors > 0 ) {
-					self::$form_message_class = 'red';
+					$this->form_message_class = 'red';
 				}
 				else {
 					// Register new user
@@ -122,8 +122,8 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						$user = wp_signon( $creds, false );
 
 						if ( is_wp_error( $user ) ) {
-							self::$form_message = $user->get_error_message();
-							self::$form_message_class = 'red';
+							$this->form_message = $user->get_error_message();
+							$this->form_message_class = 'red';
 						}
 
 						if ( ! empty( $_POST['course_id'] ) ) {
@@ -141,8 +141,8 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						exit;
 					}
 					else {
-						self::$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'cp' );
-						self::$form_message_class = 'red';
+						$this->form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'cp' );
+						$this->form_message_class = 'red';
 					}
 				}
 			}

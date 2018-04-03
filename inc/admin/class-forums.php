@@ -42,9 +42,24 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		return $columns;
 	}
 
+	/**
+	 * render error
+	 *
+	 * @since 3.0.0
+	 */
+	private function render_error() {
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Forums' ) ) );
+	}
+
 	private function get_page_list() {
 		$search         = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$current_status = $this->get_status();
+		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
+		$course    = coursepress_get_course( $course_id );
+		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {
+			$this->render_error();
+			return;
+		}
 		// Get forums.
 		$forums              = $this->get_list( $current_status, $count );
 		$forum_courses_ids   = wp_list_pluck( $forums, 'course_id' );

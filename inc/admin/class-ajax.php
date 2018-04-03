@@ -23,8 +23,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
 		add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'unenroll' ) );
 		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
-		// Register user
-		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
 		// Update profile
 		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 		// Submit module
@@ -729,7 +727,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		// Send email invitation.
 		if ( $result ) {
-			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
+			$data = (array) $request;
+			$data['code'] = $result;
+			$data['message'] = __( 'Invitation email has been sent.', 'cp' );
+			wp_send_json_success( $data );
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 	}
@@ -927,8 +928,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$data = array( 'student_id' => $student_id );
 		wp_send_json_success( $data );
 	}
-
-	public function register_user() {}
 
 	public function update_profile() {
 		$request = $_POST;
@@ -1210,7 +1209,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				'id' => $request->id,
 				'status' => $status,
 				'success' => true,
-				'button_text' => esc_html( $status? __( 'Approve', 'cp' ):__( 'Unapprove', 'cp' ) ),
+				'button_text' => esc_html( $status === 'unapproved' ? __( 'Approve', 'cp' ) : __( 'Unapprove', 'cp' ) ),
 			);
 			return $response;
 		}
@@ -1352,6 +1351,50 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			wp_send_json_success( $success );
 		}
 		wp_send_json_error( true );
+	}
+
+	/**
+	 * Remove instructor course invitation.
+	 *
+	 * @param object $request Request data.
+	 */
+	public function remove_instructor_invite( $request ) {
+
+		$success = false;
+		if ( ! empty( $request->course_id ) && !empty( $request->code ) ) {
+			// Continue only if user can withdraw student.
+			if ( ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove instructor invitation.', 'cp' ) ) );
+			}
+			$success = CoursePress_Data_Instructor::delete_invitation( $request->course_id, $request->code );
+		}
+		// Success resoponse with email.
+		if ( $success ) {
+			wp_send_json_success( array( 'code' => $request->code ) );
+		}
+		wp_send_json_error(  array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
+	}
+
+	/**
+	 * Remove facilitator course invitation.
+	 *
+	 * @param object $request Request data.
+	 */
+	public function remove_facilitator_invite( $request ) {
+
+		$success = false;
+		if ( ! empty( $request->course_id ) && !empty( $request->code ) ) {
+			// Continue only if user can withdraw student.
+			if ( ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove facilitator invitation.', 'cp' ) ) );
+			}
+			$success = CoursePress_Data_Facilitator::delete_invitation( $request->course_id, $request->code );
+		}
+		// Success resoponse with email.
+		if ( $success ) {
+			wp_send_json_success( array( 'code' => $request->code ) );
+		}
+		wp_send_json_error(  array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
 	}
 
 	public function search_students( $request ) {

@@ -34,6 +34,17 @@
             display: inline-block;
         }
     }
+	#invited-facilitators {
+		margin-left: 5px;
+	}
+	#invited-instructors,
+	#invited-facilitators {
+		width: 50%;
+	}
+	.cp-invited-container table {
+		border-collapse: separate !important;
+	}
+    .cp-invited-container table,
     #cp-instructors-box,
     #cp-facilitators-box {
         position: relative;

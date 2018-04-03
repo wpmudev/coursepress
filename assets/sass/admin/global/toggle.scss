@@ -36,7 +36,8 @@
       @include transition(0.5s);
     }
   }
-  .cp-toggle-input:disabled + .cp-toggle-btn {
+  .cp-toggle-input:disabled + .cp-toggle-btn,
+  .wpmui-field-checkbox:disabled + .wpmui-checkbox-caption .cp-toggle-btn {
     opacity: 0.5;
     cursor: not-allowed;
   }

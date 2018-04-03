@@ -77,18 +77,27 @@
 					'label' => __( 'Top', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
 					'flex' => true,
+					'data'  => array(
+						'name' => 'margin.top',
+					),
 				),
 				'margin.left' => array(
 					'type' => 'number',
 					'label' => __( 'Left', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
 					'flex' => true,
+					'data'  => array(
+						'name' => 'margin.left',
+					),
 				),
 				'margin.right' => array(
 					'type' => 'number',
 					'label' => __( 'Right', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
 					'flex' => true,
+					'data'  => array(
+						'name' => 'margin.right',
+					),
 				),
 			),
 		);
@@ -120,18 +129,27 @@
 					'label' => __( 'X', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/x', 0 ),
 					'flex'  => true,
+					'data'  => array(
+						'name' => 'certificate_logo_position.x',
+					),
 				),
 				'certificate_logo_position.y' => array(
 					'type'  => 'number',
 					'label' => __( 'Y', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/y', 0 ),
 					'flex'  => true,
+					'data'  => array(
+						'name' => 'certificate_logo_position.y',
+					),
 				),
 				'certificate_logo_position.w' => array(
 					'type'  => 'number',
 					'label' => __( 'Width', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/w', 0 ),
 					'flex'  => true,
+					'data'  => array(
+						'name' => 'certificate_logo_position.w',
+					),
 				),
 			),
 		);

@@ -39,6 +39,7 @@ class CoursePress_Step_Written extends CoursePress_Step {
 			$step_id           = $this->__get( 'ID' );
 			$user              = coursepress_get_user();
 			$previous_response = $this->get_user_response( $user->ID );
+			$questions         = $this->__get( 'questions' );
 
 			foreach ( $response as $course_id => $response2 ) {
 				foreach ( $response2 as $unit_id => $response3 ) {
@@ -48,6 +49,22 @@ class CoursePress_Step_Written extends CoursePress_Step {
 							// Redirect back.
 							$referer = filter_input( INPUT_POST, 'referer_url' );
 							$error   = __( 'Response is required for all fields.', 'cp' );
+							coursepress_set_cookie( 'cp_step_error', $error, time() + 120 );
+							wp_safe_redirect( $referer );
+							exit;
+						}
+						// If answer is empty then add previous answer.
+						if ( empty( $ans ) && ! empty( $unit_previous_response[ $step_id ][ $index ] ) ) {
+							$data['response'][ $course_id ][ $unit_id ][ $step_id ][ $index ] = $unit_previous_response[ $step_id ][ $index ];
+						}
+
+						$word_count = str_word_count( $ans );
+						$question   = $questions[ $index ];
+						if ( ! empty( $ans ) && ! empty( $question['word_limit'] ) && $word_count > $question['word_limit'] ) {
+							$question_value = ( $question['question'] ) ? $question['question'] : $question['title'];
+							// Redirect back.
+							$referer = filter_input( INPUT_POST, 'referer_url' );
+							$error   = sprintf( __( 'Word limit for question no. %1$d is %2$d.', 'cp' ), $index + 1, $question['word_limit'] );
 							coursepress_set_cookie( 'cp_step_error', $error, time() + 120 );
 							wp_safe_redirect( $referer );
 							exit;

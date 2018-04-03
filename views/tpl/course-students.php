@@ -68,7 +68,7 @@
             <?php } ?>
                 <tr class="noitems <?php echo count( $students ) > 0? 'hidden':''; ?>">
                     <td colspan="4">
-<?php if ( 1 > $all_student_count ) { ?>
+<?php if ( 1 > $all_student_count || 'all'  === $show ) { ?>
                         <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
                         <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
 <?php } else {
@@ -153,7 +153,7 @@
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <tr class="no-invites <?php echo empty( $invited_students ) ? '' : 'inactive'; ?>">
+                    <tr class="no-invites <?php $array = (array)$invited_students; echo empty( $array ) ? '' : 'inactive'; ?>">
                         <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                 </tbody>

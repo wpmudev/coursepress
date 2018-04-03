@@ -661,6 +661,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_view_units( $course_id )  ) {
+			unset( $menu_list['course-units'] );
+		}
+
 		/**
 		 * Allow population of additional menu list.
 		 *
@@ -696,6 +701,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			),
 		);
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id, 'sample_courses' => $sample_courses ) );
+		$invited_instructors = (array) get_post_meta( $course_id, 'instructor_invites', true );
+		$invited_facilitators = (array) get_post_meta( $course_id, 'facilitator_invites', true );
+		$this->localize_array['invited_instructors'] = $invited_instructors;
+		$this->localize_array['invited_facilitators'] = $invited_facilitators;
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
 		$tokens = array(

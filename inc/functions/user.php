@@ -252,7 +252,11 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( $user->is_enrolled_at( $course_id ) ) {
 		return new WP_Error( 'already_enrolled', __( 'User can not be added. User is already enrolled.', 'cp' ) );
 	}
-	$user->add_course_student( $course );
+
+	$enrollment_type = coursepress_course_get_setting( $course_id, 'enrollment_type' );
+	$check_passcode  = ( 'passcode' === $enrollment_type );
+	$user->add_course_student( $course, $check_passcode );
+
 	/**
 	 * Fired whenever a new student is added to a course.
 	 *
@@ -541,7 +545,7 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
  */
 function coursepress_get_available_users( $course_id = 0, $type = '', $search = '' ) {
 	$args = array();
-	
+
 	// Search user fields.
 	if ( ! empty( $search ) ) {
 		$args['search'] = '*' . $search . '*';

@@ -593,7 +593,8 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			if ( self::can_manage_courses( $user_id ) ) {
-				$return = self::can_update_course( $course_id );
+				$update_course = self::can_update_course( $course_id );
+				$return        = $update_course ? user_can( $user_id, 'coursepress_view_all_units_cap' ) : false;
 			}
 		}
 
