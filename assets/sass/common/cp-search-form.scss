@@ -1,9 +1,6 @@
-.cp-search-form {
+.cp-search-form,
+.cp-action-form {
     clear: left;
-    .cp-btn {
-        padding-bottom: 6px;
-        padding-top: 6px;
-    }
     .cp-flex {
         .cp-div {
             margin-left: 20px;
@@ -19,9 +16,16 @@
         }
     }
 }
+.cp-search-form {
+    .cp-btn {
+        padding-bottom: 6px;
+        padding-top: 6px;
+    }
+}
 @media screen {
     @media (min-width: 768px) {
-        .cp-search-form {
+        .cp-search-form,
+        .cp-action-form {
             margin-bottom: 15px;
             .cp-btn-active {
                 display: inline-block;
