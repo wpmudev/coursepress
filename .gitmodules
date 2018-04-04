@@ -5,7 +5,7 @@
 [submodule "themes/coursepress"]
 	path = themes/coursepress
 	url = git@bitbucket.org:incsub/coursepress-theme.git
-	branch = coursepress/2.0-dev
+	branch = development
 
 [submodule "inc/external/wpmu-lib"]
 	path = inc/external/wpmu-lib

@@ -27,9 +27,8 @@
                 // Setup UI elements.
                 this.on( 'view_rendered', this.setUpUI, this );
                 // Handle ajax request responses.
-                this.request.on( 'coursepress:success_send_email_invite', this.inviteSuccess, this );
+                this.request.on( 'coursepress:success_send_email_invite', this.inviteSuccess );
                 this.request.on( 'coursepress:success_assign_to_course', this.assignSuccess, this );
-                this.request.on( 'coursepress:error_send_email_invite', this.inviteError, this );
                 this.request.on( 'coursepress:error_assign_to_course', this.assignError, this );
                 this.render();
             },
@@ -121,22 +120,10 @@
              *
              * @param data
              */
-            inviteSuccess: function ( data ) {
+            inviteSuccess: function () {
                 this.$('#cp-invite-first-name-' + this.type).val('');
                 this.$('#cp-invite-last-name-' + this.type).val('');
                 this.$('#cp-invite-email-' + this.type).val('');
-                // Show response message.
-                this.showResponse(data, this.inv_resp);
-            },
-
-            /**
-             * After invitation error.
-             *
-             * @param data
-             */
-            inviteError: function ( data ) {
-                // Show response message.
-                this.showResponse(data, this.inv_resp);
             },
 
             /**
@@ -169,37 +156,11 @@
                     this.course.$('#cp-no-' + this.type).remove();
                 }
                 this.$('#cp-course-' + this.type).val('');
-                this.showResponse(data, this.assgn_resp);
                 /**
                  * reset dropdown
                  */
                 $('#cp-course-instructor').empty();
                 $('#cp-course-facilitator').empty();
-            },
-
-            /**
-             * After error on assign.
-             *
-             * @param data
-             */
-            assignError: function ( data ) {
-                // Show response message.
-                this.showResponse(data, this.assgn_resp);
-            },
-
-            /**
-             * Show response message.
-             *
-             * @param data
-             * @param selector
-             */
-            showResponse: function ( data, selector_class ) {
-                var selector = this.$(selector_class);
-                // Show response message.
-                selector.html(data.message).removeClass('inactive');
-                window.setTimeout(function() {
-                    selector.html('').addClass('inactive');
-                }, 2500);
             }
         });
     });
