@@ -73,7 +73,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$count = 0;
 		$screen = get_current_screen();
 		// Set query parameters back.
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$search = isset( $_GET['student_search'] ) ? $_GET['student_search'] : '';
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
 		$unit_id = empty( $_GET['student_progress'] ) ? 0 : $_GET['student_progress'];
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
