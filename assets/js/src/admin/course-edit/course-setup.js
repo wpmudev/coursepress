@@ -344,8 +344,8 @@
                         this.model.set( key, val );
                         input = this.$('[name="' + key + '"]');
                         if ( input.length &&
-                                ! input.is('[type="checkbox"]') ||
-                                ! input.is('[type="radio"]') ||
+                                ! input.is('[type="checkbox"]') &&
+                                ! input.is('[type="radio"]') &&
                                 ! input.is('select') ) {
                             input.val(val);
                             input.trigger('keyup');
