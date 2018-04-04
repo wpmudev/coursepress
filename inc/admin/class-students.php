@@ -154,7 +154,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		$count  = 0;
 		$screen = get_current_screen();
 		// Set query parameters back.
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$search = isset( $_GET['student_search'] ) ? $_GET['student_search'] : '';
 		// Data for template.
 		$args = array(
 			'columns'        => get_column_headers( $screen ),

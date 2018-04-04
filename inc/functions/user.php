@@ -569,8 +569,8 @@ function coursepress_get_available_users( $course_id = 0, $type = '', $search = 
  */
 function coursepress_get_students( $args = array(), &$count = 0 ) {
 	// Handle the search if search query found.
-	if ( ! empty( $_GET['s'] ) ) {
-		$args['search'] = '*' . $_GET['s'] . '*';
+	if ( ! empty( $_GET['student_search'] ) ) {
+		$args['search'] = '*' . $_GET['student_search'] . '*';
 	}
 	// Get only the student roles.
 	$args['role'] = 'coursepress_student';
