@@ -273,17 +273,52 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * upgrade steps
 		 */
+		$types = array(
+			'input-select' => 'select',
+			'input-radio' => 'single',
+			'input-quiz' => 'multiple',
+		);
 		foreach ( $units as $unit_id => $steps ) {
-			foreach ( $steps as $step_id => $data ) {
-				if ( isset( $data->post_content ) && ! empty( $data->post_content ) ) {
-					$args = array(
-						'ID' => $step_id,
-						'meta_input' => array(
-							'show_content' => true,
-						),
-					);
-					wp_update_post( $args );
+			foreach ( $steps as $step_id => $step ) {
+				$args = array(
+					'ID' => $step_id,
+					'meta_input' => array(),
+				);
+				if ( isset( $step->post_content ) && ! empty( $step->post_content ) ) {
+					$args['meta_input']['show_content'] = true;
 				}
+				$type = get_post_meta( $step_id, 'module_type', true );
+				$answers = $checked = array();
+				switch ( $type ) {
+					case 'input-select':
+					case 'input-radio':
+					case 'input-quiz':
+						$answers = get_post_meta( $step_id, 'answers', true );
+						$checked = array();
+						$answer = get_post_meta( $step_id, 'answers_selected', true );
+						foreach ( $answers as $id => $a ) {
+							if ( is_array( $answer ) ) {
+								$checked[ $id ] = in_array( $id, $answer )? 1:'';
+							} else {
+								$checked[ $id ] = $id == $answer? 1:'';
+							}
+						}
+						$args['meta_input']['module_type'] = 'input-quiz';
+						$args['meta_input']['questions'] = array(
+						'view'.$step_id => array(
+							'title' => $step->post_title,
+							'question' => $step->post_content,
+							'order' => 0,
+							'type' => $types[ $type ],
+							'options' => array(
+								'answers' => $answers,
+								'checked' => $checked,
+							),
+						),
+						);
+					break;
+				}
+				wp_update_post( $args );
 			}
 		}
 		/**
