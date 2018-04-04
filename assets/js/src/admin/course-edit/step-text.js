@@ -23,6 +23,10 @@
                        //self.stepView.trigger('coursepress:model_updated', self.stepView.model, self.stepView);
                    }
                });
+
+               // Always show content.
+               this.model.set('meta_show_content', true);
+               this.model.set('show_content', true);
            }
        });
     });
