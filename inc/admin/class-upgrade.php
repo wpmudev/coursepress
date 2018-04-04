@@ -25,7 +25,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * try to upgrade courses
 		 */
-		add_action( 'init', array( $this, 'count_courses' ), PHP_INT_MAX );
+		$this->count_courses();
 		if ( 0 === $this->count ) {
 			return;
 		}
@@ -63,7 +63,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	public function upgrade_settings() {
-		global $CoursePress;
+		global $CoursePress, $wpdb;
 		$version = get_option( 'coursepress_settings_version' );
 		if ( empty( $version ) ) {
 			$settings = coursepress_get_setting();
@@ -71,6 +71,32 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['general']['version'] = $CoursePress->version;
 			update_option( 'coursepress_settings_version', $CoursePress->version );
 			coursepress_update_setting( true, $settings );
+			/**
+			 * upgrade notifications
+			 */
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_type' => 'cp_notification' ),
+				array( 'post_type' => 'notifications' )
+			);
+			$args = array(
+				'nopaging' => true,
+				'post_type' => 'cp_notification',
+				'fields' => 'ids',
+			);
+			$query = new WP_Query( $args );
+			if ( isset( $query->posts ) && ! empty( $query->posts ) ) {
+				foreach ( $query->posts as $id ) {
+					$wpdb->update(
+						$wpdb->postmeta,
+						array( 'meta_key' => 'alert_course' ),
+						array(
+							'meta_key' => 'course_id',
+							'post_id' => $id,
+						)
+					);
+				}
+			}
 		}
 	}
 
@@ -220,9 +246,84 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$units[ $unit->ID ] = $unit->get_steps( false, true );
 		}
 		/**
+		 * upgrade units
+		 */
+		foreach ( $course_units as $unit ) {
+			$post_content = html_entity_decode( $unit->post_content );
+			$args = array(
+				'ID' => $unit->ID,
+				'post_content' => $post_content,
+				'meta_input' => array(),
+			);
+			if ( ! empty( $post_content ) ) {
+				$args['meta_input']['use_description'] = true;
+			}
+			if ( isset( $unit->unit_feature_image ) && ! empty( $unit->unit_feature_image ) ) {
+				$args['meta_input']['use_feature_image'] = true;
+			}
+			$page_description = get_post_meta( $unit->ID, 'page_description', true );
+			if ( ! empty( $page_description ) && is_array( $page_description ) ) {
+				foreach ( $page_description as $page_description_key => $page_description_value ) {
+					$page_description[ $page_description_key ] = html_entity_decode( $page_description_value );
+				}
+				$args['meta_input']['page_description'] = $page_description;
+			}
+			wp_update_post( $args );
+		}
+		/**
+		 * upgrade steps
+		 */
+		$types = array(
+			'input-select' => 'select',
+			'input-radio' => 'single',
+			'input-quiz' => 'multiple',
+		);
+		foreach ( $units as $unit_id => $steps ) {
+			foreach ( $steps as $step_id => $step ) {
+				$args = array(
+					'ID' => $step_id,
+					'meta_input' => array(),
+				);
+				if ( isset( $step->post_content ) && ! empty( $step->post_content ) ) {
+					$args['meta_input']['show_content'] = true;
+				}
+				$type = get_post_meta( $step_id, 'module_type', true );
+				$answers = $checked = array();
+				switch ( $type ) {
+					case 'input-select':
+					case 'input-radio':
+					case 'input-quiz':
+						$answers = get_post_meta( $step_id, 'answers', true );
+						$checked = array();
+						$answer = get_post_meta( $step_id, 'answers_selected', true );
+						foreach ( $answers as $id => $a ) {
+							if ( is_array( $answer ) ) {
+								$checked[ $id ] = in_array( $id, $answer )? 1:'';
+							} else {
+								$checked[ $id ] = $id == $answer? 1:'';
+							}
+						}
+						$args['meta_input']['module_type'] = 'input-quiz';
+						$args['meta_input']['questions'] = array(
+						'view'.$step_id => array(
+							'title' => $step->post_title,
+							'question' => $step->post_content,
+							'order' => 0,
+							'type' => $types[ $type ],
+							'options' => array(
+								'answers' => $answers,
+								'checked' => $checked,
+							),
+						),
+						);
+					break;
+				}
+				wp_update_post( $args );
+			}
+		}
+		/**
 		 * course_enrolled_student_id
 		 */
-
 		$students = get_post_meta( $course_id, 'course_enrolled_student_id', false );
 		if ( ! empty( $students ) && is_array( $students ) ) {
 			$result['students']['total'] = count( $students );
@@ -337,6 +438,25 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				&& ! empty( $meta[ $key ] )
 			) {
 				$visible[ $key ] = maybe_unserialize( $meta[ $key ][0] );
+			}
+		}
+		/**
+		 * updagre forums
+		 */
+		$args = array(
+			'post_type' => 'discussions',
+			'post_status' => 'any',
+			'fields' => 'ids',
+		);
+		$query = new WP_Query( $args );
+		foreach ( $query->posts as $id ) {
+			$course_id = get_post_meta( $id, 'course_id', true );
+			if ( ! empty( $course_id ) ) {
+				$args = array(
+					'ID' => $id,
+					'post_parent' => $course_id,
+				);
+				wp_update_post( $args );
 			}
 		}
 		/**

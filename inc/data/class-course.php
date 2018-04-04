@@ -280,25 +280,13 @@ final class CoursePress_Data_Course {
 		$units = self::get_units( $course_id, $status );
 
 		foreach ( $units as $unit ) {
-			$items = coursepress_set_array_val( $items, $unit->ID . '/order', get_post_meta( $unit->ID, 'unit_order', true ) );
-			$items = coursepress_set_array_val( $items, $unit->ID . '/unit', $unit );
-			$page_titles = get_post_meta( $unit->ID, 'page_title', true );
-			$page_description = (array) get_post_meta( $unit->ID, 'page_description', true );
-			$page_feature_image = (array) get_post_meta( $unit->ID, 'page_feature_image', true );
-			$show_page_title = (array) get_post_meta( $unit->ID, 'show_page_title', true );
-			$page_path = $unit->ID . '/pages';
-
+			$items       = coursepress_set_array_val( $items, $unit->ID . '/order', $unit->menu_order );
+			$items       = coursepress_set_array_val( $items, $unit->ID . '/unit', $unit );
+			$page_titles = get_post_meta( $unit->ID, 'course_modules', true );
+			$page_path   = $unit->ID . '/pages';
 			if ( is_array( $page_titles ) ) {
-				foreach ( $page_titles as $page_id => $page_title ) {
-					$page_number = str_replace( 'page_', '', $page_id );
-
-					$items = coursepress_set_array_val( $items, $page_path . '/' . $page_number . '/title', $page_title );
-
-					$description = ! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : '';
-
-					$items = coursepress_set_array_val( $items, $page_path . '/' . $page_number . '/description', $description );
-					$items = coursepress_set_array_val( $items, $page_path . '/' . $page_number . '/feature_image', ! empty( $page_feature_image[ $page_id ] ) ? $page_feature_image[ $page_id ] : '' );
-					$items = coursepress_set_array_val( $items, $page_path . '/' . $page_number . '/visible', isset( $show_page_title[ $page_number - 1 ] ) ? $show_page_title[ $page_number -1 ] : false );
+				foreach ( $page_titles as $page_number => $page_title ) {
+					$items = coursepress_set_array_val( $items, $page_path . '/' . $page_number, $page_title );
 
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
 
