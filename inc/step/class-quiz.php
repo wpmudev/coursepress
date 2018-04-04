@@ -168,6 +168,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 								wp_safe_redirect( $referer );
 								exit;
 							}
+
+							if ( ! isset( $response3[ $pos ] ) && isset( $previous_response[ $pos ] ) ) {
+								$data['response'][ $pos ] = $previous_response[ $pos ];
+							}
 						}
 					}
 					if ( $wrong > 0 ) {

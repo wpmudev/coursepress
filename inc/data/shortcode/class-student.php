@@ -451,39 +451,18 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 						}
 						$module_count += 1;
 						$module_type = $attributes['module_type'];
-						$response = $user->get_response( $student_id, $course_id, $unit_id, $module_id, $student_progress );
-						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
+						$response = $user->get_response( $course_id, $unit_id, $module_id, $student_progress );
+						$excluded_modules = array( 'input-written', 'input-upload' );
 						$auto_grade = true;
-						if ( in_array( $module_type, $excluded_modules ) ) {
+						$is_assessable = ! empty( $attributes['assessable'] ) && coursepress_is_true( $attributes['assessable'] );
+						if ( in_array( $module_type, $excluded_modules ) && $is_assessable ) {
 							$graded_by = coursepress_get_array_val( $response, 'graded_by' );
 							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
 								$auto_grade = false;
 							}
 						}
-						$response_display = $response['response'];
+						$response_display = ! empty( $response['response'] ) ? $response['response'] : '';
 						switch ( $attributes['module_type'] ) {
-							case 'input-checkbox': case 'input-radio': case 'input-select':
-										$answers = $attributes['answers'];
-										$selected = (array) $attributes['answers_selected'];
-										if ( empty( $response ) ) {
-											$response_display = '&ndash;';
-										} else {
-											$add = false;
-											foreach ( $answers as $key => $answer ) {
-												$the_answer = in_array( $key, $selected );
-												$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
-												if ( 'input-radio' === $attributes['module_type'] ) {
-													$student_answer = $response_display == $key;
-												}
-												if ( $student_answer && $the_answer ) {
-													$add = true;
-												}
-											}
-											if ( $add && $auto_grade ) {
-												$module_done++;
-											}
-										}
-							break;
 							case 'input-upload':
 								if ( $response && $auto_grade ) {
 									$module_done++;
@@ -494,14 +473,16 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 								$add = false;
 								foreach ( $questions as $q_index => $question ) {
 									$options = (array) $question['options'];
-									if ( ! empty( $response_display[ $q_index ] ) ) {
+									if ( 'multiple' === $question['type'] && ! empty( $response_display[ $q_index ] ) ) {
 										$answers = $response_display[ $q_index ];
 										foreach ( $answers as $a_index => $answer ) {
-											if ( ! empty( $answer ) ) {
-												if ( $correct ) {
+												if ( $answer === $options['checked'][ $a_index ] ) {
 													$add = true;
 												}
-											}
+										}
+									} else if( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
+										if ( $options['checked'][ $response_display[ $q_index ] ] ) {
+											$add = true;
 										}
 									}
 								}
@@ -509,41 +490,11 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 									$module_done++;
 								}
 								break;
-							case 'input-text': case 'input-textarea':
+							case 'input-written':
 									if ( ! empty( $response_display ) && $auto_grade ) {
 										$module_done++;
 									}
 							break;
-							case 'input-form':
-								$response = $response_display;
-								$response_display = '';
-								if ( ! empty( $attributes['questions'] ) ) {
-									$questions = $attributes['questions'];
-									$add = false;
-									foreach ( $questions as $q_index => $question ) {
-										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
-										if ( $student_response  ) {
-											if ( 'selectable' == $question['type'] ) {
-												$options = $question['options']['answers'];
-												$checked = $question['options']['checked'];
-												foreach ( $options as $ai => $answer ) {
-													if ( $student_response == $ai ) {
-														$the_answer = ! empty( $checked[ $ai ] );
-														if ( $the_answer === $student_response ) {
-															$add = true;
-														}
-													}
-												}
-											} else {
-												$add = true;
-											}
-										}
-									}
-									if ( $add && $auto_grade ) {
-										$module_done++;
-									}
-								}
-								break;
 						}
 					}
 				}

@@ -24,8 +24,20 @@ get_header(); ?>
 				coursepress_get_template( 'course', 'submenu' );
 				?>
                 </header>
-<p><?php _e( 'TODO', 'cp' ); ?></p>
-                <!-- @todo: Put course grade here -->
+                <div class="cp-student-grades">
+                  <?php
+                    $course    = coursepress_get_course();
+                    $shortcode = sprintf( '[student_grades_table course_id="%d"]', $course->ID );
+                    echo do_shortcode( $shortcode );
+                  ?>
+                  <div class="total_grade pull-right">
+                  <?php
+                    $shortcode = sprintf( '[course_progress course_id="%d"]', $course->ID );
+                    echo apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
+                    printf( ' %1$s%', do_shortcode( $shortcode ) );
+                  ?>%
+                  </div>
+                </div>
             </div>
         </div>
     </div>
