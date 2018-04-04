@@ -63,7 +63,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	public function upgrade_settings() {
-		global $CoursePress;
+		global $CoursePress, $wpdb;
 		$version = get_option( 'coursepress_settings_version' );
 		if ( empty( $version ) ) {
 			$settings = coursepress_get_setting();
@@ -71,6 +71,32 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['general']['version'] = $CoursePress->version;
 			update_option( 'coursepress_settings_version', $CoursePress->version );
 			coursepress_update_setting( true, $settings );
+			/**
+			 * upgrade notifications
+			 */
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_type' => 'cp_notification' ),
+				array( 'post_type' => 'notifications' )
+			);
+			$args = array(
+				'nopaging' => true,
+				'post_type' => 'cp_notification',
+				'fields' => 'ids',
+			);
+			$query = new WP_Query( $args );
+			if ( isset( $query->posts ) && ! empty( $query->posts ) ) {
+				foreach ( $query->posts as $id ) {
+					$wpdb->update(
+						$wpdb->postmeta,
+						array( 'meta_key' => 'alert_course' ),
+						array(
+							'meta_key' => 'course_id',
+							'post_id' => $id,
+						)
+					);
+				}
+			}
 		}
 	}
 
@@ -243,6 +269,22 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				$args['meta_input']['page_description'] = $page_description;
 			}
 			wp_update_post( $args );
+		}
+		/**
+		 * upgrade steps
+		 */
+		foreach ( $units as $unit_id => $steps ) {
+			foreach ( $steps as $step_id => $data ) {
+				if ( isset( $data->post_content ) && ! empty( $data->post_content ) ) {
+					$args = array(
+						'ID' => $step_id,
+						'meta_input' => array(
+							'show_content' => true,
+						),
+					);
+					wp_update_post( $args );
+				}
+			}
 		}
 		/**
 		 * course_enrolled_student_id

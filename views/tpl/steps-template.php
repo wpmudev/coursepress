@@ -1,5 +1,5 @@
 <script type="text/template" id="coursepress-step-tpl">
-    <div class="icon-move cp-step-header">
+    <div class="icon-move cp-step-header" data-step-id="{{ID}}">
         <span class="step-type">{{window._coursepress.steps[module_type]}}</span>
         <input type="text" name="post_title" value="{{post_title}}" />
         <div class="step-config">
