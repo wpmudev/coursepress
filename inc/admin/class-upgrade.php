@@ -459,7 +459,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				wp_update_post( $args );
 			}
 		}
-		return;
 		/**
 		 * update course CoursePress version
 		 */
