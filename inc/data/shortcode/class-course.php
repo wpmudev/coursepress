@@ -1199,8 +1199,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_list_image( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'width' => coursepress_get_setting( 'course/image_width', 600 ),
-			'height' => coursepress_get_setting( 'course/image_height', 500 ),
+			'width' => coursepress_get_setting( 'course/image_width', 235 ),
+			'height' => coursepress_get_setting( 'course/image_height', 235 ),
 			'class' => '',
 		), $atts, 'course_list_image' );
 		/**
@@ -1242,6 +1242,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		return '';
 	}
 
+	/**
+	 * Load external js library to show videos.
+	 *
+	 * @param int $id
+	 * @param string $src
+	 * @param bool $version
+	 */
 	private function set_external_js( $id, $src, $version = false ) {
 		global $CoursePress;
 
@@ -1252,6 +1259,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
 	}
 
+	/**
+	 * Load external css library to show videos.
+	 *
+	 * @param int $id
+	 * @param string $src
+	 */
 	private function set_external_css( $id, $src ) {
 		global $CoursePress;
 
@@ -1271,8 +1284,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_featured_video( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'width' => '',
-			'height' => '',
+			'width' => coursepress_get_setting( 'course/image_width', 600 ),
+			'height' => coursepress_get_setting( 'course/image_height', 500 ),
 			'class' => '',
 		), $atts, 'course_featured_video' );
 
