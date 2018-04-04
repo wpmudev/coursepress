@@ -17,7 +17,7 @@
     </h1>
     <div class="coursepress-page">
         <?php cp_subsubsub( $statuses ); ?>
-        <form method="get" class="cp-search-form" id="cp-search-form">
+        <form method="get" class="cp-action-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div" id="bulk-actions">
                     <label class="label"><?php _e( 'Bulk actions', 'cp' ); ?></label>

@@ -11,7 +11,7 @@
     <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
 
     <div class="coursepress-page">
-        <form method="get" class="cp-search-form" id="cp-search-form">
+        <form method="get" class="cp-action-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div" id="bulk-actions">
                     <label class="label"><?php _e( 'Bulk actions', 'cp' ); ?></label>
@@ -33,18 +33,20 @@
                 </div>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
-                    <select name="course_id">
-                        <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
-                        <?php if ( ! empty( $courses ) ) : ?>
-                            <?php foreach ( $courses as $course ) : ?>
-                                <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
-                                <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
-								echo $course->post_title;
-								echo $course->get_numeric_identifier_to_course_name( $course->ID );
-?></option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
+                    <div class="cp-input-clear">
+                        <select name="course_id">
+                            <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+                            <?php if ( ! empty( $courses ) ) : ?>
+                                <?php foreach ( $courses as $course ) : ?>
+                                    <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
+                                    <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
+                                    echo $course->post_title;
+                                    echo $course->get_numeric_identifier_to_course_name( $course->ID );
+    ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Search by course', 'cp' ); ?></label>

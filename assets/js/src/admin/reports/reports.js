@@ -14,6 +14,12 @@
             },
             initialize: function( model ) {
                 this.model = model;
+                this.on( 'view_rendered', this.setUI, this );
+                this.render();
+            },
+            // Setup UI.
+            setUI: function() {
+                this.$('select').select2();
             },
             getModel: function() {
                 return this.model;

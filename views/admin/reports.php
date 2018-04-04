@@ -9,7 +9,7 @@
 <div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php esc_attr_e( $download_nonce ); ?>">
 	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
-        <form method="get" class="cp-search-form" id="cp-search-form">
+        <form method="get" class="cp-action-form" id="cp-search-form">
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
             <div class="cp-flex">
 <?php if ( 0 < count( $items ) ) { ?>
