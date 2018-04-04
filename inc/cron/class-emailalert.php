@@ -446,8 +446,6 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 		FROM {$wpdb->users} usr
 		INNER JOIN {$wpdb->usermeta} enrol ON usr.ID = enrol.user_id AND enrol.meta_key = %s
 		LEFT JOIN {$wpdb->usermeta} notif ON usr.ID = notif.user_id AND notif.meta_key = %s
-		WHERE
-			notif.meta_value IS NULL
 		ORDER BY usr.ID
 		LIMIT 0, %d
 		";

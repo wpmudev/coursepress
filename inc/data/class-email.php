@@ -571,8 +571,6 @@ class CoursePress_Data_Email {
 			$course_address = get_permalink( $course_id );
 		}
 
-		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
-
 		// Email Content.
 		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
@@ -580,7 +578,6 @@ class CoursePress_Data_Email {
 			'COURSE_TITLE' => $course_name,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'STUDENT_DASHBOARD' => wp_login_url(),
-			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
 
 		/**
@@ -864,8 +861,6 @@ class CoursePress_Data_Email {
 			$course_address = get_permalink( $course_id );
 		}
 
-		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
-
 		// Email Content.
 		$vars = array(
 			'COURSE_NAME' => $course_name,
@@ -874,7 +869,6 @@ class CoursePress_Data_Email {
 			'STUDENT_FIRST_NAME' => $args['first_name'],
 			'STUDENT_LAST_NAME' => $args['last_name'],
 			'STUDENT_LOGIN' => $args['display_name'],
-			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
 
 		/**
@@ -999,7 +993,6 @@ class CoursePress_Data_Email {
 		}
 
 		$unit_address = $unit->get_permalink();
-		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
 
 		// Email Content.
 		$vars = array(
@@ -1010,7 +1003,6 @@ class CoursePress_Data_Email {
 			'UNIT_TITLE' => $unit_title,
 			'UNIT_OVERVIEW' => $unit_summary,
 			'UNIT_ADDRESS' => $unit_address,
-			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
 
 		/**
