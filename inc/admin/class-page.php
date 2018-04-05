@@ -785,6 +785,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'offset' => $per_page * ($paged - 1),
 			'paged'  => $paged,
 		);
+		/**
+		 * Students
+		 */
+		$students = array();
 		if ( $show_certified_students == 'yes' ) {
 			$students = $course->get_certified_students( $student_query_args );
 			$total_students = $certified_student_count;
@@ -795,6 +799,69 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$students = $course->get_students( $student_query_args );
 			$total_students = $all_student_count;
 		}
+		/**
+		 * row actions
+		 */
+		foreach ( $students as $student_id => $data ) {
+			$students[ $student_id ]->row_actions = array(
+				'id' => sprintf( __( 'ID: %d', 'cp' ), $student_id ),
+			);
+		}
+		/**
+		 * can see students submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_students();
+		if ( $can_see ) {
+			$link = add_query_arg(
+				array(
+					'page' => 'coursepress_students',
+					'view' => 'profile',
+				),
+				admin_url( 'admin.php' )
+			);
+			foreach ( $students as $student_id => $data ) {
+				$cp_profile = add_query_arg( 'student_id', $student_id, $link );
+				$students[ $student_id ]->coursepress_student_link = $cp_profile;
+				$students[ $student_id ]->row_actions['cp_profile'] = sprintf(
+					'<a href="%s">%s</a>',
+					$cp_profile,
+					__( 'Student Profile', 'cp' )
+				);
+				$can_edit = current_user_can( 'edit_user', $student_id );
+				if ( $can_edit ) {
+					$students[ $student_id ]->row_actions['wp_profile'] = sprintf(
+						'<a href="%s">%s</a>',
+						get_edit_user_link( $student_id ),
+						__( 'Edit User Profile', 'cp' )
+					);
+				}
+			}
+		}
+		/**
+		 * can see assessment submenu
+		 */
+		$can_see = CoursePress_Data_Capabilities::can_view_submenu_assessment();
+		if ( $can_see ) {
+			$link = add_query_arg(
+				array(
+					'course_id' => $course_id,
+					'page' => 'coursepress_assessments',
+					'tab' => 'details',
+				),
+				admin_url( 'admin.php' )
+			);
+			foreach ( $students as $student_id => $data ) {
+				$cp_profile = add_query_arg( 'student_id', $student_id, $link );
+				$students[ $student_id ]->row_actions['assessments'] = sprintf(
+					'<a href="%s">%s</a>',
+					$cp_profile,
+					__( 'Assessments', 'cp' )
+				);
+			}
+		}
+		/**
+		 * Prepare arguments to template
+		 */
 		$args = array(
 			'course_id'          => $course_id,
 			'total_students'     => $total_students,

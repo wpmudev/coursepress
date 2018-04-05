@@ -42,9 +42,31 @@
                     <td>
                         <div class="cp-flex cp-user">
                             <span class="gravatar"> <?php echo $student->get_avatar( 30 ); ?></span>
-                            <span class="user_login"><?php echo $student->user_login; ?></span>
+                            <span class="user_login"><?php
+							if ( isset( $student->coursepress_student_link ) ) {
+								printf( '<a href="%s">%s</a>', esc_url( $student->coursepress_student_link ), esc_html( $student->user_login ) );
+							} else {
+								echo esc_html( $student->user_login );
+							}
+?></span>
                             <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
-                        </div>
+						</div>
+<?php
+if ( isset( $student->row_actions ) ) {
+	echo '<div class="row-actions">';
+	$i = 0;
+	foreach ( $student->row_actions as $row_class => $row_content ) {
+		$sep = ++$i < count( $student->row_actions )? ' | ':'';
+		printf(
+			'<span class="%s"><span>%s</span>%s</span>',
+			esc_attr( $row_class ),
+			$row_content,
+			$sep
+		);
+	}
+	echo '</div>';
+}
+?>
                     </td>
                     <td class="cp-student-certified column-certified">
 		                <?php
@@ -68,7 +90,7 @@
             <?php } ?>
                 <tr class="noitems <?php echo count( $students ) > 0? 'hidden':''; ?>">
                     <td colspan="4">
-<?php if ( 1 > $all_student_count || 'all'  === $show ) { ?>
+<?php if ( 1 > $all_student_count || 'all' === $show ) { ?>
                         <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
                         <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
 <?php } else {
@@ -153,7 +175,7 @@
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <tr class="no-invites <?php $array = (array)$invited_students; echo empty( $array ) ? '' : 'inactive'; ?>">
+                    <tr class="no-invites <?php $array = (array) $invited_students; echo empty( $array ) ? '' : 'inactive'; ?>">
                         <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                 </tbody>

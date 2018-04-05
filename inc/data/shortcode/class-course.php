@@ -1242,6 +1242,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		return '';
 	}
 
+	/**
+	 * Load external js library to show videos.
+	 *
+	 * @param int $id
+	 * @param string $src
+	 * @param bool $version
+	 */
 	private function set_external_js( $id, $src, $version = false ) {
 		global $CoursePress;
 
@@ -1252,6 +1259,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
 	}
 
+	/**
+	 * Load external css library to show videos.
+	 *
+	 * @param int $id
+	 * @param string $src
+	 */
 	private function set_external_css( $id, $src ) {
 		global $CoursePress;
 
@@ -1271,20 +1284,17 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_featured_video( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'width' => coursepress_get_setting( 'course/image_width', 235 ),
-			'height' => coursepress_get_setting( 'course/image_height', 235 ),
+			'width' => coursepress_get_setting( 'course/image_width', 600 ),
+			'height' => coursepress_get_setting( 'course/image_height', 500 ),
 			'class' => '',
 		), $atts, 'course_featured_video' );
-		/**
-		 * Check course ID
-		 */
+
+		// Check course ID.
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {
 			return '';
 		}
-		/**
-		 * Check course
-		 */
+		// Check course.
 		$course = $this->get_course_class( $course_id );
 		if ( is_wp_error( $course ) ) {
 			return $course->get_error_message();
@@ -1292,24 +1302,15 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
+        // Check course post status.
         if ( 'publish' != $course->post_status ) {
             return;
         }
-        /**
-         * proceder
-         */
 		if ( ! empty( $course->featured_video ) ) {
-			$class = 'course-featured-video';
+			$class = 'course-featured-video course-featured-video-' . $course_id;
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-			$attr = array(
-				'class' => $class,
-				'src' => esc_url_raw( $course->featured_video ),
-			);
 
 			// set css & js for video.js
 			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
@@ -1318,55 +1319,50 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$this->set_external_js( 'coursepress-video-youtube', 'video-youtube.min.js' );
 			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js', '3.0.0' );
 
-		// no js
-		$html5 = $this->create_html( 'a',
-			array(
-				'href' => 'http://videojs.com/html5-video-support/',
-				'target' => '_blank',
-			)
-		);
+			// No js.
+			$html5 = $this->create_html( 'a',
+				array(
+					'href' => 'http://videojs.com/html5-video-support/',
+					'target' => '_blank',
+				)
+			);
 
-		$inner .= $this->create_html( 'p',
-			array(
+			$inner = $this->create_html( 'p', array(
 				'class' => 'vjs-no-js'
-			),$html5);
+			), $html5 );
 
-		// videojs attributes
-		$player_attr = array();
-		$mimeType = '';
+			// videojs attributes
+			$player_attr = '';
+			$mime_type = '';
+			$featured = wp_parse_url( $course->featured_video );
+			// Source: YouTube.
+			if ( strstr( $featured['host'], 'youtube') !== false ) {
+				$player_attr = '{"techOrder":["youtube"],"sources":[{"type":"video/youtube","src":"' . esc_attr( $course->featured_video ) . '"}]}';
+			} elseif ( strstr($featured['host'], 'vimeo') !== false ) {
+				$player_attr = '{"techOrder":["vimeo"],"sources":[{"type":"video/vimeo","src":"' . esc_attr( $course->featured_video ) . '"}]}';
+			} else {
+				// Get extension.
+				$ext = pathinfo( $course->featured_video, PATHINFO_EXTENSION );
 
-		$featured = parse_url($course->featured_video);
+				switch ( $ext ){
+					case "mp4":
+						$mime_type = 'video/mp4';
+						break;
+					case "webm":
+						$mime_type = 'video/webm';
+						break;
+					case "ogv":
+						$mime_type = 'video/ogg';
+						break;
+				}
 
-		// source: YouTube
-		if (strstr($featured['host'],'youtube') !== FALSE) {
-			$player_attr = '{"techOrder":["youtube"],"sources":[{"type":"video/youtube","src":"'.esc_attr($course->featured_video).'"}]}';
-		} elseif (strstr($featured['host'],'vimeo') !== FALSE) {
-			$player_attr = '{"techOrder":["vimeo"],"sources":[{"type":"video/vimeo","src":"'.esc_attr($course->featured_video).'"}]}';
-		} else {
-			// get extension
-			$ext = pathinfo($course->featured_video, PATHINFO_EXTENSION);
-
-			switch ($ext){
-				case "mp4":
-					$mimeType = 'video/mp4';
-				break;
-				case "webm":
-					$mimeType = 'video/webm';
-				break;
-				case "ogv":
-					$mimeType = 'video/ogg';
-				break;
+				$inner = $this->create_html( 'source', array(
+					'type' => $mime_type,
+					'src' => $course->featured_video
+				) );
 			}
 
-			$inner = $this->create_html( 'source',
-				array(
-					'type' => $mimeType,
-					'src' => $course->featured_video
-				));
-		}
-
-		$content = $this->create_html( 'video',
-			array(
+			$content = $this->create_html( 'video', array(
 				'id' => 'cp-video-' . $course->ID,
 				'class' => 'video-js',
 				'width' => $atts['width'],
@@ -1374,10 +1370,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				'controls' => '',
 				'preload' => 'auto',
 				'poster' => $course->listing_image,
-				'data-setup' => ($player_attr)
+				'data-setup' => $player_attr
 			), $inner );
-		return $content;
-	}
+
+			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
+
+			return $content;
+		}
 	}
 
 	/**
