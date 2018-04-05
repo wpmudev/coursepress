@@ -11,14 +11,20 @@ $student = coursepress_get_user();
 $unit_progress = $student->get_unit_progress( $course->ID, $unit->ID );
 $coursep = $student->get_completion_data( $course->ID );
 $show_progress = $student->is_enrolled_at( $course->ID );
-//error_log( print_r( $coursep, true ) );
 get_header(); ?>
     <div class="coursepress-wrap course-unit">
         <div class="">
             <div class="content-area">
                 <header class="page-header">
                     <h3 class="course-title course-title-4"><span itemprop="name"><?php echo coursepress_get_course_title(); ?></span></h3>
-                    <?php echo do_shortcode( '[course_unit_archive_submenu course_id="' . $course->ID . '"]' ); ?>
+                    <?php
+                    /**
+                     * To override course submenu template to your theme or a child-theme,
+                     * create a template `course-submenu.php` and it will be loaded instead.
+                     *
+                     * @since 3.0
+                     */
+                    coursepress_get_template( 'course', 'submenu' ); ?>
                     <div class="course-after-title">
                     <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
 
