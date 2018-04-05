@@ -254,7 +254,10 @@ name="meta_course_category">
                     <div class="cp-box"><input type="text" id="cp-invite-first-name-instructor" placeholder="<?php _e( 'First Name' ); ?>" /></div>
                     <div class="cp-box"><input type="text" id="cp-invite-last-name-instructor" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
                     <div class="cp-box"><input type="email" id="cp-invite-email-instructor" placeholder="<?php _e( 'Email' ); ?>" /></div>
-                    <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
+                    <button type="button" class="cp-btn cp-send-invite cp-invite-btn">
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        <?php _e( 'Send Invite', 'cp' ); ?>
+                    </button>
                     <p class="cp-invitation-response-instructor inactive">ss</p>
                 </div>
                 <div class="cp-div-flex cp-pad-left">
@@ -262,8 +265,11 @@ name="meta_course_category">
                     <select id="cp-course-instructor">
                         <option value=""><?php _e( 'Search users', 'cp' ); ?></option>
                     </select>
-                    <button type="button" class="cp-btn cp-assign-user"><?php _e( 'Assign', 'cp' ); ?></button>
-                    <p class="cp-assign-response-instructor inactive">ss</p>
+                    <button type="button" class="cp-btn cp-assign-user cp-invite-btn">
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        <?php _e( 'Assign', 'cp' ); ?>
+                    </button>
+                    <p class="cp-assign-response-instructor inactive"></p>
                 </div>
             </div>
         </div>
@@ -285,16 +291,20 @@ name="meta_course_category">
                     <div class="cp-box"><input type="text" id="cp-invite-first-name-facilitator" placeholder="<?php _e( 'First Name' ); ?>" /></div>
                     <div class="cp-box"><input type="text" id="cp-invite-last-name-facilitator" placeholder="<?php _e( 'Last Name' ); ?>" /></div>
                     <div class="cp-box"><input type="email" id="cp-invite-email-facilitator" placeholder="<?php _e( 'Email' ); ?>" /></div>
-                    <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
-                    <p class="cp-invitation-response-facilitator inactive">ss</p>
+                    <button type="button" class="cp-btn cp-send-invite cp-invite-btn">
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        <?php _e( 'Send Invite', 'cp' ); ?>
+                    </button>
                 </div>
                 <div class="cp-div-flex cp-pad-left">
                     <label class="label"><?php _e( 'Assign facilitator from existing users', 'cp' ); ?></label>
                     <select id="cp-course-facilitator">
                         <option value=""><?php _e( 'Search users', 'cp' ); ?></option>
                     </select>
-                    <button type="button" class="cp-btn cp-assign-user"><?php _e( 'Assign', 'cp' ); ?></button>
-                    <p class="cp-assign-response-facilitator inactive">ss</p>
+                    <button type="button" class="cp-btn cp-assign-user cp-invite-btn">
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        <?php _e( 'Assign', 'cp' ); ?>
+                    </button>
                 </div>
             </div>
         </div>

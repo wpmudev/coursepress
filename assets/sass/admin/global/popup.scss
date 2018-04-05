@@ -59,6 +59,35 @@
             .coursepress-popup-footer {
                 background-color: rgba(255, 0, 0, 0.02);
             }
+        }
+
+        &.popup-success {
+            border-color: rgba(209, 241, 234, 1);
+
+            .coursepress-popup-heading {
+                color: #3aaa91;
+                border-bottom: 1px solid rgba(209, 241, 234, 1);
+
+                h3 {
+                    color: #3aaa91;
+                }
+                &:before {
+                    @include icon('\f058');
+                    display: inline-block;
+                    float: left;
+                    margin-right: 8px;
+                    font-size: 1.4em;
+                }
+            }
+            .coursepress-popup-heading,
+            .coursepress-popup-content,
+            .coursepress-popup-footer {
+                background-color: rgba(145, 215, 199, 0.2);
+            }
+        }
+
+        &.popup-error,
+        &.popup-success {
             .coursepress-popup-footer {
                 .cp-btn-cancel {
                     display: none;
