@@ -67,7 +67,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		$version = get_option( 'coursepress_settings_version' );
 		if ( empty( $version ) ) {
 			$settings = coursepress_get_setting();
-			$settings = $this->migrate_settings();
+			$settings = $this->migrate_settings( $settings );
 			$settings = $this->set_true_false( $settings );
 			$settings['general']['version'] = $CoursePress->version;
 			update_option( 'coursepress_settings_version', $CoursePress->version );
