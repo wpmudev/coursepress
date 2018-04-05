@@ -1,22 +1,22 @@
 .single-course {
-	.cp-warning-box {
-	  border: 1px solid rgba(0, 0, 0, 0.1);
-	  padding: 25px;
-	  margin: 5px;
-	  text-align: center;
-	  border-radius: 5px;
-	  p {
-	    margin-bottom: 0;
-	  }
-	}
-	.cp-warning-box:before {
-	  content: '\f348';
-	  font-family: Dashicons;
-	  font-size: 200%;
-	  line-height: 1;
-	  float: left;
-	  color: rgba(255, 0, 0, 0.5);
-	}
+    .cp-warning-box {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin: 5px;
+        text-align: center;
+        border-radius: 5px;
+        p {
+            margin-bottom: 0;
+        }
+    }
+    .cp-warning-box:before {
+        content: '\f348';
+        font-family: Dashicons;
+        font-size: 200%;
+        line-height: 1;
+        float: left;
+        color: rgba(255, 0, 0, 0.5);
+    }
     .course-overview {
         .course-description {
             padding: 15px 0;
@@ -31,47 +31,48 @@
         }
     }
     .course-instructors {
-      h3.label {
-        display:inline-block;
-        font-size: 1.5rem;
-        margin-right: 5px;
-      }
+        h3.label {
+            display:inline-block;
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
     }
     .units-archive-list {
-      li {
-        background-color: trasparent;
-      }
-      .preview {
-        background-color: #ffffff;
-        border: 1.5px solid $grey_3;
-        display: inline-block;
-        float: right;
-        font-size: 11px;
-        @include radius(3px);
-        @include transition(opacity 0.4s);
-        opacity: 0.3;
-        padding: 4px 12px;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        &:hover {
-            opacity: 1;
-            @include transition(opacity 0.4s);
+        li {
+            background-color: transparent;
         }
-      }
-      .unit-description, .module {
-        @include clearfix;
-      }
-      .unit-progress {
-        float: right;
-      }
+        .preview {
+            background-color: #ffffff;
+            border: 1.5px solid $grey_3;
+            display: inline-block;
+            float: right;
+            font-size: 11px;
+            @include radius(3px);
+            @include transition(opacity 0.4s);
+            opacity: 0.3;
+            padding: 4px 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            &:hover {
+                opacity: 1;
+                @include transition(opacity 0.4s);
+            }
+        }
+        .unit-description,
+        .module {
+            @include clearfix;
+        }
+        .unit-progress {
+            float: right;
+        }
     }
 
     .page-header {
-      padding-bottom: 0;
+        padding-bottom: 0;
     }
     .course-content {
-      h3 {
-        padding: 0;
-      }
+        h3 {
+            padding: 0;
+        }
     }
 }
