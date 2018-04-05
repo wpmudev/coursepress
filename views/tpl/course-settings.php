@@ -94,9 +94,15 @@ name="meta_course_category">
                 <div class="cp-courses-box">
                     <?php if ( ! empty( $courses ) ) : ?>
                     <select name="meta_enrollment_prerequisite" multiple="multiple">
-                        <?php foreach ( $courses as $course ) : ?>
+                        <?php
+												foreach ( $courses as $course ) :
+													if( $course->ID !== $course_id ) :
+													?>
                             <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo $course->post_title; ?></option>
-                        <?php endforeach; ?>
+                        <?php
+													endif;
+												endforeach;
+												?>
                     </select>
                     <?php else : ?>
                         <p class="description"><?php _e( 'No courses available!', 'cp' ); ?></p>
