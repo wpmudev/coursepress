@@ -106,33 +106,10 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @param  array $settings Settings.
 	 */
 	public function migrate_settings( $settings ) {
-		// Update settings.
-		if ( ! empty( $settings['course']['details_media_type'] ) ) {
-			$settings['general']['details_media_type'] = $settings['course']['details_media_type'];
-		}
-		if ( ! empty( $settings['course']['details_media_priority'] ) ) {
-			$settings['general']['details_media_priority'] = $settings['course']['details_media_priority'];
-		}
-		if ( ! empty( $settings['course']['listing_media_type'] ) ) {
-			$settings['general']['listing_media_type'] = $settings['course']['listing_media_type'];
-		}
-		if ( ! empty( $settings['course']['listing_media_priority'] ) ) {
-			$settings['general']['listing_media_priority'] = $settings['course']['listing_media_priority'];
-		}
-		if ( ! empty( $settings['course']['order_by'] ) ) {
-			$settings['general']['order_by'] = $settings['course']['order_by'];
-		}
-		if ( ! empty( $settings['course']['order_by_direction'] ) ) {
-			$settings['general']['order_by_direction'] = $settings['course']['order_by_direction'];
-		}
-		if ( ! empty( $settings['course']['image_width'] ) ) {
-			$settings['general']['image_width'] = $settings['course']['image_width'];
-		}
-		if ( ! empty( $settings['course']['image_height'] ) ) {
-			$settings['general']['image_height'] = $settings['course']['image_height'];
-		}
+		// Migrate general settings.
+		$settings['general'] = wp_parse_args( $settings['course'], $settings['general'] );
 		if ( ! empty( $settings['course']['enrollment_type_default'] ) ) {
-			$enrollment_type_default = ( 'anyone' === $settings['course']['enrollment_type_default'] ) ? 'registered' : $settings['course']['enrollment_type_default'];
+			$enrollment_type_default                        = ( 'anyone' === $settings['course']['enrollment_type_default'] ) ? 'registered' : $settings['course']['enrollment_type_default'];
 			$settings['general']['enrollment_type_default'] = $enrollment_type_default;
 		}
 		if ( ! empty( $settings['reports']['font'] ) ) {
@@ -140,14 +117,29 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		}
 		if ( isset( $settings['instructor']['show_username'] ) ) {
 			$settings['general']['instructor_show_username'] = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : 0;
-			$settings['instructor_show_username'] = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : '';
+			$settings['instructor_show_username']            = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : '';
 		}
+
+		// Migrate Emails.
 		if ( ! empty( $settings['email']['instructor_module_feedback'] ) ) {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
 		}
 		foreach ( $settings['email'] as $key => $email ) {
 			$settings['email'][ $key ]['enabled'] = ( 0 == $settings['email'][ $key ]['enabled'] ) ? '' : 1;
 		}
+
+		// Migrate caps.
+		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor']  );
+		$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
+
+		// Migrate certificate.
+		$settings['basic_certificate']['certificate_logo']               = $settings['basic_certificate']['logo_image'];
+		$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
+		$settings['basic_certificate']['certificate_logo_position']['x'] = $settings['basic_certificate']['logo']['x'];
+		$settings['basic_certificate']['certificate_logo_position']['y'] = $settings['basic_certificate']['logo']['y'];
+		$settings['basic_certificate']['certificate_logo_position']['w'] = $settings['basic_certificate']['logo']['width'];
+		$settings['basic_certificate']['cert_text_color']                = $settings['basic_certificate']['text_color'];
+
 		return $settings;
 	}
 
