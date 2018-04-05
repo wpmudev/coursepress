@@ -127,7 +127,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 			}
 			$instructors_template[] = $template;
 		}
-		if ( 'flat' == $atts['style'] ) {
+		if ( 'list-flat' == $atts['style'] ) {
 			$templates .= ' ';
 		}
 		$separator = $atts['list_separator'];
