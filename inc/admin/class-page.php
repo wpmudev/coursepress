@@ -307,6 +307,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'error' => __( 'Error', 'cp' ),
 				'warning' => __( 'Warning', 'cp' ),
 				'info' => __( 'Info', 'cp' ),
+				'success' => __( 'Success', 'cp' ),
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
@@ -347,6 +348,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'steps' => array(
 						'question_delete' => __( 'Are you sure to delete this question?', 'cp' ),
 					),
+					'invite' => array(
+						'remove' => __( 'Please confirm that you want to remove this invite from this course.', 'cp' ),
+					)
 				),
 				'course' => array(
 					'students' => array(
