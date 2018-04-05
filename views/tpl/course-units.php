@@ -297,6 +297,7 @@
                     <tr>
                         <td class="column-unit">{{step.post_title}}</td>
                         <td class="column-step">
+                            <span class="step-icon step-{{step.module_type}}"></span>
                         </td>
                         <td class="column-preview" data-step="{{step_id}}">
                             <label class="cp-checkbox cp-ignore-update-model">
