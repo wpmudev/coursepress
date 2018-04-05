@@ -237,7 +237,7 @@
             <thead>
             <tr>
                 <th class="column-unit"><?php _e( 'Units & Steps', 'cp' ); ?></th>
-                <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
+                <th class="column-step"><?php _e( 'Step', 'cp' ); ?></th>
                 <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
                 <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
             </tr>
@@ -297,6 +297,7 @@
                     <tr>
                         <td class="column-unit">{{step.post_title}}</td>
                         <td class="column-step">
+                            <span class="step-icon step-{{step.module_type}}"></span>
                         </td>
                         <td class="column-preview" data-step="{{step_id}}">
                             <label class="cp-checkbox cp-ignore-update-model">
