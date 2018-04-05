@@ -23,7 +23,8 @@ if ( have_posts() ) {
 		 * @since 3.0
 		 */
 		coursepress_get_template( 'content', 'course' );
-	}
+    }
+    posts_nav_link();
 } else {
 	_e( 'There is currently no course, please come back later.', 'cp' );
 }
