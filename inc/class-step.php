@@ -311,7 +311,8 @@ class CoursePress_Step extends CoursePress_Unit {
 		$user = coursepress_get_user( $user_id );
 		$course = coursepress_get_course();
 		$course_id = $course->__get( 'ID' );
-		$class = 'course-module-step-template step-template-' . $this->__get( 'module_type' );
+		$module_type = $this->__get( 'module_type' );
+		$class = 'course-module-step-template step-template-' . $module_type;
 		if ( ! $user->is_enrolled_at( $course_id ) && ! $this->is_preview() ) {
 			$template .= coursepress_create_html( 'p', array(), __( 'You are not enrolled to this course!', 'cp' ) );
 			return $template;
@@ -332,7 +333,9 @@ class CoursePress_Step extends CoursePress_Unit {
 				$error
 			);
 		}
-		if ( $this->is_show_content() ) {
+		// For text step, we don't need show_content check.
+		$show_content = 'text' === $module_type ? true : $this->is_show_content();
+		if ( $show_content ) {
 			$attr        = array( 'class' => 'course-module-step-description' );
 			$description = apply_filters( 'the_content', $this->__get( 'post_content' ) );
 			$template   .= $this->create_html( 'div', $attr, $description );
