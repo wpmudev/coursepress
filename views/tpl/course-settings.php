@@ -79,7 +79,14 @@ name="meta_course_category">
             <div class="cp-box">
                 <label class="label" for="enrollment-type"><?php _e( 'Who can enroll', 'cp' ); ?></label>
                 <select id="enrollment-type" name="meta_enrollment_type">
-                    <?php foreach ( coursepress_get_enrollment_types() as $id => $label ) : ?>
+                    <?php
+										$list = coursepress_get_courses( array( 'posts_per_page' => -1, 'post_status' => 'publish' ) );
+										$total_course = count( $list );
+										foreach ( coursepress_get_enrollment_types() as $id => $label ) :
+											if( $total_course < 2 && 'prerequisite' === $id ) {
+												continue;
+											}
+										?>
                         <option value="<?php echo $id; ?>" {{_.selected('<?php echo $id; ?>', enrollment_type)}}><?php echo $label; ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -94,9 +101,15 @@ name="meta_course_category">
                 <div class="cp-courses-box">
                     <?php if ( ! empty( $courses ) ) : ?>
                     <select name="meta_enrollment_prerequisite" multiple="multiple">
-                        <?php foreach ( $courses as $course ) : ?>
+                        <?php
+												foreach ( $courses as $course ) :
+													if( $course->ID !== $course_id ) :
+													?>
                             <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo $course->post_title; ?></option>
-                        <?php endforeach; ?>
+                        <?php
+													endif;
+												endforeach;
+												?>
                     </select>
                     <?php else : ?>
                         <p class="description"><?php _e( 'No courses available!', 'cp' ); ?></p>
