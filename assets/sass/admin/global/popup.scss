@@ -59,11 +59,6 @@
             .coursepress-popup-footer {
                 background-color: rgba(255, 0, 0, 0.02);
             }
-            .coursepress-popup-footer {
-                .cp-btn-cancel {
-                    display: none;
-                }
-            }
         }
 
         &.popup-success {
@@ -89,6 +84,10 @@
             .coursepress-popup-footer {
                 background-color: rgba(145, 215, 199, 0.2);
             }
+        }
+
+        &.popup-error,
+        &.popup-success {
             .coursepress-popup-footer {
                 .cp-btn-cancel {
                     display: none;
