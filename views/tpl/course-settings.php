@@ -79,7 +79,14 @@ name="meta_course_category">
             <div class="cp-box">
                 <label class="label" for="enrollment-type"><?php _e( 'Who can enroll', 'cp' ); ?></label>
                 <select id="enrollment-type" name="meta_enrollment_type">
-                    <?php foreach ( coursepress_get_enrollment_types() as $id => $label ) : ?>
+                    <?php
+										$list = coursepress_get_courses( array( 'posts_per_page' => -1, 'post_status' => 'publish' ) );
+										$total_course = count( $list );
+										foreach ( coursepress_get_enrollment_types() as $id => $label ) :
+											if( $total_course < 2 && 'prerequisite' === $id ) {
+												continue;
+											}
+										?>
                         <option value="<?php echo $id; ?>" {{_.selected('<?php echo $id; ?>', enrollment_type)}}><?php echo $label; ?></option>
                     <?php endforeach; ?>
                 </select>
