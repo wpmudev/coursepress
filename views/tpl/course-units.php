@@ -218,7 +218,7 @@
             <thead>
             <tr>
                 <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
-                <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
+                <th class="column-step"><?php _e( 'Step', 'cp' ); ?></th>
                 <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
                 <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
             </tr>
