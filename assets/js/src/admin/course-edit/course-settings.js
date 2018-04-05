@@ -12,21 +12,30 @@
                 'click .remove-invite': 'removeInvitation',
             },
 
-            // Send ajax to remove invitation.
+            // Confirm if we can remove invitee.
             removeInvitation: function( ev ) {
-
-                var target = $( ev.currentTarget ),
+                var confirm,
+                    target = $( ev.currentTarget ),
                     code = target.data( 'code' );
                 // Send ajax request.
                 if ( code ) {
-                    this.model.set( 'action', 'remove_instructor_invite' );
-                    this.model.set( 'course_id', this.course_id );
-                    this.model.off( 'coursepress:success_remove_instructor_invite' );
-                    this.model.off( 'coursepress:error_remove_instructor_invite' );
-                    this.model.on( 'coursepress:success_remove_instructor_invite', this.invitationRemovedSuccess, this );
-                    this.model.on( 'coursepress:error_remove_instructor_invite', this.invitationRemovedError, this );
-                    this.model.save();
+                    confirm = new CoursePress.PopUp({
+                        type: 'warning',
+                        message: win._coursepress.text.confirm.invite.remove
+                    });
+                    confirm.on( 'coursepress:popup_ok', this.removeInvitationRequest, this );
                 }
+            },
+
+            // Send ajax to remove invitation.
+            removeInvitationRequest: function() {
+                this.model.set( 'action', 'remove_instructor_invite' );
+                this.model.set( 'course_id', this.course_id );
+                this.model.off( 'coursepress:success_remove_instructor_invite' );
+                this.model.off( 'coursepress:error_remove_instructor_invite' );
+                this.model.on( 'coursepress:success_remove_instructor_invite', this.invitationRemovedSuccess, this );
+                this.model.on( 'coursepress:error_remove_instructor_invite', this.invitationRemovedError, this );
+                this.model.save();
             },
 
             /**
@@ -62,21 +71,30 @@
                 'click .remove-invite': 'removeInvitation',
             },
 
-            // Send ajax to remove invitation.
+            // Confirm if we can remove invitee.
             removeInvitation: function( ev ) {
-
-                var target = $( ev.currentTarget ),
+                var confirm,
+                    target = $( ev.currentTarget ),
                     code = target.data( 'code' );
                 // Send ajax request.
                 if ( code ) {
-                    this.model.set( 'action', 'remove_facilitator_invite' );
-                    this.model.set( 'course_id', this.course_id );
-                    this.model.off( 'coursepress:success_remove_facilitator_invite' );
-                    this.model.off( 'coursepress:error_remove_facilitator_invite' );
-                    this.model.on( 'coursepress:success_remove_facilitator_invite', this.invitationRemovedSuccess, this );
-                    this.model.on( 'coursepress:error_remove_facilitator_invite', this.invitationRemovedError, this );
-                    this.model.save();
+                    confirm = new CoursePress.PopUp({
+                        type: 'warning',
+                        message: win._coursepress.text.confirm.invite.remove
+                    });
+                    confirm.on( 'coursepress:popup_ok', this.removeInvitationRequest, this );
                 }
+            },
+
+            // Send ajax to remove invitation.
+            removeInvitationRequest: function() {
+                this.model.set( 'action', 'remove_facilitator_invite' );
+                this.model.set( 'course_id', this.course_id );
+                this.model.off( 'coursepress:success_remove_facilitator_invite' );
+                this.model.off( 'coursepress:error_remove_facilitator_invite' );
+                this.model.on( 'coursepress:success_remove_facilitator_invite', this.invitationRemovedSuccess, this );
+                this.model.on( 'coursepress:error_remove_facilitator_invite', this.invitationRemovedError, this );
+                this.model.save();
             },
 
             /**
@@ -136,12 +154,6 @@
 
                 this.render();
             },
-
-			invitationSentSuccess: function(data) {
-				if ( 'undefined' !== typeof ( data ) && 'undefined' !== typeof( data.type ) && data.type ) {
-					this.addInvitee( data, data.type );
-				}
-			},
 
             validate: function() {
                 var summary, content, proceed;
@@ -241,7 +253,7 @@
 					invited = new InviteInstructor(data);
 				}
                 invited.course_id = this.model.get('ID');
-                invited.$el.prependTo(list);
+                list.prepend(invited.$el);
 
                 list.find('.no-invites').hide();
 
@@ -297,10 +309,6 @@
                     template_id: 'coursepress-course-instructor-selection-tpl',
 	                type: 'instructor'
                 });
-
-				modal.request.on( 'coursepress:success_send_email_invite', this.invitationSentSuccess, this );
-				modal.request.on( 'coursepress:error_send_email_invite', this.showError, this );
-
             },
 
             /**
@@ -314,18 +322,6 @@
                     template_id: 'coursepress-course-facilitator-selection-tpl',
 	                type: 'facilitator'
                 });
-				modal.request.on( 'coursepress:success_send_email_invite', this.invitationSentSuccess, this );
-				modal.request.on( 'coursepress:error_send_email_invite', this.showError, this );
-            },
-
-
-            showError: function( data ) {
-                if ( 'string' === typeof( data.message ) ) {
-                    new CoursePress.PopUp({
-                        type: 'error',
-                        message: data.message
-                    });
-                }
             },
 
             /**

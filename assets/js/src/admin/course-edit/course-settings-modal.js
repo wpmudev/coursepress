@@ -9,11 +9,12 @@
         return CoursePress.View.extend({
             template_id: false,
             className: 'coursepress-modal',
+            currentButton: false,
             events: {
                 'click .cp-close': 'remove',
                 'click .cp-send-invite': 'sendInvite',
                 'click .cp-assign-user': 'assignUser',
-                'focus input[type=text]': 'removeErrorMarker'
+                'focus input[type=text], input[type=email]': 'removeErrorMarker'
             },
 
             initialize: function( options ) {
@@ -22,14 +23,13 @@
                 this.request = new CoursePress.Request();
                 this.template_id = options.template_id;
                 this.type = options.type;
-                this.inv_resp = '.cp-invitation-response-' + options.type;
-                this.assgn_resp = '.cp-assign-response-' + options.type;
                 // Setup UI elements.
                 this.on( 'view_rendered', this.setUpUI, this );
                 // Handle ajax request responses.
-                this.request.on( 'coursepress:success_send_email_invite', this.inviteSuccess );
+                this.request.on( 'coursepress:success_send_email_invite', this.inviteSuccess, this );
                 this.request.on( 'coursepress:success_assign_to_course', this.assignSuccess, this );
-                this.request.on( 'coursepress:error_assign_to_course', this.assignError, this );
+                this.request.on( 'coursepress:error_send_email_invite', this.onError, this );
+                this.request.on( 'coursepress:error_assign_to_course', this.onError, this );
                 this.render();
             },
 
@@ -90,7 +90,9 @@
             /**
              * Send invitation mail to the email.
              */
-            sendInvite: function () {
+            sendInvite: function ( ev ) {
+                this.currentButton = this.$(ev.currentTarget);
+                this.currentButton.addClass('cp-progress');
                 // Email to send the invitation.
                 var email = this.$('#cp-invite-email-' + this.type);
                 var first_name = this.$('#cp-invite-first-name-' + this.type);
@@ -112,6 +114,7 @@
                     if ( '' === first_name.val() ) {
                         this.setErrorMarker( first_name, false );
                     }
+	                this.currentButton.removeClass('cp-progress');
                 }
             },
 
@@ -120,16 +123,25 @@
              *
              * @param data
              */
-            inviteSuccess: function () {
+            inviteSuccess: function ( data ) {
                 this.$('#cp-invite-first-name-' + this.type).val('');
                 this.$('#cp-invite-last-name-' + this.type).val('');
                 this.$('#cp-invite-email-' + this.type).val('');
+                new CoursePress.PopUp({
+                    type: 'success',
+                    message: data.message
+                });
+                this.currentButton.removeClass('cp-progress');
+                // Add invitees to list.
+                this.invitationSentSuccess(data);
             },
 
             /**
              * Assign instructor/facilitator to the course.
              */
-            assignUser: function () {
+            assignUser: function ( ev ) {
+                this.currentButton = this.$(ev.currentTarget);
+                this.currentButton.addClass('cp-progress');
                 var user_id = this.$('#cp-course-' + this.type).val();
                 if ( '' !== user_id ) {
                     this.request.set( {
@@ -139,6 +151,8 @@
                         'user': user_id
                     } );
                     this.request.save();
+                } else {
+	                this.currentButton.removeClass('cp-progress');
                 }
             },
 
@@ -161,7 +175,33 @@
                  */
                 $('#cp-course-instructor').empty();
                 $('#cp-course-facilitator').empty();
-            }
+                new CoursePress.PopUp({
+                    type: 'success',
+                    message: data.message
+                });
+                this.currentButton.removeClass('cp-progress');
+            },
+
+            invitationSentSuccess: function(data) {
+                if ( 'undefined' !== typeof ( data ) && 'undefined' !== typeof( data.type ) && data.type ) {
+                    this.course.addInvitee( data, data.type );
+                }
+            },
+
+            /**
+             * In case of progress is there on button remove it.
+             */
+            onError: function ( data ) {
+                if ( this.currentButton ) {
+                    this.currentButton.removeClass('cp-progress');
+                }
+                if ( 'string' === typeof( data.message ) ) {
+                    new CoursePress.PopUp({
+                        type: 'error',
+                        message: data.message
+                    });
+                }
+            },
         });
     });
 })();
