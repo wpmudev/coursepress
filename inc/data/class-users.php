@@ -139,7 +139,9 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 	public function add_instructor_role( $user_id ) {
 		if ( ! user_can( $user_id, 'coursepress_instructor' ) ) {
 			$user = get_userdata( $user_id );
-			$user->add_role( 'coursepress_instructor' );
+			if ( $user ) {
+				$user->add_role( 'coursepress_instructor' );
+			}
 		}
 	}
 
