@@ -16,7 +16,7 @@ if ( ! empty( $course_id ) && ! empty( $course ) ) : ?>
 
 	<?php if ( apply_filters( 'coursepress_registration_form_step-1', true ) ) : ?>
 		<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
-			<div class="bbm-modal-nonce signup" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_signup' ); ?>"></div>
+			<div class="bbm-modal-nonce signup" data-nonce="<?php echo esc_attr( wp_create_nonce( 'coursepress_enrollment_action_signup' ) ); ?>"></div>
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
 					<?php esc_html_e( 'Create new account', 'cp' ); ?>
@@ -29,7 +29,7 @@ if ( ! empty( $course_id ) && ! empty( $course ) ) : ?>
 				</div>
 			</div>
 			<div class="bbm-modal__bottombar">
-				<input type="hidden" name="course_id" value="<?php esc_attr_e( $course_id ); ?>" />
+				<input type="hidden" name="course_id" value="<?php echo  esc_attr( $course_id ); ?>" />
 				<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'cp' ); ?>" />
 				<a href="#" class="cancel-link">
 					<?php esc_html_e( 'Cancel', 'cp' ); ?>
@@ -40,7 +40,7 @@ if ( ! empty( $course_id ) && ! empty( $course ) ) : ?>
 
 	<?php if ( apply_filters( 'coursepress_registration_form_step-2', true ) ) : ?>
 		<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
-			<div class="bbm-modal-nonce login" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_login' ); ?>"></div>
+			<div class="bbm-modal-nonce login" data-nonce="<?php echo esc_attr( wp_create_nonce( 'coursepress_enrollment_action_login' ) ); ?>"></div>
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
 					<?php esc_html_e( 'Login to your account', 'cp' ); ?>
@@ -70,7 +70,7 @@ if ( ! empty( $course_id ) && ! empty( $course ) ) : ?>
 				<p>
 					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'cp' ); ?>
 				</p>
-				<a href="<?php echo $course->get_units_url(); ?>"><?php _e( 'Start Learning', 'cp' ); ?></a>
+				<a href="<?php echo esc_url( $course->get_units_url() ); ?>"><?php esc_html_e( 'Start Learning', 'cp' ); ?></a>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
@@ -86,7 +86,7 @@ if ( ! empty( $course_id ) && ! empty( $course ) ) : ?>
 			<div class="bbm-modal__section"><?php
 				printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to back to course.', 'cp' ) );
 				?>
-				<a href="<?php echo $course->get_units_url(); ?>"><?php _e( 'Go back to course!', 'cp' ); ?></a>
+				<a href="<?php echo esc_url( $course->get_units_url() ); ?>"><?php esc_html_e( 'Go back to course!', 'cp' ); ?></a>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>

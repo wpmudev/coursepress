@@ -1223,7 +1223,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !== $course->post_status ) {
             return;
         }
         /**
@@ -1236,7 +1236,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			}
 			// Apply schema.
 			$schema = apply_filters( 'coursepress_schema', '', 'image' );
-			$content = '<img width="' . esc_attr( $atts['width'] ) . '" height="' . esc_attr( $atts['height'] ) . '" src="' . esc_url_raw( $course->listing_image ) . '" class="' . $class . '"'.$schema.' />';
+			$content = '<img width="' . esc_attr( $atts['width'] ) . '" height="' . esc_attr( $atts['height'] ) . '" src="' . esc_url( $course->listing_image ) . '" class="' . $class . '"'.$schema.' />';
 			return $content;
 		}
 		return '';

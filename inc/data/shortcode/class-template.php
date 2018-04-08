@@ -429,7 +429,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			if ( ! is_object( $module ) ) {
 				$item_id = 0;
 				$type = '404';
-			} else if ( $module->post_parent != $unit_id ) {
+			} elseif ( $module->post_parent != $unit_id ) {
 				$item_id = 0;
 				$type = '404_module';
 			}
@@ -883,12 +883,12 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$course_id = (int) $atts['course_id'];
 		$login_link_id = sanitize_text_field( $atts['login_link_id'] );
 		$login_link_class = sanitize_text_field( $atts['login_link_class'] );
-		$login_link_url = esc_url_raw( $atts['login_link_url'] );
+		$login_link_url = esc_url( $atts['login_link_url'] );
 		$login_link_url = ! empty( $login_link_url ) ? $login_link_url : '#' . $login_link_id;
 		$login_link_label = sprintf( $atts['login_link_label'], $login_link_url, $login_link_class, $login_link_id );
 		$signup_link_id = sanitize_text_field( $atts['signup_link_id'] );
 		$signup_link_class = sanitize_text_field( $atts['signup_link_class'] );
-		$signup_link_url = esc_url_raw( $atts['signup_link_url'] );
+		$signup_link_url = esc_url( $atts['signup_link_url'] );
 		$signup_link_label = sprintf( $atts['signup_link_label'], $signup_link_url, $signup_link_class, $signup_link_id );
 		$submit_button_attributes = sanitize_text_field( $atts['submit_button_attributes'] );
 		$submit_button_label = sanitize_text_field( $atts['submit_button_label'] );

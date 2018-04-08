@@ -792,7 +792,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		if ( $show_certified_students == 'yes' ) {
 			$students = $course->get_certified_students( $student_query_args );
 			$total_students = $certified_student_count;
-		} else if ( $show_certified_students == 'no' ) {
+		} elseif ( $show_certified_students == 'no' ) {
 			$students = $course->get_non_certified_students( $student_query_args );
 			$total_students = $all_student_count - $certified_student_count;
 		} else {

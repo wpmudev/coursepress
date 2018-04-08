@@ -1,19 +1,19 @@
 <div class="wrap coursepress-wrap coursepress-settings">
-	<h1 class="wp-heading-inline">CoursePress <?php _e( 'Settings', 'cp' ); ?></h1>
+	<h1 class="wp-heading-inline">CoursePress <?php esc_html_e( 'Settings', 'cp' ); ?></h1>
 
 	<div id="coursepress-settings" class="coursepress-page course-steps-page">
 		<div class="cp-menu-items course-menu-list">
 			<ul class="course-menu">
 				<?php
 					$admin_menus = array(
-						'general' => __( 'General', 'cp' ),
-						'slugs' => __( 'URL Slugs', 'cp' ),
-						'email' => __( 'Emails', 'cp' ),
-						'capabilities' => __( 'Capabilities', 'cp' ),
-						'basic_certificate' => __( 'Certificate', 'cp' ),
-						'shortcodes' => __( 'Shortcodes', 'cp' ),
-						'extensions' => __( 'Extensions', 'cp' ),
-						'import-export' => __( 'Import/Export', 'cp' ),
+						'general' => esc_html__( 'General', 'cp' ),
+						'slugs' => esc_html__( 'URL Slugs', 'cp' ),
+						'email' => esc_html__( 'Emails', 'cp' ),
+						'capabilities' => esc_html__( 'Capabilities', 'cp' ),
+						'basic_certificate' => esc_html__( 'Certificate', 'cp' ),
+						'shortcodes' => esc_html__( 'Shortcodes', 'cp' ),
+						'extensions' => esc_html__( 'Extensions', 'cp' ),
+						'import-export' => esc_html__( 'Import/Export', 'cp' ),
 					);
 
 					/**
@@ -26,8 +26,8 @@
 
 					foreach ( $admin_menus as $menu_id => $menu_label ) :
 				?>
-					<li class="cp-menu-item step setting-<?php echo $menu_id; ?>" data-setting="<?php echo $menu_id; ?>">
-						<span class="menu-label"><?php echo $menu_label; ?></span>
+					<li class="cp-menu-item step setting-<?php echo $menu_id; ?>" data-setting="<?php echo esc_attr( $menu_id ); ?>">
+						<span class="menu-label"><?php echo esc_html( $menu_label ); ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -40,12 +40,12 @@
 
             <div class="course-footer">
                 <button type="button" class="cp-btn cp-btn-cancel step-cancel">
-					<?php _e( 'Cancel', 'cp' ); ?>
+					<?php esc_html_e( 'Cancel', 'cp' ); ?>
                 </button>
 
                 <button type="button" class="cp-btn cp-btn-active save-coursepress-setting">
                     <i class="fa fa-circle-o-notch fa-spin"></i>
-					<?php _e( 'Save Settings', 'cp' ); ?>
+					<?php esc_html_e( 'Save Settings', 'cp' ); ?>
                 </button>
             </div>
 		</div>

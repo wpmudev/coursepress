@@ -8,13 +8,13 @@
  */
 ?>
 <div class="wrap coursepress-wrap coursepress-students" id="coursepress-students">
-    <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e( 'Students', 'cp' ); ?></h1>
 
     <div class="coursepress-page">
         <form method="get" class="cp-action-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div" id="bulk-actions">
-                    <label class="label"><?php _e( 'Bulk actions', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Bulk actions', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <select id="bulk-action-selector-top">
                             <option value="-1"><?php esc_attr_e( 'Bulk Actions', 'cp' ); ?></option>
@@ -29,17 +29,17 @@
 							?>
                         </select>
                     </div>
-                    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Apply', 'cp' ); ?></button>
+                    <button type="button" class="cp-btn cp-btn-active"><?php esc_html_e( 'Apply', 'cp' ); ?></button>
                 </div>
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Filter by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <select name="course_id">
-                            <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+                            <option value=""><?php esc_html_e( 'Any course', 'cp' ); ?></option>
                             <?php if ( ! empty( $courses ) ) : ?>
                                 <?php foreach ( $courses as $course ) : ?>
                                     <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
-                                    <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
+                                    <option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
                                     echo $course->post_title;
                                     echo $course->get_numeric_identifier_to_course_name( $course->ID );
     ?></option>
@@ -49,13 +49,13 @@
                     </div>
                 </div>
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Search by course', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Search by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-                        <input type="text" name="student_search" placeholder="<?php _e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
-                        <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+                        <input type="text" name="student_search" placeholder="<?php esc_html_e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo esc_attr( $search ); ?>" />
+                        <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php esc_html_e( 'Clear', 'cp' ); ?></button>
                     </div>
-                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Search', 'cp' ); ?></button>
                 </div>
             </div>
         </form>
@@ -65,7 +65,7 @@
             <tr>
                 <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                 <?php foreach ( $columns as $column_id => $column_label ) : ?>
-                    <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                    <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo esc_attr( $column_id ); ?>">
                         <?php echo $column_label; ?>
                     </th>
                 <?php endforeach; ?>
@@ -79,7 +79,7 @@
 				foreach ( $students as $student ) {
 ?>
 <tr class="<?php echo esc_attr( $odd ? 'odd' : 'even' ); ?>" data-studetnt-id="<?php echo esc_attr( $student->ID ); ?>">
-    <th scope="row" class="check-column check-column-value"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $student->ID ); ?>"></th>
+    <th scope="row" class="check-column check-column-value"><input type="checkbox" name="students[]" value="<?php echo  esc_attr( $student->ID ); ?>"></th>
     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 <?php
@@ -136,8 +136,8 @@ endswitch;
                 <?php } ?>
             <?php } else { ?>
                 <tr class="odd">
-                    <td colspan="<?php echo count( $columns ); ?>">
-                        <?php _e( 'No students found.', 'cp' ); ?>
+                    <td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
+                        <?php esc_html_e( 'No students found.', 'cp' ); ?>
                     </td>
                 </tr>
             <?php } ?>

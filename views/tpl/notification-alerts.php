@@ -2,7 +2,7 @@
 
     <?php if ( CoursePress_Data_Capabilities::can_add_notifications() ) : ?>
         <div class="clear">
-            <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php _e( 'New Course Alert', 'cp' ); ?></a>
+            <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php esc_html_e( 'New Course Alert', 'cp' ); ?></a>
         </div>
     <?php endif; ?>
     <?php cp_subsubsub( $statuses ); ?>
@@ -39,8 +39,8 @@
 					<input id="cb-select-all-1" type="checkbox">
 				</td>
 				<?php foreach ( $columns as $column_id => $column_label ) : ?>
-					<th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
-						<?php echo $column_label; ?>
+					<th class="manage-column column-<?php echo esc_attr( $column_id ); ?><?php echo in_array( $column_id, $hidden_columns, true ) ? ' hidden': ''; ?>" id="<?php echo esc_attr( $column_id ); ?>">
+						<?php echo esc_html( $column_label ); ?>
 					</th>
 				<?php endforeach; ?>
 			</tr>
@@ -50,40 +50,46 @@
             <?php foreach ( $notifications as $notification ) : ?>
                 <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 					<th scope="row" class="check-column check-column-value">
-						<input type="checkbox" name="notifications[]" value="<?php esc_attr_e( $notification->ID ); ?>">
+						<input type="checkbox" name="notifications[]" value="<?php echo  esc_attr( $notification->ID ); ?>">
 					</th>
 
                     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
-                        <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $notification->ID ); ?>">
+                        <td class="column-<?php echo esc_attr( $column_id ); ?><?php echo in_array( $column_id, $hidden_columns, true ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $notification->ID ); ?>">
                             <?php
                             $can_delete = CoursePress_Data_Capabilities::can_delete_notification( $notification->ID );
-                            switch( $column_id ) :
+                            switch( $column_id ) {
                                 case 'title' :
-                                    echo $notification->post_title;
+                                    echo esc_html( $notification->post_title );
                                     echo '<div class="row-actions">';
-                                    if ( 'trash' != $current_status ) {
+                                    if ( 'trash' !== $current_status ) {
                                         if ( CoursePress_Data_Capabilities::can_update_notification( $notification->ID ) ) :
                                             printf(
-                                                '<span class="edit"><a href="#" aria-label="%s “%s”" class="cp_edit_alert" data-page="alerts_form" data-tab="alerts" data-id="' . $notification->ID . '">Edit</a></span>',
+                                                '<span class="edit"><a href="#" aria-label="%s “%s”" class="cp_edit_alert" data-page="alerts_form" data-tab="alerts" data-id="' . esc_attr( $notification->ID ) . '">Edit</a></span>',
                                                 esc_attr__( 'Edit', 'cp' ),
                                                 esc_attr( $notification->post_title ),
                                                 esc_html__( 'Edit', 'cp' )
                                             );
                                         endif;
                                         if ( $can_delete ) :
-                                            echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
+                                            echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . esc_html__( 'Trash', 'cp' ) . '</a></span>';
                                         endif;
-                                    } elseif ( $can_delete ) { ?>
-                                        <span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
-                                        <span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
-                                    <?php }
+                                    } elseif ( $can_delete ) {
+										?>
+                                        <span class="inline hide-if-no-js cp-restore"><a href="#"><?php esc_html_e( 'Restore', 'cp' ); ?></a> |</span>
+                                        <span class="inline hide-if-no-js cp-delete"><a href="#"><?php esc_html_e( 'Delete Permanently', 'cp' ); ?></a></span>
+										<?php
+									}
                                     echo '</div>';
 
                                     break;
                                 case 'course' :
                                     // Get course name.
                                     $course_id = get_post_meta( $notification->ID, 'alert_course', true );
-                                    echo ( empty( $course_id ) || $course_id === 'all' ) ? __( 'All Courses', 'cp' ) : get_the_title( $course_id );
+                                    if ( empty( $course_id ) || 'all' === $course_id ) {
+										esc_html__( 'All Courses', 'cp' );
+									} else {
+										echo esc_html( get_the_title( $course_id ) );
+									}
                                     break;
                                 case 'status':
                                     echo '<label>';
@@ -93,11 +99,11 @@
                                         '<input type="checkbox" class="cp-toggle-input cp-toggle-alert-status" value="%d" %s %s /> <span class="cp-toggle-btn"></span>',
                                         esc_attr( $notification->ID ),
                                         checked( $active, true, false ),
-                                        $disabled
+                                        esc_html( $disabled )
                                     );
                                     echo '</label>';
                                     break;
-                                default :
+                                default:
                                     /**
                                      * Trigger to allow custom column value
                                      *
@@ -107,7 +113,7 @@
                                      */
                                     do_action( 'coursepress_notifications_list_column', $column_id, $notification );
                                     break;
-                            endswitch;
+							}
                             ?>
                         </td>
                     <?php endforeach; ?>

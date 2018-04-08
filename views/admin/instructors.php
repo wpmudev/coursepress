@@ -8,14 +8,14 @@
  */
 ?>
 <div class="wrap coursepress-wrap coursepress-instructors" id="coursepress-instructors">
-	<h1 class="wp-heading-inline"><?php _e( 'Instructors', 'cp' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Instructors', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-action-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Filter by course', 'cp' ); ?></label>
                     <select name="course_id">
-                        <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+                        <option value=""><?php esc_html_e( 'Any course', 'cp' ); ?></option>
 <?php
 $current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
 foreach ( $courses as $course_id => $course ) {
@@ -31,13 +31,13 @@ foreach ( $courses as $course_id => $course ) {
                 </div>
 
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Search instructors by name, username or email', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Search instructors by name, username or email', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-                        <input type="text" name="instructor_search" placeholder="<?php _e( 'Type here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
-                        <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+                        <input type="text" name="instructor_search" placeholder="<?php esc_html_e( 'Type here...', 'cp' ); ?>" value="<?php echo esc_attr( $search ); ?>" />
+                        <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php esc_html_e( 'Clear', 'cp' ); ?></button>
                     </div>
-                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Search', 'cp' ); ?></button>
                 </div>
             </div>
         </form>
@@ -46,7 +46,7 @@ foreach ( $courses as $course_id => $course ) {
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo esc_attr( $column_id ); ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php } ?>
@@ -113,31 +113,31 @@ endswitch;
                             <?php } ?>
                         </tr>
                         <tr class="<?php echo $i % 2 ? 'odd' : 'even'; ?> column-actions hidden">
-                            <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo $instructor->ID; ?>">
+                            <td colspan="<?php echo esc_attr( count( $columns ) + 2 ); ?>" data-id="<?php echo esc_attr( $instructor->ID ); ?>">
                                 <div class="cp-row-actions">
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a> |
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
+                                    <a href="<?php echo esc_url( $edit_link ); ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php esc_html_e( 'Course Overview', 'cp' ); ?></a> |
+                                    <a href="<?php echo esc_url( $edit_link ); ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php esc_html_e( 'Units', 'cp' ); ?></a> |
+                                    <a href="<?php echo esc_url( $edit_link ); ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php esc_html_e( 'Display Settings', 'cp' ); ?></a>
 
                                     <div class="cp-dropdown">
                                         <button type="button" class="cp-btn-xs cp-dropdown-btn">
-                                            <?php _e( 'More', 'cp' ); ?>
+                                            <?php esc_html_e( 'More', 'cp' ); ?>
                                         </button>
                                         <ul class="cp-dropdown-menu">
                                             <li class="menu-item-students">
-                                                <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
+                                                <a href="<?php echo esc_url( $edit_link ); ?>" data-step="course-students" class="cp-reset-step"><?php esc_html_e( 'Students', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-duplicate-course">
-                                                <a href="<?php echo add_query_arg( array( 'course_id' => $instructor->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ); ?>"><?php _e( 'Duplicate Course', 'cp' ); ?></a>
+                                                <a href="<?php echo esc_url( add_query_arg( array( 'course_id' => $instructor->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ) ); ?>"><?php esc_html_e( 'Duplicate Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-export">
-                                                <a href=""><?php _e( 'Export', 'cp' ); ?></a>
+                                                <a href=""><?php esc_html_e( 'Export', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-view-course">
-                                                <a href="<?php echo esc_url( $instructor->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
+                                                <a href="<?php echo esc_url( $instructor->get_permalink() ); ?>" target="_blank"><?php esc_html_e( 'View Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-delete cp-delete">
-                                                <a href=""><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                                <a href=""><?php esc_html_e( 'Delete Course', 'cp' ); ?></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -149,8 +149,8 @@ endswitch;
 } else {
 ?>
                     <tr class="odd">
-                        <td colspan="<?php echo count( $columns ); ?>">
-                            <?php _e( 'No instructors found.', 'cp' ); ?>
+                        <td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
+                            <?php esc_html_e( 'No instructors found.', 'cp' ); ?>
                         </td>
                     </tr>
                 <?php } ?>
