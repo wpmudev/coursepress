@@ -480,7 +480,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 													$add = true;
 												}
 										}
-									} else if( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
+									} elseif( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
 										if ( $options['checked'][ $response_display[ $q_index ] ] ) {
 											$add = true;
 										}

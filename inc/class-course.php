@@ -338,7 +338,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 		if ( ! empty( $feature_video ) ) {
 			$attr = array(
-				'src' => esc_url_raw( $feature_video ),
+				'src' => esc_url( $feature_video ),
 				'class' => 'video-js vjs-default-skin vjs-big-play-centered course-feature-video',
 				'width' => $width,
 				'height' => $height,

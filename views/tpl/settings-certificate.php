@@ -1,6 +1,6 @@
 <script type="text/template" id="coursepress-certificate-setting-tpl">
 	<div class="cp-box-heading">
-		<h2 class="box-heading-title"><?php _e( 'Certificate', 'cp' ); ?></h2>
+		<h2 class="box-heading-title"><?php esc_html_e( 'Certificate', 'cp' ); ?></h2>
 	</div>
 
 	<div class="cp-content">
@@ -13,16 +13,16 @@
 		 * Certificate Options
 		 */
 		$config['certificate-options'] = array(
-			'title' => __( 'Certificate options', 'cp' ),
+			'title' => esc_html__( 'Certificate options', 'cp' ),
 			'fields' => array(
 				'enabled' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Enable basic certificate', 'cp' ),
+					'title' => $toggle_input . esc_html__( 'Enable basic certificate', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
 				),
 				'use_cp_default' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'cp' ),
+					'title' => $toggle_input . esc_html__( 'Use default CoursePress certificate', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
 			),
@@ -36,12 +36,12 @@
 			$content = $certClass->default_certificate_content();
 		}
 		$tokens = $certClass->get_tokens();
-		$token_info = sprintf( '<p>%s</p>', __( 'These codes will be replaced with actual data:', 'cp' ) );
+		$token_info = sprintf( '<p>%s</p>', esc_html__( 'These codes will be replaced with actual data:', 'cp' ) );
 		$token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 
 		$config['custom-certificate'] = array(
-			'title'  => __( 'Custom Certificate', 'cp' ),
-			'description' => __( 'Use the editor below to create the layout of your certificate. These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER.', 'cp' ),
+			'title'  => esc_html__( 'Custom Certificate', 'cp' ),
+			'description' => esc_html__( 'Use the editor below to create the layout of your certificate. These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER.', 'cp' ),
 			'fields' => array(
 				'content' => array(
 					'type'          => 'div',
@@ -53,7 +53,7 @@
 		 * Background Image
 		 */
 		$config['background_image'] = array(
-			'title' => __( 'Background Image', 'cp' ),
+			'title' => esc_html__( 'Background Image', 'cp' ),
 			'fields' => array(
 				'background_image' => array(
 					'type' => 'text',
@@ -61,7 +61,7 @@
 					'id' => 'coursepress-cert-bg',
 					'value' => coursepress_get_setting( 'basic_certificate/background_image' ),
 					'data' => array(
-						'title' => __( 'Select Certificate Background', 'cp' ),
+						'title' => esc_html__( 'Select Certificate Background', 'cp' ),
 						'thumbnail' => coursepress_get_setting( 'basic_certificate/background_image_thumbnail_id' ),
 					),
 				),
@@ -69,12 +69,12 @@
 		);
 
 		$config['content_margin'] = array(
-			'title' => __( 'Content Margin', 'cp' ),
-			'description' => __( '', 'cp' ),
+			'title' => esc_html__( 'Content Margin', 'cp' ),
+			'description' => esc_html__( ' ', 'cp' ),
 			'fields' => array(
 				'margin.top' => array(
 					'type' => 'number',
-					'label' => __( 'Top', 'cp' ),
+					'label' => esc_html__( 'Top', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
 					'flex' => true,
 					'data'  => array(
@@ -83,7 +83,7 @@
 				),
 				'margin.left' => array(
 					'type' => 'number',
-					'label' => __( 'Left', 'cp' ),
+					'label' => esc_html__( 'Left', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
 					'flex' => true,
 					'data'  => array(
@@ -92,7 +92,7 @@
 				),
 				'margin.right' => array(
 					'type' => 'number',
-					'label' => __( 'Right', 'cp' ),
+					'label' => esc_html__( 'Right', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
 					'flex' => true,
 					'data'  => array(
@@ -105,7 +105,7 @@
 		 * Logo Image
 		 */
 		$config['certificate_logo'] = array(
-			'title'  => __( 'Logo Image', 'cp' ),
+			'title'  => esc_html__( 'Logo Image', 'cp' ),
 			'fields' => array(
 				'certificate_logo' => array(
 					'type'  => 'text',
@@ -113,7 +113,7 @@
 					'id'    => 'coursepress-logo-img',
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo' ),
 					'data'  => array(
-						'title'     => __( 'Select Logo Image', 'cp' ),
+						'title'     => esc_html__( 'Select Logo Image', 'cp' ),
 						'thumbnail' => coursepress_get_setting( 'basic_certificate/certificate_logo_thumbnail_id' ),
 					),
 				),
@@ -121,12 +121,12 @@
 		);
 
 		$config['certificate_logo_position'] = array(
-			'title'       => __( 'Logo Position', 'cp' ),
-			'description' => __( '', 'cp' ),
+			'title'       => esc_html__( 'Logo Position', 'cp' ),
+			'description' => esc_html__( ' ', 'cp' ),
 			'fields'      => array(
 				'certificate_logo_position.x' => array(
 					'type'  => 'number',
-					'label' => __( 'X', 'cp' ),
+					'label' => esc_html__( 'X', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/x', 0 ),
 					'flex'  => true,
 					'data'  => array(
@@ -135,7 +135,7 @@
 				),
 				'certificate_logo_position.y' => array(
 					'type'  => 'number',
-					'label' => __( 'Y', 'cp' ),
+					'label' => esc_html__( 'Y', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/y', 0 ),
 					'flex'  => true,
 					'data'  => array(
@@ -144,7 +144,7 @@
 				),
 				'certificate_logo_position.w' => array(
 					'type'  => 'number',
-					'label' => __( 'Width', 'cp' ),
+					'label' => esc_html__( 'Width', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/w', 0 ),
 					'flex'  => true,
 					'data'  => array(
@@ -157,14 +157,14 @@
 		 * Page orientation
 		 */
 		$config['page_orientation'] = array(
-			'title' => __( 'Page orientation', 'cp' ),
+			'title' => esc_html__( 'Page orientation', 'cp' ),
 			'fields' => array(
 				'orientation' => array(
 					'type' => 'select',
 					'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
 					'field_options' => array(
-						'L' => $toggle_input . __( 'Landscape', 'cp' ),
-						'P' => $toggle_input . __( 'Portrait', 'cp' ),
+						'L' => $toggle_input . esc_html__( 'Landscape', 'cp' ),
+						'P' => $toggle_input . esc_html__( 'Portrait', 'cp' ),
 					),
 				),
 			),
@@ -173,7 +173,7 @@
 		 * Text Color
 		 */
 		$config['text_color'] = array(
-			'title' => __( 'Text Color', 'cp' ),
+			'title' => esc_html__( 'Text Color', 'cp' ),
 			'fields' => array(
 				'cert_text_color' => array(
 					'type' => 'text',
@@ -185,12 +185,12 @@
 		 * Preview
 		 */
 		$config['preview'] = array(
-			'title' => __( 'Preview', 'cp' ),
+			'title' => esc_html__( 'Preview', 'cp' ),
 			'fields' => array(
 				'preview_certificate' => array(
 					'type' => 'button',
 					'value' => coursepress_create_html( 'span', array( 'class' => 'dashicons dashicons-visibility' ), '' )
-						. __( 'Preview Certificate', 'cp' ),
+						. esc_html__( 'Preview Certificate', 'cp' ),
 					'class' => 'cp-btn cp-btn-default cp-dashicons alignright',
 				),
 			),
@@ -214,7 +214,7 @@
 			$classes = 'box-inner-content';
 			$option_class = $option_key;
 
-			if ( 'certificate-options' != $option_key ) {
+			if ( 'certificate-options' !== $option_key ) {
 				$option_class .= ' box-cert-settings';
 			}
 
@@ -224,11 +224,11 @@
 				if ( ! empty( $option['title'] ) ) {
 					printf(
 						'<h3 class="label">%s</h3>',
-						$option['title']
+						esc_html( $option['title'] )
 					);
 				}
 				if ( isset( $option['description'] ) ) {
-					printf( '<p class="description">%s</p>', $option['description'] );
+					printf( '<p class="description">%s</p>', esc_html( $option['description'] ) );
 				}
 				echo '</div>';
 			} else {
@@ -248,7 +248,7 @@
 						echo '<div class="flex">';
 					}
 					$is_flex = true;
-				} else if ( true === $is_flex ) {
+				} elseif ( true === $is_flex ) {
 					echo '</div>';
 					$is_flex = false;
 				}
@@ -260,7 +260,7 @@
 					esc_attr( $class )
 				);
 				if ( isset( $data['label'] ) ) {
-					printf( '<h3 class="label">%s</h3>', $data['label'] );
+					printf( '<h3 class="label">%s</h3>', esc_html( $data['label'] ) );
 				}
 				$data['name'] = $key;
 
@@ -278,12 +278,12 @@
 			echo '</div>';
 		}
 		?>
-        <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
+        <link type="text/css" rel="stylesheet" media="all" href="<?php echo esc_url( includes_url( '/css/editor.css' ) ); ?>" />
 	</div>
 </script>
 
 <script type="text/template" id="coursepress-cert-preview">
-    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Close Preview', 'cp' ); ?></button>
-    <h2><?php _e( 'Course Certificate Preview', 'cp' ); ?></h2>
+    <button type="button" class="cp-btn cp-btn-active"><?php esc_html_e( 'Close Preview', 'cp' ); ?></button>
+    <h2><?php esc_html_e( 'Course Certificate Preview', 'cp' ); ?></h2>
     <iframe id="coursepress-cert-frame" src="{{pdf}}"></iframe>
 </script>

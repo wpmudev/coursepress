@@ -4,11 +4,11 @@
         <div class="cp-div-url">
             <input type="hidden" name="{{name}}_thumbnail_id" class="cp-thumbnail-id" value="{{thumbnail_id}}" />
             <div class="cp-input-clear">
-                <input type="text" class="cp-image-url" value="{{value}}" placeholder="<?php _e( 'Paste URL or browse uploaded images', 'cp' ); ?>" />
-                <button type="button" class="cp-btn cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+                <input type="text" class="cp-image-url" value="{{value}}" placeholder="<?php esc_html_e( 'Paste URL or browse uploaded images', 'cp' ); ?>" />
+                <button type="button" class="cp-btn cp-btn-clear"><?php esc_html_e( 'Clear', 'cp' ); ?></button>
             </div>
         </div>
-        <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php _e( 'Browse', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php esc_html_e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>
 
@@ -16,11 +16,11 @@
     <div class="cp-flex cp-add-video-box">
         <div class="cp-div-url">
             <div class="cp-input-clear">
-                <input type="text" class="cp-video-url" value="{{value}}" placeholder="<?php _e( 'Paste URL or browse uploaded files', 'cp' ); ?>" />
-                <button type="button" class="cp-btn cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+                <input type="text" class="cp-video-url" value="{{value}}" placeholder="<?php esc_html_e( 'Paste URL or browse uploaded files', 'cp' ); ?>" />
+                <button type="button" class="cp-btn cp-btn-clear"><?php esc_html_e( 'Clear', 'cp' ); ?></button>
             </div>
         </div>
-        <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php _e( 'Browse', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php esc_html_e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>
 
@@ -31,7 +31,7 @@
         </div>
         <div class="coursepress-popup-content">{{message}}</div>
         <div class="coursepress-popup-footer">
-            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
+            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php esc_html_e( 'Cancel', 'cp' ); ?></button>
             <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
         </div>
     </div>
@@ -56,6 +56,6 @@
 <script type="text/template" id="coursepress-add-media-tpl">
     <div class="cp-flex-2">
         <input type="text" placeholder="{{placeholder}}" class="cp-add-media-input" />
-        <button type="button" class="cp-btn cp-btn-default cp-browse-btn"><?php _e( 'Browse', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-btn-default cp-browse-btn"><?php esc_html_e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>

@@ -105,7 +105,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 				$template .= $instructor->get_avatar( $atts['avatar_size'], $atts['default_avatar'] );
 				$template .= '</div>';
 			}
-			$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
+			$attr = array( 'href' => esc_url( $link ), 'class' => 'fn instructor' );
 			if ( $link_all ) {
 				$template .= $this->create_html( 'a', $attr, $instructor_name );
 			} else {
@@ -118,7 +118,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 				if ( $atts['summary_length'] && isset( $instructor->description ) && $instructor->description ) {
 					$description = wp_trim_words( $instructor->description, $atts['summary_length'] );
 					if ( $link_all ) {
-						$attr = array( 'href' => esc_url_raw( $link ) );
+						$attr = array( 'href' => esc_url( $link ) );
 						$description = $this->create_html( 'a', $attr, $description );
 					}
 					$template .= $this->create_html( 'div', array( 'class' => 'description profile-description' ), $description );

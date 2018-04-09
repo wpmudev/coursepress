@@ -11,11 +11,12 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php _e( 'My Profile', 'cp' ); ?></h1>
+                    <h1 class="page-title"><?php esc_html_e( 'My Profile', 'cp' ); ?></h1>
                 </header>
             </div>
 
             <?php coursepress_get_template( 'registration', 'form' ); ?>
         </div>
     </div>
-<?php get_footer();
+<?php
+get_footer();

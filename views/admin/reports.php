@@ -6,15 +6,15 @@
  * @var $course CoursePress_Course
  */
 ?>
-<div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php esc_attr_e( $download_nonce ); ?>">
-	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
+<div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php echo  esc_attr( $download_nonce ); ?>">
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-action-form" id="cp-search-form">
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
             <div class="cp-flex">
 <?php if ( 0 < count( $items ) ) { ?>
                 <div class="cp-div" id="bulk-actions">
-                    <label class="label"><?php _e( 'Bulk Actions', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Bulk Actions', 'cp' ); ?></label>
                 <label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'cp' ); ?></label>
 <div class="cp-input-clear">
 <select id="bulk-action-selector-top">
@@ -30,12 +30,12 @@ foreach ( $bulk_actions as $value => $label ) {
 ?>
 </select>
 </div>
-<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php esc_attr_e( $current ); ?>" />
+<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php echo  esc_attr( $current ); ?>" />
                 </div>
 <?php } ?>
 <?php if ( ! empty( $courses ) ) { ?>
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <label class="label"><?php esc_html_e( 'Filter by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <select name="course_id" id="select_course_id">
 <?php
@@ -50,7 +50,7 @@ foreach ( $courses as $course_id => $course ) {
 	?>
                         </select>
                     </div>
-                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Filter', 'cp' ); ?></button>
                 </div>
 <?php } ?>
             </div>
@@ -78,7 +78,7 @@ foreach ( $items as $item ) {
 	);
 	?>
 	<tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
-		<th scope="row" class="check-column"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $item->ID ); ?>"></th>
+		<th scope="row" class="check-column"><input type="checkbox" name="students[]" value="<?php echo  esc_attr( $item->ID ); ?>"></th>
 <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php
 								echo esc_attr( strtolower( $column_id ) );

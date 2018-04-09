@@ -16,7 +16,7 @@ get_header(); ?>
         <div class="">
             <div class="content-area">
                 <header class="page-header">
-                    <h3 class="course-title course-title-4"><span itemprop="name"><?php echo coursepress_get_course_title(); ?></span></h3>
+                    <h3 class="course-title course-title-4"><span itemprop="name"><?php echo esc_html( coursepress_get_course_title() ); ?></span></h3>
                     <?php
                     /**
                      * To override course submenu template to your theme or a child-theme,
@@ -24,17 +24,20 @@ get_header(); ?>
                      *
                      * @since 3.0
                      */
-                    coursepress_get_template( 'course', 'submenu' ); ?>
+                    coursepress_get_template( 'course', 'submenu' );
+					?>
                     <div class="course-after-title">
-                    <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
+                    <h2 class="entry-title course-title"><?php echo esc_html( coursepress_get_unit_title() ); ?></h2>
 
                     <?php if ( $show_progress ) { ?>
           						<div class="course-unit-progress">
-          							<?php echo coursepress_progress_wheel( array(
+          							<?php
+										$wheel = coursepress_progress_wheel( array(
           									'class' => 'per-unit-progress',
           									'data-value' => $unit_progress,
           									'data-size' => 62,
           								) );
+										echo esc_html( $wheel );
           							?>
           						</div>
           					<?php } ?>
@@ -47,14 +50,15 @@ get_header(); ?>
 
                 <div class="course-content-template">
                     <div class="course-structure course-structure-nav">
-			            <?php echo coursepress_get_unit_structure(); ?>
+			            <?php echo esc_html( coursepress_get_unit_structure() ); ?>
                     </div>
                     <div class="course-content">
-                      <?php echo coursepress_get_current_course_cycle(); ?>
+                      <?php echo esc_html( coursepress_get_current_course_cycle() ); ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-<?php get_footer();
+<?php
+get_footer();

@@ -1,6 +1,6 @@
 <script type="text/template" id="coursepress-import-export-setting-tpl">
 	<div class="cp-box-heading">
-		<h2 class="box-heading-title"><?php _e( 'Import & Export', 'cp' ); ?></h2>
+		<h2 class="box-heading-title"><?php esc_html_e( 'Import & Export', 'cp' ); ?></h2>
 	</div>
 
     <?php
@@ -9,33 +9,33 @@
 	$disabled = ! CoursePress_Data_Capabilities::can_create_course();
 
 	$config['import'] = array(
-		'title' => __( 'Import', 'cp' ),
-		'description' => __( 'Upload your exported courses to import here.', 'cp' ),
+		'title' => esc_html__( 'Import', 'cp' ),
+		'description' => esc_html__( 'Upload your exported courses to import here.', 'cp' ),
 		'fields' => array(
 			'replace' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Replace course if exists', 'cp' ),
-				'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'cp' ),
+				'title' => $toggle_input . esc_html__( 'Replace course if exists', 'cp' ),
+				'desc' => esc_html__( 'Courses with the same title will be automatically replaced by the new one.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'with_students' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Include course students', 'cp' ),
-				'desc' => __( 'Students listing must also included in your export for this to work.', 'cp' ),
+				'title' => $toggle_input . esc_html__( 'Include course students', 'cp' ),
+				'desc' => esc_html__( 'Students listing must also included in your export for this to work.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'with_comments' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Include course thread/comments', 'cp' ),
-				'desc' => __( 'Comments listing must also included in your export for this to work.', 'cp' ),
+				'title' => $toggle_input . esc_html__( 'Include course thread/comments', 'cp' ),
+				'desc' => esc_html__( 'Comments listing must also included in your export for this to work.', 'cp' ),
 				'class' => 'cp-ignore-update-model',
 				'disabled' => $disabled,
 			),
 			'' => array(
 				'type' => 'submit',
-				'value' => __( 'Upload file and import', 'cp' ),
+				'value' => esc_html__( 'Upload file and import', 'cp' ),
 				'class' => 'cp-btn cp-btn-active',
 				'disabled' => $disabled,
 			),
@@ -45,8 +45,8 @@
 	 * export
 	 */
 	$config['export'] = array(
-		'title' => __( 'Export', 'cp' ),
-		'description' => __( 'Select courses to export to another site.', 'cp' ),
+		'title' => esc_html__( 'Export', 'cp' ),
+		'description' => esc_html__( 'Select courses to export to another site.', 'cp' ),
 		'fields' => array(
 			'_wpnonce' => array(
 				'type' => 'hidden',
@@ -58,7 +58,7 @@
 			),
 			'coursepress[all]' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'All Courses', 'cp' ),
+				'title' => $toggle_input . esc_html__( 'All Courses', 'cp' ),
 				'data' => array(
 					'course-id' => 'all',
 				),
@@ -79,7 +79,7 @@
 		$course_title = $course->__get( 'post_title' );
 		$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . ( empty( $course_title )? __( '-[This course has no title]-', 'cp' ):$course_title ),
+			'title' => $toggle_input . ( empty( $course_title )? esc_html__( '-[This course has no title]-', 'cp' ):$course_title ),
 			'data' => array(
 				'course-id' => $course_id,
 			),
@@ -93,19 +93,19 @@
 		),
 		'coursepress[export][students]' => array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . __( 'Include course students', 'cp' ),
-			'desc' => __( 'Will include course students and their course submission progress.', 'cp' ),
+			'title' => $toggle_input . esc_html__( 'Include course students', 'cp' ),
+			'desc' => esc_html__( 'Will include course students and their course submission progress.', 'cp' ),
 		),
 		'coursepress[export][comments]' => array(
 			'type' => 'checkbox',
-			'title' => $toggle_input . __( 'Include course thread/comments', 'cp' ),
-			'desc' => __( 'Will include comments from Course forum and discussion modules.', 'cp' ),
+			'title' => $toggle_input . esc_html__( 'Include course thread/comments', 'cp' ),
+			'desc' => esc_html__( 'Will include comments from Course forum and discussion modules.', 'cp' ),
 			'disabled' => true,
 		),
 		'coursepress[export][button]' => array(
 			'id' => 'coursepress-export-button',
 			'type' => 'submit',
-			'value' => __( 'Export Courses', 'cp' ),
+			'value' => esc_html__( 'Export Courses', 'cp' ),
 			'class' => 'cp-btn cp-btn-active',
 		),
 	);
@@ -123,28 +123,28 @@
 	?>
     <div class="cp-box-content">
         <div class="box-label-area">
-            <h2 class="label"><?php echo $option['title']; ?></h2>
+            <h2 class="label"><?php echo esc_html( $option['title'] ); ?></h2>
     <?php
 	if ( isset( $option['description'] ) ) {
-		printf( '<p class="description">%s</p>', $option['description'] );
+		printf( '<p class="description">%s</p>', esc_html( $option['description'] ) );
 	}
 	?>
         </div>
         <div class="box-inner-content">
-            <form method="post" id="form-<?php echo $option_key; ?>" class="coursepress-form" enctype="multipart/form-data">
-                <?php if ( 'import' == $option_key ) : ?>
+            <form method="post" id="form-<?php echo esc_attr( $option_key ); ?>" class="coursepress-form" enctype="multipart/form-data">
+                <?php if ( 'import' === $option_key ) : ?>
                     <input type="file" name="import"<?php echo $disabled ? ' disabled="disabled"' : ''; ?> />
                     <div class="cp-alert cp-alert-error"></div>
-                <?php elseif ( 'export' == $option_key ) : ?>
+                <?php elseif ( 'export' === $option_key ) : ?>
 
                 <?php endif; ?>
 <?php
 foreach ( $option['fields'] as $key => $data ) {
 	?>
-	<div class="option option-<?php esc_attr_e( $key ); ?>">
+	<div class="option option-<?php echo esc_html( $key ); ?>">
     <?php
 	if ( isset( $data['label'] ) ) {
-		printf( '<h3>%s</h3>', $data['label'] );
+		printf( '<h3>%s</h3>', esc_html( $data['label'] ) );
 	}
 	$data['name'] = $key;
 	lib3()->html->element( $data );

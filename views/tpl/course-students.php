@@ -5,10 +5,10 @@
 ?>
 <script type="text/template" id="coursepress-students-tpl">
 	<div class="cp-box-heading">
-		<h2 class="box-heading-title"><?php _e( 'Course Students', 'cp' ); ?></h2>
+		<h2 class="box-heading-title"><?php esc_html_e( 'Course Students', 'cp' ); ?></h2>
 	</div>
     <ul class="subsubsub">
-        <?php echo implode( '<li>|</li>', $statuses ); ?>
+        <?php echo esc_html( implode( '<li>|</li>', $statuses ) ); ?>
     </ul>
     <div class="tablenav top">
         <div class="alignleft actions bulkactions cp-flex">
@@ -27,10 +27,10 @@
         <thead>
             <tr>
                 <th class="column-cb"><input type="checkbox" /></th>
-                <th class="column-student"><?php _e( 'Student', 'cp' ); ?></th>
-                <th class="column-certified"><?php _e( 'Certified', 'cp' ); ?></th>
+                <th class="column-student"><?php esc_html_e( 'Student', 'cp' ); ?></th>
+                <th class="column-certified"><?php esc_html_e( 'Certified', 'cp' ); ?></th>
                 <?php if ( $can_withdraw ) : ?>
-                    <th class="column-withdraw"><?php _e( 'Withdraw', 'cp' ); ?></th>
+                    <th class="column-withdraw"><?php esc_html_e( 'Withdraw', 'cp' ); ?></th>
                 <?php endif; ?>
             </tr>
         </thead>
@@ -38,18 +38,20 @@
             <?php if ( count( $students ) > 0 ) { ?>
                 <?php foreach ( $students as $student ) { ?>
                 <tr id="student-<?php echo esc_attr( $student->ID ); ?>">
-                    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="<?php esc_attr_e( $student->ID ); ?>" /></td>
+                    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="<?php echo  esc_attr( $student->ID ); ?>" /></td>
                     <td>
                         <div class="cp-flex cp-user">
-                            <span class="gravatar"> <?php echo $student->get_avatar( 30 ); ?></span>
-                            <span class="user_login"><?php
+                            <span class="gravatar"><?php echo esc_html( $student->get_avatar( 30 ) ); ?></span>
+                            <span class="user_login">
+							<?php
 							if ( isset( $student->coursepress_student_link ) ) {
 								printf( '<a href="%s">%s</a>', esc_url( $student->coursepress_student_link ), esc_html( $student->user_login ) );
 							} else {
 								echo esc_html( $student->user_login );
 							}
-?></span>
-                            <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
+							?>
+							</span>
+                            <span class="display_name">(<?php echo esc_html( $student->get_name() ); ?>)</span>
 						</div>
 <?php
 if ( isset( $student->row_actions ) ) {
@@ -60,8 +62,8 @@ if ( isset( $student->row_actions ) ) {
 		printf(
 			'<span class="%s"><span>%s</span>%s</span>',
 			esc_attr( $row_class ),
-			$row_content,
-			$sep
+			esc_html( $row_content ),
+			esc_html( $sep )
 		);
 	}
 	echo '</div>';
@@ -82,7 +84,7 @@ if ( isset( $student->row_actions ) ) {
                     </td>
                     <?php if ( $can_withdraw ) : ?>
                         <td>
-                            <a href="#" data-id="<?php echo esc_attr( $student->ID ); ?>" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php _e( 'Withdraw', 'cp' ); ?></a>
+                            <a href="#" data-id="<?php echo esc_attr( $student->ID ); ?>" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php esc_html_e( 'Withdraw', 'cp' ); ?></a>
                         </td>
                     <?php endif; ?>
                 </tr>
@@ -91,27 +93,29 @@ if ( isset( $student->row_actions ) ) {
                 <tr class="noitems <?php echo count( $students ) > 0? 'hidden':''; ?>">
                     <td colspan="4">
 <?php if ( 1 > $all_student_count || 'all' === $show ) { ?>
-                        <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
-                        <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
-<?php } else {
+                        <p><?php esc_html_e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
+                        <p><?php esc_html_e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
+<?php
+} else {
 	switch ( $show ) {
 		case 'yes':
 		?>
-                        <p><?php _e( 'No student has completed this course yet.', 'cp' ); ?></p>
-	<?php
-	break;
+                        <p><?php esc_html_e( 'No student has completed this course yet.', 'cp' ); ?></p>
+		<?php
+			break;
 		case 'no':
 		?>
-                        <p><?php _e( 'All enrolled students have completed this course.', 'cp' ); ?></p>
-	<?php
-	break;
+                        <p><?php esc_html_e( 'All enrolled students have completed this course.', 'cp' ); ?></p>
+		<?php
+			break;
 		default:
 		?>
-                        <p><?php _e( 'Something went wrong.', 'cp' ); ?></p>
-	<?php
-	break;
+                        <p><?php esc_html_e( 'Something went wrong.', 'cp' ); ?></p>
+		<?php
+			break;
 	}
-} ?>
+}
+?>
                     </td>
                 </tr>
         </tbody>
@@ -171,11 +175,13 @@ if ( isset( $student->row_actions ) ) {
                         <th><?php esc_html_e( 'Student Name', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Email', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Date', 'cp' ); ?></th>
-                        <?php if ( $can_invite ) : ?><th></th><?php endif; ?>
+                        <?php if ( $can_invite ) : ?>
+							<th></th>
+						<?php endif; ?>
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <tr class="no-invites <?php $array = (array) $invited_students; echo empty( $array ) ? '' : 'inactive'; ?>">
+                    <tr class="no-invites <?php $array = (array) $invited_students; ?><?php echo empty( $array ) ? '' : 'inactive'; ?>">
                         <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                 </tbody>
@@ -191,7 +197,7 @@ if ( isset( $student->row_actions ) ) {
     <td>{{date}}</td>
     <?php if ( $can_withdraw ) : ?>
         <td>
-            <button data-email="{{email}}" class="cp-btn cp-btn-xs cp-btn-active remove-invite" title="<?php _e( 'Remove invitation', 'cp' ); ?>"><?php _e( 'Remove', 'cp' ); ?></button>
+            <button data-email="{{email}}" class="cp-btn cp-btn-xs cp-btn-active remove-invite" title="<?php esc_html_e( 'Remove invitation', 'cp' ); ?>"><?php esc_html_e( 'Remove', 'cp' ); ?></button>
         </td>
     <?php endif; ?>
 </script>

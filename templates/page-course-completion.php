@@ -12,16 +12,18 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php echo coursepress_get_course_title(); ?></h1>
-					<h2 class="entry-title"><?php echo $completion['title']; ?></h2>
+					<h1 class="page-title"><?php echo esc_html( coursepress_get_course_title() ); ?></h1>
+					<h2 class="entry-title"><?php echo esc_html( $completion['title'] ); ?></h2>
 					</div>
 				</header>
 
 				<div class="page-content">
-					<?php echo apply_filters( 'the_content', $completion['content'] ); ?>
+					<?php $the_content = apply_filters( 'the_content', $completion['content'] ); ?>
+					<?php echo esc_html( $the_content ); ?>
 				</div>
 			</div>
 		</div>
 	</div>
 
-<?php get_footer();
+<?php
+get_footer();
