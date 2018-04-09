@@ -401,15 +401,18 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 		$student_id = $this->get_student_id( $course_id );
 		$progress_id = $this->get_progress_id( $student_id );
-		if ( (int) $progress_id > 0 ) {
+		// Get from cache if exist.
+		$progress = wp_cache_get( 'course_progress_data_' . $course_id, 'cp_student_' . $student_id );
+		if ( (int) $progress_id > 0 && false === $progress ) {
 			$sql = $wpdb->prepare( "SELECT `progress` FROM `{$this->progress_table}` WHERE `ID`=%d", $progress_id );
 			$progress = $wpdb->get_var( $sql );
 			if ( ! empty( $progress ) ) {
 				$progress = maybe_unserialize( $progress );
-				return $progress;
 			}
+			// Set in cache.
+			wp_cache_set( 'course_progress_data_' . $course_id, $progress, 'cp_student_' . $student_id );
 		}
-		return null;
+		return $progress;
 	}
 
 	/**
