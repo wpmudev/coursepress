@@ -24,18 +24,18 @@ get_header(); ?>
 				 */
 				coursepress_get_template( 'course', 'submenu' );
 				?>
-<?php
+				<?php
 
-$allowed = $course->__get( 'allow_discussion' );
-if ( false == $allowed ) {
-	coursepress_render( 'templates/content-discussion-off' );
-} else {
-	coursepress_render( 'templates/content-discussion-single', array(
-		'user_id' => 0,
-		'course' => $course,
-	) );
-}
-?>
+				$allowed = $course->__get( 'allow_discussion' );
+				if ( false === coursepress_is_true( $allowed ) ) :
+					coursepress_render( 'templates/content-discussion-off' );
+				else :
+					coursepress_render( 'templates/content-discussion-single', array(
+						'user_id' => 0,
+						'course' => $course,
+					) );
+				endif;
+				?>
 			</div>
 		</div>
 	</div>

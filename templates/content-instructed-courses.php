@@ -8,27 +8,27 @@ if ( ! empty( $courses ) ) : ?>
 			<tr>
 				<th><?php esc_html_e( 'Course', 'cp' ); ?></th>
 				<th><?php esc_html_e( 'Students', 'cp' ); ?></th>
-                <th></th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ( $courses as $course ) : ?>
-				<tr>
-					<td>
-						<a href="<?php echo esc_url( $course->get_permalink() ); ?>"><?php echo esc_html( $course->post_title ); ?></a>
-					</td>
-					<td>
-						<?php echo (int) $course->count_students(); ?>
-					</td>
-                    <td align="right">
-                        <a href="<?php echo esc_url( $course->get_edit_url() ); ?>" class="button">
-                            <i class="fa fa-pencil"></i>
-                            <?php esc_html_e( 'Edit', 'cp' ); ?>
-                        </a>
-                    </td>
-				</tr>
-			<?php endforeach; ?>
+		<?php foreach ( $courses as $course ) : ?>
+			<tr>
+				<td>
+					<a href="<?php echo esc_url( $course->get_permalink() ); ?>"><?php echo esc_html( $course->post_title ); ?></a>
+				</td>
+				<td>
+					<?php echo (int) $course->count_students(); ?>
+				</td>
+				<td align="right">
+					<a href="<?php echo esc_url( $course->get_edit_url() ); ?>" class="button">
+						<i class="fa fa-pencil"></i>
+						<?php esc_html_e( 'Edit', 'cp' ); ?>
+					</a>
+				</td>
+			</tr>
+		<?php endforeach; ?>
 		</tbody>
 	</table>
-<?php
+	<?php
 endif;

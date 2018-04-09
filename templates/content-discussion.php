@@ -4,49 +4,42 @@
  * @var int $course
  */
 $data = coursepress_get_disscusions( $course );
-if ( empty( $data ) ) {
-    printf(
-        '<p class="message">%s</p>',
-        esc_html__( 'This course does not have any discussions.', 'cp' )
-    );
-} else {
-		echo '<ul class="discussion-archive-list">';
-	foreach ( $data as $discussion ) {
-			echo '<li>';
-			$comments_count = wp_count_comments( $discussion->ID );
-			echo '<div class="discussion-archive-single-meta">';
-			echo '<div class="discussion-comment"><div class="comment">';
-			echo esc_html( $comments_count->approved );
-			echo '</div></div>';
-			echo '</div>';
+if ( empty( $data ) ) :
+	printf(
+		'<p class="message">%s</p>',
+		esc_html__( 'This course does not have any discussions.', 'cp' )
+	);
+else :
+	echo '<ul class="discussion-archive-list">';
+	foreach ( $data as $discussion ) :
+		echo '<li>';
+		$comments_count = wp_count_comments( $discussion->ID );
+		echo '<div class="discussion-archive-single-meta">';
+		echo '<div class="discussion-comment"><div class="comment">';
+		echo esc_html( $comments_count->approved );
+		echo '</div></div>';
+		echo '</div>';
 
 		$author = coursepress_get_user_name( $discussion->post_author, false, false );
 
-		if ( 'course' === $discussion->unit_id ) {
+		if ( 'course' === $discussion->unit_id ) :
 			$applies_to = get_post_field( 'post_title', $discussion->course_id );
-		} else {
+		else :
 			$applies_to = get_post_field( 'post_title', $discussion->unit_id );
-		}
+		endif;
 
 		$date = get_the_date( get_option( 'date_format' ), $discussion );
 
-		//          $discussion_url = CoursePress_Core::get_slug( 'courses/', true ) . $course->post_name . '/';
-		//          $discussion_url = $discussion_url . CoursePress_Core::get_slug( 'discussion/' ) . $discussion->post_name;
-
 		echo '
-					<div class="discussion-archive-single">
-						<h3 class="discussion-title"><a href="' . esc_url( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
-						<div class="discussion-content">
-							' . esc_html( $discussion->post_content ) . '
-						</div>
-						<hr />
-						<div class="meta">' . esc_html( $author ) . ' | ' . esc_html( $date ) . ' | ' . esc_html__( 'Applies to:', 'cp' ) . ' ' . esc_html( $applies_to ) . '</div>
-					</div>
-			';
+			<div class="discussion-archive-single">
+				<h3 class="discussion-title"><a href="' . esc_url( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
+				<div class="discussion-content">' . esc_html( $discussion->post_content ) . '</div>
+				<hr />
+				<div class="meta">' . esc_html( $author ) . ' | ' . esc_html( $date ) . ' | ' . esc_html__( 'Applies to:', 'cp' ) . ' ' . esc_html( $applies_to ) . '</div>
+			</div>';
 
-		echo '
-				</li>';
-	}
-		echo '</ul>';
-}
+		echo '</li>';
+	endforeach;
+	echo '</ul>';
+endif;
 

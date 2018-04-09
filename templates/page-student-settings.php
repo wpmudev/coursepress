@@ -7,16 +7,17 @@
  */
 get_header(); ?>
 
-    <div class="coursepress-wrap">
-        <div class="container">
-            <div class="content-area">
-                <header class="page-header">
-                    <h1 class="page-title"><?php esc_html_e( 'My Profile', 'cp' ); ?></h1>
-                </header>
-            </div>
+	<div class="coursepress-wrap">
+		<div class="container">
+			<div class="content-area">
+				<header class="page-header">
+					<h1 class="page-title"><?php esc_html_e( 'My Profile', 'cp' ); ?></h1>
+				</header>
+			</div>
 
-            <?php coursepress_get_template( 'registration', 'form' ); ?>
-        </div>
-    </div>
+			<?php coursepress_get_template( 'registration', 'form' ); ?>
+		</div>
+	</div>
+
 <?php
 get_footer();

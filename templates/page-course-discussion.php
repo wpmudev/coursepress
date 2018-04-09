@@ -24,22 +24,24 @@ get_header(); ?>
 				 */
 				coursepress_get_template( 'course', 'submenu' );
 				?>
-<?php
+				<?php
 
-$allowed = $course->__get( 'allow_discussion' );
-if ( ! $allowed ) {
-    coursepress_render( 'templates/content-discussion-off' );
-} else {
-    $url = $course->get_discussion_new_url();
-?>
-<div class="discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
-<?php
-    coursepress_render( 'templates/content-discussion', array(
-		'user_id' => 0,
-		'course' => $course,
-	) );
-}
-?>
+				$allowed = $course->__get( 'allow_discussion' );
+				if ( ! $allowed ) :
+					coursepress_render( 'templates/content-discussion-off' );
+				else :
+					$url = $course->get_discussion_new_url();
+					?>
+					<div class="discussion-new">
+						<a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a>
+					</div>
+					<?php
+					coursepress_render( 'templates/content-discussion', array(
+						'user_id' => 0,
+						'course' => $course,
+					) );
+				endif;
+				?>
 			</div>
 		</div>
 	</div>

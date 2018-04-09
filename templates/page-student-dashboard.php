@@ -5,8 +5,6 @@
  * @since 3.0
  * @package CoursePress
  */
-
-
 get_header(); ?>
 
 	<div class="coursepress-wrap">
@@ -16,14 +14,14 @@ get_header(); ?>
 					<h1 class="page-title"><?php esc_html_e( 'Courses', 'cp' ); ?></h1>
 				</header>
 
-                <?php
-                    // My courses template
-                    coursepress_get_template( 'content', 'my-courses' );
-                    // Instructed courses
-                    coursepress_get_template( 'content', 'instructed-courses' );
-                    // Facilitated courses
-                    coursepress_get_template( 'content', 'facilitated-courses' );
-                ?>
+				<?php
+				// My courses template.
+				coursepress_get_template( 'content', 'my-courses' );
+				// Instructed courses.
+				coursepress_get_template( 'content', 'instructed-courses' );
+				// Facilitated courses.
+				coursepress_get_template( 'content', 'facilitated-courses' );
+				?>
 			</div>
 		</div>
 	</div>
