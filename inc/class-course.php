@@ -776,12 +776,16 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int[] IDs of enrolled students
 	 */
 	public function get_student_ids() {
-		global $wpdb;
-		$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
 		$course_id = $this->__get( 'ID' );
-		return $wpdb->get_col(
-			$wpdb->prepare( $sql, $course_id )
-		);
+		// Get from cache if exist.
+		$student_ids = wp_cache_get( 'student_ids', 'cp_course_' . $course_id );
+		if ( false === $student_ids ) {
+			global $wpdb;
+			$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
+			$student_ids = $wpdb->get_col( $wpdb->prepare( $sql, $course_id ) );
+			wp_cache_set( 'student_ids', $student_ids, 'cp_course_' . $course_id );
+		}
+		return $student_ids;
 	}
 
 	/**
