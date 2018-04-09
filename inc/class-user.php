@@ -265,26 +265,37 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	public function get_enrolled_courses_ids( $per_page = 0, $paged = 1 ) {
-		global $wpdb;
 		$id = $this->__get( 'ID' );
 		$offset = $per_page * ($paged - 1);
 		$limit = $per_page * $paged;
-		if ( ! $id ) {
-			return array();
-		}
-		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
-		if ( $per_page > 0 ) {
-			$sql .= ' LIMIT %d, %d';
-			$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
-		} else {
-			$sql = $wpdb->prepare( $sql, $id );
-		}
-		$results = $wpdb->get_results( $sql, OBJECT );
-		$course_ids = array();
-		if ( $results ) {
-			foreach ( $results as $result ) {
-				$course_ids[] = $result->course_id;
+		// Get from cache if exists.
+		$course_ids = wp_cache_get( 'enrolled_courses_ids', 'cp_user_' . $id );
+		if ( false === $course_ids ) {
+			global $wpdb;
+			if ( ! $id ) {
+				return array();
 			}
+			$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
+			if ( $per_page > 0 ) {
+				$sql .= ' LIMIT %d, %d';
+				$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
+			} else {
+				$sql = $wpdb->prepare( $sql, $id );
+			}
+			$results = $wpdb->get_results( $sql, OBJECT );
+			$course_ids = array();
+			if ( $results ) {
+				foreach ( $results as $result ) {
+					$course_ids[] = $result->course_id;
+				}
+			}
+			// Store in cache only if not paginated, so we can use it later.
+			if ( 0 === $per_page ) {
+				wp_cache_set( 'enrolled_courses_ids', $course_ids, 'cp_user_' . $id );
+			}
+		} elseif ( $per_page > 0 ) {
+			// For paginated queries.
+			$course_ids = array_slice( $course_ids, $offset, $per_page );
 		}
 		return $course_ids;
 	}
