@@ -142,7 +142,7 @@
             <# if ( ! module.deleted ) { #>
             <li class="module-item" data-order="{{pos}}" data-id="{{module.id}}">
                 <div class="icon-move cp-flex">
-                    <div class="module-title"><# if ( '' == module.title ) { #><?php esc_html( _ex( '[Untitled]', 'module title', 'cp' ) ); ?><# } else { #>{{module.title}}<# } #></div>
+                    <div class="module-title"><# if ( '' == module.title ) { #><?php esc_html_ex( '[Untitled]', 'module title', 'cp' ); ?><# } else { #>{{module.title}}<# } #></div>
                     <div class="module-description">{{module.mini_desc}}</div>
                     <div class="step-icon-container"></div>
                 </div>
@@ -275,7 +275,7 @@
             <# if ( modules ) { #>
                 <# _.each( modules, function( module, module_id ) { #>
                     <tr>
-                        <td class="column-unit" data-module="{{module_id}}" data-unit="{{cid}}"><# if ( '' == module.title ) { #><?php esc_html( _ex( '[Untitled]', 'module title', 'cp' ) ); ?><# } else { #>{{module.title}}<# } #></td>
+                        <td class="column-unit" data-module="{{module_id}}" data-unit="{{cid}}"><# if ( '' == module.title ) { #><?php esc_html_ex( '[Untitled]', 'module title', 'cp' ); ?><# } else { #>{{module.title}}<# } #></td>
                         <td class="column-step" data-module="{{module_id}}" data-unit="{{cid}}">
                             <# if ( module.steps ) { #>
                                 <# _.each( module.steps, function( step ) { #>
