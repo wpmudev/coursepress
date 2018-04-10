@@ -10,7 +10,7 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php esc_html_e( 'All Courses', 'cp' ); ?></h1>
+                    <h1 class="page-title"><?php _e( 'All Courses', 'cp' ); ?></h1>
                 </header>
 <?php
 if ( have_posts() ) {
@@ -26,11 +26,10 @@ if ( have_posts() ) {
     }
     posts_nav_link();
 } else {
-	esc_html_e( 'There is currently no course, please come back later.', 'cp' );
+	_e( 'There is currently no course, please come back later.', 'cp' );
 }
 ?>
             </div>
         </div>
     </div>
-<?php
-get_footer();
+<?php get_footer();

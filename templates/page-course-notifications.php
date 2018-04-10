@@ -13,8 +13,8 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php esc_html_e( 'Notifications', 'cp' ); ?></h1>
-                    <h2 class="entry-title"><?php echo esc_html( coursepress_get_course_title() ); ?></h2>
+                    <h1 class="page-title"><?php _e( 'Notifications', 'cp' ); ?></h1>
+                    <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
                 </header>
 <?php
 /**
@@ -26,10 +26,9 @@ get_header(); ?>
 coursepress_get_template( 'course', 'submenu' );
 if ( empty( $notifications ) ) {
 	echo '<p>';
-	esc_html_e( 'There is no notifications yet.', 'cp' );
+	_e( 'There is no notifications yet.', 'cp' );
 	echo '</p>';
-} else {
-?>
+} else { ?>
                     <ul class="notification-archive-list">
                         <?php foreach ( $notifications as $notification ) : ?>
                             <li>
@@ -39,13 +38,13 @@ if ( empty( $notifications ) ) {
                                         <span class="day"><?php echo get_the_date( 'd', $notification ); ?></span>
                                         <span class="year"><?php echo get_the_date( 'Y', $notification ); ?></span>
                                     </div>
-                                    <div class="notification-time"><?php echo esc_html( get_the_time( 'h:ia', $notification ) ); ?></div>
+                                    <div class="notification-time"><?php echo get_the_time( 'h:ia', $notification ); ?></div>
                                 </div>
                                 <?php $author = sprintf( __( 'by <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ); ?>
                                 <div class="notification-archive-single">
                                     <h3 class="notification-title"><?php echo esc_html( $notification->post_title ); ?></h3>
-                                    <div class="notification_author"><?php echo esc_html( $author ); ?></div>
-                                    <div class="notification-content"><?php echo esc_html( CoursePress_Utility::filter_content( $notification->post_content ) ); ?></div>
+                                    <div class="notification_author"><?php echo $author; ?></div>
+                                    <div class="notification-content"><?php echo CoursePress_Utility::filter_content( $notification->post_content ); ?></div>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -54,5 +53,4 @@ if ( empty( $notifications ) ) {
             </div>
         </div>
     </div>
-<?php
-get_footer();
+<?php get_footer();

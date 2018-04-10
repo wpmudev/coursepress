@@ -123,7 +123,7 @@ class CoursePress_Step extends CoursePress_Unit {
 				$module = $modules[ $module_number ];
 				return $module['url'] . trailingslashit( $post_name );
 			}
-		} elseif ( $unit ) {
+		} else if ( $unit ) {
 			$slug = coursepress_get_setting( 'slugs/step', 'step' );
 			return $unit->get_permalink() . trailingslashit( $slug ) . trailingslashit( $post_name );
 		}

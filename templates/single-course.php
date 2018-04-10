@@ -5,12 +5,11 @@
  * @since 3.0
  * @package CoursePress
  */
-$coursepress_schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
 get_header(); ?>
 
 	<div class="coursepress-wrap">
 		<div class="container">
-            <div class="content-area"<?php echo esc_attr( $coursepress_schema ); ?>>
+            <div class="content-area"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope' ); ?>>
                 <?php
                 /**
                  * To override this template in your theme or a child theme,
@@ -24,5 +23,4 @@ get_header(); ?>
 		</div>
 	</div>
 
-<?php
-get_footer();
+<?php get_footer();

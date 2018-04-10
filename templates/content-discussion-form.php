@@ -1,8 +1,8 @@
-<form method="post" action="<?php echo esc_url( $course->get_discussion_url() ); ?>" class="course-discussion">
+<form method="post" action="<?php echo esc_url( $course->get_discussion_url() ) ?>" class="course-discussion">
 <?php wp_nonce_field( 'add-new-discussion' ); ?>
     <input type="hidden" name="action" value="add_new_discussion" />
-    <input type="hidden" name="id" value="<?php echo esc_attr( $id ); ?>" />
-    <input type="hidden" name="course_id" value="<?php echo esc_attr( $course->ID ); ?>" />
+    <input type="hidden" name="id" value="<?php esc_attr_e( $id ); ?>" />
+    <input type="hidden" name="course_id" value="<?php esc_attr_e( $course->ID ); ?>" />
 <?php
 // Course Area
 $options_unit = array(
@@ -25,8 +25,7 @@ foreach ( $units as $unit ) {
 }
 ?>
 <div class="discussion-section">
-<label><span>
-<?php
+<label><span><?php
 esc_html_e( 'This discussion is about ', 'cp' );
 coursepress_html_select( $options_unit, true );
 ?>
