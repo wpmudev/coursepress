@@ -16,7 +16,7 @@ $course = coursepress_get_course();
 	<?php if ( !empty( $messages ) ) { ?>
 		<div class="cp-warning-box">
 		<?php foreach ( $messages as $message ) { ?>
-			<p><?php echo $message ?></p>
+			<p><?php echo $message; ?></p>
 		<?php } ?>
 		</div>
 	<?php } ?>
@@ -58,7 +58,7 @@ if ( ! empty( $price ) ) {
 }
 ?>
             <p class="course-button">
-                <?php echo do_shortcode( '[course_join_button ]' ) ?>
+                <?php echo do_shortcode( '[course_join_button ]' ); ?>
             </p>
 
             <div class="social-shares">

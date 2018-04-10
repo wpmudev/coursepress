@@ -18,4 +18,5 @@ get_header(); ?>
             <?php coursepress_get_template( 'registration', 'form' ); ?>
         </div>
     </div>
-<?php get_footer();
+<?php
+get_footer();

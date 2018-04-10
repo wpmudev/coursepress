@@ -35,10 +35,11 @@ get_header(); ?>
                     $shortcode = sprintf( '[course_progress course_id="%d"]', $course->ID );
                     echo apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
                     printf( ' %1$s%', do_shortcode( $shortcode ) );
-                  ?>%
+                  ?>
                   </div>
                 </div>
             </div>
         </div>
     </div>
-<?php get_footer();
+<?php
+get_footer();

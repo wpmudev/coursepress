@@ -13,7 +13,7 @@ if ( empty( $discussion ) ) {
     );
 } else {
 ?>
-        <h3 class="title course-discussion-title"><?php esc_html_e( 'Discussion', 'cp' ); ?>: <?php esc_html_e( $discussion->post_title ); ?></h3>
+        <h3 class="title course-discussion-title"><?php esc_html_e( 'Discussion', 'cp' ); ?>: <?php echo esc_html( $discussion->post_title ); ?></h3>
 <?php echo $discussion->post_content; ?>
 <?php
 }

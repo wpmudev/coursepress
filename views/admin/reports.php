@@ -6,7 +6,7 @@
  * @var $course CoursePress_Course
  */
 ?>
-<div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php esc_attr_e( $download_nonce ); ?>">
+<div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php echo esc_attr( $download_nonce ); ?>">
 	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-action-form" id="cp-search-form">
@@ -30,7 +30,7 @@ foreach ( $bulk_actions as $value => $label ) {
 ?>
 </select>
 </div>
-<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php esc_attr_e( $current ); ?>" />
+<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php echo esc_attr( $current ); ?>" />
                 </div>
 <?php } ?>
 <?php if ( ! empty( $courses ) ) { ?>
@@ -64,7 +64,8 @@ if ( ! empty( $items ) ) {
                 <tr>
                 <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo esc_attr( strtolower( $column_id ) ); echo esc_attr( in_array( $column_id, $hidden_columns ) ? ' hidden': '' ); ?>" id="<?php echo esc_attr( $column_id ); ?>">
+                        <th class="manage-column column-<?php echo esc_attr( strtolower( $column_id ) ); ?>
+							<?php echo esc_attr( in_array( $column_id, $hidden_columns ) ? 'hidden': '' ); ?>" id="<?php echo esc_attr( $column_id ); ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php } ?>
@@ -78,17 +79,15 @@ foreach ( $items as $item ) {
 	);
 	?>
 	<tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
-		<th scope="row" class="check-column"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $item->ID ); ?>"></th>
+		<th scope="row" class="check-column"><input type="checkbox" name="students[]" value="<?php echo esc_attr( $item->ID ); ?>"></th>
 <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
-                                <td class="column-<?php
-								echo esc_attr( strtolower( $column_id ) );
-								echo esc_attr( in_array( $column_id, $hidden_columns ) ? ' hidden': '' );
-?>">
+                                <td class="column-<?php echo esc_attr( strtolower( $column_id ) ); ?>
+									<?php echo esc_attr( in_array( $column_id, $hidden_columns ) ? 'hidden': '' ); ?>">
                                     <?php
 									switch ( $column_id ) {
 										case 'ID':
 											echo $item->ID;
-										break;
+											break;
 
 										case 'student':
 											echo '<div class="cp-flex">';
@@ -104,11 +103,11 @@ foreach ( $items as $item ) {
 											echo $item->display_name;
 											echo ')</span>';
 											echo '</div>';
-										break;
+											break;
 
 										case 'responses':
 											echo $item->responses;
-										break;
+											break;
 
 										case 'average':
 											if ( isset( $item->progress['completion']['progress'] ) ) {
@@ -134,7 +133,7 @@ foreach ( $items as $item ) {
 											);
 											break;
 
-										default :
+										default:
 											echo $column_id;
 											/**
 			 * Trigger to allow custom column value
@@ -144,7 +143,7 @@ foreach ( $items as $item ) {
 			 * @param CoursePress_Course object $item
 			 */
 											do_action( 'coursespress_reportslist_column', $column_id, $item );
-										break;
+											break;
 									}
 									?>
                                 </td>

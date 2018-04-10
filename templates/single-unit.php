@@ -24,13 +24,15 @@ get_header(); ?>
                      *
                      * @since 3.0
                      */
-                    coursepress_get_template( 'course', 'submenu' ); ?>
+                    coursepress_get_template( 'course', 'submenu' );
+					?>
                     <div class="course-after-title">
                     <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
 
                     <?php if ( $show_progress ) { ?>
           						<div class="course-unit-progress">
-          							<?php echo coursepress_progress_wheel( array(
+          							<?php
+										echo coursepress_progress_wheel( array(
           									'class' => 'per-unit-progress',
           									'data-value' => $unit_progress,
           									'data-size' => 62,
@@ -57,4 +59,5 @@ get_header(); ?>
         </div>
     </div>
 
-<?php get_footer();
+<?php
+get_footer();

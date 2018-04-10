@@ -24,16 +24,20 @@ get_header(); ?>
 				 */
 				coursepress_get_template( 'course', 'submenu' );
 				?>
-<?php
-
-$allowed = $course->__get( 'allow_discussion' );
-if ( false == $allowed ) {
-    coursepress_render( 'templates/content-discussion-off' );
-} else {
-    coursepress_render( 'templates/content-discussion-form', array( 'course' => $course, 'id' => 0, 'section' => 0) );
-}
-?>
+				<?php
+				$allowed = $course->__get( 'allow_discussion' );
+				if ( ! $allowed ) {
+					coursepress_render( 'templates/content-discussion-off' );
+				} else {
+					coursepress_render( 'templates/content-discussion-form', array(
+						'course' => $course,
+						'id' => 0,
+						'section' => 0,
+					) );
+				}
+				?>
 			</div>
 		</div>
 	</div>
-<?php get_footer();
+<?php
+get_footer();

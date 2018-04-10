@@ -140,7 +140,7 @@ final class CoursePress_Data_Course {
 			// If we did not find a course by name, try to fetch it via ID.
 			$post = get_post( $slug );
 
-			if ( 'course' == $post->post_type ) {
+			if ( 'course' === $post->post_type ) {
 				if ( $id_only ) {
 					$res = $post->ID;
 				} else {
@@ -1120,7 +1120,7 @@ final class CoursePress_Data_Course {
 				continue;
 			}
 
-			if ( 'unit' == $hide_section && 'section' == $item['type'] ) {
+			if ( 'unit' === $hide_section && 'section' === $item['type'] ) {
 				continue;
 			}
 			if ( $valid ) {

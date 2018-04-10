@@ -37,8 +37,14 @@ get_header(); ?>
 				coursepress_get_template( 'course', 'submenu' );
 				?>
 
-                <?php coursepress_render( 'templates/content-workbook', array( 'user_id' => 0, 'course_id' => 0 ) ); ?>
+                <?php
+				coursepress_render( 'templates/content-workbook', array(
+					'user_id' => 0,
+					'course_id' => 0,
+				) );
+				?>
 			</div>
 		</div>
 	</div>
-<?php get_footer();
+<?php
+get_footer();

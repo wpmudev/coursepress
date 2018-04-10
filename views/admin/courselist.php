@@ -33,7 +33,8 @@ if ( $count > 0 ) {
 	$first = true;
 	cp_subsubsub( $statuses );
 }
-if ( 0 < count( $courses ) ) { ?>
+if ( 0 < count( $courses ) ) {
+?>
         <form method="get" class="cp-bulk-actions-form" id="cp-bulk-actions-form">
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
             <div class="cp-flex">
@@ -65,11 +66,11 @@ foreach ( $bulk_actions as $value => $label ) {
                 <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <th class="column-title"><?php _e( 'Title', 'cp' ); ?></th>
                     <?php foreach ( $columns as $column_id => $column_label ) : ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                        <th class="manage-column column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>" id="<?php echo $column_id; ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php endforeach; ?>
-<?php if ( 'trash' != $current_status ) { ?>
+<?php if ( 'trash' !==$current_status ) { ?>
                     <th class="column-status"><?php _e( 'Active?', 'cp' ); ?></th>
 <?php } ?>
                 </tr>
@@ -83,11 +84,11 @@ foreach ( $bulk_actions as $value => $label ) {
 						?>
                         <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 <td scope="row" class="check-column">
-<label class="screen-reader-text" for="cb-select-<?php esc_attr_e( $course->ID ); ?>"><?php printf( __( 'Select %s', 'cp' ), esc_html( $course->post_title ) ); ?></label>
-            <input id="cb-select-<?php esc_attr_e( $course->ID ); ?>" type="checkbox" name="post[]" value="<?php esc_attr_e( $course->ID ); ?>">
+<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $course->ID ); ?>"><?php printf( __( 'Select %s', 'cp' ), esc_html( $course->post_title ) ); ?></label>
+            <input id="cb-select-<?php echo esc_attr( $course->ID ); ?>" type="checkbox" name="post[]" value="<?php echo esc_attr( $course->ID ); ?>">
 			<div class="locked-indicator">
 				<span class="locked-indicator-icon" aria-hidden="true"></span>
-                <span class="screen-reader-text"><?php esc_html_e( $course->post_title ); ?></span>
+                <span class="screen-reader-text"><?php echo esc_html( $course->post_title ); ?></span>
 			</div>
 		</td>
                             <td class="column-title">
@@ -98,16 +99,16 @@ foreach ( $bulk_actions as $value => $label ) {
                             </td>
 
                             <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
-                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                                <td class="column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>">
                                     <?php
-									switch ( $column_id ) :
+									switch ( $column_id ) {
 										case 'units' :
 											$count_published = $course->count_units( true );
 											$count = $course->count_units( false );
 
-											printf( _n( __( '%d Unit', 'cp' ), __( '%d Units', 'cp' ), $count ), $count );
-                      echo ", ";
-											printf( _n( __( '%d Published', 'cp' ), __( '%d Published', 'cp' ), $count_published ), $count_published );
+											printf( _n( '%d Unit', '%d Units', $count, 'cp' ), $count );
+											echo ", ";
+											printf( _n( '%d Published', '%d Published', $count_published ), $count_published );
 											break;
 										case 'students' :
 											echo $course->count_students();
@@ -131,13 +132,15 @@ foreach ( $bulk_actions as $value => $label ) {
 											$categories = $course->get_category();
 											if ( ! empty( $categories ) ) :
 												$cat_i = 1; $cat_count = count( $categories );
-												foreach ( $categories as $cat_id => $cat_name ) : ?>
+												foreach ( $categories as $cat_id => $cat_name ) :
+													?>
 													<a href="<?php echo add_query_arg( 'course_category', $cat_id ); ?>" class="cp-cats-link"><?php echo $cat_name; ?></a><?php echo $cat_i < $cat_count ? ',' : ''; ?>
 													<?php $cat_i++; ?>
-												<?php endforeach;
+													<?php
+												endforeach;
 											endif;
 											break;
-										default :
+										default:
 											/**
 												 * Trigger to allow custom column value
 												 *
@@ -147,14 +150,14 @@ foreach ( $bulk_actions as $value => $label ) {
 												 */
 											do_action( 'coursepress_courselist_column', $column_id, $course );
 											break;
-										endswitch;
+									}
 									?>
                                 </td>
                             <?php endforeach; ?>
-<?php if ( 'trash' != $current_status ) { ?>
+<?php if ( 'trash' !==$current_status ) { ?>
                             <td class="column-status">
                                 <label>
-                                    <?php $active = ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
+                                    <?php $active = ( isset( $course->post_status ) && 'publish' === $course->post_status ); ?>
                                     <?php $can_change_status = CoursePress_Data_Capabilities::can_change_course_status( $course->ID ); ?>
                                     <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?>  <?php echo $can_change_status ? '' : 'disabled="disabled"'; ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
@@ -165,7 +168,7 @@ foreach ( $bulk_actions as $value => $label ) {
                             <td scope="row" class="check-column"></td>
                             <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo esc_attr( $course->ID ); ?>">
                                 <div class="cp-row-actions">
-                                    <?php if ( 'trash' != $current_status ) { ?>
+                                    <?php if ( 'trash' !==$current_status ) { ?>
                                         <?php $can_update = CoursePress_Data_Capabilities::can_update_course( $course->ID ); ?>
                                         <?php if ( $can_update ) : ?>
                                             <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |
@@ -192,7 +195,16 @@ foreach ( $bulk_actions as $value => $label ) {
                                             <?php endif; ?>
                                             <?php if ( CoursePress_Data_Capabilities::can_update_course( $course->ID ) ) : ?>
                                             <li class="menu-item-export">
-                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
+                                                <?php
+												$export_link = add_query_arg( array(
+													'course_id' => $course->ID,
+													'_wpnonce' => wp_create_nonce( 'export_course' ),
+													'cp_action' => 'export_course',
+												) );
+												?>
+												<a href="<?php echo $export_link; ?>">
+													<?php _e( 'Export', 'cp' ); ?>
+												</a>
                                             </li>
                                             <?php endif; ?>
                                             <li class="menu-item-view-course">
@@ -214,14 +226,18 @@ foreach ( $bulk_actions as $value => $label ) {
                         </tr>
                     <?php
 					if ( $odd ) {
-						$odd = false; } else { 							$odd = true; }
+						$odd = false;
+					} else {
+						$odd = true;
+					}
 					endforeach;
-				else : ?>
+				else :
+					?>
                     <tr class="odd">
                         <?php $colspan = count( $columns ) + 3; ?>
                         <td colspan="<?php echo $colspan; ?>">
 <?php
-if ( 'trash' == $current_status ) {
+if ( 'trash' === $current_status ) {
 	echo $course_post_type_object->labels->not_found_in_trash;
 } else {
 	echo $course_post_type_object->labels->not_found;

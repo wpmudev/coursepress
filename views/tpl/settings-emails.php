@@ -35,7 +35,11 @@
             <h3 class="label"><?php _e( 'Pick email to customize', 'cp' ); ?></h3>
             <ul class="cp-input-group cp-select-list">
                 <?php foreach ( $sections as $section_id => $section ) : ?>
-                    <?php if ( ! $first ) : $first = $section; endif; ?>
+					<?php
+					if ( ! $first ) {
+						$first = $section;
+					}
+					?>
                     <li data-key="<?php echo $section_id; ?>"><?php echo $section['title']; ?></li>
                 <?php endforeach; ?>
             </ul>

@@ -38,11 +38,13 @@
                             <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
                             <?php if ( ! empty( $courses ) ) : ?>
                                 <?php foreach ( $courses as $course ) : ?>
-                                    <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
-                                    <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
-                                    echo $course->post_title;
-                                    echo $course->get_numeric_identifier_to_course_name( $course->ID );
-    ?></option>
+                                    <?php $selected_course = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT ); ?>
+                                    <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>>
+										<?php
+											echo $course->post_title;
+											echo $course->get_numeric_identifier_to_course_name( $course->ID );
+										?>
+									</option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -65,7 +67,7 @@
             <tr>
                 <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                 <?php foreach ( $columns as $column_id => $column_label ) : ?>
-                    <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                    <th class="manage-column column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>" id="<?php echo $column_id; ?>">
                         <?php echo $column_label; ?>
                     </th>
                 <?php endforeach; ?>
@@ -79,12 +81,15 @@
 				foreach ( $students as $student ) {
 ?>
 <tr class="<?php echo esc_attr( $odd ? 'odd' : 'even' ); ?>" data-studetnt-id="<?php echo esc_attr( $student->ID ); ?>">
-    <th scope="row" class="check-column check-column-value"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $student->ID ); ?>"></th>
+    <th scope="row" class="check-column check-column-value"><input type="checkbox" name="students[]" value="<?php echo esc_attr( $student->ID ); ?>"></th>
     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
-                            <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                            <td class="column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>">
 <?php
-					$a = sprintf( '<a href="%s">%%s</a>', esc_url( add_query_arg( array( 'view' => 'profile', 'student_id' => $student->ID ) ) ) );
-switch ( $column_id ) :
+					$a = sprintf( '<a href="%1$s">%%s</a>', esc_url( add_query_arg( array(
+							'view' => 'profile',
+							'student_id' => $student->ID,
+					) ) ) );
+switch ( $column_id ) {
 	// @todo Add profile link if required.
 	case 'student' :
 		echo '<div class="cp-flex cp-user">';
@@ -100,7 +105,7 @@ switch ( $column_id ) :
 		printf( $a, $student->get_name() );
 		echo ')</span>';
 		echo '</div>';
-	break;
+		break;
 	case 'last_active' :
 		// Last activity time.
 		$last_active = $student->get_last_activity_time();
@@ -113,11 +118,11 @@ switch ( $column_id ) :
 		} else {
 			echo '--';
 		}
-	break;
+		break;
 	case 'number_of_courses' :
 		echo count( $student->get_enrolled_courses_ids() );
-	break;
-	default :
+		break;
+	default:
 		/**
 						 * Trigger to allow custom column value
 						 *
@@ -126,8 +131,8 @@ switch ( $column_id ) :
 						 * @param CoursePress_Student object $student
 						 */
 		do_action( 'coursepress_studentlist_column', $column_id, $student );
-	break;
-endswitch;
+		break;
+}
 ?>
                             </td>
                         <?php endforeach; ?>

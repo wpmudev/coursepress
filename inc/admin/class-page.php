@@ -218,7 +218,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	public function set_category_menu_parent( $parent_file ) {
 		global $submenu_file, $current_screen;
 		// If current page is course category edit page.
-		if ( isset( $current_screen->id ) && $current_screen->id == 'edit-course_category' ) {
+		if ( isset( $current_screen->id ) && $current_screen->id === 'edit-course_category' ) {
 			// Set submenu active.
 			$submenu_file = 'edit-tags.php?taxonomy=course_category&post_type=course';
 			// Set parent menu active.
@@ -789,10 +789,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		 * Students
 		 */
 		$students = array();
-		if ( $show_certified_students == 'yes' ) {
+		if ( $show_certified_students === 'yes' ) {
 			$students = $course->get_certified_students( $student_query_args );
 			$total_students = $certified_student_count;
-		} else if ( $show_certified_students == 'no' ) {
+		} elseif ( $show_certified_students === 'no' ) {
 			$students = $course->get_non_certified_students( $student_query_args );
 			$total_students = $all_student_count - $certified_student_count;
 		} else {

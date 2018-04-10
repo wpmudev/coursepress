@@ -84,7 +84,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		}
 		$mode = filter_input( INPUT_GET, 'mode' );
 		$nonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( is_a( $course, 'CoursePress_Course' ) && 'html' == $mode ) {
+		if ( is_a( $course, 'CoursePress_Course' ) && 'html' === $mode ) {
 			if ( wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
 				$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
 				if ( false === $student_id ) {
@@ -98,7 +98,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				}
 				$this->students = array( $student_id );
 				$this->get_page_preview();
-			} else if ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
+			} elseif ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
 				$this->students = array_filter( explode( ',', $_GET['students'] ), 'intval' );
 				switch ( $_GET['action'] ) {
 					case 'show':
@@ -152,7 +152,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	}
 
 	private function get_page_preview( $echo = true, $mode = 'full' ) {
-		$sufix = 'summary' == $mode? 'summary':'full';
+		$sufix = 'summary' === $mode? 'summary':'full';
 		$course = coursepress_get_course( $this->course_id );
 		/**
 		 * Units

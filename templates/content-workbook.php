@@ -13,18 +13,23 @@ if ( ! empty( $workbook_data ) ) : ?>
 			<td><?php echo $data['title']; ?></td>
 			<td></td>
 			<td>
-				<?php if ( isset( $data['grade'] ) ) :
+				<?php
+
+				if ( isset( $data['grade'] ) ) :
 					echo $data['grade'];
-				endif; ?>
+				endif;
+				?>
 			</td>
-			<td align="right"><?php
-				//if ( 'module' != $data['type'] ) :
-					if ( 'unit' == $data['type'] ) :
+			<td align="right">
+				<?php
+				//if ( 'module' !==$data['type'] ) :
+					if ( 'unit' === $data['type'] ) :
 						_e( 'Progress: ', 'cp' );
 					endif;
 					echo $data['progress'] . '%';
 				//endif;
-			?></td>
+				?>
+			</td>
 		</tr>
 	<?php endforeach; ?>
 </table>

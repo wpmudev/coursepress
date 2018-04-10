@@ -238,7 +238,7 @@
 
             </div>
         </div>
-    
+
         </div>
 
     <?php
@@ -248,7 +248,7 @@
 	 * @since 3.0
 	 * @param int $course_id Current course ID created or edited.
 	 */
-	do_action( 'coursepress_course_setup-course-type', $course_id );
+	do_action( 'coursepress_course_setup_course_type', $course_id );
 	?>
 </script>
 

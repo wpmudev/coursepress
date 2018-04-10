@@ -70,7 +70,7 @@
 
 		$config['content_margin'] = array(
 			'title' => __( 'Content Margin', 'cp' ),
-			'description' => __( '', 'cp' ),
+			'description' => __( ' ', 'cp' ),
 			'fields' => array(
 				'margin.top' => array(
 					'type' => 'number',
@@ -122,7 +122,7 @@
 
 		$config['certificate_logo_position'] = array(
 			'title'       => __( 'Logo Position', 'cp' ),
-			'description' => __( '', 'cp' ),
+			'description' => __( ' ', 'cp' ),
 			'fields'      => array(
 				'certificate_logo_position.x' => array(
 					'type'  => 'number',
@@ -214,7 +214,7 @@
 			$classes = 'box-inner-content';
 			$option_class = $option_key;
 
-			if ( 'certificate-options' != $option_key ) {
+			if ( 'certificate-options' !== $option_key ) {
 				$option_class .= ' box-cert-settings';
 			}
 
@@ -248,7 +248,7 @@
 						echo '<div class="flex">';
 					}
 					$is_flex = true;
-				} else if ( true === $is_flex ) {
+				} elseif ( true === $is_flex ) {
 					echo '</div>';
 					$is_flex = false;
 				}

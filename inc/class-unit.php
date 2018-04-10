@@ -61,18 +61,18 @@ class CoursePress_Unit extends CoursePress_Utility {
 			    $value = $default_value;
 			}
 			if ( ! empty( $value ) ) {
-				if ( 'unit_availability_date' == $key && ! is_array( $value ) ) {
+				if ( 'unit_availability_date' === $key && ! is_array( $value ) ) {
 					$timestamp = strtotime( $value, $time_now );
 					$value = date_i18n( $date_format, $timestamp );
 					$this->__set( 'unit_availability_date_timestamp', $timestamp );
 					$this->__set( 'meta_unit_availability_date_timestamp', $timestamp );
 				}
-				if ( 'unit_availability_date_timestamp' == $key && ! is_array( $value ) ) {
+				if ( 'unit_availability_date_timestamp' === $key && ! is_array( $value ) ) {
 					$date = date_i18n( $date_format, $value );
 					$this->__set( 'unit_availability_date', $date );
 					$this->__set( 'meta_unit_availability_date', $date );
 				}
-				if ( 'on' == $value || 'yes' == $value ) {
+				if ( 'on' === $value || 'yes' === $value ) {
 					$value = true;
 				}
 			}
@@ -190,13 +190,13 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$availability = $this->__get( 'unit_availability' );
 		$time_now = current_time( 'timestamp' );
 		$available = false;
-		if ( 'instant' == $availability ) {
+		if ( 'instant' === $availability ) {
 			$available = true;
-		} elseif ( 'on_date' == $availability ) {
+		} elseif ( 'on_date' === $availability ) {
 			$date = $this->__get( 'unit_availability_date' );
 			if ( $time_now >= $date ) {
 				$available = true; }
-		} elseif ( 'after_delay' == $availability ) {
+		} elseif ( 'after_delay' === $availability ) {
 			$course_start = $this->course->__get( 'course_start_date_timestamp' );
 			$days = (int) $this->__get( 'unit_delay_days' );
 			if ( $days > 0 ) {
@@ -504,7 +504,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$is_accessible = $this->is_accessible_by( $user_id );
 		$unit_locked = $is_student && ( ! $is_available || ! $is_accessible );
 		$unit_title = $this->get_the_title();
-		$unit_url = esc_url_raw( $this->get_unit_url() );
+		$unit_url = esc_url( $this->get_unit_url() );
 		$unit_suffix = '';
 		$unit_structure = '';
 		$unit_duration = 0;
@@ -603,7 +603,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$module_id = $module['id'];
 		$module_title = $module['title'];
 		$module_class = array( 'module' );
-		$module_url = esc_url_raw( $module['url'] );
+		$module_url = esc_url( $module['url'] );
 		if ( $has_access ) {
 			$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
 		} elseif ( $is_student ) {

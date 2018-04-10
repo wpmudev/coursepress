@@ -144,7 +144,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 				}
 			}
 		}
-		if ( 'yes' == $args['email_notification'] ) {
+		if ( 'yes' === $args['email_notification'] ) {
 			$args['email_notification'] = true;
 		}
 		coursepress_render( 'views/admin/forum-edit', $args );
@@ -298,7 +298,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	public function get_bulk_actions() {
 
 		$status = $this->get_status();
-		if ( 'trash' == $status ) {
+		if ( 'trash' === $status ) {
 			$actions = array(
 				'restore' => __( 'Restore', 'cp' ),
 				'delete' => __( 'Delete Permanently', 'cp' ),

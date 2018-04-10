@@ -28,7 +28,8 @@ if ( empty( $notifications ) ) {
 	echo '<p>';
 	_e( 'There is no notifications yet.', 'cp' );
 	echo '</p>';
-} else { ?>
+} else {
+?>
                     <ul class="notification-archive-list">
                         <?php foreach ( $notifications as $notification ) : ?>
                             <li>
@@ -53,4 +54,5 @@ if ( empty( $notifications ) ) {
             </div>
         </div>
     </div>
-<?php get_footer();
+<?php
+get_footer();

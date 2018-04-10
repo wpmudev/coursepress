@@ -26,7 +26,7 @@ class CoursePress_Step_Image extends CoursePress_Step {
 
 		if ( ! empty( $image_url ) ) {
 			$attr = array(
-				'src' => esc_url_raw( $image_url ),
+				'src' => esc_url( $image_url ),
 				'class' => 'course-step-image',
 				'alt' => '',
 			);
@@ -37,7 +37,7 @@ class CoursePress_Step_Image extends CoursePress_Step {
 				$caption_field = $this->__get( 'caption_field' );
 				$caption = '';
 
-				if ( 'media' == $caption_field ) {
+				if ( 'media' === $caption_field ) {
 					// Check thumbnail id
 					$thumb_id = $this->__get( 'image_url_thumbnail_id' );
 				} else {

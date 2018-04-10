@@ -9,7 +9,7 @@
                         <select name="course_id" id="select_course_id">
                             <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
 <?php
-$current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
+$current = isset( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : 0;
 foreach ( $courses as $course_id => $course ) {
 	printf(
 		'<option value="%d" %s>%s</option>',
@@ -31,7 +31,7 @@ foreach ( $courses as $course_id => $course ) {
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                        <th class="manage-column column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>" id="<?php echo $column_id; ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php } ?>
@@ -48,7 +48,7 @@ foreach ( $courses as $course_id => $course ) {
 						?>
                         <tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
-                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                                <td class="column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>">
 <?php
 switch ( $column_id ) {
 	case 'author':
@@ -61,25 +61,25 @@ switch ( $column_id ) {
 		echo $item->user['display_name'];
 		echo '</span>';
 		echo '</div>';
-					echo '<div class="actions hidden">';
-					printf(
-						'<a href="#" data-id="%d" data-nonce="%s" class="status">%s</a>',
-						esc_attr( $item->comment_ID ),
-						esc_attr( $item->status_nonce ),
-						1 == $item->comment_approved? esc_attr__( 'Unapprove', 'cp' ):esc_attr__( 'Approve', 'cp' )
-					);
-					echo ' ';
-					printf(
-						'<a href="%s" class="edit">%s</a>',
-						esc_url( $item->edit_comment_link ),
-						esc_attr__( 'Edit', 'cp' )
-					);
-					echo '</div>';
-				break;
+		echo '<div class="actions hidden">';
+		printf(
+			'<a href="#" data-id="%d" data-nonce="%s" class="status">%s</a>',
+			esc_attr( $item->comment_ID ),
+			esc_attr( $item->status_nonce ),
+			1 == $item->comment_approved ? esc_attr__( 'Unapprove', 'cp' ) : esc_attr__( 'Approve', 'cp' )
+		);
+		echo ' ';
+		printf(
+			'<a href="%s" class="edit">%s</a>',
+			esc_url( $item->edit_comment_link ),
+			esc_attr__( 'Edit', 'cp' )
+		);
+		echo '</div>';
+		break;
 
 	case 'comment':
 		comment_text( $item->comment_ID );
-				break;
+		break;
 
 	case 'in_response_to':
 		printf(
@@ -87,7 +87,7 @@ switch ( $column_id ) {
 			esc_url( $item->in_response_to_link ),
 			esc_html( $item->parent['title'] )
 		);
-				break;
+		break;
 
 	case 'added':
 		printf(
@@ -95,9 +95,9 @@ switch ( $column_id ) {
 			esc_html( $item->time ),
 			esc_html( $item->date )
 		);
-				break;
+		break;
 
-	default :
+	default:
 		echo $column_id;
 		/**
 												 * Trigger to allow custom column value
@@ -107,7 +107,7 @@ switch ( $column_id ) {
 												 * @param CoursePress_Course object $item
 												 */
 		do_action( 'coursespress_commentslist_column', $column_id, $item );
-						break;
+		break;
 }
 									?>
                                 </td>

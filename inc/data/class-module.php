@@ -125,7 +125,7 @@ class CoursePress_Data_Module {
 			'mode' => $input ? 'input' : 'output',
 		);
 
-		if ( 'section' != $module_type ) {
+		if ( 'section' !==$module_type ) {
 			$attributes = array_merge( $attributes, array(
 				'duration' => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
 				'show_title' => coursepress_is_true( $meta['show_title'][0] ),
@@ -166,7 +166,7 @@ class CoursePress_Data_Module {
 			return 0;
 		}
 
-		if ( $module->post_type == 'module' ) {
+		if ( $module->post_type === 'module' ) {
 			return $module->post_parent;
 		}
 
@@ -476,9 +476,9 @@ class CoursePress_Data_Module {
 		}
 
 		$estimation = get_post_meta( $module_id, 'duration', true );
-		$estimation = empty( $estimation ) ? $default : $estimation;
+		$estimation = empty( $estimation ) ? $default: $estimation;
 		if ( ! $formatted ) {
-			return empty( $estimation ) ? $default : $estimation;
+			return empty( $estimation ) ? $default: $estimation;
 		} else {
 			$parts = explode( ':', $estimation );
 			$seconds = (int) array_pop( $parts );

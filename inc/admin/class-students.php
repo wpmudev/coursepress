@@ -41,7 +41,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 	 */
 	public function get_page() {
 		$view = isset( $_GET['view'] ) ? $_GET['view'] : 'list';
-		if ( $view == 'profile' ) {
+		if ( $view === 'profile' ) {
 			$this->get_profile_view();
 		} else {
 			$this->get_list_view();

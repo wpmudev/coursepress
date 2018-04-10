@@ -143,7 +143,7 @@ class CoursePress_Data_Unit {
 		}
 		// Course is active today, so check for unit-specific limitations.
 		$status_type = get_post_meta( $unit_id, 'unit_availability', true );
-		if ( 'after_delay' == $status_type ) {
+		if ( 'after_delay' === $status_type ) {
 			$delay_val = get_post_meta( $unit_id, 'unit_delay_days', true );
 			$delay_days = (int) $delay_val;
 			if ( $delay_days > 0 ) {
@@ -156,7 +156,7 @@ class CoursePress_Data_Unit {
 					$availability_date = date_i18n( $date_format, $release_date );
 				}
 			}
-		} elseif ( 'on_date' == $status_type ) {
+		} elseif ( 'on_date' === $status_type ) {
 			$due_on = get_post_meta( $unit_id, 'unit_availability_date', true );
 			$due_date = $CoursePress_Core->strtotime( $due_on ); // UTC value.
 			$return_date = $due_date; // UTC value.
@@ -419,7 +419,7 @@ class CoursePress_Data_Unit {
 			if ( ! is_a( $post, 'WP_Post' ) ) {
 				return $res;
 			}
-			if ( 'unit' == $post->post_type ) {
+			if ( 'unit' === $post->post_type ) {
 				if ( $id_only ) {
 					$res = $post->ID;
 				} else {
@@ -481,7 +481,7 @@ class CoursePress_Data_Unit {
 		if ( ! is_a( $unit, 'WP_Post' ) ) {
 			return 0;
 		}
-		if ( $unit->post_type == 'unit' ) {
+		if ( $unit->post_type === 'unit' ) {
 			return $unit->post_parent;
 		}
 		return 0;

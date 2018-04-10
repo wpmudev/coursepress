@@ -45,7 +45,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$this->student_table = $wpdb->prefix . 'coursepress_students';
 		// Inherit WP_User object
 		foreach ( $user as $key => $value ) {
-			if ( 'data' == $key ) {
+			if ( 'data' === $key ) {
 				foreach ( $value as $k => $v ) {
 					$this->__set( $k, $v );
 				}
@@ -717,7 +717,7 @@ class CoursePress_User extends CoursePress_Utility {
 					}
 				}
 			} else {
-				if ( 'discussion' == $step_type ) {
+				if ( 'discussion' === $step_type ) {
 					$has_comments = coursepress_user_have_comments( $user_id, $step_id );
 					if ( $is_required ) {
 						if ( $has_comments ) {
@@ -730,7 +730,7 @@ class CoursePress_User extends CoursePress_Utility {
 						$item_progress += $item_ratio;
 						$module_progress += $m_ratio;
 					}
-				} elseif ( 'video' == $step_type || 'audio' == $step_type ) {
+				} elseif ( 'video' === $step_type || 'audio' === $step_type ) {
 					if ( ! $is_required ) {
 						if ( $step_seen ) {
 							$step_progress += $step_progress_ratio;
@@ -885,7 +885,7 @@ class CoursePress_User extends CoursePress_Utility {
 				$status = 'failed';
 			}
 		}
-		if ( 'ongoing' == $status ) {
+		if ( 'ongoing' === $status ) {
 			$course = coursepress_get_course( $course_id );
 			if ( $course->has_course_ended() ) {
 				$status = 'incomplete';
@@ -1083,7 +1083,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$grade     = $this->get_step_grade( $course_id, $unit_id, $step_id );
 			$step      = coursepress_get_course_step( $step_id );
 			$min_grade = $step->__get( 'minimum_grade' );
-			$pass      = $grade != 'pending' && $grade >= $min_grade;
+			$pass      = $grade !== 'pending' && $grade >= $min_grade;
 			$status    = '';
 			if ( $pass ) {
 				$status = 'pass';

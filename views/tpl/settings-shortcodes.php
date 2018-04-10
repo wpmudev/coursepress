@@ -14,7 +14,7 @@
 						<ul class="cp-input-group cp-select-list cp-type">
 							<?php $i = 0; ?>
 							<?php foreach ( $shortcode_types as $key => $type ) : ?>
-								<li data-id="<?php echo $key; ?>" <?php echo $i === 0 ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
+								<li data-id="<?php echo $key; ?>" <?php echo 0 === $i ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
 								<?php $i++; ?>
 							<?php endforeach; ?>
 						</ul>
@@ -28,7 +28,7 @@
 							<ul class="cp-input-group cp-select-list cp-sub-type <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $parent; ?>">
 								<?php $j = 0; ?>
 								<?php foreach ( $child as $key => $type ) : ?>
-									<li data-id="<?php echo $key; ?>" <?php echo $j === 0 ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
+									<li data-id="<?php echo $key; ?>" <?php echo 0 === $j ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
 									<?php $j++; ?>
 								<?php endforeach; ?>
 							</ul>
@@ -43,7 +43,7 @@
 	<?php $details = $data->get_shortcode_details(); ?>
 	<?php $i = 0; ?>
 	<?php foreach ( $details as $id => $values ) : ?>
-		<div class="cp-box-content cp-shortcode-details <?php echo $i !== 0 ? 'inactive' : ''; ?>" id="<?php echo $id; ?>">
+		<div class="cp-box-content cp-shortcode-details <?php echo 0 !== $i ? 'inactive' : ''; ?>" id="<?php echo $id; ?>">
             <h3 class="cp-box-header"><?php echo $values['title']; ?></h3>
 			<div class="cp-box cp-sep">
 				<p class="description"><?php echo $values['description']; ?></p>

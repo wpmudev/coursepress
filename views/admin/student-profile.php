@@ -64,7 +64,7 @@ if ( $student->is_error() ) {
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach ( $courses as $course_id ) :  ?>
+		<?php foreach ( $courses as $course_id ) : ?>
 			<?php
 			$course        = new CoursePress_Course( $course_id );
 			$progress_data = $student->get_course_progress_data( $course_id );
