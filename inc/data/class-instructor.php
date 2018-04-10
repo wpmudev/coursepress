@@ -129,37 +129,34 @@ class CoursePress_Data_Instructor {
 		$messages = array();
 		$is_verified = self::verify_invitation_code( $course_invite['course_id'], $course_invite['code'] );
 
-		if ( $is_verified ) {
+		/**
+		 * redirect to registration form
+		 */
+		if ( ! is_user_logged_in() ) {
+			$redirect = lib3()->net->current_url();
+			$query_args = array(
+				'redirect_to' => urlencode( $redirect ),
+				'_wpnonce' => wp_create_nonce( 'redirect_to' ),
+			);
+			$url = coursepress_get_student_login_url( $redirect, $query_args );
+			$messages[] = apply_filters( 'coursepress_instructor_invitation_message_login',
+				sprintf( '<a href="%s">%s</a> %s', esc_url( $url ), __( 'Login', 'cp' ), __( 'to continue.', 'cp' ) )
+			);
+		} elseif ( $is_verified ) {
+			$user = get_user_by( 'email', $is_verified['email'] );
+			$user_id = !empty( $user->ID) ? $user->ID : '';
 
-			/**
-			 * redirect to registration form
-			 */
-			if ( ! is_user_logged_in() ) {
-				$redirect = lib3()->net->current_url();
-				$query_args = array(
-					'redirect_to' => urlencode( $redirect ),
-					'_wpnonce' => wp_create_nonce( 'redirect_to' ),
-				);
-				$url = coursepress_get_student_login_url( $redirect, $query_args );
-				$messages[] = apply_filters( 'coursepress_instructor_invitation_message_login',
-					sprintf( '<a href="%s">%s</a> %s', esc_url( $url ), __( 'Login', 'cp' ), __( 'to continue.', 'cp' ) )
+			$is_added = self::add_from_invitation( $course_invite['course_id'], $user_id, $course_invite['code'] );
+
+			if ( $is_added ) {
+				$messages[] = apply_filters( 'coursepress_instructor_invitation_message_congratulations',
+					esc_html__( 'Congratulations. You are now an instructor of this course. ', 'cp' )
 				);
 			} else {
-				$user = get_user_by( 'email', $is_verified['email'] );
-				$user_id = !empty( $user->ID) ? $user->ID : '';
-
-				$is_added = self::add_from_invitation( $course_invite['course_id'], $user_id, $course_invite['code'] );
-
-				if ( $is_added ) {
-					$messages[] = apply_filters( 'coursepress_instructor_invitation_message_congratulations',
-						esc_html__( 'Congratulations. You are now an instructor of this course. ', 'cp' )
-					);
-				} else {
-					$messages = apply_filters( 'coursepress_instructor_invitation_message_wrong_email',
-						array( esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
-						esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ) )
-					);
-				}
+				$messages = apply_filters( 'coursepress_instructor_invitation_message_wrong_email',
+					array( esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
+					esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ) )
+				);
 			}
 		}
 

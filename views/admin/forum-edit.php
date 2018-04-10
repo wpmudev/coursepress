@@ -9,7 +9,7 @@
 
 		$config = array();
 		$config['content'] = array(
-			'title' => __( 'Topic', 'cp' ),
+			'title' => esc_html__( 'Topic', 'cp' ),
 			'fields' => array(
 				'post_title' => array(
 					'type' => 'text',
@@ -27,11 +27,11 @@
 			),
 		);
 		$config['related'] = array(
-			'title' => __( 'Related Courses', 'cp' ),
+			'title' => esc_html__( 'Related Courses', 'cp' ),
 			'fields' => array(
 				'course_id' => array(
 					'type' => 'select',
-					'title' => __( 'Select Course', 'cp' ),
+					'title' => esc_html__( 'Select Course', 'cp' ),
 					'value' => $course_id,
 					'class' => 'select2',
 					'data' => array(
@@ -41,50 +41,50 @@
 				),
 				'unit_id' => array(
 					'type' => 'select',
-					'title' => __( 'Select Unit', 'cp' ),
+					'title' => esc_html__( 'Select Unit', 'cp' ),
 					'value' => $unit_id,
 					'field_options' => $units,
 					'data' => array(
 						'nonce' => wp_create_nonce( 'coursepress_nonce' ),
 						'all-value' => 'course',
-						'all-label' => __( 'All Units', 'cp' ),
+						'all-label' => esc_html__( 'All Units', 'cp' ),
 						'value' => $unit_id,
 					),
 				),
 			),
 		);
 		$config['settings'] = array(
-			'title' => __( 'Settings', 'cp' ),
+			'title' => esc_html__( 'Settings', 'cp' ),
 			'fields' => array(
 				'email_notification' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Enable email notification', 'cp' ),
+					'title' => $toggle_input . esc_html__( 'Enable email notification', 'cp' ),
 					'value' => $email_notification,
 				),
 				'thread_comments_depth' => array(
 					'type' => 'number',
-					'title' => __( 'Threaded comments level', 'cp' ),
+					'title' => esc_html__( 'Threaded comments level', 'cp' ),
 					'value' => $thread_comments_depth,
 				),
 				'thread_comments_depth' => array(
 					'type' => 'number',
-					'title' => __( 'Threaded comments level', 'cp' ),
+					'title' => esc_html__( 'Threaded comments level', 'cp' ),
 					'value' => $thread_comments_depth,
 					'class' => 'small-text',
 				),
 				'comments_per_page' => array(
 					'type' => 'number',
-					'title' => __( 'Number of comments per page', 'cp' ),
+					'title' => esc_html__( 'Number of comments per page', 'cp' ),
 					'value' => $comments_per_page,
 					'class' => 'small-text',
 				),
 				'comments_order' => array(
 					'type' => 'radio',
-					'title' => __( 'Comments order', 'cp' ),
+					'title' => esc_html__( 'Comments order', 'cp' ),
 					'value' => $comments_order,
 					'field_options' => array(
-						'newer' => __( 'Newer first', 'cp' ),
-						'older' => __( 'Older first', 'cp' ),
+						'newer' => esc_html__( 'Newer first', 'cp' ),
+						'older' => esc_html__( 'Older first', 'cp' ),
 					),
 				),
 			),
@@ -105,7 +105,7 @@
 				admin_url( 'admin.php' )
 			);
 			
-			printf( __( 'Forum created. %sEdit forum%s', 'cp' ), '<a href="' . $url . '">', '</a>' );
+			printf( esc_html__( 'Forum created. %sEdit forum%s', 'cp' ), '<a href="' . $url . '">', '</a>' );
 			?>
 		</p></div>
 	<?php } ?>
@@ -148,7 +148,7 @@ foreach ( $options as $option_key => $option ) {
 				echo '<div class="flex">';
 			}
 			$is_flex = true;
-		} else if ( true === $is_flex ) {
+		} elseif ( true === $is_flex ) {
 			echo '</div>';
 			$is_flex = false;
 		}

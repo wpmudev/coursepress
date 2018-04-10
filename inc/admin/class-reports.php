@@ -98,7 +98,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				}
 				$this->students = array( $student_id );
 				$this->get_page_preview();
-			} else if ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
+			} elseif ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
 				$this->students = array_filter( explode( ',', $_GET['students'] ), 'intval' );
 				switch ( $_GET['action'] ) {
 					case 'show':

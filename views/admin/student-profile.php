@@ -5,7 +5,7 @@
  */
 ?>
 <div class="coursepress-wrap coursepress-student">
-    <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e( 'Students', 'cp' ); ?></h1>
 <?php
 if ( $student->is_error() ) {
 	echo '<div class="notice notice-error"><p>';
@@ -15,7 +15,7 @@ if ( $student->is_error() ) {
 ?>
     <div class="coursepress-student-data">
 		<div class="coursepress-avatar">
-			<span><?php echo get_avatar( $student->__get( 'user_email' ), 128 ); ?></span>
+			<span><?php echo esc_html( get_avatar( $student->__get( 'user_email' ), 128 ) ); ?></span>
 		</div>
 		<div class="coursepress-data-table">
 			<ul>
@@ -70,9 +70,9 @@ if ( $student->is_error() ) {
 			$progress_data = $student->get_course_progress_data( $course_id );
 			?>
 			<tr>
-				<td><?php echo $course->get_the_title(); ?></td>
-				<td><?php echo $student->get_date_enrolled( $course_id ); ?></td>
-				<td><?php echo $student->get_last_activity_time(); ?></td>
+				<td><?php echo esc_html( $course->get_the_title() ); ?></td>
+				<td><?php echo esc_html( $student->get_date_enrolled( $course_id ) ); ?></td>
+				<td><?php echo esc_html( $student->get_last_activity_time() ); ?></td>
 				<td class="column-progress"><?php printf( '%s%%', $student->get_course_progress( $course_id ) ); ?></td>
 				<td>
 					<?php

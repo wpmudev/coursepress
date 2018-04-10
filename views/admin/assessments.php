@@ -1,5 +1,5 @@
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
-    <h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e( 'Assessments', 'cp' ); ?></h1>
 	    <div class="coursepress-page">
 <?php if ( empty( $courses ) ) { ?>
 <div class="cp-alert cp-alert-info">
@@ -9,12 +9,12 @@
 		<form method="get" class="cp-action-form" id="cp-search-form">
 			<div class="cp-flex cp-students">
 				<div class="cp-div">
-					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
-					<select id="course_id" name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
+					<label for="course_id" class="label"><?php esc_html_e( 'Select course', 'cp' ); ?></label>
+					<select id="course_id" name="course_id" data-placeholder="<?php esc_html_e( 'Select a course', 'cp' ); ?>">
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
 							<?php foreach ( $courses as $course ) : ?>
-                            <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
+                            <option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
 							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
 							<?php endforeach; ?>
@@ -22,12 +22,12 @@
 					</select>
 				</div>
 				<div class="cp-div">
-					<label for="student_progress" class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
+					<label for="student_progress" class="label"><?php esc_html_e( 'Student progress', 'cp' ); ?></label>
 					<select id="student_progress" name="student_progress">
-						<option value=""><?php _e( 'Show all assessable students', 'cp' ); ?></option>
+						<option value=""><?php esc_html_e( 'Show all assessable students', 'cp' ); ?></option>
 						<?php if ( ! empty( $units ) ) : ?>
 							<?php foreach ( $units as $unit ) : ?>
-								<option value="<?php echo $unit->ID; ?>" <?php selected( $unit->ID, $unit_id ); ?>><?php echo $unit->post_title; ?></option>
+								<option value="<?php echo esc_attr( $unit->ID ); ?>" <?php selected( $unit->ID, $unit_id ); ?>><?php echo esc_html( $unit->post_title ); ?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -37,19 +37,19 @@
 						<li class="cp-div-flex <?php echo ! in_array( $graded, array( 'graded', 'ungraded' ) ) ? 'active' : ''; ?>">
 							<label>
 								<input type="radio" name="graded_ungraded" value="all" <?php checked( ! in_array( $graded, array( 'graded', 'ungraded' ) ) ); ?> />
-								<?php _e( 'All Students', 'cp' ); ?>
+								<?php esc_html_e( 'All Students', 'cp' ); ?>
 							</label>
 						</li>
 						<li class="cp-div-flex <?php echo $graded == 'graded' ? 'active' : ''; ?>">
 							<label>
 								<input type="radio" name="graded_ungraded" value="graded" <?php checked( $graded, 'graded' ); ?> />
-								<?php _e( 'Graded Students', 'cp' ); ?>
+								<?php esc_html_e( 'Graded Students', 'cp' ); ?>
 							</label>
 						</li>
 						<li class="cp-div-flex <?php echo $graded == 'ungraded' ? 'active' : ''; ?>">
 							<label>
 								<input type="radio" name="graded_ungraded" value="ungraded" <?php checked( $graded, 'ungraded' ); ?> />
-								<?php _e( 'Ungraded Students', 'cp' ); ?>
+								<?php esc_html_e( 'Ungraded Students', 'cp' ); ?>
 							</label>
 						</li>
 					</ul>
@@ -57,29 +57,29 @@
 			</div>
 			<div class="cp-flex">
 				<div class="cp-div">
-					<label class="label"><?php _e( 'Search students by name, username or email.', 'cp' ); ?></label>
+					<label class="label"><?php esc_html_e( 'Search students by name, username or email.', 'cp' ); ?></label>
 					<div class="cp-input-clear">
 						<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-						<input type="text" name="student_search" placeholder="<?php _e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
-						<button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+						<input type="text" name="student_search" placeholder="<?php esc_html_e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo esc_attr( $search ); ?>" />
+						<button type="button" id="cp-search-clear" class="cp-btn-clear"><?php esc_html_e( 'Clear', 'cp' ); ?></button>
 					</div>
-					<button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+					<button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Search', 'cp' ); ?></button>
 				</div>
 			</div>
 		</form>
 		<?php if ( isset( $assessments['pass_grade'] ) ) : ?>
 			<ul class="cp-assessments-overview">
-				<li><?php _e( 'Showing students' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['students_count']; ?></span></li>
-				<li><?php _e( 'Modules' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['modules_count']; ?></span></li>
-				<li><?php _e( 'Pass grade' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['pass_grade']; ?>%</span></li>
-				<li><?php _e( 'Grade system' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['grade_system']; ?></span></li>
+				<li><?php esc_html_e( 'Showing students' ); ?>: <span class="cp-assessments-strong"><?php echo esc_html( $assessments['students_count'] ); ?></span></li>
+				<li><?php esc_html_e( 'Modules' ); ?>: <span class="cp-assessments-strong"><?php echo esc_html( $assessments['modules_count'] ); ?></span></li>
+				<li><?php esc_html_e( 'Pass grade' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['pass_grade']; ?>%</span></li>
+				<li><?php esc_html_e( 'Grade system' ); ?>: <span class="cp-assessments-strong"><?php echo esc_html( $assessments['grade_system'] ); ?></span></li>
 			</ul>
 		<?php endif; ?>
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
 			<tr>
 				<?php foreach ( $columns as $column_id => $column_label ) : ?>
-					<th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+					<th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo esc_attr( $column_id ); ?>">
 						<?php echo $column_label; ?>
 					</th>
 				<?php endforeach; ?>
@@ -89,7 +89,7 @@
 			<?php $odd = true; ?>
 			<?php if ( ! empty( $assessments['students'] ) ) : ?>
 				<?php foreach ( $assessments['students'] as $student ) : ?>
-					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>" data-student="<?php echo $student->ID; ?>">
+					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>" data-student="<?php echo esc_attr( $student->ID ); ?>">
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 						<?php
 						$column_class = '';
@@ -133,9 +133,9 @@
 										break;
 									case 'modules_progress' :
 										echo '<div class="cp-assessment-progress-hidden">';
-										echo '<a href="javascript:void(0);" class="cp-expand-collapse">' . __( 'Expand', 'cp' ) . '</a>';
+										echo '<a href="javascript:void(0);" class="cp-expand-collapse">' . esc_html__( 'Expand', 'cp' ) . '</a>';
 										echo '<span class="separator">|</span>';
-										echo '<a href="' . $details_link . '" target="_blank">' . __( 'Open in new tab', 'cp' ) . '</a>';
+										echo '<a href="' . $details_link . '" target="_blank">' . esc_html__( 'Open in new tab', 'cp' ) . '</a>';
 										echo '</div>';
 										echo '<div class="cp-assessment-progress-expand inactive">';
 										echo '<button class="cp-expand-collapse cp-collapse-btn">Collapse</button>';
@@ -163,10 +163,10 @@
 								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
 									<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 									<li>
-										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
+										<span class="pull-left"><span class="cp-units-icon"></span><?php echo esc_html( $unit->get_the_title() ); ?></span>
 										<span class="pull-right">
 											<?php $unit_grade = $student->get_unit_grade( $course_id, $unit->ID ); ?>
-											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo $unit->ID; ?>" data-student="<?php echo $student->ID; ?>"><?php echo empty( $unit_grade ) ? 0 : floor( $unit_grade ); ?>%</span>
+											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?> cp-unit-div" data-unit="<?php echo esc_attr( $unit->ID ); ?>" data-student="<?php echo esc_attr( $student->ID ); ?>"><?php echo empty( $unit_grade ) ? 0 : floor( $unit_grade ); ?>%</span>
 											<span class="cp-plus-icon"></span>
 										</span>
 										<?php if ( ! empty( $unit->modules ) ) : ?>
@@ -175,12 +175,12 @@
 													<div class="cp-assessments-table-container inactive">
 														<table class="cp-assessments-questions-expanded">
 															<tr class="module-title">
-																<th colspan="3"><?php echo $module['title']; ?></th>
+																<th colspan="3"><?php echo esc_html( $module['title'] ); ?></th>
 															</tr>
 															<?php $step_count = 0; ?>
                                                             <?php if ( empty( $module['steps'] ) ) : ?>
 																<tr>
-																	<td colspan="3"><?php _e( 'No answerable modules found.', 'cp' ); ?></td>
+																	<td colspan="3"><?php esc_html_e( 'No answerable modules found.', 'cp' ); ?></td>
 																</tr>
 <?php else : ?>
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
@@ -197,7 +197,7 @@
   																				<span class="cp-title cp-module-grade-info">
   																					<span class="cp-current-grade"><?= round( $grade ) ?>%</span>
   																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-  																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+  																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?> cp-check"><?= $step_status ? strtoupper( $step_status ) : esc_html__( 'FAILED', 'cp' ) ?></span>
   																				</span>
   																			<?php endif; ?>
 													              <?php
@@ -206,19 +206,19 @@
     																			$allowed_for_feedback = array( 'written', 'fileupload' );
     																			$response = $step->get_user_response( $student->ID );
     																			if ( ! empty( $response ) && $is_assessable && in_array( $step->type, $allowed_for_feedback ) ) :
-										                         $no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
-									                           $with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
+										                         $no_feedback_button_label = esc_html__( 'Submit Grade without Feedback', 'cp' );
+									                           $with_feedback_button_label = esc_html__( 'Submit Grade with Feedback', 'cp' );
 
             																	$response = $student->get_response( $course_id, $unit->ID, $step_id );
             																	$graded_by = coursepress_get_array_val( $response, 'graded_by' );
             																	if ( ! empty( $graded_by ) && 'auto' !== $graded_by ) {
-            																			$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
-            																			$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
+            																			$no_feedback_button_label = esc_html__( 'Edit Grade without Feedback', 'cp' );
+            																			$with_feedback_button_label = esc_html__( 'Edit Grade with Feedback', 'cp' );
             																	}
             																	?>
 					                                    <span>
-                                                 <button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo $no_feedback_button_label; ?></button>
-                                                 <button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo $with_feedback_button_label; ?></button>
+                                                 <button type="button" class="cp-btn cp-btn-active edit-no-feedback"><?php echo esc_html( $no_feedback_button_label ); ?></button>
+                                                 <button type="button" class="cp-btn cp-btn-active edit-with-feedback"><?php echo esc_html( $with_feedback_button_label ); ?></button>
                                               </span>
 									                         <?php endif;?>
 																				</span>
@@ -243,23 +243,23 @@
 															}
 															$student_id = $student->ID;
 															$min_grade  = empty( $step->minimum_grade ) ? 0 : (int) $step->minimum_grade;
-															$pass_label = sprintf( __( 'The minimum grade to pass: %s', 'cp' ), $min_grade );
+															$pass_label = sprintf( esc_html__( 'The minimum grade to pass: %s', 'cp' ), $min_grade );
 									   					$pass_label .= '<br />';
-									   					$pass_label .= __( 'You can change this minimum score from course settings.', 'cp' );
+									   					$pass_label .= esc_html__( 'You can change this minimum score from course settings.', 'cp' );
 															?>
                                                          <div class="cp-grade-editor-box">
                                                            <div class="cp-feedback-editor" style="display:none;">
-                                                               <label class="cp-feedback-title"><?php _e( 'Feedback', 'cp' ); ?></label>
-                                                               <p class="description"><?php _e( 'Your feedback will be emailed to the student after submission.', 'cp' ); ?></p>
+                                                               <label class="cp-feedback-title"><?php esc_html_e( 'Feedback', 'cp' ); ?></label>
+                                                               <p class="description"><?php esc_html_e( 'Your feedback will be emailed to the student after submission.', 'cp' ); ?></p>
                                                                <textarea class="cp_feedback_content" style="display:none;"><?php echo esc_textarea( $feedback_text ); ?></textarea>
                                                            </div>
                                                              <div class="coursepress-tooltip pull-right cp-edit-grade-box">
-                                                                 <label class="cp-assess-label"><?php _e( 'Grade', 'cp' ); ?></label>
-                                                                 <input type="number" name="module-grade" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-minimum="<?php echo esc_attr( $min_grade ); ?>" data-student="<?php echo $student_id; ?>" class="module-grade small-text" data-grade="<?= round( $grade ) ?>" value="<?= round( $grade ) ?>" min="0" max="100" />
-                                                                 <button type="button" class="cp-btn cp-btn-default cp-right cp-save-as-draft disabled"><?php _e( 'Save Feeback as Draft', 'cp' ); ?></button>
-                                                                 <button type="button" class="cp-btn cp-btn-default cp-submit-grade disabled"><?php _e( 'Submit Grade', 'cp' ); ?></button>
-                                                                 <button type="button" class="cp-btn cp-btn-default cp-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
-                                                                 <p class="description"><?php echo $pass_label; ?></p>
+                                                                 <label class="cp-assess-label"><?php esc_html_e( 'Grade', 'cp' ); ?></label>
+                                                                 <input type="number" name="module-grade" data-courseid="<?php echo esc_attr( $course_id ); ?>" data-unit="<?php echo esc_attr( $unit->ID ); ?>" data-module="<?php echo esc_attr( $step_id ); ?>" data-minimum="<?php echo esc_attr( $min_grade ); ?>" data-student="<?php echo esc_attr( $student_id ); ?>" class="module-grade small-text" data-grade="<?= round( $grade ) ?>" value="<?= round( $grade ) ?>" min="0" max="100" />
+                                                                 <button type="button" class="cp-btn cp-btn-default cp-right cp-save-as-draft disabled"><?php esc_html_e( 'Save Feeback as Draft', 'cp' ); ?></button>
+                                                                 <button type="button" class="cp-btn cp-btn-default cp-submit-grade disabled"><?php esc_html_e( 'Submit Grade', 'cp' ); ?></button>
+                                                                 <button type="button" class="cp-btn cp-btn-default cp-cancel"><?php esc_html_e( 'Cancel', 'cp' ); ?></button>
+                                                                 <p class="description"><?php echo esc_html( $pass_label ); ?></p>
                                                              </div>
                                                          </div>
                                                       </td>
@@ -267,23 +267,23 @@
                                   <?php endif; ?>
 																	<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																		<tr>
-																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
-																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
-																			<?php if ( $step->type != 'written' ) :  ?>
-																				<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+																			<th class="cp-assessments-strong"><?php esc_html_e( 'Question', 'cp' ); ?></th>
+																			<th class="cp-assessments-strong"><?php esc_html_e( 'Student answer', 'cp' ); ?></th>
+																			<?php if ( $step->type !== 'written' ) :  ?>
+																				<th class="cp-assessments-strong"><?php esc_html_e( 'Correct answer', 'cp' ); ?></th>
 																			<?php endif; ?>
 																		</tr>
 																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
 																			<?php $response = $step->get_user_response( $student->ID ); ?>
 																			<tr>
-																				<td><?php echo $question['title']; ?></td>
+																				<td><?php echo esc_html( $question['title'] ); ?></td>
 																				<?php if ( $question['type'] == 'written' ) :  ?>
 																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][ $qkey ]; ?>
 																					<td>
 																						<?php if ( $written_answer ) :  ?>
 																							<?php echo stripslashes( $written_answer ); ?>
 																						<?php else : ?>
-																							<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																							<span class="cp-no-answer"><?php esc_html_e( 'No answer!' ); ?></span>
 																						<?php endif; ?>
 																					</td>
 																				<?php else : ?>
@@ -306,7 +306,7 @@
 																						</ul>
 																					<?php else : ?>
 																						<ul class="cp-assessments-answers">
-																							<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																							<li><span class="cp-no-answer"><?php esc_html_e( 'No answer!' ); ?></span</li>
 																						</ul>
 																					<?php endif; ?>
 																				</td>
@@ -332,9 +332,9 @@
 																			<td colspan="3">
 																				<?php $uploaded_files = $step->get_user_response( $student->ID ); ?>
 																				<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) :  ?>
-																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
+																					<a href="<?php echo esc_url( $uploaded_files['url'] ); ?>"><?php esc_html_e( 'Uploaded File', 'cp' ); ?></a>
 																				<?php else : ?>
-																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																					<span class="cp-no-answer"><?php esc_html_e( 'No answer!' ); ?></span>
 																				<?php endif; ?>
 																			</td>
 																		</tr>
@@ -342,7 +342,7 @@
 																		<tr>
 																			<td colspan="3">
 																				<ul class="cp-assessments-answers">
-																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span></li>
+																					<li><span class="cp-no-answer"><?php esc_html_e( 'No answer!' ); ?></span></li>
 																				</ul>
 																			</td>
 																		</tr>
@@ -353,13 +353,13 @@
 														$hide = ' style="display:none;"';
 														$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 													?>
-													<tr class="cp-instructor-feedback" data-courseid="<?php echo $course_id; ?>" data-unit="<?php echo $unit->ID; ?>" data-module="<?php echo $step_id; ?>" data-student="<?php echo $student_id; ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
+													<tr class="cp-instructor-feedback" data-courseid="<?php echo esc_attr( $course_id ); ?>" data-unit="<?php echo esc_attr( $unit->ID ); ?>" data-module="<?php echo esc_attr( $step_id ); ?>" data-student="<?php echo esc_attr( $student_id ); ?>" <?php echo ( ! empty( $feedback ) ? '' : $hide ); ?>>
                                                       <td colspan="3">
                                                          <div class="cp-instructor-feedback">
-                                                         <h4><?php _e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php _e( 'Draft', 'cp' ); ?>]</span></h4>
+                                                         <h4><?php esc_html_e( 'Instructor Feedback', 'cp' ); ?> <span class="cp-draft-icon" style="display: <?php echo $is_draft ? 'inline-block' : 'none'; ?>;">[<?php esc_html_e( 'Draft', 'cp' ); ?>]</span></h4>
 															<?php
 															printf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
-															printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
+															printf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, esc_html__( 'Write your feedback!', 'cp' ) );
 															?>
 														  </div>
 													</td>
@@ -371,7 +371,7 @@
 																<?php endforeach; ?>
 															<?php endif; ?>
 														</table>
-                                          <input type="hidden" class="cp-total-unit-modules" data-unit="<?php echo $unit->ID; ?>" value="<?php echo $step_count; ?>" />
+                                          <input type="hidden" class="cp-total-unit-modules" data-unit="<?php echo esc_attr( $unit->ID ); ?>" value="<?php echo esc_attr( $step_count ); ?>" />
 													</div>
 												<?php endforeach; ?>
 											</div>
@@ -386,7 +386,7 @@
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr class="odd empty-assessments">
-					<td colspan="<?php echo count( $columns ); ?>"><?php _e( 'No assessable students found.', 'cp' ); ?></td>
+					<td colspan="<?php echo esc_attr( count( $columns ) ); ?>"><?php esc_html_e( 'No assessable students found.', 'cp' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			</tbody>

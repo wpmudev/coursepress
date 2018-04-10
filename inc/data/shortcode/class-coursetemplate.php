@@ -102,7 +102,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			if ( ! $course->open_ended_course && $course->course_end_date < $now ) {
 				$course->enrollment_expired = true;
 			}
-		} else if ( $enrollment_end_date < $now ) {
+		} elseif ( $enrollment_end_date < $now ) {
 			$course->enrollment_expired = true;
 		}
 		/**
@@ -1460,7 +1460,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		if ( $test_empty_courses_ids && empty( $include_ids ) ) {
 			// Do nothing if we have empty list.
 			$courses = array();
-		} else if ( ( ( $student_list || $instructor_list ) && ! empty( $include_ids ) ) || ( ! $student_list && ! $instructor_list ) ) {
+		} elseif ( ( ( $student_list || $instructor_list ) && ! empty( $include_ids ) ) || ( ! $student_list && ! $instructor_list ) ) {
 			if ( ! empty( $include_ids ) ) {
 				$post_args = wp_parse_args( array( 'post__in' => $include_ids ), $post_args );
 			}

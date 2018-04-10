@@ -119,7 +119,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			}
 			$link = $instructor->get_instructor_profile_link();
 			if ( ! $link_all ) {
-				$attr = array( 'href' => esc_url_raw( $link ), 'class' => 'fn instructor' );
+				$attr = array( 'href' => esc_url( $link ), 'class' => 'fn instructor' );
 				$template .= $this->create_html( 'a', $attr, $instructor->get_name() );
 			} else {
 				$template .= $instructor->get_name();
@@ -306,7 +306,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			}
 			$attr = array(
 				'class' => $class,
-				'src' => esc_url_raw( $course->listing_image ),
+				'src' => esc_url( $course->listing_image ),
 				'width' => $atts['width'],
 				'height' => $atts['height'],
 			);
@@ -331,7 +331,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-			$attr = array( 'class' => $class, 'src' => esc_url_raw( $course->featured_video ) );
+			$attr = array( 'class' => $class, 'src' => esc_url( $course->featured_video ) );
 			// @todo: apply CP video.js
 		}
 		return '';
@@ -407,7 +407,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 				 */
 				$unit_html = '';
 				$unit_title = $unit->__get( 'post_title' );
-				$unit_url = esc_url_raw( $unit->get_unit_url() );
+				$unit_url = esc_url( $unit->get_unit_url() );
 				if ( $has_access ) {
 					$attr       = array( 'href' => $unit_url );
 					$unit_title = $this->create_html( 'a', $attr, $unit_title );
@@ -426,7 +426,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 						if ( ! empty( $modules ) ) {
 							foreach ( $modules as $module ) {
 								$module_html = '';
-								$module_url = esc_url_raw( $module['url'] );
+								$module_url = esc_url( $module['url'] );
 								if ( ! empty( $module['steps'] ) ) {
 									$steps = '';
 									foreach ( $module['steps'] as $step ) {
@@ -434,12 +434,12 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 										 * @var $step CoursePress_Step
 										 */
 										if ( $has_access ) {
-											$attr       = array( 'href' => esc_url_raw( $step->get_permalink() ) );
+											$attr       = array( 'href' => esc_url( $step->get_permalink() ) );
 											$step_title = $this->create_html( 'a', $attr, $step->__get( 'post_title' ) );
 										} else {
 											$step_title = $step->__get( 'post_title' );
 											if ( $step->__get( 'preview' ) ) {
-												$url = esc_url_raw( $step->get_permalink() );
+												$url = esc_url( $step->get_permalink() );
 												$attr = array( 'href' => $url );
 												$step_title = $this->create_html( 'a', $attr, $step_title );
 											}
@@ -474,7 +474,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 							 * @var $step CoursePress_Step
 							 */
 							$step_title = $step->__get( 'post_title' );
-							$step_url = esc_url_raw( $step->get_permalink() );
+							$step_url = esc_url( $step->get_permalink() );
 							if ( $has_access ) {
 								$attr = array( 'href' => $step_url );
 								$step_title = $this->create_html( 'a', $attr, $step_title );

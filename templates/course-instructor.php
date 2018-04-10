@@ -17,7 +17,7 @@ get_header();
                         <span class="display_name"><?php echo esc_html( $CoursePress_Instructor->display_name ); ?></span>
                     </h1>
 <?php if ( isset( $CoursePress_Instructor->description ) && ! empty( $CoursePress_Instructor->description ) ) { ?>
-<div class="description"><?php echo wpautop( $CoursePress_Instructor->description ); ?></div>
+<div class="description"><?php echo esc_html( wpautop( $CoursePress_Instructor->description ) ); ?></div>
 <?php } ?>
 				</header>
 
@@ -41,4 +41,5 @@ if ( $courses ) {
 			</div>
 		</div>
 	</div>
-<?php get_footer();
+<?php
+get_footer();

@@ -1,10 +1,10 @@
 <script type="text/template" id="coursepress-shortcodes-setting-tpl">
 	<div class="cp-box-heading">
-		<h2 class="box-heading-title"><?php _e( 'Shortcodes', 'cp' ); ?></h2>
+		<h2 class="box-heading-title"><?php esc_html_e( 'Shortcodes', 'cp' ); ?></h2>
 	</div>
 
 	<div class="cp-box-content cp-shortcode-list cp-odd">
-        <h3><?php _e( 'Browse shortcodes', 'cp' ); ?></h3>
+        <h3><?php esc_html_e( 'Browse shortcodes', 'cp' ); ?></h3>
 		<div class="cp-box">
 			<div class="cp-flex">
 				<div class="cp-div-flex cp-pad-right">
@@ -14,7 +14,7 @@
 						<ul class="cp-input-group cp-select-list cp-type">
 							<?php $i = 0; ?>
 							<?php foreach ( $shortcode_types as $key => $type ) : ?>
-								<li data-id="<?php echo $key; ?>" <?php echo $i === 0 ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
+								<li data-id="<?php echo esc_attr( $key ); ?>" <?php echo 0 === $i ? 'class="active"' : ''; ?>><?php echo esc_html( $type ); ?></li>
 								<?php $i++; ?>
 							<?php endforeach; ?>
 						</ul>
@@ -25,10 +25,10 @@
 					<?php if ( ! empty( $shortcode_sub_types ) ) : ?>
 						<?php $i = 0; ?>
 						<?php foreach ( $shortcode_sub_types as $parent => $child ) : ?>
-							<ul class="cp-input-group cp-select-list cp-sub-type <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $parent; ?>">
+							<ul class="cp-input-group cp-select-list cp-sub-type <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo esc_attr( $parent ); ?>">
 								<?php $j = 0; ?>
 								<?php foreach ( $child as $key => $type ) : ?>
-									<li data-id="<?php echo $key; ?>" <?php echo $j === 0 ? 'class="active"' : ''; ?>><?php echo $type; ?></li>
+									<li data-id="<?php echo esc_attr( $key ); ?>" <?php echo 0 === $j ? 'class="active"' : ''; ?>><?php echo esc_html( $type ); ?></li>
 									<?php $j++; ?>
 								<?php endforeach; ?>
 							</ul>
@@ -43,32 +43,32 @@
 	<?php $details = $data->get_shortcode_details(); ?>
 	<?php $i = 0; ?>
 	<?php foreach ( $details as $id => $values ) : ?>
-		<div class="cp-box-content cp-shortcode-details <?php echo $i !== 0 ? 'inactive' : ''; ?>" id="<?php echo $id; ?>">
-            <h3 class="cp-box-header"><?php echo $values['title']; ?></h3>
+		<div class="cp-box-content cp-shortcode-details <?php echo 0 !== $i ? 'inactive' : ''; ?>" id="<?php echo esc_attr( $id ); ?>">
+            <h3 class="cp-box-header"><?php echo esc_html( $values['title'] ); ?></h3>
 			<div class="cp-box cp-sep">
-				<p class="description"><?php echo $values['description']; ?></p>
-				<p class="cp-usage-label"><?php _e( 'USAGE EXAMPLE', 'cp' ); ?>:</p>
-				<p class="cp-code"><?php echo $data->esc_shortcodes( $values['usage'] ); ?></p>
-				<?php echo isset( $values['add_info'] ) ? $values['add_info'] : ''; ?>
+				<p class="description"><?php echo esc_html( $values['description'] ); ?></p>
+				<p class="cp-usage-label"><?php esc_html_e( 'USAGE EXAMPLE', 'cp' ); ?>:</p>
+				<p class="cp-code"><?php echo esc_html( $data->esc_shortcodes( $values['usage'] ) ); ?></p>
+				<?php echo isset( $values['add_info'] ) ? esc_html( $values['add_info'] ) : ''; ?>
 			</div>
 			<?php if ( ! empty( $values['required_attr'] ) ) : ?>
 				<div class="cp-box cp-sep">
-					<h3 class="label"><?php _e( 'Required attributes', 'cp' ); ?>:</h3>
+					<h3 class="label"><?php esc_html_e( 'Required attributes', 'cp' ); ?>:</h3>
 					<table class="cp-shortcode-table">
 						<tbody>
 						<?php foreach ( $values['required_attr'] as $attr ) : ?>
 							<tr>
-								<td><span class="cp-code"><?php echo $attr['attr']; ?></span></td>
+								<td><span class="cp-code"><?php echo esc_html( $attr['attr'] ); ?></span></td>
 								<td>
-									<?php echo isset( $attr['description'] ) ? $attr['description'] : ''; ?>
+									<?php echo isset( $attr['description'] ) ? esc_html( $attr['description'] ) : ''; ?>
 									<?php if ( ! empty( $attr['options'] ) ) : ?>
-										<p class="cp-attr-sub-label"><?php _e( 'Options', 'cp' ); ?></p>
+										<p class="cp-attr-sub-label"><?php esc_html_e( 'Options', 'cp' ); ?></p>
 										<div class="cp-code-box">
 											<p><?php echo esc_html( $attr['options'] ); ?></p>
 										</div>
 									<?php endif; ?>
 									<?php if ( ! empty( $attr['default'] ) ) : ?>
-										<p class="cp-attr-sub-label"><?php _e( 'Default', 'cp' ); ?></p>
+										<p class="cp-attr-sub-label"><?php esc_html_e( 'Default', 'cp' ); ?></p>
 										<div class="cp-code-box">
 											<p><?php echo esc_html( $attr['default'] ); ?></p>
 										</div>
@@ -82,22 +82,22 @@
 				<?php endif; ?>
 				<?php if ( ! empty( $values['optional_attr'] ) ) : ?>
 					<div class="cp-box">
-						<h3 class="label"><?php _e( 'Optional Attributes', 'cp' ); ?>:</h3>
+						<h3 class="label"><?php esc_html_e( 'Optional Attributes', 'cp' ); ?>:</h3>
 						<table class="cp-shortcode-table">
 							<tbody>
 							<?php foreach ( $values['optional_attr'] as $attr ) : ?>
 								<tr>
-									<td><span class="cp-code"><?php echo $attr['attr']; ?></span></td>
+									<td><span class="cp-code"><?php echo esc_html( $attr['attr'] ); ?></span></td>
 									<td>
-										<?php echo isset( $attr['description'] ) ? $attr['description'] : ''; ?>
+										<?php echo isset( $attr['description'] ) ? esc_html( $attr['description'] ) : ''; ?>
 										<?php if ( ! empty( $attr['options'] ) ) : ?>
-											<p class="cp-attr-sub-label"><?php _e( 'Options', 'cp' ); ?></p>
+											<p class="cp-attr-sub-label"><?php esc_html_e( 'Options', 'cp' ); ?></p>
 											<div class="cp-code-box">
 												<p><?php esc_html( $attr['options'] ); ?></p>
 											</div>
 										<?php endif; ?>
 										<?php if ( ! empty( $attr['default'] ) ) : ?>
-											<p class="cp-attr-sub-label"><?php _e( 'Default', 'cp' ); ?></p>
+											<p class="cp-attr-sub-label"><?php esc_html_e( 'Default', 'cp' ); ?></p>
 											<div class="cp-code-box">
 												<p><?php echo esc_html( $attr['default'] ); ?></p>
 											</div>
