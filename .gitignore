@@ -18,9 +18,12 @@ coursepress-files/pdf-cache/
 # Grunt folders
 .sass-cache
 /vendor
+/nbproject
+/package-lock.json
 /composer.lock
 /composer
 /release
 composer.json
 /assets/css/**
+/assets/js/maps
 /assets/js/*.js
