@@ -12,8 +12,8 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php esc_html_e( 'Discussions', 'cp' ); ?></h1>
-					<h2 class="entry-title"><?php echo esc_html( coursepress_get_course_title() ); ?></h2>
+					<h1 class="page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
+					<h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
 				</header>
 				<?php
 				/**
@@ -30,14 +30,10 @@ $allowed = $course->__get( 'allow_discussion' );
 if ( false == $allowed ) {
 	coursepress_render( 'templates/content-discussion-off' );
 } else {
-	coursepress_render( 'templates/content-discussion-single', array(
-		'user_id' => 0,
-		'course' => $course,
-	) );
+	coursepress_render( 'templates/content-discussion-single', array( 'user_id' => 0, 'course' => $course ) );
 }
 ?>
 			</div>
 		</div>
 	</div>
-<?php
-get_footer();
+<?php get_footer();

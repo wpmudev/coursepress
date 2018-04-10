@@ -104,7 +104,7 @@ body {
 		} else {
 				printf( '<p id="%s">%s</p>', 'error', esc_html__( 'Something went wrong!', 'cp' ) );
 		}
-	} elseif ( file_exists( $file_path ) ) {
+	} else if ( file_exists( $file_path ) ) {
 		echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .esc_url( $file ) . '"></iframe>';
 	} else {
 		printf( '<p id="%s">%s</p>', 'error', esc_html__( 'Somthing went wrong!', 'cp' ) );

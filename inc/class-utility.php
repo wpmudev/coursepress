@@ -517,7 +517,7 @@ abstract class CoursePress_Utility {
 
 		if ( $x[ $this->sort_key ] == $y[ $this->sort_key ] ) {
 			return 0;
-		} elseif ( $x[ $this->sort_key ] < $y[ $this->sort_key ] ) {
+		} else if ( $x[ $this->sort_key ] < $y[ $this->sort_key ] ) {
 			return - 1;
 		} else {
 			return 1;
@@ -536,7 +536,7 @@ abstract class CoursePress_Utility {
 
 		if ( $x[ $this->sort_key ] == $y[ $this->sort_key ] ) {
 			return 0;
-		} elseif ( $x[ $this->sort_key ] > $y[ $this->sort_key ] ) {
+		} else if ( $x[ $this->sort_key ] > $y[ $this->sort_key ] ) {
 			return - 1;
 		} else {
 			return 1;

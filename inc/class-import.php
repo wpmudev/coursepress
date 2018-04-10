@@ -60,7 +60,7 @@ class CoursePress_Import extends CoursePress_Utility
 		$user = $blog_id = null;
 		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
 			$user = get_user_by( 'email', $user_data->user_email );
-		} elseif ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
+		} else if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
 			$user = get_user_by( 'login', $user_data->user_login );
 		}
 		/**
@@ -281,7 +281,7 @@ class CoursePress_Import extends CoursePress_Utility
 							$this->import_steps( $course_id, $unit_id, $module->steps );
 						}
 					}
-				} elseif ( isset( $unit->steps ) ) {
+				} else if ( isset( $unit->steps ) ) {
 					$this->import_steps( $course_id, $unit_id, $unit->steps );
 				}
 				/**

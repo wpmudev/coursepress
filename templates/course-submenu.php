@@ -13,8 +13,8 @@ $menu = coursepress_get_course_submenu();
 if ( $menu ) {
         foreach ( $menu as $menu_id => $menu_item ) {
 ?>
-			<li class="<?php echo esc_attr( implode( ' ', $menu_item['classes'] ) ); ?>">
-				<a href="<?php echo esc_url( $menu_item['url'] ); ?>"><?php echo esc_html( $menu_item['label'] ); ?></a>
+			<li class="<?php esc_attr_e( implode( ' ', $menu_item['classes'] ) ); ?>">
+				<a href="<?php echo esc_url_raw( $menu_item['url'] ); ?>"><?php esc_html_e( $menu_item['label'] ); ?></a>
 			</li>
 <?php
         }

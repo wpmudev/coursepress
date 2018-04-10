@@ -318,7 +318,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			}
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
-			} elseif ( isset( $_POST['redirect_to'] ) ) {
+			} else if ( isset( $_POST['redirect_to'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_to'] ) ) );
 			} else {
 				wp_redirect( esc_url_raw( coursepress_get_dashboard_url() ) );

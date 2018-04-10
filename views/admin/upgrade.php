@@ -1,8 +1,8 @@
 <div class="wrap coursepress-wrap coursepress-upgrade" id="coursepress-upgrade">
-    <h1 class="wp-heading-inline"><?php esc_html_e( 'Upgrade', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e( 'Upgrade', 'cp' ); ?></h1>
 <?php if ( empty( $courses ) ) { ?>
     <div class="notice notice-success">
-        <p><?php esc_html_e( 'Currently you have no courses to upgrade.', 'cp' ); ?></p>
+        <p><?php _e( 'Currently you have no courses to upgrade.', 'cp' ); ?></p>
     </div>
 <?php } else { ?>
     <div class="coursepress-page">
@@ -11,7 +11,7 @@
         <h2><?php esc_html_e( 'Courses to upgrade', 'cp' ); ?></h2>
 <ol>
 <?php
-$status = esc_html__( 'waiting for upgrade', 'cp' );
+$status = __( 'waiting for upgrade', 'cp' );
 foreach ( $courses as $course ) {
 	$status_class = '';
 	if ( isset( $course->cp3_upgraded ) && 'done' === $course->cp3_upgraded ) {
