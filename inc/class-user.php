@@ -293,7 +293,7 @@ class CoursePress_User extends CoursePress_Utility {
 			if ( 0 === $per_page ) {
 				wp_cache_set( 'enrolled_courses_ids', $course_ids, 'cp_user_' . $id );
 			}
-		} elseif ( $per_page > 0 ) {
+		} elseif ( $per_page > 0 && is_array( $course_ids ) ) {
 			// For paginated queries.
 			$course_ids = array_slice( $course_ids, $offset, $per_page );
 		}
