@@ -12,8 +12,8 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php esc_html_e( 'Discussions', 'cp' ); ?></h1>
-					<h2 class="entry-title"><?php echo esc_html( coursepress_get_course_title() ); ?></h2>
+					<h1 class="page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
+					<h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
 				</header>
 				<?php
 				/**
@@ -24,26 +24,20 @@ get_header(); ?>
 				 */
 				coursepress_get_template( 'course', 'submenu' );
 				?>
-				<?php
+<?php
 
-				$allowed = $course->__get( 'allow_discussion' );
-				if ( ! $allowed ) :
-					coursepress_render( 'templates/content-discussion-off' );
-				else :
-					$url = $course->get_discussion_new_url();
-					?>
-					<div class="discussion-new">
-						<a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a>
-					</div>
-					<?php
-					coursepress_render( 'templates/content-discussion', array(
-						'user_id' => 0,
-						'course' => $course,
-					) );
-				endif;
-				?>
+$allowed = $course->__get( 'allow_discussion' );
+if ( false == $allowed ) {
+    coursepress_render( 'templates/content-discussion-off' );
+} else {
+    $url = $course->get_discussion_new_url();
+?>
+<div class="discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
+<?php
+    coursepress_render( 'templates/content-discussion', array( 'user_id' => 0, 'course' => $course ) );
+}
+?>
 			</div>
 		</div>
 	</div>
-<?php
-get_footer();
+<?php get_footer();
