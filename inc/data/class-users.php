@@ -119,7 +119,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		// Map coursepress caps
 		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
 		// Delete student data whenever a user is deleted
-		add_action( 'delete_user', array( $this, 'delete_student_data' ) );
+		add_action( 'delete_user', array( $this, 'delete_student_id' ) );
 		/**
 		 * log user activity
 		 */
@@ -263,10 +263,21 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		return $caps;
 	}
 
+	/**
+	 * Remove student from assigned courses when deleted.
+	 *
+	 * When a WP user is deleted, remove user from all his
+	 * assigned courses.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return null
+	 */
 	public function delete_student_id( $user_id ) {
 		$user = coursepress_get_user( $user_id );
 		if ( is_wp_error( $user ) ) {
-			return null; }
+			return null;
+		}
 		// Find courses where user are enrolled at
 		$course_ids = $user->get_enrolled_courses_ids();
 		if ( is_array( $course_ids ) && ! empty( $course_ids ) ) {
