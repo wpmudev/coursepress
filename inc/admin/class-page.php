@@ -53,7 +53,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Set custom pages active.
 		add_filter( 'parent_file', array( $this, 'set_category_menu_parent' ) );
 		// Set screen option values.
-		add_filter( 'set-screen-option', array( $this, 'set_courselist_options' ), 10, 3 );
+		add_filter( 'set-screen-option', array( $this, 'set_courselist_options' ), 15, 3 );
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
 		// Marked coursepress page
