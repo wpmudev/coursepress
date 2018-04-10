@@ -583,7 +583,7 @@ function coursepress_get_course_submenu() {
 	$menus = array(
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
-			'url' => esc_url( $course->get_units_url() ),
+			'url' => $course->get_units_url(),
 			'classes' => array( 'submenu-units' ),
 		),
 	);
@@ -594,7 +594,7 @@ function coursepress_get_course_submenu() {
 	// Course Notifications.
 	$menus['notifications'] = array(
 		'label' => __( 'Notifications', 'cp' ),
-		'url' => esc_url( $course->get_notifications_url() ),
+		'url' => esc_url_raw( $course->get_notifications_url() ),
 		'classes' => array( 'submenu-notifications' ),
 	);
 	if ( 'notifications' == $current ) {
@@ -607,7 +607,7 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_discussion' ) ) {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
-			'url' => esc_url( $course->get_discussion_url() ),
+			'url' => esc_url_raw( $course->get_discussion_url() ),
 			'classes' => array( 'submenu-discussions' ),
 		);
 		if ( 'forum' == $current ) {
@@ -620,7 +620,7 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_workbook' ) ) {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
-			'url' => esc_url( $course->get_workbook_url() ),
+			'url' => esc_url_raw( $course->get_workbook_url() ),
 			'classes' => array( 'submenu-workbook' ),
 		);
 		if ( 'workbook' == $current ) {
@@ -633,7 +633,7 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_grades' ) ) {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
-			'url' => esc_url( $course->get_grades_url() ),
+			'url' => esc_url_raw( $course->get_grades_url() ),
 			'classes' => array( 'submenu-grades' ),
 		);
 		if ( 'grades' == $current ) {
@@ -643,7 +643,7 @@ function coursepress_get_course_submenu() {
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
-		'url' => esc_url( $course->get_permalink() ),
+		'url' => esc_url_raw( $course->get_permalink() ),
 		'classes' => array( 'submenu-info' ),
 	);
 	/**

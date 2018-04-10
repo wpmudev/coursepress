@@ -1,13 +1,13 @@
 <div class="wrap coursepress-wrap" id="coursepress-comments-list">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Comments', 'cp' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php _e( 'Comments', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div">
-                    <label class="label"><?php esc_html_e( 'Filter by course', 'cp' ); ?></label>
+                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <select name="course_id" id="select_course_id">
-                            <option value=""><?php esc_html_e( 'Any course', 'cp' ); ?></option>
+                            <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
 <?php
 $current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
 foreach ( $courses as $course_id => $course ) {
@@ -21,7 +21,7 @@ foreach ( $courses as $course_id => $course ) {
 	?>
                         </select>
                     </div>
-                    <button type="submit" class="cp-btn cp-btn-active"><?php esc_html_e( 'Filter', 'cp' ); ?></button>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
                 </div>
             </div>
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
@@ -31,7 +31,7 @@ foreach ( $courses as $course_id => $course ) {
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo esc_attr( $column_id ); ?>">
+                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php } ?>
@@ -118,8 +118,8 @@ switch ( $column_id ) {
 				} else {
 ?>
                     <tr>
-                        <td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
-                            <?php esc_html_e( 'No comments found.', 'cp' ); ?>
+                        <td colspan="<?php echo count( $columns ); ?>">
+                            <?php _e( 'No comments found.', 'cp' ); ?>
                         </td>
                     </tr>
                 <?php } ?>

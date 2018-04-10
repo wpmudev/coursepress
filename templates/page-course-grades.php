@@ -12,8 +12,8 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php esc_html_e( 'Grades', 'cp' ); ?></h1>
-                    <h2 class="entry-title"><?php echo esc_html( coursepress_get_course_title() ); ?></h2>
+                    <h1 class="page-title"><?php _e( 'Grades', 'cp' ); ?></h1>
+                    <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
 				<?php
 				/**
 				 * To override course submenu template to your theme or a child-theme,
@@ -33,14 +33,12 @@ get_header(); ?>
                   <div class="total_grade pull-right">
                   <?php
                     $shortcode = sprintf( '[course_progress course_id="%d"]', $course->ID );
-                    $coursepress_grade_caption = apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
-					echo esc_html( $coursepress_grade_caption );
+                    echo apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
                     printf( ' %1$s%', do_shortcode( $shortcode ) );
-                  ?>
+                  ?>%
                   </div>
                 </div>
             </div>
         </div>
     </div>
-<?php
-get_footer();
+<?php get_footer();

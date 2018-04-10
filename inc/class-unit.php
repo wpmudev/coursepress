@@ -504,7 +504,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$is_accessible = $this->is_accessible_by( $user_id );
 		$unit_locked = $is_student && ( ! $is_available || ! $is_accessible );
 		$unit_title = $this->get_the_title();
-		$unit_url = esc_url( $this->get_unit_url() );
+		$unit_url = esc_url_raw( $this->get_unit_url() );
 		$unit_suffix = '';
 		$unit_structure = '';
 		$unit_duration = 0;
@@ -603,7 +603,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$module_id = $module['id'];
 		$module_title = $module['title'];
 		$module_class = array( 'module' );
-		$module_url = esc_url( $module['url'] );
+		$module_url = esc_url_raw( $module['url'] );
 		if ( $has_access ) {
 			$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
 		} elseif ( $is_student ) {

@@ -2362,7 +2362,7 @@ class QRcode {
 		}
 		if ($version <= 9) {
 			$l = 0;
-		} elseif ($version <= 26) {
+		} else if ($version <= 26) {
 			$l = 1;
 		} else {
 			$l = 2;
