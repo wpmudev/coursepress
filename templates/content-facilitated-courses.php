@@ -1,9 +1,9 @@
 <?php
-$user = coursepress_get_user();
-$courses = $user->get_facilitated_courses();
+$user     = coursepress_get_user();
+$courses  = $user->get_facilitated_courses();
 $statuses = array(
 	'active' => __( 'Active', 'cp' ),
-	'ended' => __( 'Ended', 'cp' ),
+	'ended'  => __( 'Ended', 'cp' ),
 	'future' => __( 'Not started', 'cp' ),
 );
 
@@ -35,7 +35,7 @@ if ( ! empty( $courses ) ) : ?>
 					?>
 				</td>
 				<td align="right">
-					<a href="<?php echo esc_url($course->get_edit_url()); ?>" class="button">
+					<a href="<?php echo esc_url( $course->get_edit_url() ); ?>" class="button">
 						<i class="fa fa-pencil"></i>
 						<?php _e( 'Edit', 'cp' ); ?>
 					</a>

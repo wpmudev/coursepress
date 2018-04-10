@@ -24,11 +24,11 @@ get_header(); ?>
 				 * @since 3.0
 				 */
 				coursepress_get_template( 'course', 'submenu' );
-				if ( empty( $notifications ) ) {
+				if ( empty( $notifications ) ) :
 					echo '<p>';
 					_e( 'There is no notifications yet.', 'cp' );
 					echo '</p>';
-				} else { ?>
+				else : ?>
 					<ul class="notification-archive-list">
 						<?php foreach ( $notifications as $notification ) : ?>
 							<li>
@@ -49,7 +49,7 @@ get_header(); ?>
 							</li>
 						<?php endforeach; ?>
 					</ul>
-				<?php } ?>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>

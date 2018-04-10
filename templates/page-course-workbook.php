@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+$user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
 
@@ -18,11 +18,13 @@ get_header(); ?>
 
 					<div class="course-unit-progress">
 						<?php
-						echo coursepress_progress_wheel( array(
-							'class' => 'per-course-progress',
-							'data-value' => $user->get_course_progress( $course->ID ),
-							'data-size' => 62,
-						) );
+						echo coursepress_progress_wheel(
+							array(
+								'class'      => 'per-course-progress',
+								'data-value' => $user->get_course_progress( $course->ID ),
+								'data-size'  => 62,
+							)
+						);
 						?>
 					</div>
 				</header>
