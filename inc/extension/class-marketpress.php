@@ -247,7 +247,7 @@ class CoursePress_Extension_MarketPress {
 	 * @param array $course_meta Course meta.
 	 */
 	public function maybe_create_product( $course_id, $course_meta ) {
-		$course = coursepress_get_course( $course_id );
+		$course = coursepress_get_course( $course_id, false );
 		$product_id = $course->get_product_id();
 		if ( $course->is_paid_course() ) {
 			// Check product was not deleted
@@ -483,14 +483,18 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function change_product_status( $course_id, $status ) {
 		$course = coursepress_get_course( $course_id );
+		$is_paid = $course->is_paid_course();
 		$product_id = $course->get_product_id();
+		// Do not publish if not paid anymore.
+		if ( 'publish' === $status && ! $is_paid ) {
+			return;
+		}
 		wp_update_post(
 			array(
 				'ID' => $product_id,
 				'post_status' => $status,
 			)
 		);
-		update_post_meta( $product_id, '_stock_status', 'outofstock' );
 	}
 
 	/**
