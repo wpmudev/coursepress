@@ -495,8 +495,6 @@ class CoursePress_Extension_MarketPress {
 				'post_status' => $status,
 			)
 		);
-		$stock = 'publish' === $status ? 'instock' : 'outofstock';
-		update_post_meta( $product_id, '_stock_status', $stock );
 	}
 
 	/**
