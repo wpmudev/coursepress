@@ -53,8 +53,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		/**
 		 * Set proper type for forum
 		 */
-		if ( isset( $array['type'] ) && 'forum' == $array['type'] && isset( $array['topic'] ) && '' != $array['topic'] ) {
-			if ( 'new' == $array['topic'] ) {
+		if ( isset( $array['type'] ) && 'forum' === $array['type'] && isset( $array['topic'] ) && '' != $array['topic'] ) {
+			if ( 'new' === $array['topic'] ) {
 				$this->__set( 'type', 'forum-new' );
 			} else {
 				$this->__set( 'type', 'forum-single' );
@@ -84,7 +84,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			'single-course' === $type
 			&& !empty( $course_id )
 			&& isset( $_REQUEST['action'] )
-			&& 'coursepress_enroll' == $_REQUEST['action']
+			&& 'coursepress_enroll' === $_REQUEST['action']
 		) {
 			$result = coursepress_try_to_add_student( $course_id );
 			if ( true === $result ) {
@@ -112,7 +112,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $course_id );
 				if ( empty( $unit_id ) ) {
 					$is_404 = true;
-				} else if ( 'module' === $type ) {
+				} elseif ( 'module' === $type ) {
 					$module = $this->__get( 'module' );
 					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
 					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
@@ -176,7 +176,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		global $CoursePress, $CoursePress_Instructor, $wp_query, $CoursePress_Course, $CoursePress_Unit,
 			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now;
 		$course = false;
-		if ( $this->__get( 'course' ) || 'single-course' == $type ) {
+		if ( $this->__get( 'course' ) || 'single-course' === $type ) {
 			$CoursePress_Course = $course = coursepress_get_course();
 			if ( ! isset( $course->ID ) ) {
 				return false;
@@ -311,17 +311,17 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		}
 		$type = $this->__get( 'type' );
 		$post = array_shift( $posts );
-		if ( 'student-dashboard' == $type ) {
+		if ( 'student-dashboard' === $type ) {
 			$post = $this->the_post( $post, array(
 				'post_title' => __( 'My Courses', 'cp' ),
 				'post_type' => 'page',
 			) );
-		} elseif ( 'student-settings' == $type ) {
+		} elseif ( 'student-settings' === $type ) {
 			$post = $this->the_post( $post, array(
 				'post_title' => __( 'My Profile', 'cp' ),
 				'post_type' => 'page',
 			) );
-		} elseif ( 'student-login' == $type ) {
+		} elseif ( 'student-login' === $type ) {
 			$post = $this->the_post( $post, array(
 				'post_title' => __( 'Student Login', 'cp' ),
 				'post_type' => 'page',

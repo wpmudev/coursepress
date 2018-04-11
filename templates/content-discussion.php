@@ -32,7 +32,7 @@ else :
 
 		echo '
 					<div class="discussion-archive-single">
-						<h3 class="discussion-title"><a href="' . esc_url_raw( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
+						<h3 class="discussion-title"><a href="' . esc_url( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
 						<div class="discussion-content">
 							' . $discussion->post_content . '
 						</div>

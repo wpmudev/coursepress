@@ -429,9 +429,10 @@
 		);
 	}
 
-	$options = apply_filters( 'coursepress_settings-capabilities', $config );
+	$options = apply_filters( 'coursepress_settings_capabilities', $config );
 	$i = 0;
-	foreach ( $options as $option ) : ?>
+	foreach ( $options as $option ) :
+		?>
 		<div class="cp-box-content cp-caps-fields <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $option['id']; ?>">
             <div class="cp-box cp-sep">
                 <h2 class="cp-box-header"><?php echo $option['title']; ?></h2>
@@ -442,7 +443,7 @@
 
 			<div class="cp-columns">
 				<?php foreach ( $option['fields'] as $key => $data ) : ?>
-					<div class="option option-<?php esc_attr_e( $key ); ?>">
+					<div class="option option-<?php echo esc_attr( $key ); ?>">
 						<?php if ( isset( $data['label'] ) ) : ?>
 							<?php printf( '<h3>%s</h3>', $data['label'] ); ?>
 						<?php endif; ?>

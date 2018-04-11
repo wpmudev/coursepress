@@ -50,7 +50,7 @@
 					'class' => 'large-text',
 					'title' => '<strong>SITEROOT/</strong>',
 					'after' => sprintf(
-						__( 'URL Preview: %s/%s', 'cp' ),
+						__( 'URL Preview: %1$s/%2$s', 'cp' ),
 						home_url(),
 						$slugs['courses']
 					),
@@ -69,7 +69,7 @@
 						$slugs['courses']
 					),
 					'after' => sprintf(
-						__( 'URL Preview: %s/%s/%s', 'cp' ),
+						__( 'URL Preview: %1$s/%2$s/%3$s', 'cp' ),
 						home_url(),
 						$slugs['courses'],
 						$slugs['course_category']
@@ -320,7 +320,7 @@
 						echo '<div class="flex">';
 					}
 					$is_flex = true;
-				} else if ( true === $is_flex ) {
+				} elseif ( true === $is_flex ) {
 					echo '</div>';
 					$is_flex = false;
 				}

@@ -11,13 +11,14 @@ $form_message       = get_query_var( 'form_message' );
 $form_message_class = get_query_var( 'form_message_class' );
 $redirect_url       = get_query_var( 'redirect_url' );
 $login_url          = get_query_var( 'login_url' );
-$course_id          = ! empty( $_GET['course_id'] ) ? (int) $_GET['course_id'] : 0;
-$username           = ! empty( $_POST['username'] ) ? $_POST['username'] : '';
-$first_name         = ! empty( $_POST['first_name'] ) ? $_POST['first_name'] : '';
-$last_name          = ! empty( $_POST['last_name'] ) ? $_POST['last_name'] : '';
-$email              = ! empty( $_POST['email'] ) ? $_POST['email'] : '';
-$submit_button      = __( 'Create an Account', 'cp' );
-$action_url         = '';
+$course_id          = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+$username           = filter_input( INPUT_POST, 'username' );
+$first_name         = filter_input( INPUT_POST, 'first_name' );
+$last_name          = filter_input( INPUT_POST, 'last_name' );
+$email              = filter_input( INPUT_POST, 'email' );
+$submit_button		= __( 'Create an Account', 'cp' );
+$action_url			= '';
+
 if ( coursepress_get_cookie( 'cp_mismatch_password' ) ) :
 	$form_message = __( 'Mismatch password!', 'cp' );
 elseif ( coursepress_get_cookie( 'cp_profile_updated' ) ) :
@@ -135,19 +136,18 @@ endif;
 		do_action( 'coursepress_after_all_signup_fields' );
 
 		if ( ! is_user_logged_in() ) :
-			?>
+		?>
 			<p>
 				<label class="existing-link full">
-					<?php printf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'cp' ), '</a>' ); ?>
+					<?php printf( __( 'Already have an account? %s!', 'cp' ), '<a href="' . esc_url( $login_url ) . '">' . __( 'Login to your account', 'cp' ) . '</a>' ); ?>
 				</label>
 			</p>
-		<?php endif; ?>
-		<p>
-			<label class="submit-link full-right">
-				<input type="submit" name="student-settings-submit" class="apply-button-enrolled"
-				       value="<?php echo $submit_button; ?>"/>
-			</label>
-		</p>
+        <?php endif; ?>
+			<p>
+				<label class="submit-link full-right">
+					<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php echo $submit_button; ?>" />
+				</label>
+			</p>
 		<?php
 
 		/**

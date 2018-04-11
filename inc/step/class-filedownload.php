@@ -22,7 +22,7 @@ class CoursePress_Step_FileDownload extends CoursePress_Step {
 		$file_url = $this->__get( 'file_url' );
 
 		if ( ! empty( $file_url ) ) {
-			$file_url = esc_url_raw( $file_url );
+			$file_url = esc_url( $file_url );
 			$link_text = __( 'Download', 'cp' );
 			$custom_link_text = $this->__get( 'link_text' );
 

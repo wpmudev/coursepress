@@ -232,7 +232,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 								if ( $response_display ) {
 									foreach ( $questions as $q_index => $question ) {
 										$answer = $response_display[ $q_index ];
-										if ( $question['type'] == 'selectable' ) {
+										if ( $question['type'] === 'selectable' ) {
 											$selected = ( isset( $question['options'] ) && isset( $question['options']['answers'] ) && isset( $question['options']['answers'][ $answer ] ) )
 												? $question['options']['answers'][ $answer ]
 												: '';
@@ -256,7 +256,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
 										$format = '<p class="question">%s</p>';
 										$response_display .= sprintf( $format, esc_html( $question['question'] ) );
-										if ( 'selectable' == $question['type'] ) {
+										if ( 'selectable' === $question['type'] ) {
 											$options = $question['options']['answers'];
 											$checked = $question['options']['checked'];
 											foreach ( $options as $ai => $answer ) {
@@ -457,7 +457,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 						$is_assessable = ! empty( $attributes['assessable'] ) && coursepress_is_true( $attributes['assessable'] );
 						if ( in_array( $module_type, $excluded_modules ) && $is_assessable ) {
 							$graded_by = coursepress_get_array_val( $response, 'graded_by' );
-							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
+							if ( ( 'auto' === $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
 								$auto_grade = false;
 							}
 						}
@@ -480,7 +480,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 													$add = true;
 												}
 										}
-									} else if( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
+									} elseif( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
 										if ( $options['checked'][ $response_display[ $q_index ] ] ) {
 											$add = true;
 										}
@@ -610,9 +610,9 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		// Check is unit available?
 		$is_unit_available = $unit->is_available();
 		if ( $is_unit_available ) {
-			if ( 'flat' == $style ) {
+			if ( 'flat' === $style ) {
 				$content = '<span class="percentage">' . ( $format ? $percent_value . '%' : $percent_value ) . '</span>';
-			} elseif ( 'none' == $style ) {
+			} elseif ( 'none' === $style ) {
 				$content = $percent_value;
 			} else {
 				$data_value = $percent_value / 100;
@@ -667,9 +667,9 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		$page_number = 1;
 		$module_id = 0;
 		$type = $array['type'];
-		if ( 'section' == $type ) {
+		if ( 'section' === $type ) {
 			$page_number = $array['item_id'];
-		} elseif ( 'module' == $type ) {
+		} elseif ( 'module' === $type ) {
 			$module_id = $array['item_id'];
 			$template = new CoursePress_Data_Shortcode_Template();
 			$page_number = $template->get_module_page( $course_id, $unit_id, $module_id );

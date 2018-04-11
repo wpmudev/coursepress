@@ -331,7 +331,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		/**
 		 * add basedir or not?
 		 */
-		if ( 'no-base-dir' == $basedir ) {
+		if ( 'no-base-dir' === $basedir ) {
 			$pdf_file = $subdirectory . $filename;
 		} else {
 			$pdf_file = $pdf->cache_path( $subdirectory ) . $filename;

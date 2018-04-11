@@ -30,7 +30,7 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 		$attr = array(
 			'id'         => $this->__get('ID'),
 			'class'      => 'video-js vjs-default-skin',
-			'src'        => esc_url_raw($src),
+			'src'        => esc_url($src),
 			'controls'   => true,
 			'data-setup' => $this->create_audio_js_setup_data(),
 			'data-retries-allowed' => $retries_allowed ? 'true' : 'false',

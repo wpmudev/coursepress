@@ -748,7 +748,7 @@ function coursepress_is_true( $value ) {
 	}
 	// Other strings for boolean.
 	$value = strtolower( (string) $value );
-	if ( 'on' == $value || 'yes' == $value || 'true' == $value ) {
+	if ( 'on' === $value || 'yes' === $value || 'true' === $value ) {
 		return true;
 	}
 	return false;

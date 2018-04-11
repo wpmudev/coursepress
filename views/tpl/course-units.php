@@ -380,7 +380,7 @@
         <div class="coursepress-popup-footer">
             <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
         </div>
-    </div> 
+    </div>
 </script>
 
 <script type="text/template" id="coursepress-unit-help-4-tpl">

@@ -104,8 +104,8 @@
 				),
 				admin_url( 'admin.php' )
 			);
-			
-			printf( __( 'Forum created. %sEdit forum%s', 'cp' ), '<a href="' . $url . '">', '</a>' );
+
+			printf( __( 'Forum created. %1$sEdit forum%2$s', 'cp' ), '<a href="' . $url . '">', '</a>' );
 			?>
 		</p></div>
 	<?php } ?>
@@ -148,7 +148,7 @@ foreach ( $options as $option_key => $option ) {
 				echo '<div class="flex">';
 			}
 			$is_flex = true;
-		} else if ( true === $is_flex ) {
+		} elseif ( true === $is_flex ) {
 			echo '</div>';
 			$is_flex = false;
 		}

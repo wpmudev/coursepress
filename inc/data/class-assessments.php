@@ -53,7 +53,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			'pass_grade' => $minimum_grade,
 			'modules_count' => 0,
 			'students_count' => 0,
-			'grade_system' => ( empty( $unit_id ) || $unit_id == 'all' )
+			'grade_system' => ( empty( $unit_id ) || $unit_id === 'all' )
 				? __( 'total acquired grade % total number of gradable modules', 'cp' )
 				: __( 'total acquired assessable grade % total number of assessable modules', 'cp' ),
 		);
@@ -87,11 +87,11 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			}
 			$grade = $student->get_course_grade( $course_id );
 			//Filter based on the graded param.
-			if ( $graded == 'graded' && $grade < $minimum_grade ) {
+			if ( $graded === 'graded' && $grade < $minimum_grade ) {
 				$count -= 1;
 				unset( $assessments['students'][ $student_id ] );
 				continue;
-			} elseif ( $graded == 'ungraded' && $grade >= $minimum_grade ) {
+			} elseif ( $graded === 'ungraded' && $grade >= $minimum_grade ) {
 				$count -= 1;
 				unset( $assessments['students'][ $student_id ] );
 				continue;
@@ -185,7 +185,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			foreach ( $modules_steps as $mkey => $module ) {
 				foreach ( $module['steps'] as $step_id => $step ) {
 					// If step is not answerable or assessable, unset.
-					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
+					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' === $display ) ) {
 						unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
 					} else {
 						// Set grade.

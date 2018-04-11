@@ -93,7 +93,7 @@
             'fields' => array(
                 'order_by' => array(
                     'type' => 'select',
-                    'desc' => __( '', 'cp' ),
+                    'desc' => __( ' ', 'cp' ),
                     'label' => __( 'Order by', 'cp' ),
                     'value' => coursepress_get_setting( 'general/order_by', 'course_start_date' ),
                     'field_options' => array(
@@ -288,7 +288,7 @@
                         echo '<div class="flex">';
                     }
                     $is_flex = true;
-                } else if ( true === $is_flex ) {
+                } elseif ( true === $is_flex ) {
                     echo '</div>';
                     $is_flex = false;
                 }

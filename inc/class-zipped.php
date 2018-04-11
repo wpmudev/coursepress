@@ -15,7 +15,7 @@ class CoursePress_Zipped extends CoursePress_Utility {
 			$this->file = $this->module->__get( 'primary_file' );
 			$ext = substr( $this->zip_url, strrpos( $this->zip_url, '.' ) + 1 );
 
-			if ( ! empty( $this->zip_url ) && 'zip' == $ext ) {
+			if ( ! empty( $this->zip_url ) && 'zip' === $ext ) {
 				$this->view_document();
 			}
 		}
@@ -104,7 +104,7 @@ body {
 		} else {
 				printf( '<p id="%s">%s</p>', 'error', esc_html__( 'Something went wrong!', 'cp' ) );
 		}
-	} else if ( file_exists( $file_path ) ) {
+	} elseif ( file_exists( $file_path ) ) {
 		echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .esc_url( $file ) . '"></iframe>';
 	} else {
 		printf( '<p id="%s">%s</p>', 'error', esc_html__( 'Somthing went wrong!', 'cp' ) );

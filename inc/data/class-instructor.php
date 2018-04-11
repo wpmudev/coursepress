@@ -269,7 +269,7 @@ class CoursePress_Data_Instructor {
 			$course_id = (int) str_replace( 'course_', '', $course_id );
 
 			if ( ! empty( $course_id ) ) {
-				if ( 'all' != $status ) {
+				if ( 'all' !==$status ) {
 					if ( get_post_status( $course_id ) == $status ) {
 						$assigned_courses[] = $course_id;
 					}

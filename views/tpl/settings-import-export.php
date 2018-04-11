@@ -132,16 +132,16 @@
         </div>
         <div class="box-inner-content">
             <form method="post" id="form-<?php echo $option_key; ?>" class="coursepress-form" enctype="multipart/form-data">
-                <?php if ( 'import' == $option_key ) : ?>
+                <?php if ( 'import' === $option_key ) : ?>
                     <input type="file" name="import"<?php echo $disabled ? ' disabled="disabled"' : ''; ?> />
                     <div class="cp-alert cp-alert-error"></div>
-                <?php elseif ( 'export' == $option_key ) : ?>
+                <?php elseif ( 'export' === $option_key ) : ?>
 
                 <?php endif; ?>
 <?php
 foreach ( $option['fields'] as $key => $data ) {
 	?>
-	<div class="option option-<?php esc_attr_e( $key ); ?>">
+	<div class="option option-<?php echo esc_attr( $key ); ?>">
     <?php
 	if ( isset( $data['label'] ) ) {
 		printf( '<h3>%s</h3>', $data['label'] );

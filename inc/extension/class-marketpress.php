@@ -179,7 +179,7 @@ class CoursePress_Extension_MarketPress {
 		$course = get_post( $course_id );
 		if ( $course ) {
 			foreach ( $course as $key => $value ) {
-				if ( 'post_type' != $key && 'ID' != $key ) {
+				if ( 'post_type' !==$key && 'ID' !==$key ) {
 					$product->{$key} = $value;
 				}
 			}
@@ -365,7 +365,7 @@ class CoursePress_Extension_MarketPress {
 			return $content;
 		}
 		// Change button only when when really need to do it.
-		if ( 'enroll' != $button_option ) {
+		if ( 'enroll' !==$button_option ) {
 			return $content;
 		}
 		// If already purchased, then return too
@@ -464,12 +464,12 @@ class CoursePress_Extension_MarketPress {
 	public function maybe_delete_product( $course_id, $course ) {
 		$product_id = $course->get_product_id();
 		$delete_action = coursepress_get_setting( 'marketpress/delete' );
-		if ( 'delete' == $delete_action ) {
+		if ( 'delete' === $delete_action ) {
 			wp_delete_post( $product_id );
 			// Avoid over loop !
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
-		} elseif ( 'change_status' == $delete_action ) {
+		} elseif ( 'change_status' === $delete_action ) {
 			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
@@ -502,12 +502,12 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function maybe_change_product( $product_id, $course_id, $course ) {
 		$delete_action = coursepress_get_setting( 'marketpress/unpaid' );
-		if ( 'delete' == $delete_action ) {
+		if ( 'delete' === $delete_action ) {
 			wp_delete_post( $product_id );
 			// Avoid over loop!
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
-		} elseif ( 'change_status' == $delete_action ) {
+		} elseif ( 'change_status' === $delete_action ) {
 			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}

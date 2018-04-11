@@ -28,10 +28,11 @@ get_header(); ?>
 
 				<?php echo do_shortcode( '[course_instructors style="list" course_id="' . $course->ID . '"]' ); ?>
 
-				<div class="course-structure">
-					<?php echo coursepress_get_course_structure( false, true ); ?>
-				</div>
-			</div>
-		</div>
-	</div>
-<?php get_footer();
+                <div class="course-structure">
+                    <?php echo coursepress_get_course_structure( false, true ); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+get_footer();

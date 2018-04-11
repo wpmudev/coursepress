@@ -38,17 +38,19 @@
             <?php if ( count( $students ) > 0 ) { ?>
                 <?php foreach ( $students as $student ) { ?>
                 <tr id="student-<?php echo esc_attr( $student->ID ); ?>">
-                    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="<?php esc_attr_e( $student->ID ); ?>" /></td>
+                    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="<?php echo esc_attr( $student->ID ); ?>" /></td>
                     <td>
                         <div class="cp-flex cp-user">
                             <span class="gravatar"> <?php echo $student->get_avatar( 30 ); ?></span>
-                            <span class="user_login"><?php
+                            <span class="user_login">
+							<?php
 							if ( isset( $student->coursepress_student_link ) ) {
 								printf( '<a href="%s">%s</a>', esc_url( $student->coursepress_student_link ), esc_html( $student->user_login ) );
 							} else {
 								echo esc_html( $student->user_login );
 							}
-?></span>
+							?>
+							</span>
                             <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
 						</div>
 <?php
@@ -93,25 +95,27 @@ if ( isset( $student->row_actions ) ) {
 <?php if ( 1 > $all_student_count || 'all' === $show ) { ?>
                         <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
                         <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
-<?php } else {
+<?php
+	} else {
 	switch ( $show ) {
 		case 'yes':
 		?>
-                        <p><?php _e( 'No student has completed this course yet.', 'cp' ); ?></p>
-	<?php
-	break;
+						<p><?php _e( 'No student has completed this course yet.', 'cp' ); ?></p>
+		<?php
+			break;
 		case 'no':
 		?>
                         <p><?php _e( 'All enrolled students have completed this course.', 'cp' ); ?></p>
-	<?php
-	break;
+		<?php
+			break;
 		default:
 		?>
                         <p><?php _e( 'Something went wrong.', 'cp' ); ?></p>
-	<?php
-	break;
+		<?php
+			break;
 	}
-} ?>
+}
+?>
                     </td>
                 </tr>
         </tbody>
@@ -171,11 +175,13 @@ if ( isset( $student->row_actions ) ) {
                         <th><?php esc_html_e( 'Student Name', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Email', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Date', 'cp' ); ?></th>
-                        <?php if ( $can_invite ) : ?><th></th><?php endif; ?>
+                        <?php if ( $can_invite ) { ?>
+							<th></th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <tr class="no-invites <?php $array = (array) $invited_students; echo empty( $array ) ? '' : 'inactive'; ?>">
+                    <tr class="no-invites <?php $array = (array) $invited_students; ?><?php echo empty( $array ) ? '' : 'inactive'; ?>">
                         <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                 </tbody>

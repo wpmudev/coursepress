@@ -58,7 +58,7 @@ foreach ( $courses as $course_id => $course ) {
                     <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
                 </div>
             </div>
-            <input type="hidden" name="page" value="<?php esc_attr_e( $page ); ?>" />
+            <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
         </form>
 
         <table class="coursepress-table" id="cp-forums-table" cellspacing="0">
@@ -66,9 +66,9 @@ foreach ( $courses as $course_id => $course ) {
                 <tr>
                     <th id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                        <th class="manage-column column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>" id="<?php echo $column_id; ?>">
 <?php
-if ( 'comments' == $column_id ) {
+if ( 'comments' === $column_id ) {
 	echo '<i class="fa fa-comments" aria-hidden="true"></i>';
 } else {
 	echo $column_label;
@@ -88,16 +88,16 @@ if ( ! empty( $forums ) ) {
 ?>
                         <tr class="<?php echo $i % 2? 'odd' : 'even'; ?>">
 
-                            <th scope="row" class="check-column check-column-value"><input type="checkbox" name="forums[]" value="<?php esc_attr_e( $forum->ID ); ?>"></th>
+                            <th scope="row" class="check-column check-column-value"><input type="checkbox" name="forums[]" value="<?php echo esc_attr( $forum->ID ); ?>"></th>
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
-                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $forum->ID ); ?>">
+                                <td class="column-<?php echo $column_id; ?> <?php echo in_array( $column_id, $hidden_columns ) ? 'hidden': ''; ?>" data-id="<?php echo esc_attr( $forum->ID ); ?>">
 <?php
 $can_delete = CoursePress_Data_Capabilities::can_delete_discussion( $forum->ID );
 switch ( $column_id ) {
 	case 'topic' :
 		echo $forum->post_title;
 		echo '<div class="row-actions">';
-		if ( 'trash' != $current_status ) {
+		if ( 'trash' !==$current_status ) {
             if ( CoursePress_Data_Capabilities::can_update_discussion( $forum->ID ) ) :
                 printf(
                     '<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a></span>',
@@ -110,35 +110,37 @@ switch ( $column_id ) {
             if ( $can_delete ) :
 			    echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
             endif;
-		} elseif ( $can_delete ) { ?>
+		} elseif ( $can_delete ) {
+			?>
 			<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
 			<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
-		<?php }
+			<?php
+		}
 
 		echo '</div>';
-	break;
+		break;
 	case 'course' :
 		if ( isset( $forum_courses[ $forum->course_id ] ) ) {
 			echo $forum_courses[ $forum->course_id ]->post_title;
 		}
-	break;
+		break;
 	case 'comments':
 		echo $forum->comments_number;
-	break;
+		break;
 	case 'status':
 		echo '<label>';
 		$active = isset( $forum->post_status ) && 'publish' === $forum->post_status;
-    $disabled = CoursePress_Data_Capabilities::can_change_discussion_status( $forum->ID ) ? '' : 'disabled="disabled"';
+		$disabled = CoursePress_Data_Capabilities::can_change_discussion_status( $forum->ID ) ? '' : 'disabled="disabled"';
 		printf(
 			'<input type="checkbox" class="cp-toggle-input cp-toggle-forum-status" value="%d" %s %s /> <span class="cp-toggle-btn"></span>',
 			esc_attr( $forum->ID ),
 			checked( $active, true, false ),
-      $disabled
+			$disabled
 		);
 		echo '</label>';
-	break;
+		break;
 
-	default :
+	default:
 		echo $column_id;
 		/**
 				 * Trigger to allow custom column value
@@ -148,7 +150,7 @@ switch ( $column_id ) {
 				 * @param CoursePress_Course object $forum
 				 */
 		do_action( 'coursepress_forums_column', $column_id, $forum );
-	break;
+		break;
 }
 ?>
                                 </td>

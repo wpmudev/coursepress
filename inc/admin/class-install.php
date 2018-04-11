@@ -24,7 +24,7 @@ class CoursePress_Admin_Install {
 	public function install_tables() {
 		$option_name = 'coursepress_tables';
 		$installed = get_option( $option_name, 'not installed' );
-		if ( 'not installed' == $installed ) {
+		if ( 'not installed' === $installed ) {
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			$this->create_student_table();
 			$this->create_student_progress_table();

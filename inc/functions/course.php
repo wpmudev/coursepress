@@ -179,7 +179,7 @@ function coursepress_get_post_statuses( $type, $current_status, $slug ) {
 	foreach ( $post_status as $status => $value ) {
 		if ( isset( $count->$status ) ) {
 			$post_status[ $status ] = $count->$status;
-			if ( 'trash' == $status ) {
+			if ( 'trash' === $status ) {
 				continue;
 			}
 			$post_status['all'] += $count->$status;
@@ -194,14 +194,14 @@ function coursepress_get_post_statuses( $type, $current_status, $slug ) {
 		$url = add_query_arg( 'page', $slug, admin_url( 'admin.php' ) );
 		foreach ( $post_status as $status => $count ) {
 			$classes = array( $status );
-			if ( 'all' == $status ) {
+			if ( 'all' === $status ) {
 				$statuses[] = array(
 					'status' => 'all',
 					'label' => __( 'All', 'cp' ),
 					'count' => $count,
 					'url' => $url,
 					'classes' => $classes,
-					'current' => 'any' == $current_status,
+					'current' => 'any' === $current_status,
 				);
 			} elseif ( $count > 0 ) {
 				$url = add_query_arg( 'status', $status, $url );
@@ -419,7 +419,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 			);
 			if ( is_user_logged_in() ) {
 				$link = add_query_arg( $link_args, admin_url( 'admin-ajax.php' ) );
-				if ( 'prerequisite' == $enrollment_type ) {
+				if ( 'prerequisite' === $enrollment_type ) {
 					$courses = $course->__get( 'enrollment_prerequisite' );
 					$messages = array();
 
@@ -445,7 +445,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 							}
 						}
 					}
-				} elseif ( 'passcode' == $enrollment_type ) {
+				} elseif ( 'passcode' === $enrollment_type ) {
 					$link = '';
 					$link_text = '';
 					$args = array(
@@ -587,17 +587,17 @@ function coursepress_get_course_submenu() {
 			'classes' => array( 'submenu-units' ),
 		),
 	);
-	if ( 'unit-archive' == $current || 'step' == $current ) {
+	if ( 'unit-archive' === $current || 'step' === $current ) {
 		$menus['units']['classes'][] = 'current-menu-item';
 	}
 
 	// Course Notifications.
 	$menus['notifications'] = array(
 		'label' => __( 'Notifications', 'cp' ),
-		'url' => esc_url_raw( $course->get_notifications_url() ),
+		'url' => esc_url( $course->get_notifications_url() ),
 		'classes' => array( 'submenu-notifications' ),
 	);
-	if ( 'notifications' == $current ) {
+	if ( 'notifications' === $current ) {
 		$menus['notifications']['classes'][] = 'current-menu-item';
 	}
 
@@ -607,10 +607,10 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_discussion' ) ) {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
-			'url' => esc_url_raw( $course->get_discussion_url() ),
+			'url' => esc_url( $course->get_discussion_url() ),
 			'classes' => array( 'submenu-discussions' ),
 		);
-		if ( 'forum' == $current ) {
+		if ( 'forum' === $current ) {
 			$menus['discussions']['classes'][] = 'current-menu-item';
 		}
 	}
@@ -620,10 +620,10 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_workbook' ) ) {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
-			'url' => esc_url_raw( $course->get_workbook_url() ),
+			'url' => esc_url( $course->get_workbook_url() ),
 			'classes' => array( 'submenu-workbook' ),
 		);
-		if ( 'workbook' == $current ) {
+		if ( 'workbook' === $current ) {
 			$menus['workbook']['classes'][] = 'current-menu-item';
 		}
 	}
@@ -633,17 +633,17 @@ function coursepress_get_course_submenu() {
 	if ( $course->__get( 'allow_grades' ) ) {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
-			'url' => esc_url_raw( $course->get_grades_url() ),
+			'url' => esc_url( $course->get_grades_url() ),
 			'classes' => array( 'submenu-grades' ),
 		);
-		if ( 'grades' == $current ) {
+		if ( 'grades' === $current ) {
 			$menus['grades']['classes'][] = 'current-menu-item';
 		}
 	}
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
-		'url' => esc_url_raw( $course->get_permalink() ),
+		'url' => esc_url( $course->get_permalink() ),
 		'classes' => array( 'submenu-info' ),
 	);
 	/**
@@ -760,8 +760,8 @@ function coursepress_get_current_course_cycle() {
 
 	if ( $has_access['access'] ) {
 
-		if ( 'focus' == $view_mode ) {
-			if ( 'unit' == $vp_type ) {
+		if ( 'focus' === $view_mode ) {
+			if ( 'unit' === $vp_type ) {
 				$template    .= $vp->create_html(
 					'div',
 					array( 'class' => 'unit-description' ),
@@ -769,7 +769,7 @@ function coursepress_get_current_course_cycle() {
 				);
 				$referer_url = $unit->get_permalink();
 
-			} elseif ( 'module' == $vp_type && $_course_module ) {
+			} elseif ( 'module' === $vp_type && $_course_module ) {
 				$has_access = coursepress_has_access( $course_id, $unit_id, $_course_module['id'] );
 
 				if ( $has_access['access'] ) {
@@ -790,7 +790,7 @@ function coursepress_get_current_course_cycle() {
 					// Record module visit
 					$user->add_visited_module( $course_id, $unit_id, $_course_module['id'] );
 				}
-			} elseif ( 'step' == $vp_type && $_course_step ) {
+			} elseif ( 'step' === $vp_type && $_course_step ) {
 				$has_access = coursepress_has_access( $course_id, $unit_id, $_course_module['id'], $_course_step->__get( 'ID' ) );
 
 				if ( $has_access['access'] ) {
@@ -1777,7 +1777,7 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	 * Check course passcode
 	 */
 	$email_type = 'course_invitation';
-	if ( 'passcode' == $course->__get( 'enrollment_type' ) ) {
+	if ( 'passcode' === $course->__get( 'enrollment_type' ) ) {
 		$email_type = 'course_invitation_password';
 	}
 	$emailClass = $CoursePress->get_class( 'CoursePress_Email' );

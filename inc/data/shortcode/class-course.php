@@ -103,13 +103,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$shows = explode( ',', $atts['show'] );
 		$shows = array_map( 'trim', $shows );
 		$template = '';
-		if ( 'yes' == $atts['show_title'] ) {
+		if ( 'yes' === $atts['show_title'] ) {
 			$template .= '[course_title course_id="' . $atts['course_id'] . '"]';
 		}
 		$content = '';
@@ -156,7 +156,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$action = sanitize_html_class( $atts['field'] );
@@ -239,7 +239,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$class = 'course-title';
@@ -248,7 +248,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		// Apply schema.
 		$title = apply_filters( 'coursepress_schema', $course->post_title, 'title' );
-		if ( 'yes' == $atts['clickable'] ) {
+		if ( 'yes' === $atts['clickable'] ) {
 			$attr = array(
 				'href' => $course->get_permalink(),
 				'rel' => 'bookmark',
@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         $args = array( 'class' => 'course-summary', );
@@ -335,7 +335,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$template = $atts['label'];
@@ -388,7 +388,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$template = '';
@@ -456,7 +456,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		$date_format = sanitize_text_field( $atts['date_format'] );
@@ -521,7 +521,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -597,7 +597,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -673,7 +673,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -695,7 +695,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		$content .= $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', date_i18n( $date_format, $this->strtotime( $end_date ) ) );
 		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-		if ( ! $open_ended || 'yes' == $show_all_dates ) {
+		if ( ! $open_ended || 'yes' === $show_all_dates ) {
 			return $content;
 		} else {
 			return '';
@@ -745,7 +745,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -765,7 +765,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$end_date = coursepress_course_get_setting( $course_id, 'enrollment_end_date' );
 		$open_ended = coursepress_is_true( coursepress_course_get_setting( $course_id, 'enrollment_open_ended', false ) );
 		$show_alt_display = coursepress_is_true( $show_alt_display );
-		if ( 'yes' == strtolower( $show_enrolled_display ) ) {
+		if ( 'yes' === strtolower( $show_enrolled_display ) ) {
 			$enrollment_date = coursepress_get_student_date_enrolled( $course_id );
 			if ( ! empty( $enrollment_date ) ) {
 				$enrollment_date = date_i18n( $date_format, $this->strtotime( $enrollment_date ) );
@@ -839,7 +839,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -922,7 +922,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -997,7 +997,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -1054,7 +1054,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -1129,7 +1129,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -1223,7 +1223,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -1236,7 +1236,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			}
 			// Apply schema.
 			$schema = apply_filters( 'coursepress_schema', '', 'image' );
-			$content = '<img width="' . esc_attr( $atts['width'] ) . '" height="' . esc_attr( $atts['height'] ) . '" src="' . esc_url_raw( $course->listing_image ) . '" class="' . $class . '"'.$schema.' />';
+			$content = '<img width="' . esc_attr( $atts['width'] ) . '" height="' . esc_attr( $atts['height'] ) . '" src="' . esc_url( $course->listing_image ) . '" class="' . $class . '"'.$schema.' />';
 			return $content;
 		}
 		return '';
@@ -1303,7 +1303,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			return $course->__get( 'error_message' );
 		}
         // Check course post status.
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
 		if ( ! empty( $course->featured_video ) ) {
@@ -1414,7 +1414,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         /**
          * Check course post status
          */
-        if ( 'publish' != $course->post_status ) {
+        if ( 'publish' !==$course->post_status ) {
             return;
         }
         /**
@@ -1521,12 +1521,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$type = empty( $type ) ? coursepress_get_setting( 'course/listing_media_type', 'default' ) : $type;
 			$priority = empty( $priority ) ? coursepress_get_setting( 'course/listing_media_priority', 'image' ) : $priority;
 		}
-		$priority = 'default' != $type ? false : $priority;
+		$priority = 'default' !==$type ? false : $priority;
 		// Saves some overhead by not loading the post again if we don't need to.
 		$class = sanitize_html_class( $class );
 		$course_video = coursepress_course_get_setting( $course_id, 'featured_video' );
 		$course_image = coursepress_course_get_setting( $course_id, 'listing_image' );
-		if ( 'thumbnail' == $type ) {
+		if ( 'thumbnail' === $type ) {
 			$type = 'image';
 			$priority = 'image';
 			$width = $height = '';
@@ -1542,7 +1542,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$wrapper_style = '';
 		}
 		$content = '';
-		if ( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
+		if ( ( ( 'default' === $type && 'video' === $priority ) || 'video' === $type || ( 'default' === $type && 'image' === $priority && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
 			$class = 'video_player course-featured-media course-featured-media-' . $course_id . ' ' . $class;
 			$video_extension = pathinfo( $course_video, PATHINFO_EXTENSION );
 			if ( ! empty( $video_extension ) ) {
@@ -1561,7 +1561,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$content = empty( $wrapper ) ? $content : $this->create_html( $wrapper, array( 'style' => $wrapper_style ), $content );
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
 		}
-		if ( ( ( 'default' == $type && 'image' == $priority ) || 'image' == $type || ( 'default' == $type && 'video' == $priority && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
+		if ( ( ( 'default' === $type && 'image' === $priority ) || 'image' === $type || ( 'default' === $type && 'video' === $priority && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
 			$class = 'course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class;
 			$content_img = $this->create_html( 'img', array( 'src' => esc_url( $course_image ), 'class' => 'course-media-img' ) );
 			$content_wrapper = empty( $wrapper ) ? $content_img : $this->create_html( $wrapper, array( 'style' => $wrapper_style ), $content_img );
@@ -1721,19 +1721,19 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$courses = $courses->posts;
 		$class = sanitize_html_class( $class );
 		$featured_atts = $content = '';
-		if ( 'default' != $featured_title ) {
+		if ( 'default' !==$featured_title ) {
 			$featured_atts .= 'featured_title="' . $featured_title . '" ';
 		}
-		if ( 'default' != $button_title ) {
+		if ( 'default' !==$button_title ) {
 			$featured_atts .= 'button_title="' . $button_title . '" ';
 		}
-		if ( 'default' != $media_type ) {
+		if ( 'default' !==$media_type ) {
 			$featured_atts .= 'media_type="' . $media_type . '" ';
 		}
-		if ( 'default' != $media_priority ) {
+		if ( 'default' !==$media_priority ) {
 			$featured_atts .= 'media_priority="' . $media_priority . '" ';
 		}
-		if ( 'default' != $course_class ) {
+		if ( 'default' !==$course_class ) {
 			$featured_atts .= 'class="' . $course_class . '" ';
 		}
 		foreach ( $courses as $course ) {
