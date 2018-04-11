@@ -16,20 +16,20 @@ get_header(); ?>
                     <h1 class="page-title"><?php _e( 'Notifications', 'cp' ); ?></h1>
                     <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
                 </header>
-<?php
-/**
- * To override course submenu template to your theme or a child-theme,
- * create a template `course-submenu.php` and it will be loaded instead.
- *
- * @since 3.0
- */
-coursepress_get_template( 'course', 'submenu' );
-if ( empty( $notifications ) ) {
-	echo '<p>';
-	_e( 'There is no notifications yet.', 'cp' );
-	echo '</p>';
-} else {
-?>
+					<?php
+					/**
+					 * To override course submenu template to your theme or a child-theme,
+					 * create a template `course-submenu.php` and it will be loaded instead.
+					 *
+					 * @since 3.0
+					 */
+					coursepress_get_template( 'course', 'submenu' );
+					if ( empty( $notifications ) ) :
+						echo '<p>';
+							_e( 'There is no notifications yet.', 'cp' );
+						echo '</p>';
+					else :
+					?>
                     <ul class="notification-archive-list">
                         <?php foreach ( $notifications as $notification ) : ?>
                             <li>
@@ -50,7 +50,7 @@ if ( empty( $notifications ) ) {
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                <?php } ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+$user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
 	<div class="coursepress-wrap course-unit">
@@ -26,15 +26,15 @@ get_header(); ?>
 				?>
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );
-				if ( ! $allowed ) {
+				if ( ! $allowed ) :
 					coursepress_render( 'templates/content-discussion-off' );
-				} else {
+				else :
 					coursepress_render( 'templates/content-discussion-form', array(
 						'course' => $course,
 						'id' => 0,
 						'section' => 0,
 					) );
-				}
+				endif;
 				?>
 			</div>
 		</div>

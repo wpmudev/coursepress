@@ -5,9 +5,10 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+$user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
+
 	<div class="coursepress-wrap course-unit">
 		<div class="container">
 			<div class="content-area">
@@ -26,9 +27,9 @@ get_header(); ?>
 				?>
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );
-				if ( ! $allowed ) {
+				if ( ! $allowed ) :
 					coursepress_render( 'templates/content-discussion-off' );
-				} else {
+				else :
 					$url = $course->get_discussion_new_url();
 				?>
 				<div class="discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
@@ -37,7 +38,7 @@ get_header(); ?>
 					'user_id' => 0,
 					'course' => $course,
 				) );
-				}
+				endif;
 				?>
 			</div>
 		</div>

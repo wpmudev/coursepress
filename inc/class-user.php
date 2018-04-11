@@ -242,39 +242,60 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id ) {
 			return false;
 		}
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d AND `course_id`=%d", $id, $course_id );
-		$student_id = $wpdb->get_var( $sql );
+		// Get from cache if exist.
+		$student_id = wp_cache_get( 'student_id', 'cp_user_' . $id );
+		if ( false === $student_id ) {
+			$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d AND `course_id`=%d", $id, $course_id );
+			$student_id = $wpdb->get_var( $sql );
+			wp_cache_set( 'student_id', $student_id, 'cp_user_' . $id );
+		}
 		return $student_id;
 	}
 
 	private function get_progress_id( $student_id ) {
-		global $wpdb;
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->progress_table` WHERE `student_id`=%d", $student_id );
-		$progress_id = $wpdb->get_var( $sql );
+		// Get from cache if exist.
+		$progress_id = wp_cache_get( 'progress_id', 'cp_student_' . $student_id );
+		if ( false === $progress_id ) {
+			global $wpdb;
+			$sql = $wpdb->prepare( "SELECT ID FROM `$this->progress_table` WHERE `student_id`=%d", $student_id );
+			$progress_id = $wpdb->get_var( $sql );
+			wp_cache_set( 'progress_id', $progress_id, 'cp_student_' . $student_id );
+		}
 		return (int) $progress_id;
 	}
 
 	public function get_enrolled_courses_ids( $per_page = 0, $paged = 1 ) {
-		global $wpdb;
 		$id = $this->__get( 'ID' );
 		$offset = $per_page * ($paged - 1);
 		$limit = $per_page * $paged;
-		if ( ! $id ) {
-			return array();
-		}
-		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
-		if ( $per_page > 0 ) {
-			$sql .= ' LIMIT %d, %d';
-			$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
-		} else {
-			$sql = $wpdb->prepare( $sql, $id );
-		}
-		$results = $wpdb->get_results( $sql, OBJECT );
-		$course_ids = array();
-		if ( $results ) {
-			foreach ( $results as $result ) {
-				$course_ids[] = $result->course_id;
+		// Get from cache if exists.
+		$course_ids = wp_cache_get( 'enrolled_courses_ids', 'cp_user_' . $id );
+		if ( false === $course_ids ) {
+			global $wpdb;
+			if ( ! $id ) {
+				return array();
 			}
+			$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
+			if ( $per_page > 0 ) {
+				$sql .= ' LIMIT %d, %d';
+				$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
+			} else {
+				$sql = $wpdb->prepare( $sql, $id );
+			}
+			$results = $wpdb->get_results( $sql, OBJECT );
+			$course_ids = array();
+			if ( $results ) {
+				foreach ( $results as $result ) {
+					$course_ids[] = $result->course_id;
+				}
+			}
+			// Store in cache only if not paginated, so we can use it later.
+			if ( 0 === $per_page ) {
+				wp_cache_set( 'enrolled_courses_ids', $course_ids, 'cp_user_' . $id );
+			}
+		} elseif ( $per_page > 0 && is_array( $course_ids ) ) {
+			// For paginated queries.
+			$course_ids = array_slice( $course_ids, $offset, $per_page );
 		}
 		return $course_ids;
 	}
@@ -328,6 +349,9 @@ class CoursePress_User extends CoursePress_Utility {
 			'student_id' => $id,
 		);
 		$wpdb->insert( $this->student_table, $array );
+		// Delete cache after enroll.
+		wp_cache_delete( 'student_ids', 'cp_course_' . $course_id );
+		wp_cache_delete( 'enrolled_courses_ids', 'cp_user_' . $id );
 		return $wpdb->insert_id;
 	}
 
@@ -351,6 +375,9 @@ class CoursePress_User extends CoursePress_Utility {
 			 */
 			$certificate = new CoursePress_Certificate();
 			$certificate->delete_certificate( $id, $course_id );
+			// Delete cache after enroll.
+			wp_cache_delete( 'student_ids', 'cp_course_' . $course_id );
+			wp_cache_delete( 'enrolled_courses_ids', 'cp_user_' . $id );
 			return true;
 		}
 		return false;
@@ -358,7 +385,8 @@ class CoursePress_User extends CoursePress_Utility {
 
 	public function add_student_progress( $course_id = 0, $progress = array() ) {
 		global $wpdb;
-		if ( empty( $course_id ) || empty( $progress ) ) {
+		$id = $this->__get( 'ID' );
+		if ( empty( $course_id ) || empty( $progress ) || ! $id ) {
 			return false;
 		}
 		$student_id = $this->get_student_id( $course_id );
@@ -375,6 +403,8 @@ class CoursePress_User extends CoursePress_Utility {
 			} else {
 				$wpdb->update( $this->progress_table, $param, array( 'ID' => $progress_id ) );
 			}
+			// Delete cache after progress update.
+			wp_cache_delete( 'course_progress_data_' . $id, 'cp_course_' . $course_id );
 			return true;
 		}
 		return false;
@@ -391,15 +421,18 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 		$student_id = $this->get_student_id( $course_id );
 		$progress_id = $this->get_progress_id( $student_id );
-		if ( (int) $progress_id > 0 ) {
+		// Get from cache if exist.
+		$progress = wp_cache_get( 'course_progress_data_' . $id, 'cp_course_' . $course_id );
+		if ( (int) $progress_id > 0 && false === $progress ) {
 			$sql = $wpdb->prepare( "SELECT `progress` FROM `{$this->progress_table}` WHERE `ID`=%d", $progress_id );
 			$progress = $wpdb->get_var( $sql );
 			if ( ! empty( $progress ) ) {
 				$progress = maybe_unserialize( $progress );
-				return $progress;
 			}
+			// Set in cache.
+			wp_cache_set( 'course_progress_data_' . $id, $progress, 'cp_course_' . $course_id );
 		}
-		return null;
+		return $progress;
 	}
 
 	/**

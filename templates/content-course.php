@@ -8,23 +8,17 @@
  * @var $post CoursePress_Course
  */
 global $post;
-$course = coursepress_get_course( $post );
-$thumbnail = $course->get_feature_image( 'full' );
-
-$course_media = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' );
-
-	if ( $course_media ) {
-		$extended_class = '';
-	} else {
-		$extended_class = 'quick-course-info-extended';
-	}
+$course         = coursepress_get_course( $post );
+$thumbnail      = $course->get_feature_image( 'full' );
+$course_media   = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' );
+$extended_class = $course_media ? '' : 'quick-course-info-extended';
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-item-box' ); ?>>
 	<div class="course-info"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope' ); ?>>
 	<?php
-	if ( ! empty( $thumbnail ) ) {
+	if ( ! empty( $thumbnail ) ) :
 		printf( '<a href="%s" class="post-thumbnail" aria-hidden="true">%s</a>', esc_url( $course->get_permalink() ), $thumbnail );
-	}
+	endif;
 	?>
 <header class="entry-header course-entry-header">
 	<?php $title = apply_filters( 'coursepress_schema', get_the_title(), 'title' ); ?>
@@ -63,6 +57,6 @@ echo do_shortcode( '[course_join_button details_text="' . __( 'Details', 'cp' ) 
 </div>
 </div><!-- .entry-content -->
 
-<?php endif; ?>
+		<?php endif; ?>
 	</div>
 </article>
