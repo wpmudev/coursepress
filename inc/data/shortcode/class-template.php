@@ -105,7 +105,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				),
 			);
 		}
-		if ( ! empty( $atts['courses_type'] ) && 'current_and_upcoming' == $atts['courses_type'] ) {
+		if ( ! empty( $atts['courses_type'] ) && 'current_and_upcoming' === $atts['courses_type'] ) {
 			$query = CoursePress_Data_Course::current_and_upcoming_courses( $post_args );
 		} else {
 			$query = new WP_Query( $post_args );
@@ -429,7 +429,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			if ( ! is_object( $module ) ) {
 				$item_id = 0;
 				$type = '404';
-			} else if ( $module->post_parent != $unit_id ) {
+			} elseif ( $module->post_parent != $unit_id ) {
 				$item_id = 0;
 				$type = '404_module';
 			}
@@ -479,10 +479,10 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			$breadcrumb_trail = $c_link . $bcs . $a_link . $bcs . $u_link;
 		}
 		if ( ! $is_enrolled && ! $is_instructor ) {
-			if ( 'section' == $type ) {
+			if ( 'section' === $type ) {
 				$can_view = CoursePress_Data_Course::can_view_page( $course_id, $unit_id, $page, $student_id );
 			}
-			if ( 'module' == $type ) {
+			if ( 'module' === $type ) {
 				$attributes = CoursePress_Data_Module::attributes( $item_id );
 				if ( 'output' === $attributes['mode'] ) {
 					$can_view = CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $item_id, $page, $student_id );
@@ -495,7 +495,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$view_type = 'normal';
 		// Can be preview?
 		$can_be_previewed = false;
-		if ( 'module' == $type && ! $can_view && ! $can_update_course ) {
+		if ( 'module' === $type && ! $can_view && ! $can_update_course ) {
 			$can_be_previewed = CoursePress_Data_Module::can_be_previewed( $item_id );
 			$view_type = 'preview';
 		}
@@ -605,12 +605,12 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				}
 				$content .= '</div>'; // .focus-main
 				// Navigation.
-				if ( 'normal' == $view_type && ( $is_enrolled || $can_update_course ) ) {
+				if ( 'normal' === $view_type && ( $is_enrolled || $can_update_course ) ) {
 					$content .= '<div class="focus-nav">';
 					// Previous Navigation.
 					$content .= $this->show_nav_button( $prev, $pre_text, array( 'focus-nav-prev' ), '', false, 'prev' );
 					// Next Navigation
-					if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
+					if ( ! empty( $next['type'] ) && 'section' === $next['type'] ) {
 						$next_module_class[] = 'next-section';
 						$title = '';
 						$text = $next_section_text;
@@ -716,7 +716,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		if ( $button['id'] ) {
 			$c = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
 			if ( $next ) {
-				if ( 'completion_page' == $button['id'] ) {
+				if ( 'completion_page' === $button['id'] ) {
 					$title = __( 'Finish', 'cp' );
 				}
 				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s"%s>%s</button>';
@@ -883,12 +883,12 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$course_id = (int) $atts['course_id'];
 		$login_link_id = sanitize_text_field( $atts['login_link_id'] );
 		$login_link_class = sanitize_text_field( $atts['login_link_class'] );
-		$login_link_url = esc_url_raw( $atts['login_link_url'] );
+		$login_link_url = esc_url( $atts['login_link_url'] );
 		$login_link_url = ! empty( $login_link_url ) ? $login_link_url : '#' . $login_link_id;
 		$login_link_label = sprintf( $atts['login_link_label'], $login_link_url, $login_link_class, $login_link_id );
 		$signup_link_id = sanitize_text_field( $atts['signup_link_id'] );
 		$signup_link_class = sanitize_text_field( $atts['signup_link_class'] );
-		$signup_link_url = esc_url_raw( $atts['signup_link_url'] );
+		$signup_link_url = esc_url( $atts['signup_link_url'] );
 		$signup_link_label = sprintf( $atts['signup_link_label'], $signup_link_url, $signup_link_class, $signup_link_id );
 		$submit_button_attributes = sanitize_text_field( $atts['submit_button_attributes'] );
 		$submit_button_label = sanitize_text_field( $atts['submit_button_label'] );

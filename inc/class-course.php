@@ -29,7 +29,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 			$course = get_post( (int) $course );
 		}
-		if ( ! $course instanceof WP_Post || 'course' != $course->post_type ) {
+		if ( ! $course instanceof WP_Post || 'course' !==$course->post_type ) {
 			$this->is_error = true;
 			return $this->wp_error();
 		}
@@ -338,7 +338,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 		if ( ! empty( $feature_video ) ) {
 			$attr = array(
-				'src' => esc_url_raw( $feature_video ),
+				'src' => esc_url( $feature_video ),
 				'class' => 'video-js vjs-default-skin vjs-big-play-centered course-feature-video',
 				'width' => $width,
 				'height' => $height,
@@ -353,7 +353,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function get_media( $width = 235, $height = 235 ) {
 		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
 		$image = $this->get_feature_image( array( $width, $height ) );
-		if ( ( 'image' == $media_type || 'default' == $media_type ) && ! empty( $image ) ) {
+		if ( ( 'image' === $media_type || 'default' === $media_type ) && ! empty( $image ) ) {
 			return $image;
 		}
 		$video = $this->get_feature_video( $width, $height );
@@ -376,7 +376,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_course_dates( $separator = ' - ' ) {
 		$course_type = $this->__get( 'course_type' );
-		$open = 'auto-moderated' == $course_type;
+		$open = 'auto-moderated' === $course_type;
 		if ( ! $open ) {
 			$open = $this->__get( 'course_open_ended' );
 		}
@@ -556,7 +556,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function is_available() {
 		$course_type = $this->__get( 'course_type' );
-		if ( 'auto-moderated' == $course_type ) {
+		if ( 'auto-moderated' === $course_type ) {
 			// Auto-moderated courses are always available
 			return true;
 		}
@@ -776,12 +776,16 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int[] IDs of enrolled students
 	 */
 	public function get_student_ids() {
-		global $wpdb;
-		$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
 		$course_id = $this->__get( 'ID' );
-		return $wpdb->get_col(
-			$wpdb->prepare( $sql, $course_id )
-		);
+		// Get from cache if exist.
+		$student_ids = wp_cache_get( 'student_ids', 'cp_course_' . $course_id );
+		if ( false === $student_ids ) {
+			global $wpdb;
+			$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
+			$student_ids = $wpdb->get_col( $wpdb->prepare( $sql, $course_id ) );
+			wp_cache_set( 'student_ids', $student_ids, 'cp_course_' . $course_id );
+		}
+		return $student_ids;
 	}
 
 	/**

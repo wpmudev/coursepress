@@ -5,11 +5,11 @@
  * @since 3.0
  * @package CoursePress
  */
-$course = coursepress_get_course();
-$unit = coursepress_get_unit();
-$student = coursepress_get_user();
+$course        = coursepress_get_course();
+$unit          = coursepress_get_unit();
+$student       = coursepress_get_user();
 $unit_progress = $student->get_unit_progress( $course->ID, $unit->ID );
-$coursep = $student->get_completion_data( $course->ID );
+$coursep       = $student->get_completion_data( $course->ID );
 $show_progress = $student->is_enrolled_at( $course->ID );
 get_header(); ?>
     <div class="coursepress-wrap course-unit">
@@ -24,37 +24,40 @@ get_header(); ?>
                      *
                      * @since 3.0
                      */
-                    coursepress_get_template( 'course', 'submenu' ); ?>
+                    coursepress_get_template( 'course', 'submenu' );
+					?>
                     <div class="course-after-title">
                     <h2 class="entry-title course-title"><?php echo coursepress_get_unit_title(); ?></h2>
 
-                    <?php if ( $show_progress ) { ?>
+                    <?php if ( $show_progress ) : ?>
           						<div class="course-unit-progress">
-          							<?php echo coursepress_progress_wheel( array(
+          							<?php
+										echo coursepress_progress_wheel( array(
           									'class' => 'per-unit-progress',
           									'data-value' => $unit_progress,
           									'data-size' => 62,
           								) );
           							?>
           						</div>
-          					<?php } ?>
+          					<?php endif; ?>
 
-                    <?php coursepress_breadcrumb(); ?>
+						<?php coursepress_breadcrumb(); ?>
 
-                  </div>
+					</div>
 
-                </header>
+				</header>
 
-                <div class="course-content-template">
-                    <div class="course-structure course-structure-nav">
-			            <?php echo coursepress_get_unit_structure(); ?>
-                    </div>
-                    <div class="course-content">
-                      <?php echo coursepress_get_current_course_cycle(); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="course-content-template">
+					<div class="course-structure course-structure-nav">
+						<?php echo coursepress_get_unit_structure(); ?>
+					</div>
+					<div class="course-content">
+						<?php echo coursepress_get_current_course_cycle(); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<?php get_footer();
+<?php
+get_footer();

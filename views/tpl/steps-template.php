@@ -183,7 +183,7 @@
             <div class="cp-box cp-toggle-box">
                 <label class="cp-ignore-update-model">
                     <input type="checkbox" name="meta_allowed_file_types" value="<?php echo $type; ?>" {{_.checked('<?php echo $type; ?>', meta_allowed_file_types)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
-                    <span class="label"><?php echo $label ?></span>
+                    <span class="label"><?php echo $label; ?></span>
                 </label>
             </div>
             <?php endforeach; ?>

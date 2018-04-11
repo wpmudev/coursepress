@@ -155,7 +155,7 @@ class CoursePress_Extension_WooCommerce {
 			return;
 		}
 		remove_action( 'coursepress_course_updated', array( $this, 'course_update' ), 10, 2 );
-		if ( isset( $course_meta['mp_sale_price_enabled'] ) && 'on' == $course_meta['mp_sale_price_enabled'] ) {
+		if ( isset( $course_meta['mp_sale_price_enabled'] ) && 'on' === $course_meta['mp_sale_price_enabled'] ) {
 			$course_meta['mp_sku'] = sprintf( 'CP-%d', $course_id );
 			update_post_meta( $course_id, 'course_settings', $course_meta );
 		}
@@ -230,7 +230,7 @@ class CoursePress_Extension_WooCommerce {
 		}
 		$product_id = get_post_meta( $course_id, 'mp_product_id', true );
 		$product = get_post( $product_id );
-		if ( is_a( $product, 'WP_Post' ) && 'product' == $product->post_type ) {
+		if ( is_a( $product, 'WP_Post' ) && 'product' === $product->post_type ) {
 			return $product_id;
 		}
 		return 0;
@@ -275,7 +275,7 @@ class CoursePress_Extension_WooCommerce {
 			return;
 		}
 		$delete = coursepress_get_setting( 'woocommerce/delete', 'change_status' );
-		if ( 'delete' == $delete ) {
+		if ( 'delete' === $delete ) {
 			wp_delete_post( $product_id );
 		} else {
 			$this->hide_product( $course_id );
@@ -298,7 +298,7 @@ class CoursePress_Extension_WooCommerce {
 		 * check post type
 		 */
 		$post_type = get_post_type( $product_id );
-		if ( 'product' != $post_type ) {
+		if ( 'product' !==$post_type ) {
 			return;
 		}
 		/**
@@ -403,7 +403,7 @@ class CoursePress_Extension_WooCommerce {
 		}
 		$course_id = is_object( $course )? $course->ID : $course;
 		$key = sprintf( 'course_%d_woo_payment_status', $course_id );
-		return 'wc-completed' == get_user_meta( $user_id, $key, true );
+		return 'wc-completed' === get_user_meta( $user_id, $key, true );
 	}
 
 	public function woo_save_post() {
@@ -483,7 +483,7 @@ class CoursePress_Extension_WooCommerce {
 		$purchased_course	 = false;
 		foreach ( $order_items as $order_item ) {
 			$course_id = wp_get_post_parent_id( $order_item['product_id'] );
-			if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+			if ( $course_id && get_post_type( $course_id ) === 'course' ) {
 				$purchased_course = true;
 			}
 		}
@@ -491,10 +491,10 @@ class CoursePress_Extension_WooCommerce {
 			return;
 		}
 		$args = array(
-			'show_dashboard_link' => is_user_logged_in() && 'wc-completed' == $order->post_status,
+			'show_dashboard_link' => is_user_logged_in() && 'wc-completed' === $order->post_status,
 			'dashboard_link' => coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' ),
 		);
-		coursepress_render( 'views/extensions/woocommerce/front/message_after_order', $args );
+		coursepress_render( 'views/extensions/woocommerce/front/message-after-order', $args );
 	}
 
 	public function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
@@ -502,7 +502,7 @@ class CoursePress_Extension_WooCommerce {
 			return $title;
 		}
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
-		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+		if ( $course_id && get_post_type( $course_id ) === 'course' ) {
 			return get_the_title( $course_id );
 		}
 		return $title;
@@ -514,7 +514,7 @@ class CoursePress_Extension_WooCommerce {
 		}
 		$product_id = $item->get_product_id();
 		$course_id = wp_get_post_parent_id( $product_id );
-		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+		if ( $course_id && get_post_type( $course_id ) === 'course' ) {
 			return get_the_title( $course_id );
 		}
 		return $name;
@@ -580,7 +580,7 @@ class CoursePress_Extension_WooCommerce {
 			the_post();
 			$product_id = get_the_ID();
 			$product_status = get_post_meta( $product_id, '_stock_status', true );
-			if ( 'instock' != $product_status ) {
+			if ( 'instock' !==$product_status ) {
 				continue;
 			}
 			$course_id = get_post_meta( $product_id, 'cp_course_id', true );
@@ -606,7 +606,7 @@ class CoursePress_Extension_WooCommerce {
 	 * @param string $new_status New status of this order.
 	 */
 	public function woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
-		if ( 'completed' == $new_status ) {
+		if ( 'completed' === $new_status ) {
 			return;
 		}
 		$order = new WC_order( $order_id );
@@ -645,7 +645,7 @@ class CoursePress_Extension_WooCommerce {
 		if ( is_user_logged_in() ) {
 			return $enable_guest_checkout;
 		}
-		if ( 'no' == $enable_guest_checkout ) {
+		if ( 'no' === $enable_guest_checkout ) {
 			return $enable_guest_checkout;
 		}
 		$cart_data = WC()->cart->get_cart();
@@ -695,7 +695,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( 'product' != $post->post_type ) {
+		if ( 'product' !==$post->post_type ) {
 			return $url;
 		}
 		/**
@@ -725,7 +725,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( ! $post || 'product' != $post->post_type ) {
+		if ( ! $post || 'product' !==$post->post_type ) {
 			return;
 		}
 		/**

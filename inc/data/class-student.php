@@ -86,7 +86,7 @@ class CoursePress_Data_Student {
 					if ( ! empty( $last_visited['module'] ) ) {
 						$link .= 'module_id/' . (int) $last_visited['module'];
 					}
-				} elseif ( 'completion_page' == $last_visited['page'] ) {
+				} elseif ( 'completion_page' === $last_visited['page'] ) {
 					$link = $course_url . 'course-completion';
 				}
 			}
@@ -208,7 +208,7 @@ class CoursePress_Data_Student {
 					$return = 'awaiting-review';
 				}
 			} else {
-				if ( 'open' == $course_status ) {
+				if ( 'open' === $course_status ) {
 					$return = 'ongoing';
 				} else {
 					$return = 'incomplete';

@@ -80,7 +80,10 @@ name="meta_course_category">
                 <label class="label" for="enrollment-type"><?php _e( 'Who can enroll', 'cp' ); ?></label>
                 <select id="enrollment-type" name="meta_enrollment_type">
                     <?php
-										$list = coursepress_get_courses( array( 'posts_per_page' => -1, 'post_status' => 'publish' ) );
+										$list = coursepress_get_courses( array(
+											'posts_per_page' => -1,
+											'post_status' => 'publish',
+										) );
 										$total_course = count( $list );
 										foreach ( coursepress_get_enrollment_types() as $id => $label ) :
 											if( $total_course < 2 && 'prerequisite' === $id ) {
@@ -199,7 +202,9 @@ name="meta_course_category">
 						<tr>
 							<th><?php esc_html_e( 'Instructor Name', 'cp' ); ?></th>
 							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
-							<?php if ( $can_assign_instructor ) : ?><th></th><?php endif; ?>
+							<?php if ( $can_assign_instructor ) : ?>
+								<th></th>
+							<?php endif; ?>
 						</tr>
 					</thead>
 					<tbody id="invited-instructor-list">
@@ -216,7 +221,9 @@ name="meta_course_category">
 						<tr>
 							<th><?php esc_html_e( 'Facilitator Name', 'cp' ); ?></th>
 							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
-							<?php if ( $can_assign_facilitator ) : ?><th></th><?php endif; ?>
+							<?php if ( $can_assign_facilitator ) : ?>
+								<th></th>
+							<?php endif; ?>
 						</tr>
 					</thead>
 					<tbody id="invited-facilitator-list">

@@ -15,10 +15,11 @@
             <tbody>
             <?php foreach ( $extensions as $id => $extension ) { ?>
                 <tr id="extension-row-<?php echo esc_attr( $id ); ?>">
-                    <td><?php
-					echo $extension['name'];
-?></td>
-    <td><?php
+                    <td>
+						<?php echo $extension['name']; ?>
+					</td>
+					<td>
+					<?php
 	if ( isset( $extension['wpmu'] ) && $extension['wpmu'] && isset( $extension['soruce_link'] ) ) {
 		printf(
 			'<a href="%s" target="_blank">%s</a>',
@@ -28,28 +29,32 @@
 	} else {
 		echo $extension['source_info'];
 	}
-?></td>
+					?>
+					</td>
                     <td class="action"
 data-extension="<?php echo esc_attr( $id ); ?>"
 data-active="<?php echo esc_attr( $extension['is_active']? 'yes':'no' ); ?>"
 data-installed="<?php echo esc_attr( $extension['is_installed']? 'yes':'no' ); ?>"
 data-nonce="<?php echo esc_attr( $extension['nonce'] ); ?>"
 >
-                        <?php if ( $extension['is_active'] ) {
+                        <?php
+						if ( $extension['is_active'] ) {
 							$aria = sprintf(
 								_x( 'Deactivate %s', 'deactivate extension (plugin name in placeholder)', 'cp' ),
 								$extension['name']
 							);
 ?>
                             <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-btn-active" aria-label="<?php echo esc_attr( $aria ); ?>"><?php _e( 'Deactivate', 'cp' ); ?></a>
-                        <?php } elseif ( $extension['is_installed'] ) {
+                        <?php
+						} elseif ( $extension['is_installed'] ) {
 						$aria = sprintf(
 							_x( 'Activate %s', 'activate extension (plugin name in placeholder)', 'cp' ),
 							$extension['name']
 						);
 	?>
                             <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-bordered-btn" aria-label="<?php echo esc_attr( $aria ); ?>"><?php _e( 'Activate', 'cp' ); ?></a>
-                        <?php } elseif ( ! $extension['is_installed'] && isset( $extension['wpmu'] ) && $extension['wpmu'] ) {
+                        <?php
+						} elseif ( ! $extension['is_installed'] && isset( $extension['wpmu'] ) && $extension['wpmu'] ) {
 						$aria = sprintf(
 							_x( 'Install %s', 'install extension (plugin name in placeholder)', 'cp' ),
 							$extension['name']

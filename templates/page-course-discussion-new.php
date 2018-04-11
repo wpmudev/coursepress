@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+$user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
 	<div class="coursepress-wrap course-unit">
@@ -24,16 +24,20 @@ get_header(); ?>
 				 */
 				coursepress_get_template( 'course', 'submenu' );
 				?>
-<?php
-
-$allowed = $course->__get( 'allow_discussion' );
-if ( false == $allowed ) {
-    coursepress_render( 'templates/content-discussion-off' );
-} else {
-    coursepress_render( 'templates/content-discussion-form', array( 'course' => $course, 'id' => 0, 'section' => 0) );
-}
-?>
+				<?php
+				$allowed = $course->__get( 'allow_discussion' );
+				if ( ! $allowed ) :
+					coursepress_render( 'templates/content-discussion-off' );
+				else :
+					coursepress_render( 'templates/content-discussion-form', array(
+						'course' => $course,
+						'id' => 0,
+						'section' => 0,
+					) );
+				endif;
+				?>
 			</div>
 		</div>
 	</div>
-<?php get_footer();
+<?php
+get_footer();

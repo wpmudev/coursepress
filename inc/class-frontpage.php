@@ -79,7 +79,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 				if ( ( $step = $wp->get( 'step' ) ) ) {
 					$cp['step'] = $step;
 				}
-			} elseif ( 'forum' == $type ) {
+			} elseif ( 'forum' === $type ) {
 				$cp['topic'] = $wp->get( 'topic' );
 			}
 			$this->reset_wp( $wp, $course_name );
@@ -122,7 +122,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$deps = array( 'jquery', 'backbone', 'underscore' );
 		$page_now = $this->__get( 'page_now' );
 
-		if ( 'single-course' == $page_now
+		if ( 'single-course' === $page_now
 			|| in_array( $page_now, array( 'unit', 'module', 'step' ) ) ) {
 			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
 

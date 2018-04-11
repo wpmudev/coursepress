@@ -188,7 +188,7 @@ class CoursePress_Data_Capabilities {
 	 */
 	public static function assign_role_capabilities( $user_id, $role ) {
 
-		if ( 'administrator' == $role ) {
+		if ( 'administrator' === $role ) {
 			self::assign_admin_capabilities( $user_id );
 		} else {
 
@@ -560,7 +560,7 @@ class CoursePress_Data_Capabilities {
 			if ( $course_creator ) {
 				$post_status = get_post_status( $course_id );
 
-				if ( 'publish' != $post_status ) {
+				if ( 'publish' !==$post_status ) {
 					// If the course is not public yet, always give the owner the write permission
 					$return = true;
 				} else {
@@ -789,7 +789,7 @@ class CoursePress_Data_Capabilities {
 		$post_status = get_post_status( $course_id );
 
 		if ( ! $return ) {
-			$return = user_can( $user_id, 'coursepress_students_cap' ) && 'publish' == $post_status;
+			$return = user_can( $user_id, 'coursepress_students_cap' ) && 'publish' === $post_status;
 
 			$is_facilitator = self::is_course_facilitator( $course_id, $user_id );
 			if ( ! $return && $is_facilitator ) {
@@ -1901,7 +1901,7 @@ class CoursePress_Data_Capabilities {
 	 * @return mixed
 	 */
 	public static function filter_row_actions( $actions, $tag ) {
-		if ( ! empty( $tag->taxonomy ) && 'course_category' == $tag->taxonomy ) {
+		if ( ! empty( $tag->taxonomy ) && 'course_category' === $tag->taxonomy ) {
 			$instructor_capabilities = self::get_instructor_capabilities();
 			if (
 				! isset( $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] )

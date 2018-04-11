@@ -498,16 +498,16 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 	$course_id = $course->ID;
 	$status = $user->get_course_completion_status( $course_id );
 	$results = array( 'status' => $status );
-	if ( 'pass' == $status ) {
+	if ( 'pass' === $status ) {
 		$results['title'] = $course->__get( 'course_completion_title' );
 		$results['content'] = $course->__get( 'course_completion_content' );
-	} elseif ( 'failed' == $status ) {
+	} elseif ( 'failed' === $status ) {
 		$results['title'] = $course->__get( 'course_failed_title' );
 		$results['content'] = $course->__get( 'course_failed_content' );
-	} elseif ( 'completed' == $status ) {
+	} elseif ( 'completed' === $status ) {
 		$results['title'] = $course->__get( 'pre_completion_title' );
 		$results['content'] = $course->__get( 'pre_completion_content' );
-	} elseif ( 'incomplete' == $status ) {
+	} elseif ( 'incomplete' === $status ) {
 		$results['title'] = __( 'Oooops! Course incomplete!', 'cp' );
 		$results['content'] = __( 'Looks like you failed to complete this course at the given period.', 'cp' );
 	} else {

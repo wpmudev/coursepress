@@ -26,13 +26,13 @@ echo '</h3>';
 foreach ( $units as $unit ) {
 ?>
                     <tbody>
-                    <tr style="font-weight:bold; font-size: 4mm; background-color: <?php esc_attr_e( $colors['unit_bg'] ); ?> '; color: <?php esc_attr_e( $colors['unit'] ); ?>">
-                    <th colspan="3"><?php esc_html_e( $unit->post_title ); ?></th>
+                    <tr style="font-weight:bold; font-size: 4mm; background-color: <?php echo esc_attr( $colors['unit_bg'] ); ?> '; color: <?php echo esc_attr( $colors['unit'] ); ?>">
+                    <th colspan="3"><?php echo esc_html( $unit->post_title ); ?></th>
                         </tr>
 <?php
 	$assessable_modules = 0;
 foreach ( $unit->steps as $module_id => $module ) {
-	if ( 1 != $module->assessable ) {
+	if ( ! $module->assessable ) {
 		continue;
 	}
 		$assessable_modules++;
@@ -48,16 +48,16 @@ foreach ( $unit->steps as $module_id => $module ) {
 		);
 	}
 ?>
-<tr style="font-size: 4mm; background-color: <?php esc_attr_e( $colors['item_bg'] ); ?>; color: <?php esc_attr_e( $colors['item'] ); ?>">
-<td style="border-bottom: 0.5mm solid <?php esc_attr_e( $colors['item_line'] ); ?>"><?php esc_html_e( $module->post_title ); ?></td>
-<td style="border-bottom: 0.5mm solid <?php esc_attr_e( $colors['item_line'] ); ?>"><?php esc_html_e( $date_display ); ?></td>
-<td style="border-bottom: 0.5mm solid <?php esc_attr_e( $colors['item_line'] ); ?>"><?php esc_html_e( $module_progress ); ?></td>
+<tr style="font-size: 4mm; background-color: <?php echo esc_attr( $colors['item_bg'] ); ?>; color: <?php echo esc_attr( $colors['item'] ); ?>">
+<td style="border-bottom: 0.5mm solid <?php echo esc_attr( $colors['item_line'] ); ?>"><?php echo esc_html( $module->post_title ); ?></td>
+<td style="border-bottom: 0.5mm solid <?php echo esc_attr( $colors['item_line'] ); ?>"><?php echo esc_html( $date_display ); ?></td>
+<td style="border-bottom: 0.5mm solid <?php echo esc_attr( $colors['item_line'] ); ?>"><?php echo esc_html( $module_progress ); ?></td>
 </tr>
 <?php
 }
 if ( empty( $assessable_modules ) ) {
 ?>
-<tr style="font-style:oblique; font-size: 4mm; background-color:<?php esc_attr_e( $colors['item_bg'] ); ?>; color:<?php esc_attr_e( $colors['no_items'] ); ?>;">
+<tr style="font-style:oblique; font-size: 4mm; background-color:<?php echo esc_attr( $colors['item_bg'] ); ?>; color:<?php echo esc_attr( $colors['no_items'] ); ?>;">
 <td colspan="3"><em><?php esc_html_e( 'No assessable items.', 'cp' ); ?></em></td>
 						</tr>
 <?php
@@ -69,8 +69,8 @@ if ( empty( $assessable_modules ) ) {
 ?>
             <tfoot>
                 <tr>
-                    <td colspan="2" style="font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] );?>;color:<?php esc_attr_e( $colors['footer'] );?>;"><?php printf( __( 'Average response grade: %d%%', 'cp' ), $student->average ); ?></td>
-                    <td style="text-align:right; font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] ); ?>;color:<?php esc_attr_e( $colors['footer'] ); ?>;"><?php printf( __( 'Total Average: %d%%', 'cp' ), $student->course_average ); ?></td>
+                    <td colspan="2" style="font-size: 4mm; background-color:<?php echo esc_attr( $colors['footer_bg'] ); ?>;color:<?php echo esc_attr( $colors['footer'] ); ?>;"><?php printf( __( 'Average response grade: %d%%', 'cp' ), $student->average ); ?></td>
+                    <td style="text-align:right; font-size: 4mm; background-color:<?php echo esc_attr( $colors['footer_bg'] ); ?>;color:<?php echo esc_attr( $colors['footer'] ); ?>;"><?php printf( __( 'Total Average: %d%%', 'cp' ), $student->course_average ); ?></td>
                 </tr>
             </tfoot>
 </table>

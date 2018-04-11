@@ -251,7 +251,7 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
 		// Clean out old cache files
 		foreach ( glob( $cache_path . '*.pdf' ) as $fname ) {
 			$age = time() - filemtime( $fname );
-			if ( ( $age > 12 * 60 * 60 ) && ( basename( $fname ) != 'index.php' ) ) { // Don't erase our blocking index.php file
+			if ( ( $age > 12 * 60 * 60 ) && ( basename( $fname ) !== 'index.php' ) ) { // Don't erase our blocking index.php file
 				unlink( $fname ); // more than 12 hours old;
 			}
 		}
@@ -259,7 +259,7 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
 		$pdf = new CoursePress_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
 		// $dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
 		$dimension = $this->get_format_in_px( PDF_PAGE_FORMAT );
-		if ( 'P' == $page_orientation ) {
+		if ( 'P' === $page_orientation ) {
 			$temp = $dimension[0];
 			$dimension[0] = $dimension[1];
 			$dimension[1] = $temp;

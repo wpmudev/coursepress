@@ -59,11 +59,11 @@ class CoursePress_Step extends CoursePress_Unit {
 			if ( is_array( $value ) ) {
 				$value = $this->to_array( $value );
 			}
-			if ( 'on' == $value ) {
+			if ( 'on' === $value ) {
 				$value = true;
 			}
-			if ( 'module_type' == $key ) {
-				if ( 'input-checkbox' == $value ) {
+			if ( 'module_type' === $key ) {
+				if ( 'input-checkbox' === $value ) {
 					$value = 'input-quiz';
 				}
 			}
@@ -123,7 +123,7 @@ class CoursePress_Step extends CoursePress_Unit {
 				$module = $modules[ $module_number ];
 				return $module['url'] . trailingslashit( $post_name );
 			}
-		} else if ( $unit ) {
+		} elseif ( $unit ) {
 			$slug = coursepress_get_setting( 'slugs/step', 'step' );
 			return $unit->get_permalink() . trailingslashit( $slug ) . trailingslashit( $post_name );
 		}

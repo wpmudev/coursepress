@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+$user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
 
@@ -16,15 +16,17 @@ get_header(); ?>
 					<h1 class="page-title"><?php _e( 'Workbook', 'cp' ); ?></h1>
 					<h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
 
-                    <div class="course-unit-progress">
+					<div class="course-unit-progress">
 						<?php
-						echo coursepress_progress_wheel( array(
-							'class' => 'per-course-progress',
-							'data-value' => $user->get_course_progress( $course->ID ),
-							'data-size' => 62,
-						) );
+						echo coursepress_progress_wheel(
+							array(
+								'class'      => 'per-course-progress',
+								'data-value' => $user->get_course_progress( $course->ID ),
+								'data-size'  => 62,
+							)
+						);
 						?>
-                    </div>
+					</div>
 				</header>
 
 				<?php
@@ -37,8 +39,14 @@ get_header(); ?>
 				coursepress_get_template( 'course', 'submenu' );
 				?>
 
-                <?php coursepress_render( 'templates/content-workbook', array( 'user_id' => 0, 'course_id' => 0 ) ); ?>
+                <?php
+				coursepress_render( 'templates/content-workbook', array(
+					'user_id' => 0,
+					'course_id' => 0,
+				) );
+				?>
 			</div>
 		</div>
 	</div>
-<?php get_footer();
+<?php
+get_footer();

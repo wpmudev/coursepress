@@ -8,27 +8,23 @@
  * @var $post CoursePress_Course
  */
 global $post;
-$course = coursepress_get_course( $post );
-$thumbnail = $course->get_feature_image( 'full' );
-
-$course_media = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' );
-
-	if ( $course_media ) {
-		$extended_class = '';
-	} else {
-		$extended_class = 'quick-course-info-extended';
-	}
+$course         = coursepress_get_course( $post );
+$thumbnail      = $course->get_feature_image( 'full' );
+$course_media   = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' );
+$extended_class = $course_media ? '' : 'quick-course-info-extended';
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-item-box' ); ?>>
 	<div class="course-info"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope' ); ?>>
-	<?php if ( ! empty( $thumbnail ) ) {
+	<?php
+	if ( ! empty( $thumbnail ) ) :
 		printf( '<a href="%s" class="post-thumbnail" aria-hidden="true">%s</a>', esc_url( $course->get_permalink() ), $thumbnail );
-	} ?>
+	endif;
+	?>
 <header class="entry-header course-entry-header">
 	<?php $title = apply_filters( 'coursepress_schema', get_the_title(), 'title' ); ?>
 	<h3 class="entry-title course-title"><a href="<?php echo esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
 </header>
-<?php if ( is_search() ) : // Only display Excerpts for Search   ?>
+<?php if ( is_search() ) : // Only display Excerpts for Search ?>
 <div class="entry-summary">
 <?php the_excerpt(); ?>
 </div><!-- .entry-summary -->
@@ -38,10 +34,10 @@ $course_media = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' 
 // Course summary/excerpt
 echo do_shortcode( '[course_summary length="50" class="' . $extended_class . '"]' );
 wp_link_pages(
-array(
-'before' => '<div class="page-links">' . __( 'Pages:', 'cp' ),
-'after' => '</div>',
-)
+	array(
+		'before' => '<div class="page-links">' . __( 'Pages:', 'cp' ),
+		'after' => '</div>',
+	)
 );
 ?>
 <div class="instructors-content"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope-person' ); ?>>
@@ -61,6 +57,6 @@ echo do_shortcode( '[course_join_button details_text="' . __( 'Details', 'cp' ) 
 </div>
 </div><!-- .entry-content -->
 
-<?php endif; ?>
+		<?php endif; ?>
 	</div>
 </article>

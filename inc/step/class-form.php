@@ -12,9 +12,9 @@ class CoursePress_Step_Form extends CoursePress_Step_Quiz {
 
 		if ( $questions ) {
 			foreach ( $questions as $index => $data ) {
-				if ( 'selectable' == $data['type'] )
+				if ( 'selectable' === $data['type'] )
 					$data['type'] = 'select';
-				if ( 'long' == $data['type'] )
+				if ( 'long' === $data['type'] )
 					$data['type'] = 'short';
 
 				$questions[ $index ] = $data;

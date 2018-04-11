@@ -25,7 +25,7 @@
 			</ul>
 		</div>
 		<div class="course-content">
-			<?php  foreach ( $menu_list as $key => $label ) : ?>
+			<?php foreach ( $menu_list as $key => $label ) : ?>
 				<div id="<?php echo $key; ?>" class="course-content-tab"></div>
 			<?php endforeach; ?>
 

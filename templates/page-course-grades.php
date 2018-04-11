@@ -14,15 +14,15 @@ get_header(); ?>
                 <header class="page-header">
                     <h1 class="page-title"><?php _e( 'Grades', 'cp' ); ?></h1>
                     <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
-				<?php
-				/**
-				 * To override course submenu template to your theme or a child-theme,
-				 * create a template `course-submenu.php` and it will be loaded instead.
-				 *
-				 * @since 3.0
-				 */
-				coursepress_get_template( 'course', 'submenu' );
-				?>
+					<?php
+					/**
+					 * To override course submenu template to your theme or a child-theme,
+					 * create a template `course-submenu.php` and it will be loaded instead.
+					 *
+					 * @since 3.0
+					 */
+					coursepress_get_template( 'course', 'submenu' );
+					?>
                 </header>
                 <div class="cp-student-grades">
                   <?php
@@ -35,10 +35,11 @@ get_header(); ?>
                     $shortcode = sprintf( '[course_progress course_id="%d"]', $course->ID );
                     echo apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
                     printf( ' %1$s%', do_shortcode( $shortcode ) );
-                  ?>%
+                  ?>
                   </div>
                 </div>
             </div>
         </div>
     </div>
-<?php get_footer();
+<?php
+get_footer();
