@@ -26,10 +26,8 @@
 	$config = array();
 	$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 	$can_update_course = coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true );
-
 	// General capabilities.
 	$config['capabilities/general'] = array(
-
 		'title' => __( 'General', 'cp' ),
 		'id' => 'cp-cap-general',
 		'description' => __( 'Instructor of my courses can:', 'cp' ),
@@ -44,39 +42,44 @@
 				'title' => $toggle_input . __( 'Access to Courses submenus', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_courses_cap', true ),
 			),
-			'coursepress_instructors_cap' => array(
-				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Access to instructors submenus', 'cp' ),
-				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_instructors_cap', true ),
-			),
 			'coursepress_students_cap' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Access the Students submenu', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
+			),
+			'coursepress_instructors_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access to instructors submenus', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_instructors_cap', true ),
 			),
 			'coursepress_assessments_cap' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Access the Assessment submenu', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
 			),
+			'coursepress_discussions_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Forum submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_discussions_cap', true ),
+			),
+			'coursepress_comments_cap' => array(
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Comments submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_comments_cap', true ),
+			),
 			'coursepress_reports_cap' => array(
-	            'type' => 'checkbox',
-	            'title' => $toggle_input . __( 'Access the Reports submenu', 'cp' ),
-	            'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_reports_cap', true ),
+				'type' => 'checkbox',
+				'title' => $toggle_input . __( 'Access the Reports submenu', 'cp' ),
+				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_reports_cap', true ),
 			),
 			'coursepress_notifications_cap' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Access the Notifications submenu', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_notifications_cap', true ),
 			),
-			'coursepress_discussions_cap' => array(
-				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Access the Forum submenu', 'cp' ),
-				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_discussions_cap', true ),
-			),
 			'coursepress_settings_cap' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Access to the Settings page', 'cp' ),
+				'title' => $toggle_input . __( 'Access the Settings submenus', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_settings_cap', true ),
 			),
 		),
