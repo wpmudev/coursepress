@@ -2054,7 +2054,7 @@ class CoursePress_Data_Capabilities {
 			// Check if current user is the course author.
 			$is_author = self::is_course_creator( $course_id, $user_id );
 
-			if ( $is_author ) {
+			if ( $is_author || empty( $course_id ) ) {
 				$return = user_can( $user_id, 'coursepress_assign_my_course_facilitator_cap' );
 			} else {
 				$return = user_can( $user_id, 'coursepress_assign_facilitator_cap' );
