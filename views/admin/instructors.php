@@ -30,15 +30,17 @@ foreach ( $courses as $course_id => $course ) {
                     </select>
                 </div>
 
-                <div class="cp-div">
+								<div class="cp-div">
                     <label class="label"><?php _e( 'Search instructors by name, username or email', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
                         <input type="text" name="instructor_search" placeholder="<?php _e( 'Type here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
                         <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
                     </div>
-                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
-                </div>
+									</div>
+								<div class="cp-div">
+									<button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+								</div>
             </div>
         </form>
 
@@ -172,4 +174,3 @@ switch ( $column_id ) {
     </div>
 </div>
 <?php
-
