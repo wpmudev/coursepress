@@ -33,6 +33,8 @@ class CoursePress_Extension_WooCommerce {
 		add_filter( 'coursepress_default_course_meta', array( $this, 'add_course_default_fields' ) );
 		add_action( 'before_delete_post', array( $this, 'update_product_when_deleting_course' ) );
 		add_action( 'before_delete_post', array( $this, 'update_course_when_deleting_product' ) );
+		// Trigger an action when a course status is changed.
+		add_action( 'coursepress_course_status_changed', array( $this, 'change_product_status' ), 10, 2 );
 
 		/**
 		 * This filter allow to set that the user bought the course.
@@ -176,7 +178,7 @@ class CoursePress_Extension_WooCommerce {
 					wp_delete_post( $product_id );
 				break;
 				default:
-					$this->hide_product( $course );
+					$this->hide_product( $product_id );
 				break;
 			}
 		}
@@ -542,6 +544,30 @@ class CoursePress_Extension_WooCommerce {
 				coursepress_add_student( $user_id, $course_id );
 			}
 		}
+	}
+
+	/**
+	 * Update product status.
+	 *
+	 * @param int $course_id Course ID.
+	 * @param string $status Status.
+	 */
+	public function change_product_status( $course_id, $status ) {
+		$course = coursepress_get_course( $course_id );
+		$is_paid = $course->is_paid_course();
+		$product_id = $course->get_product_id();
+		// Do not publish if not paid anymore.
+		if ( 'publish' === $status && ! $is_paid ) {
+			return;
+		}
+		wp_update_post(
+			array(
+				'ID' => $product_id,
+				'post_status' => $status,
+			)
+		);
+		$stock = 'publish' === $status ? 'instock' : 'outofstock';
+		update_post_meta( $product_id, '_stock_status', $stock );
 	}
 
 	/**
