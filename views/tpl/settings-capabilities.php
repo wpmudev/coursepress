@@ -49,7 +49,7 @@
 			),
 			'coursepress_instructors_cap' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Access to instructors submenus', 'cp' ),
+				'title' => $toggle_input . __( 'Access to Instructors submenu', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_instructors_cap', true ),
 			),
 			'coursepress_assessments_cap' => array(
