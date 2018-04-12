@@ -1,3 +1,48 @@
 // Use in Instructors page
 @import "common/mixin.scss";
 @import "common/cp-search-form";
+
+
+.cp-flex{
+  .cp-div {
+      width: 33.333%;
+      display: block;
+      padding-right:20px;
+
+      &:last-of-type{
+        margin-left: 0;
+      }
+
+      label{
+        display:block;
+      }
+
+      .cp-input-clear{
+        width: 100%;
+        position: relative;
+
+        input{
+          width: 100%;
+        }
+        .cp-btn-clear{
+          position: absolute;
+          right: 0px;
+          top: 2px;
+          background-color: #ddd;
+        }
+      }
+      .cp-btn-active{
+        position:relative;
+        top: 15px;
+      }
+  }
+}
+
+@media ( max-width: 991px ) {
+  .cp-flex{
+    .cp-div {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+}
