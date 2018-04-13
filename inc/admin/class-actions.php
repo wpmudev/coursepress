@@ -13,6 +13,36 @@ class CoursePress_Admin_Actions {
 		// Hook to `admin_init` action hook to process action requests.
 		add_action( 'admin_init', array( $this, 'process_action_request' ) );
 		add_filter( 'post_type_link', array( $this, 'modify_module_discussion_link' ), 10, 2 );
+		add_filter( 'posts_where', array( $this, 'modify_instructor_courselist' ) );
+		add_filter( 'coursepress_pre_get_courses', array( $this, 'allow_filter_instructor_courselist' ) );
+	}
+
+	/**
+	 * Allow filter for instructor courselist.
+	 *
+	 * @param  array $args
+	 */
+	public function allow_filter_instructor_courselist( $args ) {
+		$user = new CoursePress_User( get_current_user_id() );
+		if ( is_admin() && ( ! $user->is_super_admin() || ! CoursePress_Data_Capabilities::can_view_others_course() ) ) {
+			$args['suppress_filters'] = false;
+		}
+		return $args;
+	}
+
+	/**
+	 * Modify instructor courselist query.
+	 * @param  string $where query.
+	 */
+	public function modify_instructor_courselist( $where ) {
+		global $wpdb;
+		$user = new CoursePress_User( get_current_user_id() );
+		if ( is_admin() && ( ! $user->is_super_admin() || ! CoursePress_Data_Capabilities::can_view_others_course() ) ) {
+			$find     = sprintf( "( %s.meta_key = 'instructor'", $wpdb->postmeta );
+			$replace  = sprintf( " ( %s.post_author=%d ) OR ( %s.meta_key = 'instructor'", $wpdb->posts, $user->ID, $wpdb->postmeta );
+			$where    = str_replace( $find, $replace, $where );
+		}
+		return $where;
 	}
 
 	/**

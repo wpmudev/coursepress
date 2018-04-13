@@ -147,12 +147,12 @@
 		'fields' => array(
 			'coursepress_course_categories_manage_terms_cap' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'View and create categories', 'cp' ),
+				'title' => $toggle_input . __( 'View categories', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_course_categories_manage_terms_cap', true ),
 			),
 			'coursepress_course_categories_edit_terms_cap' => array(
 				'type' => 'checkbox',
-				'title' => $toggle_input . __( 'Edit any category', 'cp' ),
+				'title' => $toggle_input . __( 'Create or Edit any category', 'cp' ),
 				'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_course_categories_edit_terms_cap', true ),
 			),
 			'coursepress_course_categories_delete_terms_cap' => array(
