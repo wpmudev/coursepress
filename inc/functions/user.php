@@ -31,23 +31,23 @@ function coursepress_get_user_option( $user_id, $key ) {
  * @return CoursePress_User|int|WP_Error
  */
 function coursepress_get_user( $user_id = 0 ) {
-	global $CoursePress_User, $CoursePress_Core;
+	global $coursepress_user, $coursepress_core;
 	if ( empty( $user_id ) ) {
 		// Assume current user
 		$user_id = get_current_user_id();
 	}
-	if ( $CoursePress_User instanceof  CoursePress_User
-		&& $user_id == $CoursePress_User->__get( 'ID' ) ) {
-		return $CoursePress_User;
+	if ( $coursepress_user instanceof  CoursePress_User
+		&& $user_id == $coursepress_user->__get( 'ID' ) ) {
+		return $coursepress_user;
 	}
-	if ( isset( $CoursePress_Core->users[ $user_id ] ) ) {
-		return $CoursePress_Core->users[ $user_id ];
+	if ( isset( $coursepress_core->users[ $user_id ] ) ) {
+		return $coursepress_core->users[ $user_id ];
 	}
 	$user = new CoursePress_User( $user_id );
 	if ( is_wp_error( $user ) ) {
 		return $user->wp_error();
 	}
-	$CoursePress_Core->users[ $user_id ] = $user;
+	$coursepress_core->users[ $user_id ] = $user;
 	return $user;
 }
 
@@ -166,11 +166,11 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
  *
  * @param int $user_id
  * @param bool $published
- * @param bool $returnAll
+ * @param bool $return_all
  *
  * @return array|null
  */
-function coursepress_get_user_instructed_courses( $user_id = 0, $published = true, $returnAll = true ) {
+function coursepress_get_user_instructed_courses( $user_id = 0, $published = true, $return_all = true ) {
 	$user = coursepress_get_user( $user_id );
 	if ( is_wp_error( $user ) ) {
 		return null;
@@ -178,7 +178,7 @@ function coursepress_get_user_instructed_courses( $user_id = 0, $published = tru
 	if ( ! $user->is_instructor() ) {
 		return null; // User is not an instructor, bail!
 	}
-	return $user->get_instructed_courses( $published, $returnAll );
+	return $user->get_instructed_courses( $published, $return_all );
 }
 
 /**
@@ -334,11 +334,11 @@ function coursepress_delete_student( $user_id = 0, $course_id = 0 ) {
  *
  * @param int $user_id
  * @param bool $published
- * @param bool $returnAll
+ * @param bool $return_all
  *
  * @return array|bool|null
  */
-function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $returnAll = true ) {
+function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $return_all = true ) {
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -352,7 +352,7 @@ function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $ret
 	if ( empty( $user_id ) ) {
 		return null;
 	}
-	return $user->get_user_enrolled_at( $published, $returnAll );
+	return $user->get_user_enrolled_at( $published, $return_all );
 }
 
 /**
@@ -437,11 +437,11 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
  *
  * @param int $user_id
  * @param bool $published
- * @param bool $returnAll
+ * @param bool $return_all
  *
  * @return array|bool
  */
-function coursepress_get_user_facilitated_courses( $user_id = 0, $published = true, $returnAll = false ) {
+function coursepress_get_user_facilitated_courses( $user_id = 0, $published = true, $return_all = false ) {
 	if ( empty( $user_id ) ) {
 		return false;
 	}
@@ -452,7 +452,7 @@ function coursepress_get_user_facilitated_courses( $user_id = 0, $published = tr
 	if ( ! $user->is_facilitator() ) {
 		return false; // User is not a facilitator? bail!
 	}
-	return $user->get_facilitated_courses( $published, $returnAll );
+	return $user->get_facilitated_courses( $published, $return_all );
 }
 
 /**
@@ -460,16 +460,16 @@ function coursepress_get_user_facilitated_courses( $user_id = 0, $published = tr
  * User must be either instructor or administrator to a course to get an access.
  *
  * @param bool $publish
- * @param bool $returnAll
+ * @param bool $return_all
  *
  * @return array|null
  */
-function coursepress_get_accessible_courses( $returnAll = true ) {
+function coursepress_get_accessible_courses( $return_all = true ) {
 	$user = coursepress_get_user();
 	if ( is_wp_error( $user ) ) {
 		return null;
 	}
-	return $user->get_accessible_courses( false, $returnAll );
+	return $user->get_accessible_courses( false, $return_all );
 }
 
 /**
@@ -653,7 +653,7 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 									'progress' => (int) $user->get_step_progress( $course_id, $unit_id, $step_id ),
 									'title' => $step->__get( 'post_title' ),
 									'type' => 'step',
-									'grade' => $grade,//$is_completed ? $grade : $step_status,
+									'grade' => $grade, //$is_completed ? $grade : $step_status,
 								);
 							}
 						}
@@ -699,23 +699,21 @@ function coursepress_get_redirect_to() {
  */
 function coursepress_get_students_ids( $course_id = 0, $page = 0, $per_page = 0 ) {
 	global $wpdb;
-	$students_table = $wpdb->prefix . 'coursepress_students';
+
 	// If pagination is set.
 	$limit = '';
 	if ( ! empty( $per_page ) && ! empty( $page ) ) {
 		$offset = ceil( $per_page * ( $page - 1 ) );
 		$limit = ' LIMIT ' . $offset . ', ' . $per_page;
 	}
+	$where = '';
 	if ( ! empty( $course_id ) ) {
-		// Make sure it is int.
-		$course_id = absint( $course_id );
 		// Get students of specific course.
-		$sql = $wpdb->prepare( "SELECT student_id FROM `$students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
-	} else {
-		// Get all students.
-		$sql = "SELECT student_id FROM `$students_table` GROUP BY student_id";
+		$where = $wpdb->prepare( " WHERE `course_id` = %d", $course_id );
 	}
-	return $wpdb->get_col( $sql );
+
+	// Get students.
+	return $wpdb->get_col( "SELECT student_id FROM `{$wpdb->prefix}coursepress_students` {$where} GROUP BY student_id" );
 }
 
 /**
@@ -869,13 +867,13 @@ function coursepress_add_user_to_blog( $user_id, $role = 'student', $blog_id = 0
 	switch ( $role ) {
 		case 'instructor':
 			$role = 'coursepress_instructor';
-		break;
+			break;
 		case 'facilitator':
 			$role = 'coursepress_facilitator';
-		break;
+			break;
 		case 'student':
 			$role = 'coursepress_student';
-		break;
+			break;
 	}
 	add_user_to_blog( $blog_id, $user_id, array( $role, 'subscriber' ) );
 }

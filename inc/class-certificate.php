@@ -312,8 +312,8 @@ class CoursePress_Certificate extends CoursePress_Utility {
 	 * @return mixed
 	 */
 	public function get_pdf_file_name( $course_id, $student_id, $basedir = 'include' ) {
-		global $CoursePress;
-		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+		global $cp_coursepress;
+		$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 		$filename = (defined( 'NONCE_KEY' ) && NONCE_KEY) ? NONCE_KEY : rand();
 		$filename .= $course_id . $student_id;
 		$filename = md5( $filename );
@@ -353,8 +353,8 @@ class CoursePress_Certificate extends CoursePress_Utility {
 	 */
 	public function deprecated_get_pdf_file_name( $course_id, $student_id ) {
 
-		global $CoursePress;
-		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+		global $cp_coursepress;
+		$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 
 		$filename = 'certificate-' . $course_id . '-' . $student_id;
 		$pdf_file = $pdf->cache_path() . $filename.'.pdf';
@@ -374,7 +374,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 	 * @return array|bool|string
 	 */
 	public function generate_pdf_certificate( $course_id, $student_id = '', $download = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
@@ -392,7 +392,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 		$is_override = $course->__get( 'basic_certificate' );
 		$is_override = ! empty( $is_override );
 		if ( count( $post ) > 0 || $is_override ) {
-			$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+			$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 			$post = $post[0];
 			// We'll replace the existing content to a new one to apply settings changes when applicable.
 			$certificate = $this->get_certificate_content( $post->ID );
@@ -428,7 +428,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					/**
 					 * Default Background
 					 */
-					$background = $CoursePress->plugin_path .'assets/images/certificate/certificate-background-p.png';
+					$background = $cp_coursepress->plugin_path .'assets/images/certificate/certificate-background-p.png';
 					/**
 					 * default orientation
 					 */
@@ -437,7 +437,7 @@ class CoursePress_Certificate extends CoursePress_Utility {
 					 * CP Logo
 					 */
 					$logo = array(
-						'file' => $CoursePress->plugin_path . 'assets/images/certificate/certificate-logo-coursepress.png',
+						'file' => $cp_coursepress->plugin_path . 'assets/images/certificate/certificate-logo-coursepress.png',
 						'x' => 95,
 						'y' => 15,
 						'w' => 100,
@@ -493,8 +493,8 @@ class CoursePress_Certificate extends CoursePress_Utility {
 	}
 
 	public function pdf_notice() {
-		global $CoursePress;
-		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+		global $cp_coursepress;
+		$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 		$cache_path = $pdf->cache_path();
 		$message = coursepress_create_html(
 			'p',

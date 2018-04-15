@@ -17,7 +17,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$this->slug = 'coursepress_instructors';
 	}
 
-	function columns() {
+	public function columns() {
 		$columns = array(
 			'id' => __( 'ID', 'cp' ),
 			'instructor' => __( 'Instructor', 'cp' ),
@@ -44,8 +44,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
-	private function get_meta_key_prefix($meta_key)
-	{
+	private function get_meta_key_prefix( $meta_key ) {
 		global $wpdb;
 
 		return coursepress_user_meta_prefix_required()
@@ -191,7 +190,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$regex = array();
 		$regex[] = 'course_\d+';
 		$regex[] = $wpdb->prefix . 'course_\d+';
-		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
+		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE === get_current_blog_id() ) {
 			$regex[] = $wpdb->base_prefix . 'course_\d+';
 		}
 		$pattern = sprintf( '/^(%s)$/', implode( '|', $regex ) );

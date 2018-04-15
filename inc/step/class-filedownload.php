@@ -8,7 +8,7 @@
 class CoursePress_Step_FileDownload extends CoursePress_Step {
 	protected $type = 'filedownload';
 
-	function get_keys() {
+	public function get_keys() {
 		$keys = parent::get_keys();
 		$keys = array_merge( $keys, array(
 			'file_url',
@@ -18,7 +18,7 @@ class CoursePress_Step_FileDownload extends CoursePress_Step {
 		return $keys;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$file_url = $this->__get( 'file_url' );
 
 		if ( ! empty( $file_url ) ) {

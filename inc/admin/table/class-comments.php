@@ -11,7 +11,7 @@ if ( ! class_exists( 'WP_Comments_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-comments-list-table.php';
 }
 class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
-	var $course_id = 0;
+	public $course_id = 0;
 
 	private $users = array();
 	private $modules = array();
@@ -28,7 +28,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 	}
 
 	public function prepare_items() {
-		global $post_id, $comment_status, $search, $comment_type, $CoursePress_Core;
+		global $post_id, $comment_status, $search, $comment_type, $coursepress_core;
 
 		$course_id = ( isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
 		if ( !empty( $course_id ) ) {
@@ -41,7 +41,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 						'value' => $course_id,
 					),
 				),
-				'post_type'	=> $CoursePress_Core->step_post_type,
+				'post_type'	=> $coursepress_core->step_post_type,
 				'posts_per_page' => -1
 			));
 			if ( empty( $discussions ) ) {
@@ -50,7 +50,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		} else {
 			$discussions = get_posts( array(
 				'fields' => 'ids',
-				'post_type'	=> $CoursePress_Core->step_post_type,
+				'post_type'	=> $coursepress_core->step_post_type,
 				'posts_per_page' => -1
 			));
 			if ( empty( $discussions ) ) {

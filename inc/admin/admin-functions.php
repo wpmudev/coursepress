@@ -12,9 +12,9 @@ if ( ! function_exists( 'coursepress_is_admin' ) ) :
 	 * @return bool|string Returns CoursePress screen ID on success or false.
 	 */
 	function coursepress_is_admin() {
-		global $CoursePress_Admin_Page;
+		global $coursepress_admin_page;
 
-		if ( ! $CoursePress_Admin_Page instanceof CoursePress_Admin_Page )
+		if ( ! $coursepress_admin_page instanceof CoursePress_Admin_Page )
 			return false;
 
 		$screen_id = get_current_screen()->id;
@@ -22,7 +22,7 @@ if ( ! function_exists( 'coursepress_is_admin' ) ) :
 		$pttrn = '%toplevel_page_|coursepress-pro_page_|coursepress-base_page_|coursepress_page%';
 		$id = preg_replace( $pttrn, '', $screen_id );
 
-		if ( in_array( $screen_id, $CoursePress_Admin_Page->__get( 'screens' ) ) )
+		if ( in_array( $screen_id, $coursepress_admin_page->__get( 'screens' ) ) )
 			return $id;
 
 		return false;
@@ -40,9 +40,9 @@ if ( ! function_exists( 'coursepress_get_accessable_courses' ) ) :
 	 * @return array
 	 */
 	function coursepress_get_accessable_courses( $publish = true, $ids = false, $all = false ) {
-		global $CoursePress_User;
+		global $coursepress_user;
 
-		return $CoursePress_User->get_accessable_courses( $publish, $ids, $all );
+		return $coursepress_user->get_accessable_courses( $publish, $ids, $all );
 	}
 endif;
 
@@ -59,7 +59,10 @@ endif;
 
 if ( ! function_exists( 'coursepress_get_categories' ) ) :
 	function coursepress_get_categories() {
-		$terms = get_terms( array( 'taxonomy' => 'course_category', 'hide_empty' => false ) );
+		$terms = get_terms( array(
+			'taxonomy' => 'course_category',
+			'hide_empty' => false,
+		) );
 		$cats = array();
 
 		if ( ! empty( $terms ) ) {

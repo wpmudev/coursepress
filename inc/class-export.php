@@ -32,13 +32,13 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return bool
 	 */
 	private function prepare_data( $course_id ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		// WP_Post object for course.
 		$post = get_post( $course_id );
 		/**
 		 * Add CoursePress Version
 		 */
-		$post->coursepress_version = $CoursePress->version;
+		$post->coursepress_version = $cp_coursepress->version;
 		// Get course from course id.
 		$course = coursepress_get_course( $post );
 		// If course do not found, bail out.
@@ -170,7 +170,7 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return string File name.
 	 */
 	private function get_file_name() {
-		global $CoursePress;
+		global $cp_coursepress;
 		// Get site name.
 		$site_name = sanitize_key( get_bloginfo( 'name' ) );
 		$site_name = empty( $site_name ) ? '' : $site_name . '.';
@@ -178,7 +178,7 @@ class CoursePress_Export extends CoursePress_Utility {
 		$filename = sprintf(
 			'%scoursepress.%s.%d.json',
 			$site_name,
-			$CoursePress->version,
+			$cp_coursepress->version,
 			time()
 		);
 		// Course slug.

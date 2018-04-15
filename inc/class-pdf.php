@@ -231,7 +231,7 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
 	 * @return array|string
 	 */
 	public function make_pdf( $html, $args = array() ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		if ( ! isset( $args['title'] ) || empty( $args['title'] ) ) {
 			$args['title'] = __( 'CoursePress Report', 'cp' );
 		}
@@ -268,7 +268,7 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
 		// Can use the following to change language symbols to appropriate standard, e.g. ISO-638-2 languages.
 		// $pdf = new TCPDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, false, 'ISO-639-2', false );
 		// set document information
-		$pdf->SetCreator( $CoursePress->name );
+		$pdf->SetCreator( $cp_coursepress->name );
 		$pdf->SetTitle( $args['title'] );
 		$pdf->SetKeywords( '' );
 		if ( isset( $args['header'] ) && is_array( $args['header'] ) ) {

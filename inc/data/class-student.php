@@ -115,7 +115,7 @@ class CoursePress_Data_Student {
 
 		$student = coursepress_get_user( $student_id );
 
-		$page = 0 == (int) $page ? 1 : $page;
+		$page = 0 === (int) $page ? 1 : $page;
 
 		// Check if student is enrolled
 		$is_enrolled = is_wp_error( $student ) ? false : $student->is_enrolled_at( $course_id );
@@ -233,7 +233,7 @@ class CoursePress_Data_Student {
 	 */
 	public static function my_courses( $student_id = 0, $courses = array() ) {
 
-		global $CoursePress_Core;
+		global $coursepress_core;
 
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
@@ -242,7 +242,7 @@ class CoursePress_Data_Student {
 		$student = coursepress_get_user( $student_id );
 
 		if ( empty( $courses ) ) {
-			$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+			$course_ids = self::get_enrolled_courses_ids( $student_id );
 			$courses = array_map( 'get_post', $course_ids );
 		}
 
@@ -260,14 +260,14 @@ class CoursePress_Data_Student {
 			'past' => array(),
 		);
 
-		$now = $CoursePress_Core->date_time_now();
+		$now = $coursepress_core->date_time_now();
 
 		foreach ( $courses as $course ) {
 			$course_id = $course->ID;
 			$start_date = coursepress_course_get_setting( $course_id, 'course_start_date', 0 );
-			$start_date = empty( $start_date ) ? $start_date : $CoursePress_Core->strtotime( $start_date );
+			$start_date = empty( $start_date ) ? $start_date : $coursepress_core->strtotime( $start_date );
 			$end_date = coursepress_course_get_setting( $course_id, 'course_start_date', 0 );
-			$end_date = empty( $end_date ) ? $end_date : $CoursePress_Core->strtotime( $end_date );
+			$end_date = empty( $end_date ) ? $end_date : $coursepress_core->strtotime( $end_date );
 			$open_date = coursepress_course_get_setting( $course_id, 'course_open_ended', 0 );
 			$is_open_ended = ! empty( $open_date );
 
@@ -373,7 +373,7 @@ class CoursePress_Data_Student {
 				$required_steps = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/required_steps' );
 				$completed = coursepress_get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' );
 
-				return (int) $completed == (int) $required_steps;
+				return (int) $completed === (int) $required_steps;
 			}
 		}
 

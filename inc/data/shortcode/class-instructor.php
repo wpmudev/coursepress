@@ -75,7 +75,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 		}
 		$instructors = $course->get_instructors();
 		$count = count( $instructors );
-		if ( 0 == $count ) {
+		if ( ! $count ) {
 			return '';
 		}
 		$class = array( 'course-instructors', $atts['style'] );
@@ -105,7 +105,10 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 				$template .= $instructor->get_avatar( $atts['avatar_size'], $atts['default_avatar'] );
 				$template .= '</div>';
 			}
-			$attr = array( 'href' => esc_url( $link ), 'class' => 'fn instructor' );
+			$attr = array(
+				'href' => esc_url( $link ),
+				'class' => 'fn instructor',
+			);
 			if ( $link_all ) {
 				$template .= $this->create_html( 'a', $attr, $instructor_name );
 			} else {

@@ -459,9 +459,9 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	public function get_completion_data( $course_id ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		$id = $this->__get( 'ID' );
-		$defaults = array( 'version' => $CoursePress->version );
+		$defaults = array( 'version' => $cp_coursepress->version );
 		$progress = $this->get_course_progress_data( $course_id );
 		if ( empty( $progress ) ) {
 			$progress = $defaults;

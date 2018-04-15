@@ -824,7 +824,7 @@ abstract class CoursePress_Utility {
 			)
 		);
 		$atts = apply_filters( 'coursepress_video_embed_args', $atts, $html, $url, $args );
-		$this->embed_args = $atts;;
+		$this->embed_args = $atts;
 		// build the query url.
 		$parameters = http_build_query( $atts );
 		// Another attempt to remove Youtube features.

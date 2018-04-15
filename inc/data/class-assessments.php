@@ -53,7 +53,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			'pass_grade' => $minimum_grade,
 			'modules_count' => 0,
 			'students_count' => 0,
-			'grade_system' => ( empty( $unit_id ) || $unit_id === 'all' )
+			'grade_system' => ( empty( $unit_id ) || 'all' === $unit_id )
 				? __( 'total acquired grade % total number of gradable modules', 'cp' )
 				: __( 'total acquired assessable grade % total number of assessable modules', 'cp' ),
 		);
@@ -80,19 +80,19 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				$unit = reset( $units );
 				if ( ! $unit->is_accessible_by( $student_id ) ) {
 					// We need to exclude this user from count.
-					$count -= 1;
+					$count--;
 					unset( $assessments['students'][ $student_id ] );
 					continue;
 				}
 			}
 			$grade = $student->get_course_grade( $course_id );
 			//Filter based on the graded param.
-			if ( $graded === 'graded' && $grade < $minimum_grade ) {
-				$count -= 1;
+			if ( 'graded' === $graded && $grade < $minimum_grade ) {
+				$count--;
 				unset( $assessments['students'][ $student_id ] );
 				continue;
-			} elseif ( $graded === 'ungraded' && $grade >= $minimum_grade ) {
-				$count -= 1;
+			} elseif ( 'ungraded' === $graded && $grade >= $minimum_grade ) {
+				$count--;
 				unset( $assessments['students'][ $student_id ] );
 				continue;
 			}
@@ -181,7 +181,8 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		foreach ( $units as $unit_key => $unit ) {
 			// Get the modules for the unit.
 			$modules_steps = $unit->get_modules_with_steps();
-			$answerable_modules = $gradable_modules = 0;
+			$answerable_modules = 0;
+			$gradable_modules = 0;
 			foreach ( $modules_steps as $mkey => $module ) {
 				foreach ( $module['steps'] as $step_id => $step ) {
 					// If step is not answerable or assessable, unset.
@@ -190,7 +191,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 					} else {
 						// Set grade.
 						$step_grade = $student->get_step_grade( $course_id, $unit->ID, $step_id );
-						if ( $step->type === 'fileupload' && ( empty( $step_grade ) || $step_grade === 'pending' ) ) {
+						if ( 'fileupload' === $step->type && ( empty( $step_grade ) || 'pending' === $step_grade ) ) {
 							$modules_steps[ $mkey ]['steps'][ $step_id ]->is_graded = false;
 							$modules_steps[ $mkey ]['steps'][ $step_id ]->grade = 0;
 						} else {

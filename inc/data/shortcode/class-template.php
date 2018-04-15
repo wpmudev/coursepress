@@ -18,14 +18,14 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 *
 	 * @var (string)
 	 **/
-	var $form_message = '';
+	public $form_message = '';
 
 	/**
 	 * Form class to render on registration form.
 	 *
 	 * @var (string)
 	 **/
-	var $form_message_class = '';
+	public $form_message_class = '';
 
 	/**
 	 * Register the shortcodes.
@@ -657,11 +657,10 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				}
 				$content .= '</p></div>';
 				$content .= do_shortcode( sprintf(
-						'[course_join_button course_id="%s" details_text="%s"]',
-						esc_attr( $course_id ),
-						esc_attr__( 'Show course details', 'cp' )
-					)
-				);
+					'[course_join_button course_id="%s" details_text="%s"]',
+					esc_attr( $course_id ),
+					esc_attr__( 'Show course details', 'cp' )
+				) );
 				$content .= '</div>'; // .focus-main
 				$content .= '</div>'; // .focus-wrapper
 				$template = apply_filters( 'coursepress_404_message', $content, $course_id, $unit_id );
@@ -709,7 +708,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$rel_attribute = '';
 		if ( ! empty( $rel ) ) {
 			$allowed = array( 'alternate', 'author', 'bookmark', 'external', 'help', 'license', 'next', 'nofollow', 'noreferrer', 'noopener', 'prev', 'search', 'tag' );
-			if ( in_array( $rel, $allowed ) ) {
+			if ( in_array( $rel, $allowed, true ) ) {
 				$rel_attribute = sprintf( ' rel="%s"', esc_attr( $rel ) );
 			}
 		}
@@ -820,31 +819,31 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
         ob_start();
         $atts = shortcode_atts( array( 'page' => '' ), $atts );
         switch ( $atts['page'] ) {
-        case 'enrollment_process':
-            $args = array( 'course_id' => coursepress_get_course_id() );
-            $shortcode = new CoursePress_Data_Shortcode_Student();
-            $content = $shortcode->get_coursepress_enrollment_templates( $args );
-            echo $content;
-            break;
-        case 'student_login':
-            coursepress_get_template( 'page', 'student-login-form' );
-            break;
-        case 'student_signup':
-            coursepress_get_template( 'registration', 'form' );
-            break;
-        case 'student_dashboard':
-            // My courses template
-            coursepress_get_template( 'content', 'my-courses' );
-            // Instructed courses
-            coursepress_get_template( 'content', 'instructed-courses' );
-            // Facilitated courses
-            coursepress_get_template( 'content', 'facilitated-courses' );
-            break;
-        case 'student_settings':
-            coursepress_get_template( 'page', 'student-settings' );
-            break;
-        default:
-            _e( 'Page cannot be found', 'cp' );
+			case 'enrollment_process':
+				$args = array( 'course_id' => coursepress_get_course_id() );
+				$shortcode = new CoursePress_Data_Shortcode_Student();
+				$content = $shortcode->get_coursepress_enrollment_templates( $args );
+				echo $content;
+				break;
+			case 'student_login':
+				coursepress_get_template( 'page', 'student-login-form' );
+				break;
+			case 'student_signup':
+				coursepress_get_template( 'registration', 'form' );
+				break;
+			case 'student_dashboard':
+				// My courses template
+				coursepress_get_template( 'content', 'my-courses' );
+				// Instructed courses
+				coursepress_get_template( 'content', 'instructed-courses' );
+				// Facilitated courses
+				coursepress_get_template( 'content', 'facilitated-courses' );
+				break;
+			case 'student_settings':
+				coursepress_get_template( 'page', 'student-settings' );
+				break;
+			default:
+				_e( 'Page cannot be found', 'cp' );
         }
         $content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
         return $content;
@@ -868,11 +867,11 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'login_link_url' => '#',
 			'login_link_id' => '',
 			'login_link_class' => '',
-			'login_link_label' => __( 'Already have an account? <a href="%s" class="%s" id="%s">Login to your account</a>!', 'cp' ),
+			'login_link_label' => __( 'Already have an account? <a href="%1$s" class="%2$s" id="%3$s">Login to your account</a>!', 'cp' ),
 			'signup_link_url' => '#',
 			'signup_link_id' => '',
 			'signup_link_class' => '',
-			'signup_link_label' => __( 'Don\'t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'cp' ),
+			'signup_link_label' => __( 'Don\'t have an account? <a href="%1$s" class="%2$s" id="%3$s">Create an Account</a> now!', 'cp' ),
 			'forgot_password_label' => __( 'Forgot Password?', 'cp' ),
 			'submit_button_class' => '',
 			'submit_button_attributes' => '',
@@ -966,7 +965,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 						$content .= '<input type="checkbox" name="confirm_weak_password" value="1" /> ' . __( 'Confirm use of weak password', 'cp' );
 						$content .= '</label> ';
 						if ( shortcode_exists( 'signup-tos' ) ) {
-							if ( get_option( 'show_tos', 0 ) == '1' ) {
+							if ( '1' == get_option( 'show_tos', 0 ) ) {
 								$content .= '<label class="tos full">';
 								ob_start();
 								echo do_shortcode( '[signup-tos]' );
@@ -1150,7 +1149,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$login_title        = sanitize_text_field( $atts['login_title'] );
 		$signup_url         = esc_url_raw( $atts['signup_url'] );
 		$redirect_url       = esc_url_raw( $atts['redirect_url'] );
-		$page               = in_array( $atts['page'], $allowed ) ? $atts['page'] : 'signup';
+		$page               = in_array( $atts['page'], $allowed, true ) ? $atts['page'] : 'signup';
 		$signup_prefix      = empty( $signup_url ) ? '&' : '?';
 		$login_prefix       = empty( $login_url ) ? '&' : '?';
 		$signup_url         = empty( $signup_url ) ? coursepress_get_setting( 'slugs/signup' ) : $signup_url;
@@ -1238,7 +1237,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				if ( $redirect = coursepress_get_redirect_to() ) {
 					$redirect_to = $redirect;
 				}
-				$content .= '<label class="signup-link full">' . ( $this->users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'cp' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'cp' ), '</a>' ) : '' ) . '</label>';
+				$content .= '<label class="signup-link full">' . ( $this->users_can_register() ? sprintf( __( 'Don\'t have an account? %s now!', 'cp' ), '<a href="' . $signup_url . '">' . __( 'Create an Account', 'cp' ) . '</a>' ) : '' ) . '</label>';
 				$content .= '<label class="forgot-link half-left"><a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'cp' ) . '</a></label>';
 				$content .= '<label class="submit-link half-right"><input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'cp' ) . '"></label>';
 				$content .= '<input name="redirect_to" value="' . esc_url( $redirect_to ) . '" type="hidden">';
@@ -1296,7 +1295,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 */
 	public static function term_link( $termlink, $term, $taxonomy ) {
 		$course_category_name = 'course_category';
-		if ( $course_category_name != $taxonomy ) {
+		if ( $course_category_name !== $taxonomy ) {
 			return $termlink;
 		}
 		$courses_slug = coursepress_get_setting( 'slugs/course', 'courses' );

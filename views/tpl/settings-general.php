@@ -207,7 +207,7 @@
         /**
          * Reports
          */
-        $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+        $pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
         $fonts = array();
 
         if ( $pdf ) {

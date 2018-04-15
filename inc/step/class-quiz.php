@@ -60,7 +60,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 										$classes[] = $checked[ $user_response ]? 'correct':'wrong';
 										$show = true;
 									}
-								break;
+									break;
 								default:
 									if ( isset( $user_response[ $answer_pos ] ) ) {
 										$classes[] = $checked[ $answer_pos ]? 'correct':'wrong';
@@ -138,7 +138,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 											if ( $checked[ $user_response ] && $user_response == $answer_pos ) {
 												$correct++;
 											}
-										break;
+											break;
 										case 'multiple':
 											if ( isset( $user_response[ $answer_pos ] ) ) {
 												$user_ans = intval( $user_response[ $answer_pos ] );
@@ -151,7 +151,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 													$wrong++;
 												}
 											}
-										break;
+											break;
 									}
 								}
 							}
@@ -254,10 +254,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 				switch ( $question['type'] ) {
 					case 'single':
 						$name = sprintf( 'module[%d][%d][%d][%s]', $course_id, $unit_id, $step_id, $index );
-					break;
+						break;
 					default:
 						$name = sprintf( 'module[%d][%d][%d][%s][%d]', $course_id, $unit_id, $step_id, $index, $pos );
-					break;
+						break;
 				}
 				$attr = array(
 					'type' => 'radio',

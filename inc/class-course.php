@@ -62,11 +62,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @since 3.0.0
 	 */
 	public function update_coursepress_version() {
-		global $CoursePress;
+		global $cp_coursepress;
 		$course_id = $this->__get( 'ID' );
-		$result = add_post_meta( $course_id, 'coursepress_version', $CoursePress->version, true );
+		$result = add_post_meta( $course_id, 'coursepress_version', $cp_coursepress->version, true );
 		if ( false === $result ) {
-			update_post_meta( $course_id, 'coursepress_version', $CoursePress->version );
+			update_post_meta( $course_id, 'coursepress_version', $cp_coursepress->version );
 		}
 	}
 
@@ -118,7 +118,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	public function get_settings() {
-		global $CoursePress;
+		global $cp_coursepress;
 		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
 		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
 		$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
@@ -193,14 +193,14 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * MarketPress plugin status
 		 */
-		$MarketPress = $CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
+		$MarketPress = $cp_coursepress->get_class( 'CoursePress_Extension_MarketPress' );
 		$settings['mp_is_instaled'] = $MarketPress->installed();
 		$settings['mp_is_activated'] = $MarketPress->activated();
 		return $settings;
 	}
 
 	public function update_setting( $key, $value = array() ) {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
 		if ( true === $key ) {
@@ -225,7 +225,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $settings['listing_image_thumbnail_id'] );
 		}
-		$category_type = $CoursePress_Core->__get( 'category_type' );
+		$category_type = $coursepress_core->__get( 'category_type' );
 		if ( ! empty( $settings['course_category'] ) ) {
 			wp_set_object_terms( $course_id, $settings['course_category'], $category_type );
 		} else {
@@ -1084,7 +1084,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool Success?
 	 */
 	public function duplicate_course() {
-		global $CoursePress_Core;
+		global $coursepress_core;
 
 		// Course ID is set when this class is instantiated.
 		$course_id = $this->__get( 'ID' );
@@ -1153,7 +1153,7 @@ class CoursePress_Course extends CoursePress_Utility {
 				}
 			}
 
-			$category_type = $CoursePress_Core->__get( 'category_type' );
+			$category_type = $coursepress_core->__get( 'category_type' );
 			$categories = $this->get_category();
 			if ( empty( $categories ) ) {
 				$categories = array();
@@ -1217,11 +1217,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @param array $excludes Array of excluded Post IDs
 	 */
 	public function save_course_number( $post_id, $post_title, $excludes = array() ) {
-		global $wpdb, $CoursePress_Core;
+		global $wpdb, $coursepress_core;
 		if ( ! coursepress_is_course( $post_id ) ) {
 			return;
 		}
-		$course_post_type = $CoursePress_Core->course_post_type;
+		$course_post_type = $coursepress_core->course_post_type;
 		$sql = $wpdb->prepare(
 			"select ID from {$wpdb->posts} where post_title = ( select a.post_title from {$wpdb->posts} a where id = %d ) and post_type = %s and post_status in ( 'publish', 'draft', 'pending', 'future' ) order by id asc",
 			$post_id,
@@ -1276,11 +1276,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @param integer $post_id Post ID.
 	 */
 	public function delete_course_number( $post_id ) {
-		global $wpdb, $CoursePress_Core;
+		global $wpdb, $coursepress_core;
 		if ( ! coursepress_is_course( $post_id ) ) {
 			return;
 		}
-		$course_post_type = $CoursePress_Core->course_post_type;
+		$course_post_type = $coursepress_core->course_post_type;
 		$sql = $wpdb->prepare(
 			"SELECT ID FROM {$wpdb->posts} WHERE post_title = ( SELECT a.post_title FROM {$wpdb->posts} a WHERE a.ID = %d )",
 			$post_id

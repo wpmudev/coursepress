@@ -403,7 +403,7 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 			}
 
 			// Ignore units that start on same date as course.
-			if ( $start_date == $course_start_date ) {
+			if ( $start_date === $course_start_date ) {
 				continue;
 			}
 
@@ -541,7 +541,7 @@ class CoursePress_Cron_EmailAlert extends CoursePress_Utility {
 	 */
 	protected function is_today( $date ) {
 
-		return $date == $this->today;
+		return $date === $this->today;
 	}
 
 	/**

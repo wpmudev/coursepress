@@ -6,10 +6,9 @@ class CoursePress_Data_Helper_UI {
 	 * Displays a password strength meter and includes the necessary assets.
 	 */
 	public static function password_strength_meter() {
+		global $coursepress_core;
 
-		global $CoursePress_Core;
-
-		if ( ! $CoursePress_Core->is_password_strength_meter_enabled() ) {
+		if ( ! $coursepress_core->is_password_strength_meter_enabled() ) {
 			return;
 		}
 

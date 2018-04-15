@@ -154,16 +154,20 @@ class CoursePress_Data_Instructor {
 				);
 			} else {
 				$messages = apply_filters( 'coursepress_instructor_invitation_message_wrong_email',
-					array( esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
-					esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ) )
+					array(
+						esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
+						esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ),
+					)
 				);
 			}
 		}
 
 		if ( empty( $messages ) ) {
 			$messages = apply_filters( 'coursepress_instructor_invitation_message_error',
-				array( esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
-				esc_html__( 'Please contact us if you believe this to be an error.', 'cp' ) )
+				array(
+					esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
+					esc_html__( 'Please contact us if you believe this to be an error.', 'cp' ),
+				)
 			);
 		}
 
@@ -196,7 +200,7 @@ class CoursePress_Data_Instructor {
 		$regex = array();
 		$regex[] = 'course_\d+';
 		$regex[] = $wpdb->prefix . 'course_\d+';
-		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
+		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE === get_current_blog_id() ) {
 			$regex[] = $wpdb->base_prefix . 'course_\d+';
 		}
 
@@ -242,7 +246,7 @@ class CoursePress_Data_Instructor {
 	 */
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 
-		global $wpdb, $CoursePress_Core;
+		global $wpdb, $coursepress_core;
 
 		$assigned_courses = array();
 
@@ -259,7 +263,7 @@ class CoursePress_Data_Instructor {
 			// Dealing with multisite nuances
 			if ( is_multisite() ) {
 				// Primary blog?
-				if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
+				if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE === get_current_blog_id() ) {
 					$course_id = str_replace( $wpdb->base_prefix, '', $course_id );
 				} else {
 					$course_id = str_replace( $wpdb->prefix, '', $course_id );
@@ -269,8 +273,8 @@ class CoursePress_Data_Instructor {
 			$course_id = (int) str_replace( 'course_', '', $course_id );
 
 			if ( ! empty( $course_id ) ) {
-				if ( 'all' !==$status ) {
-					if ( get_post_status( $course_id ) == $status ) {
+				if ( 'all' !== $status ) {
+					if ( get_post_status( $course_id ) === $status ) {
 						$assigned_courses[] = $course_id;
 					}
 				} else {
@@ -284,7 +288,7 @@ class CoursePress_Data_Instructor {
 		if ( ! empty( $assigned_courses ) ) {
 			// Filter the course IDs, make sure courses exists and are not deleted
 			$args = array(
-				'post_type' => $CoursePress_Core->course_post_type,
+				'post_type' => $coursepress_core->course_post_type,
 				'post_status' => 'any',
 				'suppress_filters' => true,
 				'fields' => 'ids',
@@ -308,10 +312,10 @@ class CoursePress_Data_Instructor {
 	 * @return array List of course IDs.
 	 */
 	public static function get_created_courses_ids( $user, $status = 'any' ) {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		// Filter the course IDs, make sure courses exists and are not deleted
 		$args = array(
-			'post_type' => $CoursePress_Core->course_post_type,
+			'post_type' => $coursepress_core->course_post_type,
 			'post_status' => $status,
 			'suppress_filters' => true,
 			'fields' => 'ids',

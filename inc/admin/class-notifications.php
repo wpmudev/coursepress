@@ -36,7 +36,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @since 3.0.0
 	 */
-	function change_localize_array( $localize_array ) {
+	public function change_localize_array( $localize_array ) {
 		$localize_array['text']['deleting_post'] = __( 'Deleting alert... please wait', 'cp' );
 		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this alert?', 'cp' );
 		if ( ! isset( $localize_array['text']['notifications'] ) ) {
@@ -60,7 +60,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 * @uses get_column_headers().
 	 * @uses coursepress_render().
 	 */
-	function get_page() {
+	public function get_page() {
 
 		$count = 0;
 		$screen = get_current_screen();
@@ -118,7 +118,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @return array Notification objects.
 	 */
-	function get_notifications( $current_status, &$count = 0 ) {
+	public function get_notifications( $current_status, &$count = 0 ) {
 
 		// Set the parameters for pagination.
 		$per_page = $this->items_per_page( 'coursepress_notifications_per_page' );
@@ -155,7 +155,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @uses get_current_screen().
 	 */
-	function screen_options() {
+	public function screen_options() {
 
 		$screen_id = get_current_screen()->id;
 
@@ -164,7 +164,10 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
 
 		//  Notifications per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_notifications_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_notifications_per_page',
+		) );
 	}
 
 	/**
@@ -172,7 +175,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_columns( $current_status ) {
+	public function get_columns( $current_status ) {
 
 		$columns = array(
 			'title' => __( 'Notification title', 'cp' ),
@@ -199,7 +202,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function hidden_columns() {
+	public function hidden_columns() {
 
 		/**
 		 * Trigger to modify hidden columns.

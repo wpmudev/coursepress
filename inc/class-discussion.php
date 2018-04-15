@@ -29,7 +29,7 @@ class CoursePress_Discussion extends CoursePress_Utility {
 	}
 
 	function add_comment( $comments ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
 		$student_id = get_current_user_id();
 		$comments = wp_parse_args(
@@ -48,7 +48,7 @@ class CoursePress_Discussion extends CoursePress_Utility {
 
 		if ( ! empty( $comments['coursepress_subscribe'] ) ) {
 			// Send notification
-			$discussionClass = $CoursePress->get_class( 'CoursePress_Cron_Discussion' );
+			$discussionClass = $cp_coursepress->get_class( 'CoursePress_Cron_Discussion' );
 
 			if ( $discussionClass ) {
 				if ( 'do-not-subscribe' === $comments['coursepress_subscribe'] ) {

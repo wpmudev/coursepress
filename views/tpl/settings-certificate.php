@@ -5,7 +5,7 @@
 
 	<div class="cp-content">
         <?php
-		global $CoursePress, $editor_styles;
+		global $cp_coursepress, $editor_styles;
 
 		$config = array();
 		$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
@@ -31,11 +31,11 @@
 		 * Custom Certificate
 		 */
 		$content = coursepress_get_setting( 'basic_certificate/content' );
-		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
+		$cert_class = $cp_coursepress->get_class( 'CoursePress_Certificate' );
 		if ( empty( $content ) ) {
-			$content = $certClass->default_certificate_content();
+			$content = $cert_class->default_certificate_content();
 		}
-		$tokens = $certClass->get_tokens();
+		$tokens = $cert_class->get_tokens();
 		$token_info = sprintf( '<p>%s</p>', __( 'These codes will be replaced with actual data:', 'cp' ) );
 		$token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 

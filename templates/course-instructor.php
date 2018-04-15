@@ -12,17 +12,17 @@ get_header(); ?>
 			<div class="content-area">
 				<header class="page-header">
 					<h1 class="page-title cp-flex">
-						<span class="gravatar"><?php echo get_avatar( $CoursePress_Instructor->user_email, 64 ); ?></span>
-						<span class="display_name"><?php echo esc_html( $CoursePress_Instructor->display_name ); ?></span>
+						<span class="gravatar"><?php echo get_avatar( $coursepress_instructor->user_email, 64 ); ?></span>
+						<span class="display_name"><?php echo esc_html( $coursepress_instructor->display_name ); ?></span>
 					</h1>
-					<?php if ( isset( $CoursePress_Instructor->description ) && ! empty( $CoursePress_Instructor->description ) ) : ?>
-						<div class="description"><?php echo wpautop( $CoursePress_Instructor->description ); ?></div>
+					<?php if ( isset( $coursepress_instructor->description ) && ! empty( $coursepress_instructor->description ) ) : ?>
+						<div class="description"><?php echo wpautop( $coursepress_instructor->description ); ?></div>
 					<?php endif; ?>
 				</header>
 
 				<?php
 
-				$courses = $CoursePress_Instructor->get_instructed_courses();
+				$courses = $coursepress_instructor->get_instructed_courses();
 				if ( $courses ) :
 					foreach ( $courses as $course ) :
 						$post = get_post( $course->ID );

@@ -5,9 +5,9 @@
  * @since 2.0.0
  */
 class CoursePress_Cron_Discussion extends CoursePress_Utility {
-	var $option_name = 'new_comment_id';
-	var $hook = 'coursepress_send_comment_notification';
-	var $recurrance = 'cp_quarter';
+	public $option_name = 'new_comment_id';
+	public $hook = 'coursepress_send_comment_notification';
+	public $recurrance = 'cp_quarter';
 
 	/**
 	 * Class must be loaded, before we call WP_Cron
@@ -83,7 +83,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 	 * @param int $comment_post_id Comment Post ID.
 	 * @param int $user_id User ID.
 	 */
-	function un_subscribe( $comment_post_id, $user_id ) {
+	public function un_subscribe( $comment_post_id, $user_id ) {
 		// Get meta key for this comment subscription.
 		$meta_key = $this->get_user_meta_name( $comment_post_id );
 		// Mark this user as an un-subscriber.
@@ -96,7 +96,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 	 * @param int $comment_post_id Comment Post ID.
 	 * @param int $user_id User ID.
 	 */
-	function subscribe( $comment_post_id, $user_id, $subscribe_type = 'subscribe-reactions' ) {
+	public function subscribe( $comment_post_id, $user_id, $subscribe_type = 'subscribe-reactions' ) {
 		if ( in_array( $subscribe_type, array( 'subscribe-reactions', 'subscribe-all' ) ) ) {
 			// Get meta key for this comment subscription.
 			$meta_key = $this->get_user_meta_name( $comment_post_id );
@@ -174,7 +174,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 
 		$post_type = 'discussion';
 
-		if ( $post_type == $post->post_type ) {
+		if ( $post_type === $post->post_type ) {
 			$discussion = get_post( $post->post_parent );
 
 			return $discussion->post_id;
@@ -253,7 +253,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 				}
 				// Do not send if unsubscribed.
 				$meta = get_user_meta( $instructor->ID, $meta_key, true );
-				if ( $meta && $meta === 'do-not-subscribe' ) {
+				if ( $meta && 'do-not-subscribe' === $meta ) {
 					continue;
 				}
 				$receipients[ $instructor->ID ] = $instructor->__get( 'user_email' );
@@ -271,7 +271,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 				}
 				// Do not send if unsubscribed.
 				$meta = get_user_meta( $facilitator->ID, $meta_key, true );
-				if ( $meta && $meta === 'do-not-subscribe' ) {
+				if ( $meta && 'do-not-subscribe' === $meta ) {
 					continue;
 				}
 				$receipients[ $facilitator->ID ] = $facilitator->__get( 'user_email' );
@@ -376,7 +376,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		}
 		$comment = get_comment( $comment_id );
 
-		if ( 0 == $comment->comment_parent ) {
+		if ( ! $comment->comment_parent ) {
 			return $users;
 		}
 		if ( ! empty( $comment->user_id ) ) {

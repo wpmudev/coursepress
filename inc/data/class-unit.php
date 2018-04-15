@@ -12,7 +12,7 @@ class CoursePress_Data_Unit {
 	 * @return array
 	 */
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		$estimations = array();
 		if ( ! isset( $data[ $unit_id ]['pages'] ) ) {
 			$data[ $unit_id ]['pages'] = array();
@@ -29,12 +29,12 @@ class CoursePress_Data_Unit {
 				if ( ! empty( $parts ) ) {
 					$hours = (int) array_pop( $parts );
 				}
-				$time = $CoursePress_Core->get_time( $seconds, $minutes, $hours );
+				$time = $coursepress_core->get_time( $seconds, $minutes, $hours );
 				// Increase page time.
 				$page_seconds += $time['total_seconds'];
 			}
 			// Page time.
-			$time = $CoursePress_Core->get_time( $page_seconds );
+			$time = $coursepress_core->get_time( $page_seconds );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
 			$estimations = coursepress_set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
@@ -43,7 +43,7 @@ class CoursePress_Data_Unit {
 			$unit_seconds += $time['total_seconds'];
 		}
 		// Unit time.
-		$time = $CoursePress_Core->get_time( $unit_seconds );
+		$time = $coursepress_core->get_time( $unit_seconds );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/estimation', $time['time'] );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/components/hours', $time['hours'] );
 		$estimations = coursepress_set_array_val( $estimations, 'unit/components/minutes', $time['minutes'] );
@@ -106,7 +106,7 @@ class CoursePress_Data_Unit {
 	 * @return string $date The unit becomes available or null. Date is in GMT timezone.
 	 **/
 	public static function get_unit_availability_date( $unit_id, $course_id, $date_format = null, $student_id = 0 ) {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
@@ -114,8 +114,8 @@ class CoursePress_Data_Unit {
 		$is_open_ended = coursepress_course_get_setting( $course_id, 'course_open_ended' );
 		$course_start = coursepress_course_get_setting( $course_id, 'course_start_date' );
 		$course_end = coursepress_course_get_setting( $course_id, 'course_end_date' );
-		$start_date = $CoursePress_Core->strtotime( $course_start ); // Converts date to UTC.
-		$end_date = $CoursePress_Core->strtotime( $course_end ); // Converts date to UTC.
+		$start_date = $coursepress_core->strtotime( $course_start ); // Converts date to UTC.
+		$end_date = $coursepress_core->strtotime( $course_end ); // Converts date to UTC.
 		$is_open_ended = coursepress_is_true( $is_open_ended );
 		// Use common current timestamp for CP
 		$always_return_date = false; // Return empty value if unit is available!
@@ -124,7 +124,7 @@ class CoursePress_Data_Unit {
 		} else {
 			$always_return_date = true; // Return formatted date, even when unit is available.
 		}
-		$now = $CoursePress_Core->date_time_now();
+		$now = $coursepress_core->date_time_now();
 		$availability_date = '';
 		$return_date = $start_date; // UTC value.
 		// Check for course start/end dates.
@@ -136,8 +136,7 @@ class CoursePress_Data_Unit {
 			// 2. End date reached?
 			// Check if student is currently enrolled
 			$is_student = is_wp_error( $student ) ? false : $student->is_enrolled_at( $course_id );
-			if ( $is_student ) {
-			} else {
+			if ( ! $is_student ) {
 				$availability_date = 'expired';
 			}
 		}
@@ -149,7 +148,7 @@ class CoursePress_Data_Unit {
 			if ( $delay_days > 0 ) {
 				// Delay is added to the base-date. In future this could be
 				// changed to enrollment date or completion of prev-unit, etc.
-				$base_date = $CoursePress_Core->strtotime( $course_start ); // UTC value.
+				$base_date = $coursepress_core->strtotime( $course_start ); // UTC value.
 				$release_date = $base_date + ($delay_days * DAY_IN_SECONDS);
 				$return_date = $release_date; // UTC value.
 				if ( $now < $release_date ) {
@@ -158,7 +157,7 @@ class CoursePress_Data_Unit {
 			}
 		} elseif ( 'on_date' === $status_type ) {
 			$due_on = get_post_meta( $unit_id, 'unit_availability_date', true );
-			$due_date = $CoursePress_Core->strtotime( $due_on ); // UTC value.
+			$due_date = $coursepress_core->strtotime( $due_on ); // UTC value.
 			$return_date = $due_date; // UTC value.
 			// Unit-Start date reached?
 			if ( $now < $due_date ) {
@@ -340,7 +339,7 @@ class CoursePress_Data_Unit {
 		 */
 		if ( $previous_unit_id && $force_current_unit_completion ) {
 			$number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
-			if ( 0 == $number_of_mandatory ) {
+			if ( ! $number_of_mandatory ) {
 				$force_current_unit_completion = false;
 				$force_current_unit_successful_completion = false;
 			}
@@ -481,7 +480,7 @@ class CoursePress_Data_Unit {
 		if ( ! is_a( $unit, 'WP_Post' ) ) {
 			return 0;
 		}
-		if ( $unit->post_type === 'unit' ) {
+		if ( 'unit' === $unit->post_type ) {
 			return $unit->post_parent;
 		}
 		return 0;

@@ -16,7 +16,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
 	}
 
-	function change_localize_array( $localize_array ) {
+	public function change_localize_array( $localize_array ) {
 		$localize_array['text']['deleting_post'] = __( 'Deleting forum... please wait', 'cp' );
 		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this forum?', 'cp' );
 		if ( ! isset( $localize_array['text']['forums'] ) ) {
@@ -29,7 +29,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		return $localize_array;
 	}
 
-	function columns( $current_status ) {
+	public function columns( $current_status ) {
 		$columns = array(
 			'topic' => __( 'Topic', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
@@ -54,8 +54,8 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	private function get_page_list() {
 		$search         = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$current_status = $this->get_status();
-		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
-		$course    = coursepress_get_course( $course_id );
+		$course_id		= isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
+		$course			= coursepress_get_course( $course_id );
 		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {
 			$this->render_error();
 			return;
@@ -120,7 +120,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 
 			$post = get_post( $forum_id );
 			if ( is_a( $post, 'WP_Post' ) ) {
-				if ( $this->post_type == $post->post_type ) {
+				if ( $this->post_type === $post->post_type ) {
 					$args['forum_id'] = $post->ID;
 					$args['course_id'] = $post->post_parent;
 					$args['post_title'] = $post->post_title;
@@ -257,7 +257,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		);
 		$postarr = sanitize_post( $postarr, 'db' );
 		$post_id = wp_insert_post( $postarr );
-		if ( 0 == $postarr['ID'] ) {
+		if ( ! $postarr['ID'] ) {
 			return $post_id;
 		}
 		return $forum_id;
@@ -273,7 +273,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	 */
 	public function get_by_course_id( $course_id ) {
 		$is_course = coursepress_is_course( $course_id );
-		if ( false == $is_course ) {
+		if ( ! $is_course ) {
 			return array();
 		}
 		$args = array(
