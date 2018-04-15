@@ -1052,17 +1052,30 @@ class CoursePress_Data_Capabilities {
 		}
 
 		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
-		if ( empty( $courses ) ) {
-			return false;
-		}
+		$courses_created = CoursePress_Data_Instructor::get_created_courses_ids( $user_id );
+		if ( ! empty( $courses_created ) || ! empty( $courses ) ) {
 
-		// If "coursepress_create_my_assigned_notification_cap" is on then enable to add notifications.
-		$capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
-		if ( user_can( $user_id, $capability_assigned ) ) {
-			return true;
-		}
+			// If "coursepress_create_my_assigned_notification_cap" is on then enable to add notifications.
+			// $capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			// el( user_can( $user_id, $capability_assigned ) );
+			// if ( user_can( $user_id, $capability_assigned ) ) {
+			// 	return true;
+			// }
 
-		return self::can_add_notification( $courses[0], $user_id );
+			$can_create_own_course_notification      = false;
+			$can_create_assigned_course_notification = false;
+
+			if ( ! empty( $courses_created ) ) {
+				$can_create_own_course_notification = self::can_add_notification( $courses_created[0], $user_id );
+				el( $can_create_own_course_notification );
+			}
+			if ( ! empty( $courses ) ) {
+				$can_create_assigned_course_notification = self::can_add_notification( $courses[0], $user_id );
+				el( $can_create_assigned_course_notification );
+			}
+			return $can_create_own_course_notification || $can_create_assigned_course_notification;
+		}
+		return false;
 	}
 
 	/**
