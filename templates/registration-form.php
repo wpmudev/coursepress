@@ -39,7 +39,7 @@ endif;
 	<?php endif; ?>
 	<p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
 
-	<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form" action="<?php //echo $action_url; ?>">
+	<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form" action="<?php echo $action_url; ?>">
 		<?php
 		/**
 		 * Trigger before the signup form.
