@@ -194,7 +194,7 @@ name="meta_course_category">
             </div>
         </div>
 
-		<div class="cp-flex clear cp-invited-container">
+		<div class="clear cp-invited-container">
 
 			<div class="cp-content-box" id="invited-instructors">
 				<table class="coursepress-table">
