@@ -91,12 +91,17 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			'coursepress_course_categories_manage_terms_cap' => 1,
 			'coursepress_course_categories_edit_terms_cap' => 1,
 			'coursepress_course_categories_delete_terms_cap' => 0,
-			/* Posts and Pages */
+			/* Pages */
+			'edit_other_pages' => 0,
 			'edit_pages' => 0,
 			'edit_published_pages' => 0,
-			'edit_posts' => 0,
 			'publish_pages' => 0,
+			/* Posts*/
+			'edit_other_posts' => 0,
+			'edit_posts' => 0,
+			'edit_published_posts' => 0,
 			'publish_posts' => 0,
+			/* Other */
 			'edit_comments' => 1,
 			'read' => 1,
 		),
@@ -158,7 +163,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			$user = get_userdata( $user_id );
 			$user->remove_role( 'coursepress_instructor' );
 
-			delete_user_option($user_id, 'role_ins', !coursepress_user_meta_prefix_required());
+			delete_user_option( $user_id, 'role_ins', ! coursepress_user_meta_prefix_required() );
 		}
 	}
 
@@ -231,17 +236,47 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		return $this->__get( 'allcaps' );
 	}
 
+	/**
+	 * Filter capabilities by value
+	 *
+	 * @since 3.0.0
+	 *
+	 */
+	private function filter_caps( $allcaps ) {
+		$caps = array();
+		foreach ( $allcaps as $key => $value ) {
+			if ( $value ) {
+				$caps[ $key ] = $value;
+			}
+		}
+		return $caps;
+	}
+
+	/**
+	 * Get instructor capabilities.
+	 *
+	 * @since 3.0.0
+	 *
+	 */
 	public function get_instructor_caps() {
 		if ( ! $this->__get( 'instructor_caps' ) ) {
 			$cp_caps = coursepress_get_setting( 'capabilities/instructor', $this->capabilities['instructor'] );
+			$cp_caps = $this->filter_caps( $cp_caps );
 			$this->__set( 'instructor_caps', $cp_caps );
 		}
 		return $this->__get( 'instructor_caps' );
 	}
 
+	/**
+	 * Get facilitator capabilities.
+	 *
+	 * @since 3.0.0
+	 *
+	 */
 	public function get_facilitator_caps() {
 		if ( ! $this->__get( 'facilitator_caps' ) ) {
 			$cp_caps = coursepress_get_setting( 'capabilities/facilitator', $this->capabilities['facilitator'] );
+			$cp_caps = $this->filter_caps( $cp_caps );
 			$this->__set( 'facilitator_caps', $cp_caps );
 		}
 		return $this->__get( 'facilitator_caps' );

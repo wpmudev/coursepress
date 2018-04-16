@@ -560,7 +560,7 @@ class CoursePress_Data_Capabilities {
 			if ( $course_creator ) {
 				$post_status = get_post_status( $course_id );
 
-				if ( 'publish' !==$post_status ) {
+				if ( 'publish' !== $post_status ) {
 					// If the course is not public yet, always give the owner the write permission
 					$return = true;
 				} else {
@@ -844,25 +844,20 @@ class CoursePress_Data_Capabilities {
 	 * @return bool
 	 */
 	public static function can_invite_students( $course_id, $user_id = '' ) {
-
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$return = user_can( $user_id, 'manage_options' );
-
 		if ( ! $return ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 			$is_facilitator = self::is_course_facilitator( $course_id, $user_id );
-
 			if ( $course_creator ) {
 				$return = user_can( $user_id, 'coursepress_invite_my_students_cap' );
 			} elseif ( $is_instructor || $is_facilitator ) {
 				$return = user_can( $user_id, 'coursepress_invite_students_cap' );
 			}
 		}
-
 		return $return;
 	}
 
@@ -1067,11 +1062,9 @@ class CoursePress_Data_Capabilities {
 
 			if ( ! empty( $courses_created ) ) {
 				$can_create_own_course_notification = self::can_add_notification( $courses_created[0], $user_id );
-				el( $can_create_own_course_notification );
 			}
 			if ( ! empty( $courses ) ) {
 				$can_create_assigned_course_notification = self::can_add_notification( $courses[0], $user_id );
-				el( $can_create_assigned_course_notification );
 			}
 			return $can_create_own_course_notification || $can_create_assigned_course_notification;
 		}

@@ -396,37 +396,56 @@
 
 	// Add these capabilities only when MarketPress is acctive.
 	if ( $marketpress_active ) {
-
 		// Default WP capabilities.
 		$config['capabilities/wordpress'] = array(
-
 			'title' => __( 'Grant default WordPress capabilities', 'cp' ),
 			'id' => 'cp-cap-wpdefault',
 			'fields' => array(
+				/**
+				 * pages
+				 */
 				'edit_pages' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Edit Pages (required for MarketPress)', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/instructor/edit_pages', true ),
-				),
-				'edit_published_pages'    => array(
-					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Edit Published Pages', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/instructor/edit_published_pages', true ),
-				),
-				'edit_posts' => array(
-					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Edit Posts', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/instructor/edit_posts', true ),
+					'title' => $toggle_input . __( 'Edit My Pages (required for MarketPress)', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_pages', false ),
 				),
 				'publish_pages' => array(
 					'type' => 'checkbox',
 					'title' => $toggle_input . __( 'Publish Pages', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/instructor/publish_pages', true ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/publish_pages', false ),
+				),
+				'edit_others_pages'    => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Others Pages (required for MarketPress)', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_others_pages', false ),
+				),
+				'edit_published_pages'    => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Published Pages', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_published_pages', false ),
+				),
+				/**
+				 * posts
+				 */
+				'edit_posts' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit My Posts', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_posts', false ),
 				),
 				'publish_posts' => array(
 					'type' => 'checkbox',
 					'title' => $toggle_input . __( 'Publish Posts', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/instructor/publish_posts', true ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/publish_posts', false ),
+				),
+				'edit_others_posts'    => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Others posts', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_others_posts', false ),
+				),
+				'edit_published_posts'    => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit Published posts', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/edit_published_posts', false ),
 				),
 			),
 		);
