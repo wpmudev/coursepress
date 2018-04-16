@@ -27,7 +27,7 @@ class CoursePress_Step_Video extends CoursePress_Step {
 		return $keys;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$src = esc_url( $this->__get( 'video_url' ) );
 		$hide_related_video = $this->__get( 'hide_related_media' );
 		$width = $this->__get( 'video_player_width' );

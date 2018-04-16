@@ -20,7 +20,7 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 		return $keys;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$src = $this->__get( 'audio_url' );
 		$loop = $this->__get( 'loop' );
 		$autoplay = $this->__get( 'autoplay' );
@@ -48,12 +48,11 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 		return $this->create_html( 'div', array( 'class' => 'audio-player' ), $this->create_html('audio', $attr) );
 	}
 
-	private function create_audio_js_setup_data()
-	{
+	private function create_audio_js_setup_data() {
 		$data = array();
 		$data["aspectRatio"] = "1:0";
 		$data["fluid"] = true;
-		$data["controlBar"] = array("fullscreenToggle" => false);
+		$data["controlBar"] = array( "fullscreenToggle" => false );
 
 		return json_encode($data);
 	}

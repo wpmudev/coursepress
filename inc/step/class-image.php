@@ -8,7 +8,7 @@
 class CoursePress_Step_Image extends CoursePress_Step {
 	protected $type = 'image';
 
-	function get_keys() {
+	public function get_keys() {
 		$keys = parent::get_keys();
 		$keys = array_merge( $keys, array(
 			'image_url',
@@ -21,7 +21,7 @@ class CoursePress_Step_Image extends CoursePress_Step {
 		return $keys;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$image_url = $this->__get( 'image_url' );
 
 		if ( ! empty( $image_url ) ) {

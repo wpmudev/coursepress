@@ -8,7 +8,7 @@
  * @package CoursePress
  */
 class CoursePress_Step_Checkbox extends CoursePress_Step_Quiz {
-	function setUpStepMeta() {
+	public function setUpStepMeta() {
 		parent::setUpStepMeta();
 
 		$questions = $this->get_questions_data();

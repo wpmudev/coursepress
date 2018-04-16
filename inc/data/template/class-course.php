@@ -18,7 +18,7 @@ class CoursePress_Template_Course {
 	 */
 	public static function course_list_table( $courses = array() ) {
 
-		global $CoursePress, $CoursePress_Core;
+		global $cp_coursepress, $coursepress_core;
 
 		if ( ! is_array( $courses ) || empty( $courses ) ) {
 			return '';
@@ -79,7 +79,7 @@ class CoursePress_Template_Course {
 									__( 'Unknown enrolled date.', 'cp' )
 								);
 							} else {
-								$date_enrolled = date_i18n( $date_format, $CoursePress_Core->strtotime( $date_enrolled ) );
+								$date_enrolled = date_i18n( $date_format, $coursepress_core->strtotime( $date_enrolled ) );
 							}
 							$table_body .= sprintf( '<td>%s</td>', $date_enrolled );
 							break;
@@ -87,7 +87,7 @@ class CoursePress_Template_Course {
 						case 'average':
 							$statuses = array( 'Ongoing', 'Awaiting Review' );
 
-							if ( in_array( $completion_status, $statuses ) ) {
+							if ( in_array( $completion_status, $statuses, true ) ) {
 								$average = '&#8212;';
 							} else {
 								$average = CoursePress_Data_Student::average_course_responses( $student_id, $course->ID );
@@ -97,7 +97,6 @@ class CoursePress_Template_Course {
 							break;
 
 						case 'status':
-
 							$table_body .= sprintf( '<td class="column-status">%s</td>', $completion_status );
 
 							break;
@@ -106,7 +105,7 @@ class CoursePress_Template_Course {
 							$download_certificate = __( 'Not available', 'cp' );
 
 							if ( $course_completed ) {
-								$certificate = $CoursePress->get_class( 'CoursePress_Certificate' );
+								$certificate = $cp_coursepress->get_class( 'CoursePress_Certificate' );
 								$certificate_link = $certificate->get_encoded_url( $course->ID, $student_id );
 								$download_certificate = sprintf( '<a href="%s" class="button-primary">%s</a>', $certificate_link, __( 'Download', 'cp' ) );
 							}

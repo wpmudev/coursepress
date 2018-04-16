@@ -231,7 +231,8 @@ class CoursePress_Extension_MarketPress {
 		// Create Auto SKU
 		if ( ! empty( $settings['mp_auto_sku'] ) || empty( $settings['mp_sku'] ) ) {
 			$sku_prefix = apply_filters( 'coursepress_course_sku_prefix', 'CP-' );
-			$product_meta['mp_sku'] = $product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
+			$product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
+			$product_meta['mp_sku'] = $product_meta['sku'];
 		}
 		// Update all metas.
 		foreach ( $product_meta as $key => $value ) {
@@ -301,7 +302,7 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function update_course_from_product( $product_id, $post ) {
 		// If its not a product, exit
-		if ( self::$product_ctp != $post->post_type ) {
+		if ( self::$product_ctp !== $post->post_type ) {
 			return;
 		}
 		$course_id = $this->get_course_id_by_product( $product_id );
@@ -434,7 +435,7 @@ class CoursePress_Extension_MarketPress {
 	 */
 	public function redirect_to_product() {
 		global $post, $wp_query;
-		if ( ! $post || self::$product_ctp != $post->post_type ) {
+		if ( ! $post || self::$product_ctp !== $post->post_type ) {
 			return;
 		}
 		if ( ! $wp_query->is_single || ! $wp_query->is_singular ) {
@@ -470,7 +471,10 @@ class CoursePress_Extension_MarketPress {
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
 		} elseif ( 'change_status' === $delete_action ) {
-			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
+			wp_update_post( array(
+				'ID' => $product_id,
+				'post_status' => 'draft',
+			) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}
@@ -512,7 +516,10 @@ class CoursePress_Extension_MarketPress {
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
 		} elseif ( 'change_status' === $delete_action ) {
-			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft' ) );
+			wp_update_post( array(
+				'ID' => $product_id,
+				'post_status' => 'draft',
+			) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}

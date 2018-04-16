@@ -68,7 +68,10 @@ class CoursePress_Data_Unsubscribe {
 		$courses_link = coursepress_get_main_courses_url();
 
 		// Include unsubscribe link
-		$unsubscribe_link = add_query_arg( array( 'uid' => $user_id, 'unsubscribe' => 1 ), $courses_link );
+		$unsubscribe_link = add_query_arg( array(
+			'uid' => $user_id,
+			'unsubscribe' => 1,
+		), $courses_link );
 		// Remove http and https to avoid auto linking when added this string to text editor.
 		$unsubscribe_link = preg_replace( '(^https?://)', '', $unsubscribe_link );
 
@@ -111,7 +114,7 @@ class CoursePress_Data_Unsubscribe {
 			// Check if the user is already unsubscribed.
 			$is_unsubscriber = is_object( $user ) ? $this->is_unsubscriber( $user->ID ) : false;
 			// Check if current email type can be unsubscribed.
-			$can_unsubscribe = in_array( $email_type, $this->unsubscribable() );
+			$can_unsubscribe = in_array( $email_type, $this->unsubscribable(), true );
 
 			// Check if we can send the email alert.
 			if ( $can_unsubscribe && $is_unsubscriber ) {
@@ -211,10 +214,10 @@ class CoursePress_Data_Unsubscribe {
 			do_action( 'coursepress_remove_subscriber', $unsubscribe_id );
 
 			if ( $comment_id ) {
-				global $CoursePress;
+				global $cp_coursepress;
 				// Unsubscribe from discussion.
-				$discussionClass = $CoursePress->get_class( 'CoursePress_Cron_Discussion' );
-				$discussionClass->un_subscribe( $comment_id, $unsubscribe_id );
+				$discussion_class = $cp_coursepress->get_class( 'CoursePress_Cron_Discussion' );
+				$discussion_class->un_subscribe( $comment_id, $unsubscribe_id );
 			} else {
 				// Marked the user as unsubscriber.
 				update_user_meta( $unsubscribe_id, 'cp_unsubscriber', true );

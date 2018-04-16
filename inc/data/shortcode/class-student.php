@@ -100,7 +100,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 	public function get_student_workbook_table( $args ) {
 		$course_id = coursepress_get_course_id();
 		$workbook_is_active = coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_workbook', false ) );
-		if ( false == $workbook_is_active ) {
+		if ( ! $workbook_is_active ) {
 			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'cp' ) );
 			return $content;
 		}
@@ -134,7 +134,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 			$unit_list = array( $unit_list[ $unit_id ] );
 		}
 		if ( $show_course_progress && empty( $unit_id ) ) {
-			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'cp' ) . '<small>' . $student->get_course_progress( $course_id ) . '%</small>' . '</h3>';
+			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'cp' ) . '<small>' . $student->get_course_progress( $course_id ) . '%</small></h3>';
 		}
 		$content .= '<div class="workbook">';
 		$content .= '<table class="workbook-table ' . $table_class . '">';
@@ -159,7 +159,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 						if ( 'output' === $attributes['mode'] ) {
 							continue;
 						}
-						$module_count += 1;
+						$module_count++;
 						$title = empty( $module->post_title ) ? $module->post_content : $module->post_title;
 						$response = $student->get_response( $course_id, $unit_id, $module_id, $student_progress );
 						$feedback = $student->get_instructor_feedback( $course_id, $unit_id, $module_id, $student_progress );
@@ -168,7 +168,9 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 						$grade = empty( $grade ) ? 0 : (int) $grade;
 						$response_display = $response['response'];
 						switch ( $attributes['module_type'] ) {
-							case 'input-checkbox': case 'input-radio': case 'input-select':
+							case 'input-checkbox':
+							case 'input-radio':
+							case 'input-select':
 										$answers = $attributes['answers'];
 										$selected = (array) $attributes['answers_selected'];
 										$display = '';
@@ -232,7 +234,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 								if ( $response_display ) {
 									foreach ( $questions as $q_index => $question ) {
 										$answer = $response_display[ $q_index ];
-										if ( $question['type'] === 'selectable' ) {
+										if ( 'selectable' === $question['type'] ) {
 											$selected = ( isset( $question['options'] ) && isset( $question['options']['answers'] ) && isset( $question['options']['answers'][ $answer ] ) )
 												? $question['options']['answers'][ $answer ]
 												: '';
@@ -244,7 +246,8 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 								}
 								$response_display = $display;
 								break;
-							case 'input-text': case 'input-textarea':
+							case 'input-text':
+							case 'input-textarea':
 									$response_display = empty( $response_display ) ? __( 'No answer!', 'cp' ) : $response_display;
 								break;
 							case 'input-form':
@@ -301,7 +304,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 					}
 				}
 			}
-			if ( 0 == $module_count ) {
+			if ( ! $module_count ) {
 				$content .= sprintf( '<tr><td colspan="3" class="non-gradable">%s</td></tr>', __( 'No gradable modules under this unit.', 'cp' ) );
 			}
 		}
@@ -413,7 +416,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 	public function get_student_grades_table( $args ) {
 		$course_id = coursepress_get_course_id();
 		$workbook_is_active = coursepress_is_true( coursepress_course_get_setting( $course_id, 'allow_workbook', false ) );
-		if ( false == $workbook_is_active ) {
+		if ( ! $workbook_is_active ) {
 			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'cp' ) );
 			return $content;
 		}
@@ -449,13 +452,13 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 						if ( 'output' === $attributes['mode'] ) {
 							continue;
 						}
-						$module_count += 1;
+						$module_count++;
 						$module_type = $attributes['module_type'];
 						$response = $user->get_response( $course_id, $unit_id, $module_id, $student_progress );
 						$excluded_modules = array( 'input-written', 'input-upload' );
 						$auto_grade = true;
 						$is_assessable = ! empty( $attributes['assessable'] ) && coursepress_is_true( $attributes['assessable'] );
-						if ( in_array( $module_type, $excluded_modules ) && $is_assessable ) {
+						if ( in_array( $module_type, $excluded_modules, true ) && $is_assessable ) {
 							$graded_by = coursepress_get_array_val( $response, 'graded_by' );
 							if ( ( 'auto' === $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
 								$auto_grade = false;
@@ -480,7 +483,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 													$add = true;
 												}
 										}
-									} elseif( in_array( $question['type'], array( 'single', 'select' ) ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
+									} elseif( in_array( $question['type'], array( 'single', 'select' ), true ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
 										if ( $options['checked'][ $response_display[ $q_index ] ] ) {
 											$add = true;
 										}
@@ -494,14 +497,14 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 									if ( ! empty( $response_display ) && $auto_grade ) {
 										$module_done++;
 									}
-							break;
+								break;
 						}
 					}
 				}
 			}
 			$grade_display = __( 'No gradable modules under this unit.', 'cp' );
-			if ( 0 != $module_count ) {
-				$grade_display = __( '%d of %d elements completed.', 'cp' );
+			if ( $module_count ) {
+				$grade_display = __( '%1$d of %2$d elements completed.', 'cp' );
 				$grade_display = sprintf( $grade_display, $module_done, $module_count );
 			}
 			$content .= '<tr class="row-elements">';
@@ -528,7 +531,7 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
 			'unit_id' => coursepress_get_unit_id(),
-			'message' => __( '%d of %d required elements completed.', 'cp' ),
+			'message' => __( '%1$d of %2$d required elements completed.', 'cp' ),
 		), $atts, 'course_mandatory_message' );
 		$course_id = (int) $atts['course_id'];
 		if ( empty( $course_id ) ) {

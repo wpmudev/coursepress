@@ -5,23 +5,22 @@
  *
  * @since 3.0
  */
-class CoursePress_Import extends CoursePress_Utility
-{
-	var $with_students = false;
-	var $with_comments = false;
-	var $replace = false;
-	var $courses = array();
-	var $course_imported_id = 0;
-	var $unit_keys = array();
+class CoursePress_Import extends CoursePress_Utility {
+	public $with_students = false;
+	public $with_comments = false;
+	public $replace = false;
+	public $courses = array();
+	public $course_imported_id = 0;
+	public $unit_keys = array();
 	/**
 	 * CP 2 legacy
 	 */
-	var $visible = array();
+	public $visible = array();
 	/**
 	 * default import version
 	 */
-	var $version = '2.0';
-	var $course;
+	public $version = '2.0';
+	public $course;
 
 	public function __construct( $course_object, $options ) {
 		$this->setUp( $course_object );
@@ -57,7 +56,8 @@ class CoursePress_Import extends CoursePress_Utility
 	 * Try to add user if check fails.
 	 */
 	private function maybe_add_user( $user_data, $role = null ) {
-		$user = $blog_id = null;
+		$blog_id = null;
+		$user = null;
 		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
 			$user = get_user_by( 'email', $user_data->user_email );
 		} elseif ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
@@ -95,14 +95,14 @@ class CoursePress_Import extends CoursePress_Utility
 	 * import course
 	 */
 	private function import_course() {
-		global $wpdb, $CoursePress_Core;
+		global $wpdb, $coursepress_core;
 		/**
 		 *  Remove course ID
 		 */
 		$this->course_imported_id = $this->course->ID;
 		unset( $this->course->ID );
 		$the_course = get_object_vars( $this->course );
-		$the_course['post_type'] = $CoursePress_Core->__get( 'course_post_type' );
+		$the_course['post_type'] = $coursepress_core->__get( 'course_post_type' );
 		/**
 		 * TODO: sanitize
 		 */
@@ -185,8 +185,8 @@ class CoursePress_Import extends CoursePress_Utility
 	 * @param array $course Imported course data.
 	 */
 	private function import_course_categories( $course_id, $course ) {
-		global $CoursePress_Core;
-		$category_type = $CoursePress_Core->__get( 'category_type' );
+		global $coursepress_core;
+		$category_type = $coursepress_core->__get( 'category_type' );
 		$terms = array();
 		if ( isset( $course['course_categories'] ) ) {
 			foreach ( $course['course_categories'] as $slug => $name ) {
@@ -219,7 +219,7 @@ class CoursePress_Import extends CoursePress_Utility
 	 * Import course units
 	 */
 	private function import_course_units() {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		if ( ! empty( $this->units ) ) {
 			foreach ( $this->units as $unit ) {
 				$the_unit = $unit;
@@ -269,7 +269,7 @@ class CoursePress_Import extends CoursePress_Utility
 					$unit->post_parent = $course_id;
 				}
 				$the_unit->post_parent = $this->course->ID;
-				$the_unit->post_type = $CoursePress_Core->__get( 'unit_post_type' );
+				$the_unit->post_type = $coursepress_core->__get( 'unit_post_type' );
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
 				/**
@@ -460,20 +460,20 @@ class CoursePress_Import extends CoursePress_Utility
 					if ( is_array( $module->meta_input->answers_selected ) ) {
 						$checked[] = in_array( $i, $module->meta_input->answers_selected );
 					} else {
-						$checked[] = $i === intval( $module->meta_input->answers_selected );
+						$checked[] = intval( $module->meta_input->answers_selected ) === $i;
 					}
 				}
 				$step_type = 'unknown';
 				switch ( $type ) {
 					case 'input-radio':
 						$step_type = 'single';
-					break;
+						break;
 					case 'input-checkbox':
 						$step_type = 'multiple';
-					break;
+						break;
 					case 'input-select':
 						$step_type = 'select';
-					break;
+						break;
 				}
 				$module->meta_input->questions = array(
 					$id => array(
@@ -487,7 +487,7 @@ class CoursePress_Import extends CoursePress_Utility
 						'order' => '0,',
 					),
 				);
-			break;
+				break;
 		}
 		return $module;
 	}
@@ -514,8 +514,8 @@ class CoursePress_Import extends CoursePress_Utility
 	 */
 	private function import_steps( $course_id, $unit_id, $steps ) {
 
-		global $CoursePress_Core;
-		$step_post_type = $CoursePress_Core->step_post_type;
+		global $coursepress_core;
+		$step_post_type = $coursepress_core->step_post_type;
 		$matches = array();
 		foreach ( $steps as $step ) {
 			$data = array(

@@ -57,8 +57,8 @@ class CoursePress_Admin_Actions {
 		if ( ! is_admin() ) {
 			return $post_link;
 		}
-		global $CoursePress_Core;
-		$post_type = $CoursePress_Core->step_post_type;
+		global $coursepress_core;
+		$post_type = $coursepress_core->step_post_type;
 		if ( $post_type === $post->post_type ) {
 			$step = new CoursePress_step( $post );
 			if ( 'discussion' === $step->module_type ) {

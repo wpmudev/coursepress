@@ -65,7 +65,6 @@ class CoursePress_Data_Module {
 					$comments = get_comments( $args );
 
 					return count( $comments ) > 0;
-				break;
 
 				default:
 					$course_id = wp_get_post_parent_id( $unit_id );
@@ -166,7 +165,7 @@ class CoursePress_Data_Module {
 			return 0;
 		}
 
-		if ( $module->post_type === 'module' ) {
+		if ( 'module' === $module->post_type ) {
 			return $module->post_parent;
 		}
 
@@ -274,7 +273,7 @@ class CoursePress_Data_Module {
 
 		// Retry button
 		if ( ! $quiz_passed ) {
-			$attributes = CoursePress_Data_Module::attributes( $module_id );
+			$attributes = self::attributes( $module_id );
 			$can_retry = $attributes['allow_retries'];
 			if ( $can_retry ) {
 				$is_enabled = false;
@@ -378,7 +377,7 @@ class CoursePress_Data_Module {
 					if ( isset( $response[ $key ] ) && is_array( $response[ $key ] ) ) {
 						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
-								$correct_responses += 1;
+								$correct_responses++;
 							}
 						}
 					}
@@ -396,7 +395,7 @@ class CoursePress_Data_Module {
 					if ( is_array( $response[ $key ] ) ) {
 						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
-								$correct_responses += 1;
+								$correct_responses++;
 							}
 						}
 					}

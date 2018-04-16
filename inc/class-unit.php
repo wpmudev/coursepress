@@ -424,14 +424,14 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * @return array
 	 */
 	public function get_steps( $published = true, $with_module = false, $module_id = false ) {
-		global $CoursePress_Core;
+		global $coursepress_core;
 		$key = implode( '-', array( $published, $with_module, $module_id ) );
 		$key = 'unit_steps_list' . $key;
 		if ( $this->__get( $key ) ) {
 			return $this->__get( $key );
 		}
 		$args = array(
-			'post_type' => $CoursePress_Core->step_post_type,
+			'post_type' => $coursepress_core->step_post_type,
 			'post_status' => $published ? 'publish' : 'any',
 			'posts_per_page' => -1,
 			'post_parent' => $this->__get( 'ID' ),

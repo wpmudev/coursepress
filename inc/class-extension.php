@@ -47,10 +47,10 @@ class CoursePress_Extension {
 	/**
 	 * Load active extension class.
 	 *
-	 * @global $CoursePress
+	 * @global $coursepress
 	 */
 	function active_extensions() {
-		global $CoursePress;
+		global $cp_coursepress;
 		$active = array(
 			'commerce' => false,
 		);
@@ -61,10 +61,10 @@ class CoursePress_Extension {
 			}
 			switch ( $extension ) {
 				case 'marketpress':
-					$CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
+					$cp_coursepress->get_class( 'CoursePress_Extension_MarketPress' );
 				break;
 				case 'woocommerce':
-					$CoursePress->get_class( 'CoursePress_Extension_WooCommerce' );
+					$cp_coursepress->get_class( 'CoursePress_Extension_WooCommerce' );
 				break;
 			}
 			// Set extension type to active
@@ -75,12 +75,12 @@ class CoursePress_Extension {
 		// Load some code for missing extensions - like fix missing
 		// shortcodes for commerce.
 		if ( false === $active['commerce'] ) {
-			$CoursePress->get_class( 'CoursePress_Extension_Commerce' );
+			$cp_coursepress->get_class( 'CoursePress_Extension_Commerce' );
 		}
 	}
 
 	private function get_extensions( $extensions = array() ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		/**
 		 * sanitize
 		 */
@@ -169,7 +169,7 @@ class CoursePress_Extension {
 		 */
 		foreach ( $extensions as $key => $data ) {
 			// Set default values.
-			$class_name = $CoursePress->get_class( 'CoursePress_Extension_'.$data['name'] );
+			$class_name = $cp_coursepress->get_class( 'CoursePress_Extension_'.$data['name'] );
 			$extensions[ $key ]['class_name'] = $class_name;
 			// Check if extension is installed.
 			if ( method_exists( $class_name, 'installed' ) ) {
@@ -188,7 +188,7 @@ class CoursePress_Extension {
 	 *
 	 * @param array $extensions Extensions data.
 	 *
-	 * @global $CoursePress
+	 * @global $coursepress
 	 *
 	 * @return mixed
 	 */

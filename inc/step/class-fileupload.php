@@ -21,12 +21,12 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 		if ( empty( $allowed ) || ! is_array( $allowed ) ) {
 			$allowed = array();
 		}
-		if ( in_array( 'image', $allowed ) ) {
+		if ( in_array( 'image', $allowed, true ) ) {
 			array_push( $allowed, 'jpeg', 'jpg', 'png' );
 		}
 		if ( ! empty( $allowed ) ) {
 			foreach ( $mimes as $type => $label ) {
-				if ( ! in_array( $type, $allowed ) ) {
+				if ( ! in_array( $type, $allowed, true ) ) {
 					unset( $mimes[ $type ] );
 				}
 			}

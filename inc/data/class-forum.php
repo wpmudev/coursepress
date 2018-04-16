@@ -21,7 +21,7 @@ class CoursePress_Data_Forum {
 			|| ! isset( $_POST['action'] )
 			|| ! isset( $_POST['title'] )
 			|| ! isset( $_POST['content'] )
-			|| 'add_new_discussion' !==$_POST['action']
+			|| 'add_new_discussion' !== $_POST['action']
 			|| ! wp_verify_nonce( $_POST['_wpnonce'], 'add-new-discussion' )
 		) {
 			return;

@@ -25,10 +25,10 @@ class CoursePress_Admin_Install {
 		$option_name = 'coursepress_tables';
 		$installed = get_option( $option_name, 'not installed' );
 		if ( 'not installed' === $installed ) {
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			$this->create_student_table();
 			$this->create_student_progress_table();
-			add_option( $option_name, 'installed', null, 'no' );
+			add_option( $option_name, 'installed', '', 'no' );
 		}
 	}
 
@@ -57,10 +57,10 @@ class CoursePress_Admin_Install {
 		dbDelta( $sql );
 	}
 
-	function run_legacy() {
-		global $CoursePress;
-		if ( ! $CoursePress instanceof CoursePress ) {
-			$CoursePress = $this->cp;
+	public function run_legacy() {
+		global $cp_coursepress;
+		if ( ! $cp_coursepress instanceof CoursePress ) {
+			$cp_coursepress = $this->cp;
 		}
 		// Run the core
 		$this->cp->load_core();

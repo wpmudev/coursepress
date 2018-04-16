@@ -15,11 +15,11 @@
  * @return WP_Error|CoursePress_Course
  */
 function coursepress_get_course( $course_id = 0, $cached = true ) {
-	global $CoursePress_Course, $CoursePress_Core;
+	global $coursepress_course, $coursepress_core;
 	if ( empty( $course_id ) ) {
 		// Assume current course
-		if ( $CoursePress_Course instanceof CoursePress_Course ) {
-			return $CoursePress_Course;
+		if ( $coursepress_course instanceof CoursePress_Course ) {
+			return $coursepress_course;
 		} else {
 			// Try current post
 			$course_id = get_the_ID();
@@ -29,17 +29,17 @@ function coursepress_get_course( $course_id = 0, $cached = true ) {
 		$course_id = $course_id->ID;
 	}
 	if (
-		$CoursePress_Course instanceof CoursePress_Course
-		&& $course_id == $CoursePress_Course->__get( 'ID' )
+		$coursepress_course instanceof CoursePress_Course
+		&& $course_id == $coursepress_course->__get( 'ID' )
 	) {
-		return $CoursePress_Course;
+		return $coursepress_course;
 	}
-	if ( $cached && isset( $CoursePress_Core->courses[ $course_id ] ) ) {
-		return $CoursePress_Core->courses[ $course_id ];
+	if ( $cached && isset( $coursepress_core->courses[ $course_id ] ) ) {
+		return $coursepress_core->courses[ $course_id ];
 	}
 	$course = new CoursePress_Course( $course_id );
 	if ( ! $course->__get( 'is_error' ) ) {
-		$CoursePress_Core->courses[ $course_id ] = $course;
+		$coursepress_core->courses[ $course_id ] = $course;
 		return $course;
 	}
 	return $course->wp_error();
@@ -76,8 +76,8 @@ function coursepress_get_course_id( $course = 0 ) {
  * @return array Returns an array of courses where each course is an instance of CoursePress_Course object.
  */
 function coursepress_get_courses( $args = array(), &$count = 0 ) {
-	/** @var $CoursePress_Core CoursePress_Core */
-	global $CoursePress_Core;
+	/** @var $coursepress_core CoursePress_Core */
+	global $coursepress_core;
 
 	// If courses per page is not set.
 	if ( ! isset( $args['posts_per_page'] ) ) {
@@ -127,7 +127,7 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 	}
 
 	$args = wp_parse_args( array(
-		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
+		'post_type' => $coursepress_core->__get( 'course_post_type' ),
 		'suppress_filters' => true,
 		'fields' => 'ids',
 		'orderby' => 'post_title',
@@ -211,7 +211,7 @@ function coursepress_get_post_statuses( $type, $current_status, $slug ) {
 					'count' => $count,
 					'url' => $url,
 					'classes' => $classes,
-					'current' => $status == $current_status,
+					'current' => $status === $current_status,
 				);
 			}
 		}
@@ -675,7 +675,7 @@ function coursepress_get_current_course_cycle() {
 	 * @var array $_course_module An array of current module data.
 	 * @var object $_course_step
 	 */
-	global $CoursePress_VirtualPage, $_course_module, $_course_step, $_coursepress_previous;
+	global $coursepress_virtualpage, $_course_module, $_course_step, $_coursepress_previous;
 
 	$course = coursepress_get_course();
 
@@ -683,7 +683,7 @@ function coursepress_get_current_course_cycle() {
 		return null;
 	}
 	$is_course_started = $course->is_course_started();
-	if ( false == $is_course_started ) {
+	if ( ! $is_course_started ) {
 		return __( 'Course is not available yet', 'cp' );
 	}
 
@@ -693,18 +693,18 @@ function coursepress_get_current_course_cycle() {
 		return null;
 	}
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+	if ( ! $coursepress_virtualpage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
 
-	$vp = $CoursePress_VirtualPage;
+	$vp = $coursepress_virtualpage;
 	$vp_type = $vp->__get( 'type' );
 	$_coursepress_previous = $course->get_units_url();
 	$course_id = $course->__get( 'ID' );
 	$unit_id = $unit->__get( 'ID' );
 	$user = coursepress_get_user();
 
-	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ) ) ) {
+	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ), true ) ) {
 		return null;
 	}
 
@@ -889,12 +889,12 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 	$force_current_unit_successful_completion = $course->__get( 'force_current_unit_successful_completion' );
 	$with_modules = $course->is_with_modules();
 	$has_access = true;
-	$prevUnit = $unit->get_previous_unit();
+	$prev_unit = $unit->get_previous_unit();
 	$message = '';
 	$user_id = $user->ID;
 
-	if ( $prevUnit ) {
-		$has_access = $user->is_unit_completed( $course_id, $prevUnit->ID );
+	if ( $prev_unit ) {
+		$has_access = $user->is_unit_completed( $course_id, $prev_unit->ID );
 		if ( ! $has_access ) {
 			$message = __( 'You need to complete the previous unit before this unit!', 'cp' );
 		}
@@ -932,7 +932,7 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 									$_step_id = $step->__get( 'ID' );
 									$is_step_completed = $user->is_step_completed( $course_id, $unit_id, $_step_id );
 
-									if ( ! $is_step_completed && $step_id != $_step_id ) {
+									if ( ! $is_step_completed && $step_id !== $_step_id ) {
 										$has_access = false;
 										$message = __( 'You need to complete all previous steps before this step!', 'cp' );
 										break;
@@ -960,7 +960,7 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 
 					$is_step_completed = $user->is_step_completed( $course_id, $unit_id, $_step_id );
 
-					if ( ! $is_step_completed && $step_id != $_step_id ) {
+					if ( ! $is_step_completed && $step_id !== $_step_id ) {
 						$has_access = false;
 						$message = __( 'You need to complete all previous steps before this step!', 'cp' );
 						break;
@@ -974,11 +974,14 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 		}
 	}
 
-	return array( 'access' => $has_access, 'message' => $message );
+	return array(
+		'access' => $has_access,
+		'message' => $message,
+		);
 }
 
 function coursepress_get_link_cycle( $type = 'next' ) {
-	global $CoursePress_VirtualPage, $_course_module, $_course_step;
+	global $coursepress_virtualpage, $_course_module, $_course_step;
 
 	$course = coursepress_get_course();
 	$unit = coursepress_get_unit();
@@ -989,7 +992,7 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 
 	$user = coursepress_get_user();
 
-	$vp = $CoursePress_VirtualPage;
+	$vp = $coursepress_virtualpage;
 	$vp_type = $vp->__get( 'type' );
 	$with_modules = $course->is_with_modules();
 	$has_access = $user->has_access_at( $course->__get( 'ID' ) );
@@ -999,58 +1002,58 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 	$link = '';
 
 	if ( 'previous' === $type ) {
-		$previousUnit = $unit->get_previous_unit();
-		$prevModule = $unit->get_previous_module( $module_id );
-		$prevModuleID = !empty( $prevModule['id'] ) ? $prevModule['id'] : false;
-		$prevStep = $_course_step ? $_course_step->get_previous_step() : false;
-		if ( $prevStep ) {
-			$link = $prevStep->get_permalink();
+		$previous_unit = $unit->get_previous_unit();
+		$prev_module = $unit->get_previous_module( $module_id );
+		$prev_module_id = !empty( $prev_module['id'] ) ? $prev_module['id'] : false;
+		$prev_step = $_course_step ? $_course_step->get_previous_step() : false;
+		if ( $prev_step ) {
+			$link = $prev_step->get_permalink();
 		} elseif ( $module_url && 'module' !== $vp_type && 'unit' !== $vp_type ) {
 			$link = $module_url;
-		} elseif ( $prevModule ) {
-			$link = $prevModule['url'];
-			$prevSteps = $unit->get_steps( ! $has_access, $with_modules, $prevModuleID );
-			if ( $prevSteps ) {
-				$lastSteps = array_pop( $prevSteps );
-				$link = $lastSteps->get_permalink();
+		} elseif ( $prev_module ) {
+			$link = $prev_module['url'];
+			$prev_steps = $unit->get_steps( ! $has_access, $with_modules, $prev_module_id );
+			if ( $prev_steps ) {
+				$last_steps = array_pop( $prev_steps );
+				$link = $last_steps->get_permalink();
 			}
 		} elseif ( 'unit' !== $vp_type ) {
 			$link = $unit->get_permalink();
-		} elseif ( $previousUnit ) {
-			$link = $previousUnit->get_unit_url();
-			$prevModules = $previousUnit->get_modules_with_steps();
-			$prevSteps = $previousUnit->get_steps();
-			if ( $prevModules ) {
-				$lastModule = array_pop( $prevModules );
-				$link = $lastModule['url'];
-				if ( !empty( $lastModule['steps'] ) ) {
-					$lastStep = array_pop( $lastModule['steps'] );
-					$link = $lastStep->get_permalink();
+		} elseif ( $previous_unit ) {
+			$link = $previous_unit->get_unit_url();
+			$prev_modules = $previous_unit->get_modules_with_steps();
+			$prev_steps = $previous_unit->get_steps();
+			if ( $prev_modules ) {
+				$last_module = array_pop( $prev_modules );
+				$link = $last_module['url'];
+				if ( !empty( $last_module['steps'] ) ) {
+					$last_step = array_pop( $last_module['steps'] );
+					$link = $last_step->get_permalink();
 				}
 
-			} elseif ( $prevSteps ) {
-				$prevStep = array_pop( $prevSteps );
-				$link = $prevStep->get_permalink();
+			} elseif ( $prev_steps ) {
+				$prev_step = array_pop( $prev_steps );
+				$link = $prev_step->get_permalink();
 			}
 		} else {
 			$link = $course->get_units_url();
 		}
 	} else {
 		// for Next link
-		$nextUnit = $unit->get_next_unit();
-		$nextModule = $unit->get_next_module( $module_id );
-		$nextStep = $_course_step ? $_course_step->get_next_step() : false;
-		if ( $nextStep ) {
-			$link = $nextStep->get_permalink();
+		$next_unit = $unit->get_next_unit();
+		$next_module = $unit->get_next_module( $module_id );
+		$next_step = $_course_step ? $_course_step->get_next_step() : false;
+		if ( $next_step ) {
+			$link = $next_step->get_permalink();
 		} elseif ( $module_url && 'unit' === $vp_type ) {
 			$link = $module_url;
 		} elseif ( $steps && 'step' !== $vp_type ) {
-			$firstStep = array_shift( $steps );
-			$link = $firstStep->get_permalink();
-		} elseif ( $nextModule ) {
-			$link = $nextModule['url'];
-		} elseif ( $nextUnit ) {
-			$link = $nextUnit->get_unit_url();
+			$first_step = array_shift( $steps );
+			$link = $first_step->get_permalink();
+		} elseif ( $next_module ) {
+			$link = $next_module['url'];
+		} elseif ( $next_unit ) {
+			$link = $next_unit->get_unit_url();
 		} else {
 			$link = $course->get_permalink() . trailingslashit( 'completion/validate' );
 		}
@@ -1067,9 +1070,9 @@ function coursepress_get_link_cycle( $type = 'next' ) {
  * @return null|string
  */
 function coursepress_get_previous_course_cycle_link( $label = '' ) {
-	global $CoursePress_VirtualPage;
+	global $coursepress_virtualpage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+	if ( ! $coursepress_virtualpage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
 
@@ -1102,9 +1105,9 @@ function coursepress_get_previous_course_cycle_link( $label = '' ) {
  * @return null|string
  */
 function coursepress_get_next_course_cycle_link( $label = '' ) {
-	global $CoursePress_VirtualPage;
+	global $coursepress_virtualpage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+	if ( ! $coursepress_virtualpage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
 
@@ -1383,15 +1386,15 @@ function get_cp_type_title( $post_type ) {
 /**
  * Get all cp post types
  *
- * @global object $CoursePress_Core
+ * @global object $coursepress_core
  * @return array
  */
 function get_cp_types() {
-	global $CoursePress_Core;
+	global $coursepress_core;
 	$post_types = array(
-		'course' => $CoursePress_Core->course_post_type,
-		'notification' => $CoursePress_Core->notification_post_type,
-		'discussion' => $CoursePress_Core->discussions_post_type,
+		'course' => $coursepress_core->course_post_type,
+		'notification' => $coursepress_core->notification_post_type,
+		'discussion' => $coursepress_core->discussions_post_type,
 	);
 
 	return $post_types;
@@ -1418,7 +1421,8 @@ function get_cp_type( $name ) {
  * @return bool
  */
 function coursepress_is_type( $post_id, $type ) {
-	if ( $post_type = get_cp_type( $type ) ) {
+	$post_type = get_cp_type( $type );
+	if ( $post_type ) {
 		$type = $post_type;
 	}
 	$current_post_type = get_post_field( 'post_type', $post_id );
@@ -1443,7 +1447,7 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 	// Allowed statuses to change.
 	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
 
-	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! coursepress_is_type( $post_id, $type ) ) {
+	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses, true ) || ! coursepress_is_type( $post_id, $type ) ) {
 
 		/**
 		 * Perform actions when post status not changed.
@@ -1470,7 +1474,7 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 			'trash',
 			'delete',
 			'restore',
-		) ) ? 'can_delete_' . $type : 'can_change_' . $type . '_status';
+		), true ) ? 'can_delete_' . $type : 'can_change_' . $type . '_status';
 		if ( method_exists( 'CoursePress_Data_Capabilities', $cap_method ) && ! CoursePress_Data_Capabilities::$cap_method( $post_id ) ) {
 			// This action hook is documented above.
 			do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
@@ -1482,11 +1486,11 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 	switch ( $status ) {
 		case 'trash':
 			wp_trash_post( $post_id );
-		break;
+			break;
 
 		case 'restore':
 			wp_untrash_post( $post_id );
-		break;
+			break;
 
 		case 'delete':
 			$delete_function = "coursepress_delete_$type";
@@ -1495,7 +1499,7 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 			} else {
 				wp_delete_post( $post_id );
 			}
-		break;
+			break;
 
 		default:
 			$post = array(
@@ -1509,7 +1513,7 @@ function coursepress_change_post( $post_id, $status, $type, $caps_check = true )
 				do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
 				return false;
 			}
-		break;
+			break;
 	}
 
 	/**
@@ -1550,10 +1554,10 @@ function coursepress_get_course_step( $step_id = 0 ) {
 	);
 
 	if ( isset( $class[ $step_type ] ) ) {
-		$stepClass = $class[ $step_type ];
-		$stepClass = new $stepClass( $step_id );
+		$step_class = $class[ $step_type ];
+		$step_class = new $step_class( $step_id );
 
-		return $stepClass;
+		return $step_class;
 	}
 
 	return false;
@@ -1607,9 +1611,9 @@ function coursepress_update_course_alert( $course_id, $title, $content, $receive
 	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
 	// Get the course.
-	$course = $course_id === 'all' ? $course_id : coursepress_get_course( $course_id );
+	$course = 'all' === $course_id ? $course_id : coursepress_get_course( $course_id );
 	// If current user is capable of updating any notification statuses.
-	if ( $course !== 'all' && is_wp_error( $course ) ) {
+	if ( 'all' !== $course && is_wp_error( $course ) ) {
 		/**
 		 * Perform actions when alert could not be created/updated.
 		 *
@@ -1688,9 +1692,9 @@ function coursepress_get_notification_alert( $alert_id ) {
  * @return array Array of modules ids.
  */
 function coursepress_get_all_modules_ids_by_type( $type, $course_id = null ) {
-	global $CoursePress_Core;
+	global $coursepress_core;
 	$args = array(
-		'post_type' => $CoursePress_Core->__get( 'step_post_type' ),
+		'post_type' => $coursepress_core->__get( 'step_post_type' ),
 		'fields' => 'ids',
 		'suppress_filters' => true,
 		'nopaging' => true,
@@ -1712,9 +1716,9 @@ function coursepress_get_all_modules_ids_by_type( $type, $course_id = null ) {
  * Get units from course
  */
 function coursepress_get_units( $course_id ) {
-	global $CoursePress_Core;
+	global $coursepress_core;
 	$args = array(
-		'post_type' => $CoursePress_Core->__get( 'unit_post_type' ),
+		'post_type' => $coursepress_core->__get( 'unit_post_type' ),
 		'post_parent' => $course_id,
 		'nopaging' => true,
 		'fields' => 'ids',
@@ -1731,13 +1735,13 @@ function coursepress_get_units( $course_id ) {
  * @return bool
  */
 function coursepress_is_course( $course ) {
-	global $CoursePress_Core;
+	global $coursepress_core;
 	$post_type = get_post_type( $course );
-	return $CoursePress_Core->course_post_type == $post_type;
+	return $coursepress_core->course_post_type == $post_type;
 }
 
 function coursepress_discussion_link( $location, $comment ) {
-	global $CoursePress_Core;
+	global $coursepress_core;
 	/**
 	 * Check WP_Comment class
 	 */
@@ -1747,7 +1751,7 @@ function coursepress_discussion_link( $location, $comment ) {
 	/**
 	 * Check post type
 	 */
-	$unit_post_type = $CoursePress_Core->discussions_post_type;
+	$unit_post_type = $coursepress_core->discussions_post_type;
 	$post_type = get_post_type( $comment->comment_post_ID );
 	if ( $unit_post_type !== $post_type ) {
 		return $location;
@@ -1768,7 +1772,7 @@ function coursepress_discussion_link( $location, $comment ) {
  * @return object All invited students
  */
 function coursepress_invite_student( $course_id, $student_data ) {
-	global $CoursePress;
+	global $cp_coursepress;
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
 		return new WP_Error( 'error', __( 'Selected course does not exits.', 'cp' ) );
@@ -1780,8 +1784,8 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	if ( 'passcode' === $course->__get( 'enrollment_type' ) ) {
 		$email_type = 'course_invitation_password';
 	}
-	$emailClass = $CoursePress->get_class( 'CoursePress_Email' );
-	$email_data = $emailClass->get_email_data( $email_type );
+	$email_class = $cp_coursepress->get_class( 'CoursePress_Email' );
+	$email_data = $email_class->get_email_data( $email_type );
 	if ( empty( $email_data['enabled'] ) ) {
 		return new WP_Error( 'error', __( 'Currently we can not send mails.', 'cp' ) );
 	}
@@ -1811,7 +1815,7 @@ function coursepress_invite_student( $course_id, $student_data ) {
 		'to' => $email,
 	);
 	$email_data = wp_parse_args( $email_data, $args );
-	$emailClass->sendEmail( $email_type, $email_data );
+	$email_class->sendEmail( $email_type, $email_data );
 	$student_data['date'] = $course->date( current_time( 'mysql' ) );
 	$student_data['timestamp'] = time();
 	$invited_students = $course->__get( 'invited_students' );
@@ -1886,7 +1890,7 @@ function coursepress_search_students( $args = array() ) {
 
 		if ( ! empty( $user_query->results ) ) {
 			foreach ( $user_query->results as $user ) {
-				if ( in_array( 'coursepress_student', $user->roles ) ) {
+				if ( in_array( 'coursepress_student', $user->roles, true ) ) {
 					$cp_user = coursepress_get_user( $user->ID );
 
 					if ( $course_id > 0 ) {
@@ -1942,12 +1946,13 @@ function coursepress_get_discussion() {
 	}
 	$found_post = null;
 
-	if ( $posts = get_posts( array(
+	$posts = get_posts( array(
 		'name' => $topic,
 		'post_type' => 'discussions',
 		'post_status' => 'publish',
 		'posts_per_page' => 1,
-	) ) ) {
+	) );
+	 if ( $posts ) {
 		$found_post = $posts[0];
 	}
 

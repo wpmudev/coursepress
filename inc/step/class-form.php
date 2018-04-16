@@ -24,7 +24,7 @@ class CoursePress_Step_Form extends CoursePress_Step_Quiz {
 		return $questions;
 	}
 
-	function get_question_short( $index, $question ) {
+	public function get_question_short( $index, $question ) {
 		$unit = $this->get_unit();
 		$course_id = $unit->__get( 'course_id' );
 		$unit_id = $unit->__get( 'ID' );

@@ -103,7 +103,7 @@ class CoursePress_Extension_WooCommerce {
 		// Check if extension is enabled in settings.
 		$settings = coursepress_get_setting( 'woocommerce' );
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
-			$this->active = class_exists( 'WC_Product' );;
+			$this->active = class_exists( 'WC_Product' );
 			return $this->active;
 		}
 		$this->active = false;
@@ -169,17 +169,20 @@ class CoursePress_Extension_WooCommerce {
 			/**
 			 * set post parent for product
 			 */
-			wp_update_post( array( 'ID' => $product_id, 'post_parent' => $course_id ) );
+			wp_update_post( array(
+				'ID' => $product_id,
+				'post_parent' => $course_id,
+			) );
 		} else {
 			$product_id = $this->get_product_id( $course_id );
 			$action = coursepress_get_setting( 'woocommerce/unpaid', 'change_status' );
 			switch ( $action ) {
 				case 'delete':
 					wp_delete_post( $product_id );
-				break;
+					break;
 				default:
 					$this->hide_product( $product_id );
-				break;
+					break;
 			}
 		}
 	}
@@ -258,7 +261,7 @@ class CoursePress_Extension_WooCommerce {
 		if ( ! $this->active ) {
 			return;
 		}
-		global $CoursePress_Core;
+		global $coursepress_core;
 		/**
 		 * check post type
 		 */
@@ -266,7 +269,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		 * handle only correct post_type
 		 */
-		if ( $CoursePress_Core->course_post_type != $post_type ) {
+		if ( $coursepress_core->course_post_type !== $post_type ) {
 			return;
 		}
 		/**
@@ -416,8 +419,12 @@ class CoursePress_Extension_WooCommerce {
 		if ( 'product' === $post->post_type ) {
 			return;
 		}
-		if ( isset( $_POST['parent_course'] ) && ! empty( $_POST['parent_course'] ) ) {
-			wp_update_post( array( 'ID' => $post->ID, 'post_parent' => (int) $_POST['parent_course'] ) );
+		$parent_course = filter_input( INPUT_POST, 'parent_course', FILTER_VALIDATE_INT );
+		if ( $parent_course ) {
+			wp_update_post( array(
+				'ID' => $post->ID,
+				'post_parent' => $parent_course,
+			) );
 		}
 		/**
 		 * Set or update thumbnail.
@@ -466,7 +473,7 @@ class CoursePress_Extension_WooCommerce {
 		 * set thumbnail for product.
 		 */
 		global $wpdb;
-		$thumbnail_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $thumbnail_url ) );
+		$thumbnail_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid = %s", $thumbnail_url ) );
 		if ( empty( $thumbnail_id ) ) {
 			return;
 		}
@@ -619,7 +626,7 @@ class CoursePress_Extension_WooCommerce {
 			}
 			update_post_meta( get_the_ID(), '_stock_status', 'outofstock' );
 		}
-		wp_reset_query();
+		wp_reset_postdata();
 	}
 
 	/**

@@ -11,7 +11,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	 */
 	protected $breadcrumb = array();
 
-	var $type = '';
+	public $type = '';
 
 	/**
 	 * @var array
@@ -53,7 +53,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		/**
 		 * Set proper type for forum
 		 */
-		if ( isset( $array['type'] ) && 'forum' === $array['type'] && isset( $array['topic'] ) && '' != $array['topic'] ) {
+		if ( isset( $array['type'] ) && 'forum' === $array['type'] && isset( $array['topic'] ) && '' !== $array['topic'] ) {
 			if ( 'new' === $array['topic'] ) {
 				$this->__set( 'type', 'forum-new' );
 			} else {
@@ -103,7 +103,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				if ( empty( $course_id ) ) {
 					$is_404 = true;
 				}
-			break;
+				break;
 			case 'unit':
 			case 'module':
 				$course = $this->__get( 'course' );
@@ -114,13 +114,13 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					$is_404 = true;
 				} elseif ( 'module' === $type ) {
 					$module = $this->__get( 'module' );
-					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
-					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
+					$coursepress_unit = new CoursePress_Unit( $unit_id );
+					$module = $coursepress_unit->get_module_by_slug( $module, 'module' );
 					if ( false === $module ) {
 						$is_404 = true;
 					}
 				}
-			break;
+				break;
 		}
 		/**
 		 * Course, unit, module exists?
@@ -173,18 +173,19 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	private function get_template( $type ) {
-		global $CoursePress, $CoursePress_Instructor, $wp_query, $CoursePress_Course, $CoursePress_Unit,
+		global $cp_coursepress, $coursepress_instructor, $wp_query, $coursepress_course, $coursepress_unit,
 			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now;
 		$course = false;
 		if ( $this->__get( 'course' ) || 'single-course' === $type ) {
-			$CoursePress_Course = $course = coursepress_get_course();
+			$coursepress_course = coursepress_get_course();
+			$course = $coursepress_course;
 			if ( ! isset( $course->ID ) ) {
 				return false;
 			}
 		}
-		$template = $CoursePress->plugin_path . 'templates/';
+		$template = $cp_coursepress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
-		$with_modules = $CoursePress_Course instanceof CoursePress_Course ? $CoursePress_Course->is_with_modules() : false;
+		$with_modules = $coursepress_course instanceof CoursePress_Course ? $coursepress_course->is_with_modules() : false;
 		switch ( $type ) {
 			case 'instructor':
 				$instructor = $wp_query->get( 'instructor' );
@@ -193,27 +194,27 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					$user = CoursePress_Data_Instructor::instructor_by_hash( $instructor );
 				}
 				if ( $user ) {
-					$CoursePress_Instructor = new CoursePress_User( $user );
+					$coursepress_instructor = new CoursePress_User( $user );
 				}
-			break;
+				break;
 			case 'unit':
 			case 'module':
 			case 'step':
 			case 'step-comment':
-				$this->add_breadcrumb( $CoursePress_Course->get_the_title(), $CoursePress_Course->get_permalink() );
-				$this->add_breadcrumb( __( 'Units', 'cp' ), $CoursePress_Course->get_units_url() );
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Units', 'cp' ), $coursepress_course->get_units_url() );
 				$unit = $this->__get( 'unit' );
-				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $CoursePress_Course->ID );
+				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $coursepress_course->ID );
 				if ( empty( $unit_id ) ) {
 					return false;
 				}
-				$CoursePress_Unit = new CoursePress_Unit( $unit_id );
-				$this->add_breadcrumb( $CoursePress_Unit->get_the_title(), $CoursePress_Unit->get_unit_url() );
+				$coursepress_unit = new CoursePress_Unit( $unit_id );
+				$this->add_breadcrumb( $coursepress_unit->get_the_title(), $coursepress_unit->get_unit_url() );
 				$_course_module_id = 1; // always start module with 1
 				$_coursepress_type_now = 'unit';
 				$module = $this->__get( 'module' );
 				if ( ! empty( $module ) ) {
-					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
+					$module = $coursepress_unit->get_module_by_slug( $module, 'module' );
 					if ( ! empty( $module ) ) {
 						$_coursepress_type_now = 'module';
 						$_course_module_id = $module['id'];
@@ -221,7 +222,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 						$this->add_breadcrumb( $module['title'], $module['url'] );
 					}
 				} else {
-					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
+					$_course_module = $coursepress_unit->get_module_by_id( 1 );
 				}
 				$step = $this->__get( 'step' );
 				if ( ! $with_modules ) {
@@ -235,28 +236,29 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 						return false;
 					} else {
 						$_coursepress_type_now = 'step';
-						$_course_step = $stepClass = $CoursePress_Unit->get_step_by_id( $step_id );
-						if ( ! is_wp_error( $stepClass ) ) {
-							$this->add_breadcrumb( $stepClass->get_the_title(), $stepClass->get_permalink() );
+						$_course_step = $coursepress_unit->get_step_by_id( $step_id );
+						$step_lass = $_course_step;
+						if ( ! is_wp_error( $step_lass ) ) {
+							$this->add_breadcrumb( $step_lass->get_the_title(), $step_lass->get_permalink() );
 						}
 					}
 				}
 				do_action( 'coursepress_get_template', $_coursepress_type_now, $course->ID, $unit_id, $step_id, $_course_module_id );
-			break;
+				break;
 			case 'completion':
 				// Validate here
 				$user = coursepress_get_user();
-				$completion_url = $user->get_course_completion_url( $CoursePress_Course->ID );
+				$completion_url = $user->get_course_completion_url( $coursepress_course->ID );
 				wp_redirect( $completion_url );
-			exit;
+				exit;
 			case 'unit-archive':
 				// Check if user is logged in
 				if ( ! is_user_logged_in() ) {
 					// Redirect back to course overview
-					wp_safe_redirect( $CoursePress_Course->get_permalink() );
+					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
-			break;
+				break;
 			case 'grades':
 			case 'forum':
 			case 'forum-new':
@@ -264,16 +266,16 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			case 'workbook':
 			case 'unit-archive':
 				if ( ! is_user_logged_in() ) {
-					wp_safe_redirect( $CoursePress_Course->get_permalink() );
+					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
 				$user = coursepress_get_user();
-				$is_enrolled = $user->is_enrolled_at( $CoursePress_Course->ID );
+				$is_enrolled = $user->is_enrolled_at( $coursepress_course->ID );
 				if ( ! $is_enrolled ) {
-					wp_safe_redirect( $CoursePress_Course->get_permalink() );
+					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
-			break;
+				break;
 		}
 		return $template;
 	}

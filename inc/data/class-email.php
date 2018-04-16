@@ -94,7 +94,7 @@ class CoursePress_Data_Email {
 	 */
 	public static function get_email_fields( $email_type ) {
 		return apply_filters(
-			'coursepress_get_email_fields-' . $email_type,
+			'coursepress_get_email_fields_' . $email_type,
 			array(
 				'enabled' => self::enabled( $email_type ),
 				'name' => self::from_name( $email_type ),
@@ -320,14 +320,14 @@ class CoursePress_Data_Email {
 			$type
 		);
 		$email = apply_filters(
-			'coursepress_email_fields-' . $type,
+			'coursepress_email_fields_' . $type,
 			$email,
 			$args
 		);
 
 		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
 		do_action( 'coursepress_email_pre_send', $args, $type );
-		do_action( 'coursepress_email_pre_send-' . $type, $args );
+		do_action( 'coursepress_email_pre_send_' . $type, $args );
 
 		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args, $type ) ) {
 			$email['subject'] = stripslashes( $email['subject'] );
@@ -390,7 +390,7 @@ class CoursePress_Data_Email {
 		}
 
 		do_action( 'coursepress_email_sent', $args, $type, $result );
-		do_action( 'coursepress_email_sent-' . $type, $args, $result );
+		do_action( 'coursepress_email_sent_' . $type, $args, $result );
 
 		return $result;
 	}
@@ -402,11 +402,11 @@ class CoursePress_Data_Email {
 	 */
 
 	protected static function get_email_data( $context ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
-		$emailClass = $CoursePress->get_class( 'CoursePress_Email' );
+		$email_class = $cp_coursepress->get_class( 'CoursePress_Email' );
 
-		return $emailClass->get_email_data( $context );
+		return $email_class->get_email_data( $context );
 	}
 
 	protected static function enabled( $email_type ) {
@@ -565,7 +565,7 @@ class CoursePress_Data_Email {
 		$course_name = $post->post_title;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -649,7 +649,7 @@ class CoursePress_Data_Email {
 		$course_summary = $post->post_excerpt;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -709,7 +709,7 @@ class CoursePress_Data_Email {
 		$course_summary = $post->post_excerpt;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -772,7 +772,7 @@ class CoursePress_Data_Email {
 		$course_summary = $post->post_excerpt;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -855,7 +855,7 @@ class CoursePress_Data_Email {
 		$course_summary = $post->post_excerpt;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -920,7 +920,7 @@ class CoursePress_Data_Email {
 				$wp_rewrite = new WP_Rewrite();
 			}
 		}
-		if ( in_array( $post->post_status, $valid_stati ) ) {
+		if ( in_array( $post->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $post );
@@ -986,7 +986,7 @@ class CoursePress_Data_Email {
 		$unit_summary = $unit->post_content;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $course->post_status, $valid_stati ) ) {
+		if ( in_array( $course->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_course_permalink( $course_id );
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -1108,7 +1108,7 @@ class CoursePress_Data_Email {
 			'completion/average'
 		);
 
-		if ( in_array( $course->post_status, $valid_stati ) ) {
+		if ( in_array( $course->post_status, $valid_stati, true ) ) {
 			$course_address = coursepress_get_setting( 'slugs/course', true ) . $unit->post_name . '/';
 		} else {
 			$course_address = get_permalink( $course_id );

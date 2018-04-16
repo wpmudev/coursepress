@@ -41,32 +41,34 @@
  * MA 02110-1301 USA
  */
 
-if ( ! defined( 'ABSPATH' ) ) { exit; }
-
-if ( is_admin() ) {
-	//require_once 'inc/admin/admin-functions.php';
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
+
+//if ( is_admin() ) {
+	//require_once 'inc/admin/admin-functions.php';
+//}
 
 final class CoursePress {
 	/**
 	 * @var string Current version number.
 	 */
-	var $version = '3';
+	public $version = '3';
 
 	/**
 	 * @var string Plugin name, it will be replaced by grunt build command.
 	 */
-	var $name = 'CoursePress Base';
+	public $name = 'CoursePress Base';
 
 	/**
 	 * @var string
 	 */
-	var $plugin_url;
+	public $plugin_url;
 
 	/**
 	 * @var string The absolute path where CP is installed.
 	 */
-	var $plugin_path;
+	public $plugin_path;
 
 	/**
 	 * @var array List of classes that are loaded both admin and front.
@@ -181,22 +183,23 @@ final class CoursePress {
 
 		$filename = implode( DIRECTORY_SEPARATOR, $class );
 
-		try {
+//		try {
 			$file = $this->plugin_path . $filename . '.php';
 
 			if ( file_exists( $file ) && is_readable( $file ) ) {
 				require_once $file;
 			}
-		} catch ( Exception $e ) {
+//		} catch ( Exception $e ) {
 			// @todo: Log error?
-		}
+//		}
 	}
 
-	function get_class( $class_name ) {
-		if ( ! isset( $GLOBALS[ $class_name ] ) ) {
-			$GLOBALS[ $class_name ] = new $class_name();
+	public function get_class( $class_name ) {
+		$key = strtolower( $class_name );
+		if ( ! isset( $GLOBALS[ $key ] ) ) {
+			$GLOBALS[ $key ] = new $class_name();
 		}
-		return $GLOBALS[ $class_name ];
+		return $GLOBALS[ $key ];
 	}
 
 	public function activate() {
@@ -207,7 +210,7 @@ final class CoursePress {
 	public function deactivate() {
 	}
 
-	function load_core() {
+	public function load_core() {
 		// Load core classses
 		array_map( array( $this, 'get_class' ), $this->core_classes );
 
@@ -230,7 +233,7 @@ final class CoursePress {
 
 		// We speak languages!
 		load_plugin_textdomain(
-			'cp', // Text domain.
+			'cp',
 			false, // Deprecated. Set to false.
 			$this->plugin_path. '/languages'
 		);
@@ -242,12 +245,12 @@ final class CoursePress {
 		}
 	}
 
-	function set_current_user() {
-		global $CoursePress_User;
-		$CoursePress_User = new CoursePress_User( get_current_user_id() );
+	public function set_current_user() {
+		global $coursepress_user;
+		$coursepress_user = new CoursePress_User( get_current_user_id() );
 	}
 
-	function register_cp_theme() {
+	public function register_cp_theme() {
 		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
 				$this->plugin_path . 'themes'
 			)
@@ -258,5 +261,5 @@ final class CoursePress {
 	}
 }
 
-global $CoursePress;
-$CoursePress = new CoursePress();
+global $cp_coursepress;
+$cp_coursepress = new CoursePress();

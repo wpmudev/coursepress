@@ -47,10 +47,10 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				switch ( $value ) {
 					case 'on':
 						$settings[ $key ] = true;
-					break;
+						break;
 					case 'off':
 						$settings[ $key ] = false;
-					break;
+						break;
 				}
 			}
 		}
@@ -63,14 +63,14 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	public function upgrade_settings() {
-		global $CoursePress, $wpdb;
+		global $cp_coursepress, $wpdb;
 		$version = get_option( 'coursepress_settings_version' );
 		if ( empty( $version ) ) {
 			$settings = coursepress_get_setting();
 			$settings = $this->migrate_settings( $settings );
 			$settings = $this->set_true_false( $settings );
-			$settings['general']['version'] = $CoursePress->version;
-			update_option( 'coursepress_settings_version', $CoursePress->version );
+			$settings['general']['version'] = $cp_coursepress->version;
+			update_option( 'coursepress_settings_version', $cp_coursepress->version );
 			coursepress_update_setting( true, $settings );
 			/**
 			 * upgrade notifications
@@ -125,7 +125,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
 		}
 		foreach ( $settings['email'] as $key => $email ) {
-			$settings['email'][ $key ]['enabled'] = ( 0 == $settings['email'][ $key ]['enabled'] ) ? '' : 1;
+			$settings['email'][ $key ]['enabled'] = ( ! $settings['email'][ $key ]['enabled'] ) ? '' : 1;
 		}
 
 		// Migrate caps.
@@ -242,7 +242,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	public function upgrade_course_by_id( $course_id ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		/**
 		 * check course
 		 */
@@ -331,7 +331,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 					$args['meta_input']['show_content'] = true;
 				}
 				$type = get_post_meta( $step_id, 'module_type', true );
-				$answers = $checked = array();
+				$answers = array();
+				$checked = array();
 				switch ( $type ) {
 					case 'input-select':
 					case 'input-radio':
@@ -348,18 +349,18 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 						}
 						$args['meta_input']['module_type'] = 'input-quiz';
 						$args['meta_input']['questions'] = array(
-						'view'.$step_id => array(
-							'title' => $step->post_title,
-							'question' => $step->post_content,
-							'order' => 0,
-							'type' => $types[ $type ],
-							'options' => array(
-								'answers' => $answers,
-								'checked' => $checked,
+							'view'.$step_id => array(
+								'title' => $step->post_title,
+								'question' => $step->post_content,
+								'order' => 0,
+								'type' => $types[ $type ],
+								'options' => array(
+									'answers' => $answers,
+									'checked' => $checked,
+								),
 							),
-						),
 						);
-					break;
+						break;
 				}
 				wp_update_post( $args );
 			}
@@ -458,7 +459,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 					}
 					if ( ! empty( $progress ) ) {
 						$progress = coursepress_set_array_val( $progress, 'version_last', coursepress_get_array_val( $progress, 'version' ) );
-						$progress = coursepress_set_array_val( $progress, 'version', $CoursePress->version );
+						$progress = coursepress_set_array_val( $progress, 'version', $cp_coursepress->version );
 						$student->add_student_progress( $course_id, $progress );
 					}
 				}
@@ -505,9 +506,9 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		/**
 		 * update course CoursePress version
 		 */
-		$value = add_post_meta( $course->ID, 'coursepress_version', $CoursePress->version, true );
-		if ( false == $value ) {
-			update_post_meta( $course->ID, 'coursepress_version', $CoursePress->version );
+		$value = add_post_meta( $course->ID, 'coursepress_version', $cp_coursepress->version, true );
+		if ( ! $value ) {
+			update_post_meta( $course->ID, 'coursepress_version', $cp_coursepress->version );
 		}
 		return $result;
 	}

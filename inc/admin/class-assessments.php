@@ -29,7 +29,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @since 3.0.0
 	 */
-	function change_localize_array( $localize_array ) {
+	public function change_localize_array( $localize_array ) {
 		$courseinstructor_id = get_current_user_id();
 		$user                = new CoursePress_User( $courseinstructor_id );
 		$localize_array['courseinstructor_id'] = $courseinstructor_id;
@@ -77,7 +77,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
 		$unit_id = empty( $_GET['student_progress'] ) ? 0 : $_GET['student_progress'];
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
-		$graded = in_array( $graded, array( 'graded', 'ungraded' ) ) ? $graded : 'all';
+		$graded = in_array( $graded, array( 'graded', 'ungraded' ), true ) ? $graded : 'all';
 		$units = empty( $course_id ) ? array() : coursepress_get_course_units( $course_id );
 		$course = coursepress_get_course( $course_id );
 		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {
@@ -184,7 +184,10 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
 		// Assessments per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_assessments_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_assessments_per_page',
+		) );
 	}
 
 	/**

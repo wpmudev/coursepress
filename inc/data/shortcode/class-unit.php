@@ -102,7 +102,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 	 */
 	public function get_course_unit_archive_submenu( $atts ) {
 
-		global $CoursePress;
+		global $cp_coursepress;
 
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
@@ -155,7 +155,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
 			if ( $student->is_course_completed( $course_id ) ) {
-				$certificate = $CoursePress->get_class( 'CoursePress_Certificate' );
+				$certificate = $cp_coursepress->get_class( 'CoursePress_Certificate' );
 				$certificate_link = $certificate->get_encoded_url( $course->__get( 'ID' ), $student->__get( 'ID' ) );
 
 				$content .= '<li class="submenu-item menu-item submenu-certificate ' . ( 'certificate' === $subpage ? 'submenu-active' : '') . '">' . $certificate_link . '</li>';
@@ -182,7 +182,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 			'course_id' => coursepress_get_course_id(),
 			'unit_id' => coursepress_get_unit_id(),
 			'previous_unit' => false,
-			'message' => __( '%d of %d required elements completed.', 'cp' ),
+			'message' => __( '%1$d of %2$d required elements completed.', 'cp' ),
 			'format' => 'true',
 		), $atts, 'module_status' );
 

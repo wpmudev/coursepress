@@ -41,7 +41,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 	 */
 	public function get_page() {
 		$view = isset( $_GET['view'] ) ? $_GET['view'] : 'list';
-		if ( $view === 'profile' ) {
+		if ( 'profile' === $view ) {
 			$this->get_profile_view();
 		} else {
 			$this->get_list_view();
@@ -111,7 +111,10 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
 		// Students per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_students_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_students_per_page',
+		) );
 	}
 
 	/**

@@ -14,11 +14,11 @@
  * @return object|null
  */
 function coursepress_get_unit( $unit_id = 0 ) {
-	global $CoursePress_Unit;
+	global $coursepress_unit;
 	if ( empty( $unit_id ) ) {
 		// Assume current unit
-		if ( $CoursePress_Unit instanceof CoursePress_Unit ) {
-			return $CoursePress_Unit;
+		if ( $coursepress_unit instanceof CoursePress_Unit ) {
+			return $coursepress_unit;
 		}
 	} else {
 		$unit = new CoursePress_Unit( $unit_id );

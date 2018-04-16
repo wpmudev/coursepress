@@ -57,7 +57,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'columns' ) );
 		// Courses per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_reports_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_reports_per_page',
+		) );
 	}
 
 	/**
@@ -103,13 +106,13 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				switch ( $_GET['action'] ) {
 					case 'show':
 						$this->get_page_preview();
-					break;
+						break;
 					case 'show_summary':
 						$this->get_page_preview( true, 'summary' );
-					break;
+						break;
 					default:
 						$this->render_error();
-					return;
+						return;
 				}
 			} else {
 				$this->render_error();
@@ -123,7 +126,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	}
 
 	private function get_page_list() {
-		global $CoursePress_User;
+		global $coursepress_user;
 		$this->list = new CoursePress_Admin_Table_Reports();
 		add_filter( 'set-screen-option', array( $this, 'set_options' ), 10, 3 );
 		$this->list->prepare_items();
@@ -276,7 +279,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 				'orientation' => 'P',
 				'filename' => $filename,
 				'format' => 'F',
-				'uid' => crc32( rand() ),
+				'uid' => crc32( wp_rand() ),
 			),
 		);
 
@@ -285,12 +288,12 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			case 'download':
 				$this->students = array_filter( explode( ',', $request->students ), 'intval' );
 				$args['pdf_content'] = $this->get_page_preview( false );
-			break;
+				break;
 
 			case 'download_summary':
 				$this->students = array_filter( explode( ',', $request->students ), 'intval' );
 				$args['pdf_content'] = $this->get_page_preview( false, 'summary' );
-			break;
+				break;
 
 			default:
 				$this->students = array( $request->student_id );

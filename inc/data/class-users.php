@@ -249,15 +249,15 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 
 	public function map_coursepress_user_cap( $caps, $cap, $args, $user ) {
 		// Set all CP caps for administrator
-		if ( in_array( 'administrator', $user->roles ) ) {
+		if ( in_array( 'administrator', $user->roles, true ) ) {
 			$caps = wp_parse_args( $this->get_all_caps(), $caps );
 		}
 		// Set instructor caps
-		if ( in_array( 'coursepress_instructor', $user->roles ) ) {
+		if ( in_array( 'coursepress_instructor', $user->roles, true ) ) {
 			$caps = wp_parse_args( $this->get_instructor_caps(), $caps );
 		}
 		// Set facilitator caps
-		if ( in_array( 'coursepress_facilitator', $user->roles ) ) {
+		if ( in_array( 'coursepress_facilitator', $user->roles, true ) ) {
 			$caps = wp_parse_args( $this->get_facilitator_caps(), $caps );
 		}
 		return $caps;
@@ -317,7 +317,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			'module_answered',
 			'unknown',
 		);
-		if ( ! in_array( $kind, $allowed_kinds ) ) {
+		if ( ! in_array( $kind, $allowed_kinds, true ) ) {
 			$kind = 'unknown';
 		}
 		$success = add_user_meta( $user_id, 'latest_activity_kind', $kind, true );
@@ -362,13 +362,13 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		switch ( $type ) {
 			case 'unit':
 				self::log_student_activity( 'course_unit_seen', null, $unit_id );
-			break;
+				break;
 			case 'module':
 				self::log_student_activity( 'course_module_seen', null, $module_id );
-			break;
+				break;
 			case 'step':
 				self::log_student_activity( 'course_step_seen', null, $step_id );
-			break;
+				break;
 		}
 	}
 

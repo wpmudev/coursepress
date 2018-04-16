@@ -23,7 +23,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_columns() {
+	public function get_columns() {
 		$columns = array(
 			'author' => __( 'Author', 'cp' ),
 			'comment' => __( 'Comment', 'cp' ),
@@ -45,7 +45,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function hidden_columns() {
+	public function hidden_columns() {
 		/**
 		 * Trigger to modify hidden columns.
 		 *
@@ -70,7 +70,10 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'get_columns' ) );
 		// Comments per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_comments_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_comments_per_page',
+		) );
 	}
 
 	/**
@@ -89,7 +92,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	 * @uses get_hidden_columns().
 	 * @uses coursepress_render().
 	 */
-	function get_page() {
+	public function get_page() {
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 		$course    = coursepress_get_course( $course_id );
 		if ( isset( $_GET['course_id'] ) && is_wp_error( $course ) ) {

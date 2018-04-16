@@ -202,9 +202,9 @@ final class CoursePress_Core extends CoursePress_Utility {
 	 * @return void
 	 */
 	public function init_email_alerts() {
-		global $CoursePress;
+		global $cp_coursepress;
 		// Initialize Email alerts
-		$emailAlerts = $CoursePress->get_class( 'CoursePress_Cron_EmailAlert' );
+		$emailAlerts = $cp_coursepress->get_class( 'CoursePress_Cron_EmailAlert' );
 		// Initialize email alert crons.
 		$emailAlerts->init();
 	}

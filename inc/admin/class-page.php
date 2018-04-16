@@ -24,7 +24,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * @var array An array of variables use for localization.
 	 */
-	var $localize_array = array();
+	public $localize_array = array();
 
 	/**
 	 * Statuses
@@ -218,7 +218,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	public function set_category_menu_parent( $parent_file ) {
 		global $submenu_file, $current_screen;
 		// If current page is course category edit page.
-		if ( isset( $current_screen->id ) && $current_screen->id === 'edit-course_category' ) {
+		if ( isset( $current_screen->id ) && 'edit-course_category' === $current_screen->id ) {
 			// Set submenu active.
 			$submenu_file = 'edit-tags.php?taxonomy=course_category&post_type=course';
 			// Set parent menu active.
@@ -268,17 +268,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	private function enqueue_style( $id, $src ) {
-		global $CoursePress;
-		wp_enqueue_style( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version );
+		global $cp_coursepress;
+		wp_enqueue_style( $id, $cp_coursepress->plugin_url . $src, false, $cp_coursepress->version );
 	}
 
 	public function set_admin_scripts() {
-		global $CoursePress;
+		global $cp_coursepress;
 		$coursepress_pagenow = coursepress_is_admin();
 		if ( ! $coursepress_pagenow ) {
 			return; // Do not continue
 		}
-		$plugin_url = $CoursePress->plugin_url;
+		$plugin_url = $cp_coursepress->plugin_url;
 		$this->localize_array = wp_parse_args( $this->localize_array, array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
@@ -288,7 +288,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
-			'plugin_url' => $CoursePress->plugin_url,
+			'plugin_url' => $cp_coursepress->plugin_url,
 			/**
 			 * WordPress
 			 */
@@ -414,11 +414,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @param string $ver String specifying script version number, if empty it will be CP version. Default value: false
 	 */
 	public function enqueue_script( $handle, $src, $deps = array(), $version = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		if ( empty( $version ) ) {
-			$version = $CoursePress->version;
+			$version = $cp_coursepress->version;
 		}
-		$src = sprintf( '%s%s', $CoursePress->plugin_url, $src );
+		$src = sprintf( '%s%s', $cp_coursepress->plugin_url, $src );
 		wp_enqueue_script( $handle, $src, $deps, $version, true );
 	}
 
@@ -460,15 +460,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'courselist_columns' ) );
 		// Courses per page.
-		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
+		add_screen_option( 'per_page', array(
+			'default' => 20,
+			'option' => 'coursepress_course_per_page',
+		) );
 	}
 
 	/**
 	 * Set custom screen options for the students listing page.
 	 */
 	public function process_studentlist_page() {
-		global $CoursePress;
-		$students = $CoursePress->get_class( 'CoursePress_Admin_Students' );
+		global $cp_coursepress;
+		$students = $cp_coursepress->get_class( 'CoursePress_Admin_Students' );
 		if ( $students ) {
 			return $students->screen_options();
 		}
@@ -478,8 +481,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Set custom screen options for the comments listing page.
 	 */
 	public function process_commentlist_page() {
-		global $CoursePress;
-		$comments = $CoursePress->get_class( 'CoursePress_Admin_Comments' );
+		global $cp_coursepress;
+		$comments = $cp_coursepress->get_class( 'CoursePress_Admin_Comments' );
 		if ( $comments ) {
 			return $comments->screen_options();
 		}
@@ -489,8 +492,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Set custom screen options for the listing page.
 	 */
 	public function process_notifications_list_page() {
-		global $CoursePress;
-		$notifications = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
+		global $cp_coursepress;
+		$notifications = $cp_coursepress->get_class( 'CoursePress_Admin_Notifications' );
 		if ( $notifications ) {
 			return $notifications->screen_options();
 		}
@@ -500,8 +503,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Process assesment listing page screen.
 	 */
 	public function process_assessments_page() {
-		global $CoursePress;
-		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
+		global $cp_coursepress;
+		$assessments = $cp_coursepress->get_class( 'CoursePress_Admin_Assessments' );
 		if ( $assessments ) {
 			return $assessments->screen_options();
 		}
@@ -533,17 +536,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	public function get_courselist_page() {
-		global $CoursePress_User, $CoursePress_Core;
+		global $coursepress_user, $coursepress_core;
 		$count = 0;
 		$screen = get_current_screen();
 		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$current_status = $this->get_status();
-		$post_type = $CoursePress_Core->__get( 'course_post_type' );
+		$post_type = $coursepress_core->__get( 'course_post_type' );
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( $current_status, false, $count ),
+			'courses' => $coursepress_user->get_accessible_courses( $current_status, false, $count ),
 			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 			'page' => $page,
@@ -604,7 +607,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	public function get_course_edit_page() {
-		global $CoursePress;
+		global $cp_coursepress;
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
 		// Include datepicker
@@ -616,7 +619,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Sorter
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		// Include resize sensor
-		wp_enqueue_script( 'resize-sensor', $CoursePress->plugin_url . '/assets/external/js/resize-sensor.js' );
+		wp_enqueue_script( 'resize-sensor', $cp_coursepress->plugin_url . '/assets/external/js/resize-sensor.js' );
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 		/**
 		 * check is course
@@ -687,7 +690,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course_id' => $course_id,
 			'post_content' => $course->post_content,
 			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
-			'courses' => coursepress_get_courses( array( 'post_status' => 'publish', 'posts_per_page' => -1 ) ),
+			'courses' => coursepress_get_courses( array(
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+			) ),
 		);
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/admin/course-edit', $args );
@@ -704,13 +710,16 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.wordpress-multisite-masterclass-2.json',
 			),
 		);
-		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id, 'sample_courses' => $sample_courses ) );
+		coursepress_render( 'views/tpl/course-type', array(
+			'course_id' => $course_id,
+			'sample_courses' => $sample_courses,
+		) );
 		$invited_instructors = (array) get_post_meta( $course_id, 'instructor_invites', true );
 		$invited_facilitators = (array) get_post_meta( $course_id, 'facilitator_invites', true );
 		$this->localize_array['invited_instructors'] = $invited_instructors;
 		$this->localize_array['invited_facilitators'] = $invited_facilitators;
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
-		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
+		$cert_class = $cp_coursepress->get_class( 'CoursePress_Certificate' );
 		$tokens = array(
 			'COURSE_NAME',
 			'COURSE_OVERVIEW',
@@ -721,7 +730,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		);
 		$format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
 		$page_tokens = sprintf( $format, implode( ', ', $tokens ) );
-		$cert_tokens = sprintf( $format, implode( ', ', array_keys( $certClass->get_tokens() ) ) );
+		$cert_tokens = sprintf( $format, implode( ', ', array_keys( $cert_class->get_tokens() ) ) );
 		$completion_pages = array(
 			'tokens' => $page_tokens,
 			'pre_completion' => array(
@@ -772,7 +781,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'can_create_unit' => CoursePress_Data_Capabilities::can_create_unit( $course_id ),
 		);
 		coursepress_render( 'views/tpl/course-units', $unit_args );
-		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
+		coursepress_render( 'views/tpl/steps-template', array(
+			'file_types' => $file_types,
+			'questions' => $question_types,
+		) );
 		$paged = $this->get_pagenum();
 		$all_student_count = $course->count_students();
 		$certified_student_ids = $course->get_certified_student_ids();
@@ -789,10 +801,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		 * Students
 		 */
 		$students = array();
-		if ( $show_certified_students === 'yes' ) {
+		if ( 'yes' === $show_certified_students ) {
 			$students = $course->get_certified_students( $student_query_args );
 			$total_students = $certified_student_count;
-		} elseif ( $show_certified_students === 'no' ) {
+		} elseif ( 'no' === $show_certified_students ) {
 			$students = $course->get_non_certified_students( $student_query_args );
 			$total_students = $all_student_count - $certified_student_count;
 		} else {
@@ -892,7 +904,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$classes = array(
 				sprintf( 'status-%s', $status_id ),
 			);
-			if ( $status_id == $selected ) {
+			if ( $status_id === $selected ) {
 				$classes[] = 'current';
 			}
 			$status_url = add_query_arg( 'certified', $status_id, $url );
@@ -926,8 +938,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Assessments listing page cotent.
 	 */
 	public function get_assessments_page() {
-		global $CoursePress;
-		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
+		global $cp_coursepress;
+		$assessments = $cp_coursepress->get_class( 'CoursePress_Admin_Assessments' );
 		if ( is_wp_error( $assessments ) ) {
 			echo $assessments->get_error_message();
 		} elseif ( $assessments ) {
@@ -941,26 +953,26 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	public function get_notification_page() {
-		global $CoursePress;
-		$students = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
+		global $cp_coursepress;
+		$students = $cp_coursepress->get_class( 'CoursePress_Admin_Notifications' );
 		if ( $students ) {
 			$students->get_page();
 		}
 	}
 
 	public function get_settings_page() {
-		global $CoursePress;
+		global $cp_coursepress;
 		// Include wp.media
 		wp_enqueue_media();
 		// Include color picker
 		wp_enqueue_script( 'iris' );
 		// Include jquery-iframe
-		wp_enqueue_script( 'jquery-iframe', $CoursePress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
+		wp_enqueue_script( 'jquery-iframe', $cp_coursepress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
 		$this->lib3();
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );
 		$this->localize_array['messages'] = array(
-			'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
+			'no_mp_woo' => sprintf( __( '%1$s and %2$s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
 		);
 		$extensions = $this->get_extensions();
 		$this->localize_array['extensions'] = $extensions;
@@ -969,7 +981,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/settings-general' );
 		coursepress_render( 'views/tpl/settings-slugs' );
-		$emails = $CoursePress->get_class( 'CoursePress_Email' );
+		$emails = $cp_coursepress->get_class( 'CoursePress_Email' );
 		$sections = $emails->get_settings_sections();
 		if ( empty( $this->localize_array['settings']['email'] ) ) {
 			$this->localize_array['settings']['email'] = $emails->get_defaults();
@@ -1003,8 +1015,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @since 3.0.0
 	 */
 	public function get_report_page() {
-		global $CoursePress;
-		$instance = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		global $cp_coursepress;
+		$instance = $cp_coursepress->get_class( 'CoursePress_Admin_Reports' );
 		if ( $instance ) {
 			$instance->get_page();
 		}
@@ -1048,7 +1060,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		if ( null != $this->current_status ) {
 			return $this->current_status;
 		}
-		$this->current_status = $status = 'any';
+		$status = 'any';
+		$this->current_status = $status;
 		if ( isset( $_REQUEST['status'] ) ) {
 			$status = $_REQUEST['status'];
 		}
@@ -1058,7 +1071,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'draft',
 			'trash',
 		);
-		if ( in_array( $status, $allowed_statuses ) ) {
+		if ( in_array( $status, $allowed_statuses, true ) ) {
 			$this->current_status = $status;
 		}
 		return $this->current_status;

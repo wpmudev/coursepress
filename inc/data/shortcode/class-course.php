@@ -293,7 +293,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
         if ( 'publish' !==$course->post_status ) {
             return;
         }
-        $args = array( 'class' => 'course-summary', );
+        $args = array(
+			'class' => 'course-summary',
+		);
 		if ( apply_filters( 'coursepress_schema', false, 'description' ) ) {
 			$args['itemprop'] = 'description';
 		}
@@ -855,7 +857,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$class = sanitize_html_class( $atts['class'] );
 		$content = '';
 		$class_size = (int) coursepress_course_get_setting( $course_id, 'class_size' );
-		$is_limited = 0 != $class_size;
+		$is_limited = (bool) $class_size;
 		$show_no_limit = coursepress_is_true( $show_no_limit );
 		$show_remaining = coursepress_is_true( $show_remaining );
 		if ( $is_limited ) {
@@ -1072,7 +1074,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		$counter = 0;
 		foreach ( $categories as $key => $category ) {
-			$counter += 1;
+			$counter++;
 			$content .= $category;
 			$content .= count( $categories ) > $counter ? ', ' : '';
 		}
@@ -1250,12 +1252,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @param bool $version
 	 */
 	private function set_external_js( $id, $src, $version = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
 		if ( false === $version ) {
-			$version = $CoursePress->version;
+			$version = $cp_coursepress->version;
 		}
-		$plugin_url = $CoursePress->plugin_url;
+		$plugin_url = $cp_coursepress->plugin_url;
 		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
 	}
 
@@ -1266,9 +1268,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 * @param string $src
 	 */
 	private function set_external_css( $id, $src ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
-		$plugin_url = $CoursePress->plugin_url;
+		$plugin_url = $cp_coursepress->plugin_url;
 		wp_enqueue_style( $id, $plugin_url . 'assets/external/css/' . $src );
 	}
 
@@ -1460,7 +1462,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$class = 'apply-links course-action-links course-action-links-' . $course_id . ' ' . $class;
 		if ( $withdraw_link_visible ) {
 			$link = wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' );
-			$content .= $this->create_html( 'a', array( 'href' => $link, 'onClick' => 'return withdraw();' ), esc_html__( 'Withdraw', 'cp' ) );
+			$content .= $this->create_html( 'a', array(
+				'href' => $link,
+				'onClick' => 'return withdraw();',
+			), esc_html__( 'Withdraw', 'cp' ) );
 			$content .= ' | ';
 		}
 		$content .= $this->create_html( 'a', array( 'href' => get_permalink( $course_id ) ), esc_html__( 'Course Details', 'cp' ) );
@@ -1508,10 +1513,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$height = sanitize_text_field( $atts['height'] );
 		$width = sanitize_text_field( $atts['width'] );
 		// We'll use pixel if none is set
-		if ( ! empty( $width ) && (int) $width == $width ) {
+		if ( ! empty( $width ) ) {
 			$width .= 'px';
 		}
-		if ( ! empty( $height ) && (int) $height == $height ) {
+		if ( ! empty( $height ) ) {
 			$height .= 'px';
 		}
 		if ( ! $list_page ) {
@@ -1529,7 +1534,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( 'thumbnail' === $type ) {
 			$type = 'image';
 			$priority = 'image';
-			$width = $height = '';
+			$width = '';
+			$height = '';
 		}
 		// If no wrapper and we're specifying a width and height, we need one, so will use div.
 		if ( empty( $wrapper ) && ( ! empty( $width ) || ! empty( $height ) ) ) {
@@ -1563,7 +1569,10 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( ( ( 'default' === $type && 'image' === $priority ) || 'image' === $type || ( 'default' === $type && 'video' === $priority && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
 			$class = 'course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class;
-			$content_img = $this->create_html( 'img', array( 'src' => esc_url( $course_image ), 'class' => 'course-media-img' ) );
+			$content_img = $this->create_html( 'img', array(
+				'src' => esc_url( $course_image ),
+				'class' => 'course-media-img',
+			) );
 			$content_wrapper = empty( $wrapper ) ? $content_img : $this->create_html( $wrapper, array( 'style' => $wrapper_style ), $content_img );
 			$content .= $this->create_html( 'div', array( 'class' => $class ), $content_wrapper );
 		}
@@ -1720,7 +1729,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$courses = new WP_Query( $args );
 		$courses = $courses->posts;
 		$class = sanitize_html_class( $class );
-		$featured_atts = $content = '';
+		$content = '';
+		$featured_atts = '';
 		if ( 'default' !==$featured_title ) {
 			$featured_atts .= 'featured_title="' . $featured_title . '" ';
 		}

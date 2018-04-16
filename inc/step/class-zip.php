@@ -8,7 +8,7 @@
 class CoursePress_Step_Zip extends CoursePress_Step {
 	protected $type = 'zipped';
 
-	function get_keys() {
+	public function get_keys() {
 		$keys = parent::get_keys();
 		$keys = array_merge( $keys, array(
 			'zip_url',
@@ -19,7 +19,7 @@ class CoursePress_Step_Zip extends CoursePress_Step {
 		return $keys;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$zip_url = $this->__get( 'zip_url' );
 
 		if ( ! empty( $zip_url ) ) {

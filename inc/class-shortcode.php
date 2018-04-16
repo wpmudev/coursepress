@@ -372,9 +372,9 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 
 	public function get_course_structure( $atts ) {
 		/**
-		 * @var $CoursePress_User CoursePress_User
+		 * @var $coursepress_user CoursePress_User
 		 **/
-		global $CoursePress_User;
+		global $coursepress_user;
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
 			'show_label' => 'yes',
@@ -396,7 +396,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			);
 		}
 		$course_id = $course->__get( 'ID' );
-		$has_access = $CoursePress_User->has_access_at( $course_id );
+		$has_access = $coursepress_user->has_access_at( $course_id );
 		$published = $has_access ? false : true;
 		$units = $course->get_units( $published );
 		if ( ! empty( $units ) ) {

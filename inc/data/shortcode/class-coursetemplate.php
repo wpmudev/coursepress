@@ -141,7 +141,8 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				if ( is_array( $last_seen_unit ) && isset( $last_seen_unit['unit_id'] ) && isset( $last_seen_unit['page'] ) ) {
 					$unit = coursepress_get_unit( $last_seen_unit['unit_id'] );
 					if ( ! is_wp_error( $unit ) ) {
-						$continue_learning_link = $course_link = $unit->get_permalink();
+						$course_link = $unit->get_permalink();
+						$continue_learning_link = $course_link;
 					}
 				}
 			}
@@ -279,11 +280,11 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 							$student = coursepress_get_user( $student_id );
 						}
 						if ( $student->is_enrolled_at( $prerequisite ) && $student->is_course_completed( $prerequisite ) ) {
-							$completed += 1;
+							$completed++;
 						}
 					}
 
-					if ( count( $prerequisites ) == $completed ) {
+					if ( count( $prerequisites ) === $completed ) {
 						$all_complete = true;
 					}
 
@@ -337,11 +338,11 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 									$student = coursepress_get_user( $student_id );
 								}
 								if ( $student->is_enrolled_at( $prerequisite ) && $student->is_course_completed( $course_id ) ) {
-									$completed += 1;
+									$completed++;
 								}
 							}
 
-							if ( count( $prerequisites ) == $completed ) {
+							if ( count( $prerequisites ) === $completed ) {
 								$all_complete = true;
 							}
 
@@ -753,7 +754,9 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					foreach ( $page['modules'] as $module ) {
 						// Hide hidden modules
 						$is_module_structure_visible = CoursePress_Data_Unit::is_module_structure_visible( $course_id, $unit_id, $module->ID, $student_id );
-						if ( ! $is_module_structure_visible ) { continue; }
+						if ( ! $is_module_structure_visible ) {
+							continue;
+						}
 						$attributes = CoursePress_Data_Module::attributes( $module->ID );
 						$is_required = isset( $attributes['mandatory'] ) && coursepress_is_true( $attributes['mandatory'] );
 						if ( ! CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module->ID, $page_number ) ) {
@@ -1029,7 +1032,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			$unit_title = ( $is_unit_available && $enrolled && $clickable ) || $can_update_course ? '<a href="' . esc_url( $unit_link ) . '">' . esc_html( $unit['unit']->post_title ) . '</a>' : '<span>' . esc_html( $unit['unit']->post_title ) . '</span>';
 			$is_current_unit = false;
 			$classes = array( 'unit' );
-			if ( $unitname == $unit['unit']->post_name ) {
+			if ( $unitname === $unit['unit']->post_name ) {
 				$classes[] = 'current-unit';
 				$is_current_unit = true;
 			}
@@ -1097,7 +1100,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					}
 				}
 				//	if ( empty( $show_page ) ) { continue; }
-				$count += 1;
+				$count++;
 				$page_link = trailingslashit( $unit_link ) . 'page/' . $key;
 				$page_title = empty( $page['title'] ) ? sprintf( __( 'Untitled Page %s', 'cp' ), $count ) : $page['title'];
 				$page_title = $enrolled ? '<a href="' . esc_url( $page_link ) . '">' . esc_html( $page_title ) . '</a>' : esc_html( $page_title );
@@ -1201,7 +1204,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 							$module_link = preg_replace( '/#module-/', '/module_id/', $module_link );
 							$list_content .= '<div class="unit-module-preview-link"><a href="' . esc_url( $module_link ) . '">' . $free_text . '</a></div>';
 						}
-						$visibility_count += 1;
+						$visibility_count++;
 						$list_content .= sprintf(
 							'<div class="module-title" data-title="%s">%s</div>',
 							esc_attr__( 'Preview', 'cp' ),
@@ -1295,7 +1298,9 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				}
 			}
 			$instructor_list = true;
-			if ( empty( $include_ids ) ) { return ''; }
+			if ( empty( $include_ids ) ) {
+				return '';
+			}
 		}
 		if ( ! empty( $atts['facilitator'] ) ) {
 			$facilitator = $atts['facilitator'];
@@ -1476,7 +1481,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				);
 				$shortcode_attributes = $this->convert_array_to_params( $shortcode_attributes );
 				$content .= do_shortcode( '[course_list_box ' . $shortcode_attributes . ']' );
-				$counter += 1;
+				$counter++;
 			}
 		} else {
 			if ( $student_list ) {
@@ -1498,7 +1503,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				foreach ( $courses as $course ) {
 					$course_url = get_edit_post_link( $course->ID );
 					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '" class="'.esc_attr( $atts['class'] ).'"]' );
-					$counter += 1;
+					$counter++;
 				}
 			}
 		}
@@ -1511,7 +1516,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				case 'current':
 				case 'all':
 					$label = $atts['current_label'];
-					if ( 0 == $counter ) {
+					if ( ! $counter ) {
 						$show_empty = true;
 						$content = sprintf(
 							'<p class="message">%s</p>',

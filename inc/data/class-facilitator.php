@@ -154,16 +154,20 @@ class CoursePress_Data_Facilitator {
 				);
 			} else {
 				$messages = apply_filters( 'coursepress_facilitator_invitation_message_wrong_email',
-					array( esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
-					esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ) )
+					array(
+						esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
+						esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ),
+					)
 				);
 			}
 		}
 
 		if ( empty( $messages ) ) {
 			$messages = apply_filters( 'coursepress_facilitator_invitation_message_error',
-				array( esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
-				esc_html__( 'Please contact us if you believe this to be an error.', 'cp' ) )
+				array(
+					esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
+					esc_html__( 'Please contact us if you believe this to be an error.', 'cp' ),
+				)
 			);
 		}
 

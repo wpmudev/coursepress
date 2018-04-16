@@ -61,7 +61,7 @@ class CoursePress_Data_Notification {
 		$completion_status = $student->get_course_completion_status( $course_id );
 
 		// Course passed students.
-		if ( $completion_status === 'pass' ) {
+		if ( 'pass' === $completion_status ) {
 			$meta_query[] = array(
 				array(
 					'key' => 'receivers',
@@ -72,7 +72,7 @@ class CoursePress_Data_Notification {
 		}
 
 		// Course failed students.
-		if ( $completion_status === 'failed' ) {
+		if ( 'failed' === $completion_status ) {
 			$meta_query[] = array(
 				array(
 					'key' => 'receivers',

@@ -40,10 +40,10 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 
 		self::require_coursepress();
 
-		global $coursepress;
+		global $cp_coursepress;
 		$this->assertEquals( true, CoursePressUpgrade::check_old_courses() );
 		$this->assertTrue( class_exists( 'CoursePress' ) );
-		$this->assertStringStartsWith( '1.', $coursepress->version );
+		$this->assertStringStartsWith( '1.', $cp_coursepress->version );
 	}
 
 	public static function init_vars( $instance ) {

@@ -9,17 +9,17 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 class CoursePress_Admin_Table_Reports extends WP_List_Table {
-	var $courses = array();
-	var $course_id = 0;
-	var $last_student_progress = array();
-	var $is_cache_path_writable = false;
+	public $courses = array();
+	public $course_id = 0;
+	public $last_student_progress = array();
+	public $is_cache_path_writable = false;
 
 	/** Class constructor */
 	public function __construct() {
 		parent::__construct( array(
 			'singular' => __( 'Reports', 'cp' ),
 			'plural' => __( 'Reports', 'cp' ),
-			'ajax' => false,// should this table support ajax?
+			'ajax' => false, // should this table support ajax?
 		) );
 		$this->courses = coursepress_get_accessible_courses();
 		if ( empty( $_REQUEST['course_id'] ) && ! empty( $this->courses ) ) {

@@ -52,7 +52,7 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 	// Check to see if this invite is already there.
 	if ( $invites ) {
 		foreach ( $invites as $invite => $data ) {
-			$invite_exists = array_search( $email, $data );
+			$invite_exists = array_search( $email, $data, true );
 			if ( $invite_exists ) {
 				// Update code and hash for re-send.
 				$args['invite_code'] = $data['code'];
@@ -62,12 +62,12 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 	}
 
 	// Fire off the email based on type.
-	if ( $type === 'instructor' ) {
+	if ( 'instructor' === $type ) {
 		/**
 		 * check instructors
 		 */
 		$instructors = $course->get_instructors_emails();
-		if ( in_array( $email, $instructors ) ) {
+		if ( in_array( $email, $instructors, true ) ) {
 			return new WP_Error(
 				'error',
 				sprintf(
@@ -77,12 +77,12 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 			);
 		}
 		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::INSTRUCTOR_INVITATION, $args );
-	} elseif ( $type === 'facilitator'  ) {
+	} elseif ( 'facilitator' === $type  ) {
 		/**
 		 * check facilitators
 		 */
 		$facilitators = $course->get_facilitators_emails();
-		if ( in_array( $email, $facilitators ) ) {
+		if ( in_array( $email, $facilitators, true ) ) {
 			return new WP_Error(
 				'error',
 				sprintf(
@@ -113,7 +113,7 @@ function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 		$invites[ $args['invite_code'] ] = $invite;
 
 		// Set meta name.
-		$meta_name = $type === 'instructor' ? 'instructor_invites' : 'facilitator_invites';
+		$meta_name = 'instructor' === $type ? 'instructor_invites' : 'facilitator_invites';
 		// Update meta with invite data.
 		update_post_meta(
 			$course_id,

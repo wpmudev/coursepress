@@ -42,7 +42,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	public function process_ajax_request() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
-		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
+		$error = array(
+			'code' => 'cannot_process',
+			'message' => __( 'Something went wrong. Please try again.', 'cp' ),
+			);
 		if ( isset( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress_nonce' ) ) {
 			$action = $request->action;
 			// Remove commonly used params
@@ -172,7 +175,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
 		$with_modules = filter_input( INPUT_GET, 'with_modules', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		$error = array( 'error_code' => 'cannot_get_units', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
+		$error = array(
+			'error_code' => 'cannot_get_units',
+			'message' => __( 'Something went wrong. Please try again.', 'cp' ),
+			);
 		if ( ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error( $error );
 		}
@@ -270,7 +276,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$course->save_course_number( $course_id, $course_object['post_title'] );
 		// Retrieve the course object back
 		$course = coursepress_get_course( $course_id, false );
-		return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
+		return array(
+			'success' => true,
+			'ID' => $course_id,
+			'course' => $course,
+			);
 	}
 
 	public function update_units( $request ) {
@@ -391,8 +401,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 								}
 								// Let's keep course id too.
 								$step_metas['course_id'] = $course_id;
-								$stepId = coursepress_create_step( $step_array, $step_metas );
-								$step_object = coursepress_get_course_step( $stepId );
+								$step_id = coursepress_create_step( $step_array, $step_metas );
+								$step_object = coursepress_get_course_step( $step_id );
 								$new_steps[ $step_cid ] = $step_object;
 							}
 							$module->steps = $new_steps;
@@ -432,8 +442,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 							}
 							// Let's keep course id too.
 							$step_metas['course_id'] = $course_id;
-							$stepId = coursepress_create_step( $step_array, $step_metas );
-							$step_object = coursepress_get_course_step( $stepId );
+							$step_id = coursepress_create_step( $step_array, $step_metas );
+							$step_object = coursepress_get_course_step( $step_id );
 							$unit->steps->{$step_cid} = $step_object;
 						}
 					}
@@ -444,7 +454,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$units->{$cid} = $unit;
 				$menu_order++;
 			}
-			wp_send_json_success( array( 'success' => true, 'units' => $units ) );
+			wp_send_json_success( array(
+				'success' => true,
+				'units' => $units,
+			) );
 		}
 		wp_send_json_error( true );
 	}
@@ -465,7 +478,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $result ) {
 			return array( 'success' => true );
 		}
-		return;
 	}
 
 	/**
@@ -491,8 +503,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		/**
 		 * check extensions settings
 		 */
-		global $CoursePress_Extension;
-		$CoursePress_Extension->active_extensions();
+		global $coursepress_extension;
+		$coursepress_extension->active_extensions();
 		coursepress_update_setting( true, $request );
 		return array( 'success' => true );
 	}
@@ -504,9 +516,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @return array
 	 */
 	public function preview_certificate( $request ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		$course_id = '';
-		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+		$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 		if ( isset( $request->ID ) ) {
 			$course_id = $request->ID;
 			$content = $request->meta_basic_certificate_layout;
@@ -536,7 +548,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'LAST_NAME' => __( 'Snow', 'cp' ),
 			'COURSE_NAME' => __( 'Example Course Title', 'cp' ),
 			'COMPLETION_DATE' => date_i18n( $date_format, $this->date_time_now() ),
-			'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
+			'CERTIFICATE_NUMBER' => uniqid( wp_rand(), true ),
 		);
 		$content = $this->replace_vars( $content, $vars );
 		$text_color = $this->convert_hex_color_to_rgb( $text_color, '#000000' );
@@ -617,7 +629,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$data['total_courses'] = count( $courses );
 				$data['courses'] = array();
 				foreach ( $courses as $course ) {
-					$importClass = new CoursePress_Import( $course, $options );
+					$import_class = new CoursePress_Import( $course, $options );
 				}
 				wp_delete_attachment( $import_id );
 				wp_send_json_success( $data );
@@ -644,10 +656,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					'author' => wp_get_current_user(),
 				)
 			);
-			$importClass = new CoursePress_Import( $the_course, $import_options );
+			$import_class = new CoursePress_Import( $the_course, $import_options );
 			coursepress_delete_course( $request->old_course_id );
 			wp_send_json_success(array(
-				'course' => $importClass->get_course(),
+				'course' => $import_class->get_course(),
 			));
 		}
 	}
@@ -668,7 +680,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$success = array( 'message' => __( 'Course status updated successfully.', 'cp' ) );
 			wp_send_json_success( $success );
 		} else {
-			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update course status.', 'cp' ) );
+			$error = array(
+				'error_code' => 'cannot_change_status',
+				'message' => __( 'Could not update course status.', 'cp' ),
+				);
 			wp_send_json_error( $error );
 		}
 	}
@@ -706,9 +721,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// Do not continue if empty.
 		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
 			$proceed = false;
-		} elseif ( $request->type === 'instructor' && ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
+		} elseif ( 'instructor' === $request->type && ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
 			$proceed = false;
-		} elseif ( $request->type === 'facilitator' && ! CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
+		} elseif ( 'facilitator' === $request->type && ! CoursePress_Data_Capabilities::can_assign_facilitator( $request->course_id ) ) {
 			$proceed = false;
 		}
 		// If we can not continue.
@@ -762,7 +777,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		// If sent, send success response back.
 		if ( $success ) {
-			$user = $name = coursepress_get_user( $request->user );
+			$user = coursepress_get_user( $request->user );
 			$name = $user->get_name();
 			wp_send_json_success(
 				array(
@@ -833,7 +848,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	public function import_sample_course( $request ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		$file = $request->meta_sample_course;
 		$option_id = 'sample_' . $file;
 		$data = array();
@@ -841,7 +856,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// Let's check if the sample had previously use
 		$courses = coursepress_get_option( $option_id );
 		if ( empty( $courses ) ) {
-			$filename = $CoursePress->plugin_path . 'assets/external/sample-courses/' . $file;
+			$filename = $cp_coursepress->plugin_path . 'assets/external/sample-courses/' . $file;
 			$courses = file_get_contents( $filename );
 			$courses = json_decode( $courses );
 			$courses = get_object_vars( $courses );
@@ -979,7 +994,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$user_id = get_current_user_id();
 		$referer = filter_input( INPUT_POST, 'referer_url' );
 		$redirect_url = filter_input( INPUT_POST, 'redirect_url' );
-		$response = isset( $_POST['module'] ) ? $_POST['module'] : array();
+		$response = filter_input( INPUT_POST, 'module' );
 		$user = coursepress_get_user( $user_id );
 		if ( ! $user->is_enrolled_at( $course_id ) ) {
 			// If user is not enrolled, don't validate
@@ -1072,12 +1087,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request Request data.
 	 */
 	public function send_notification_email( $request ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		// Check if required values are set.
 		if ( empty( $request->content ) || empty( $request->title ) || empty( $request->students ) ) {
 			wp_send_json_error();
 		}
-		$email = $CoursePress->get_class( 'CoursePress_Email' );
+		$email = $cp_coursepress->get_class( 'CoursePress_Email' );
 		// Send email notifications.
 		if ( $email->notification_alert_email( $request->students, $request->title, $request->content ) ) {
 			wp_send_json_success( array( 'message' => __( 'Notification emails sent successfully.', 'cp' ) ) );
@@ -1101,7 +1116,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$success = array( 'message' => __( 'Discussion status updated successfully.', 'cp' ) );
 			wp_send_json_success( $success );
 		} else {
-			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update discussion status.', 'cp' ) );
+			$error = array(
+				'error_code' => 'cannot_change_status',
+				'message' => __( 'Could not update discussion status.', 'cp' ),
+				);
 			wp_send_json_error( $error );
 		}
 	}
@@ -1122,7 +1140,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$success = array( 'message' => __( 'Alert status updated successfully.', 'cp' ) );
 			wp_send_json_success( $success );
 		} else {
-			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update alert status.', 'cp' ) );
+			$error = array(
+				'error_code' => 'cannot_change_status',
+				'message' => __( 'Could not update alert status.', 'cp' ),
+				);
 			wp_send_json_error( $error );
 		}
 	}
@@ -1194,10 +1215,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		switch ( $status ) {
 			case 'unapproved':
 				$commentarr['comment_approved'] = 1;
-			break;
+				break;
 			case 'approved':
 				$commentarr['comment_approved'] = 0;
-			break;
+				break;
 		}
 		if ( ! isset( $commentarr['comment_approved'] ) ) {
 			return;
@@ -1209,7 +1230,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				'id' => $request->id,
 				'status' => $status,
 				'success' => true,
-				'button_text' => esc_html( $status === 'unapproved' ? __( 'Approve', 'cp' ) : __( 'Unapprove', 'cp' ) ),
+				'button_text' => esc_html( 'unapproved' === $status ? __( 'Approve', 'cp' ) : __( 'Unapprove', 'cp' ) ),
 			);
 			return $response;
 		}
@@ -1286,8 +1307,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * Get PDF report
 	 */
 	public function get_report_pdf( $request ) {
-		global $CoursePress;
-		$data = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		global $cp_coursepress;
+		$data = $cp_coursepress->get_class( 'CoursePress_Admin_Reports' );
 		$content = $data->get_pdf_content( $request );
 		if ( is_wp_error( $content ) ) {
 			wp_send_json_error( array( 'message' => $content->get_error_message() ) );
@@ -1295,7 +1316,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( empty( $content ) || ! isset( $content['pdf_content'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Oops! Some error occurred while generating the PDF file.', 'cp' ) ) );
 		}
-		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+		$pdf = $cp_coursepress->get_class( 'CoursePress_PDF' );
 		$pdf->make_pdf( $content['pdf_content'], $content['args'] );
 		$data = array(
 			'pdf' => $pdf->cache_url() . $content['filename'],
@@ -1465,7 +1486,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			foreach ( $request->courses as $course_id ) {
 
 				// Make sure that the user is capable.
-				if ( in_array( $request->which, array( 'trash', 'delete' ) ) && ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+				if ( in_array( $request->which, array( 'trash', 'delete' ), true ) && ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
 					continue;
 				} elseif ( ! CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 					continue;
@@ -1491,7 +1512,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		// Do not continue if this user is not capable.
 		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $request->course_id ) ) {
-			return array( 'success' => false, 'message' => __( 'You do not have permission to withdraw students.', 'cp' ) );
+			return array(
+				'success' => false,
+				'message' => __( 'You do not have permission to withdraw students.', 'cp' ),
+				);
 		}
 		foreach ( $request->students as $student_id ) {
 			coursepress_delete_student( $student_id, $request->course_id );
@@ -1590,7 +1614,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function duplicate_course( $request ) {
 		// We need course id.
 		if ( ! isset( $request->course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );;
+			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
 		}
 		// Continue only if valid course.
 		$course = coursepress_get_course( $request->course_id );
@@ -1656,9 +1680,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request Request.
 	 */
 	public function upgrade_course( $request ) {
-		global $CoursePress;
+		global $cp_coursepress;
 		if ( isset( $request->course_id ) ) {
-			$upggrade = new CoursePress_Admin_Upgrade( $CoursePress );
+			$upggrade = new CoursePress_Admin_Upgrade( $cp_coursepress );
 			$result = $upggrade->upgrade_course_by_id( $request->course_id );
 			if ( is_array( $result ) ) {
 				wp_send_json_success( $result );

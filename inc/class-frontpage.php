@@ -29,7 +29,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		new CoursePress_Data_Forum();
 	}
 
-	function remove_cookies() {
+	public function remove_cookies() {
 		$cookies = array(
 			'cp_incorrect_passcode',
 			'cp_mismatch_password',
@@ -44,7 +44,8 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 
 	private function reset_wp( $wp, $course_name ) {
 		$wp->is_home = false;
-		$wp->is_singular = $wp->is_single = true;
+		$wp->is_singular = true;
+		$wp->is_single = true;
 		$wp->query_vars = wp_parse_args( array(
 			'page' => '',
 			'course' => $course_name,
@@ -58,10 +59,10 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 	 *
 	 * @return mixed
 	 */
-	function maybe_load_coursepress( $wp ) {
-		global $CoursePress_VirtualPage, $CoursePress_Core, $_coursepress_vars;
+	public function maybe_load_coursepress( $wp ) {
+		global $coursepress_virtualpage, $coursepress_core, $_coursepress_vars;
 
-		$core = $CoursePress_Core;
+		$core = $coursepress_core;
 		$post_type = $wp->get( 'post_type' );
 		$course_name = $wp->get( 'coursename' );
 		$type = $wp->get( 'coursepress' );
@@ -70,13 +71,15 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			$cp['course'] = $course_name;
 			$cp['type']   = $type;
 
-			if ( in_array( $type, array( 'unit', 'module', 'step', 'step-comment' ) ) ) {
+			if ( in_array( $type, array( 'unit', 'module', 'step', 'step-comment' ), true ) ) {
 				$cp['unit'] = $wp->get( 'unit' );
 
-				if ( ( $module = $wp->get( 'module' ) ) ) {
+				$module = $wp->get( 'module' );
+				if ( $module ) {
 					$cp['module'] = $module;
 				}
-				if ( ( $step = $wp->get( 'step' ) ) ) {
+				$step = $wp->get( 'step' );
+				if ( $step ) {
 					$cp['step'] = $step;
 				}
 			} elseif ( 'forum' === $type ) {
@@ -88,7 +91,8 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			$cp['course'] = false;
 			$cp['type'] = $type;
 			$wp->is_home = false;
-			$wp->is_singular = $wp->is_single = true;
+			$wp->is_singular = true;
+			$wp->is_single = true;
 
 		} elseif ( $core->course_post_type == $post_type && $wp->is_main_query() ) {
 			if ( $wp->is_single || $wp->is_singular ) {
@@ -105,13 +109,13 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		if ( ! empty( $cp ) ) {
 			$this->__set( 'page_now', $cp['type'] );
 			// Set CP Virtual Page
-			$CoursePress_VirtualPage = new CoursePress_VirtualPage( $cp );
+			$coursepress_virtualpage = new CoursePress_VirtualPage( $cp );
 		}
 
 		return $wp;
 	}
 
-	function maybe_load_assets() {
+	public function maybe_load_assets() {
 		if ( $this->__get( 'page_now' ) ) {
 			$this->load_assets();
 		}
@@ -123,7 +127,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$page_now = $this->__get( 'page_now' );
 
 		if ( 'single-course' === $page_now
-			|| in_array( $page_now, array( 'unit', 'module', 'step' ) ) ) {
+			|| in_array( $page_now, array( 'unit', 'module', 'step' ), true ) ) {
 			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
 
 			$this->set_external_js( 'coursepress-video', 'video.min.js' );
@@ -169,41 +173,42 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 	 * @param bool|string $version Version of the file. Default to CoursePress version.
 	 */
 	private function set_external_js( $id, $src, $version = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
 		if ( false === $version ) {
-			$version = $CoursePress->version;
+			$version = $cp_coursepress->version;
 		}
-		$plugin_url = $CoursePress->plugin_url;
+		$plugin_url = $cp_coursepress->plugin_url;
 		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
 	}
 
 	private function set_external_css( $id, $src ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
-		$plugin_url = $CoursePress->plugin_url;
+		$plugin_url = $cp_coursepress->plugin_url;
 		wp_enqueue_style( $id, $plugin_url . 'assets/external/css/' . $src );
 	}
 
 	private function set_css( $id, $src, $deps = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
-		$plugin_url = $CoursePress->plugin_url;
-		$version = $CoursePress->version;
+		$plugin_url = $cp_coursepress->plugin_url;
+		$version = $cp_coursepress->version;
 
 		wp_enqueue_style( $id, $plugin_url . 'assets/css/' . $src, $deps, $version );
 	}
 
 	private function set_js( $id, $src, $deps = false ) {
-		global $CoursePress;
+		global $cp_coursepress;
 
-		$plugin_url = $CoursePress->plugin_url;
-		$version = $CoursePress->version;
+		$plugin_url = $cp_coursepress->plugin_url;
+		$version = $cp_coursepress->version;
 		wp_enqueue_script( $id, $plugin_url . 'assets/js/' . $src, $deps, $version, true );
 	}
 
 	public function set_body_class( $classes ) {
-		if ( ( $is_cp = $this->__get( 'page_now' ) ) ) {
+		$is_cp = $this->__get( 'page_now' );
+		if ( $is_cp ) {
 			array_push( $classes, 'coursepress', 'coursepress-' . $is_cp );
 		}
 		/**
@@ -215,7 +220,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		return $classes;
 	}
 
-	function maybe_load_zip() {
+	public function maybe_load_zip() {
 		if ( ! empty( $_REQUEST['oacpf'] ) ) {
 			$module_id = $_REQUEST['oacpf'];
 
