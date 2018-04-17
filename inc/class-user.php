@@ -530,6 +530,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( 0 < $course_progress_counter ) {
 			$course_progress = intval( $course_progress / $course_progress_counter );
 		}
+		$course_progress = $this->normalize( $course_progress );
 		$progress = coursepress_set_array_val( $progress, 'completion/progress', $course_progress );
 		/**
 		 * is course progress larger or equal minimum course completion?
@@ -873,7 +874,8 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	public function get_course_grade( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
-		return coursepress_get_array_val( $progress, 'completion/progress' );
+		$progress = coursepress_get_array_val( $progress, 'completion/progress' );
+		return $this->normalize( $progress );
 	}
 	/**
 	 * Returns user's course progress percentage.
@@ -890,8 +892,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $course_id ) {
 			return false;
 		}
-		$progress = $this->get_completion_data( $course_id );
-		return (int) coursepress_get_array_val( $progress, 'completion/progress' );
+		return $this->get_course_grade( $course_id );
 	}
 
 	/**
@@ -963,8 +964,8 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( false === $progress ) {
 			$progress = $this->get_completion_data( $course_id );
 		}
-
-		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
+		$progress = coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
+		return $this->normalize( $progress );
 	}
 
 	/**
