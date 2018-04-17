@@ -248,10 +248,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			}
 		}
 		$course_object['post_name'] = wp_unique_post_slug( $course_object['post_name'], $course_object['ID'], 'publish', 'course', 0 );
+		$is_auto_draft              = false;
 		if ( 'auto-draft' === $course_object['post_status'] ) {
+			$is_auto_draft                = true;
 			$course_object['post_status'] = 'draft';
 		}
-		if ( (int) $course_object['ID'] > 0 ) {
+		if ( (int) $course_object['ID'] > 0 && ! $is_auto_draft ) {
 			// Check course update capability.
 			if ( ! CoursePress_Data_Capabilities::can_update_course( (int) $course_object['ID'] ) ) {
 				return array( 'success' => false );
