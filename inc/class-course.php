@@ -225,6 +225,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		// Set post thumbnail ID if not empty
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $settings['listing_image_thumbnail_id'] );
+		} else {
+			delete_post_thumbnail( $course_id );
 		}
 		$category_type = $coursepress_core->__get( 'category_type' );
 		if ( ! empty( $settings['course_category'] ) ) {

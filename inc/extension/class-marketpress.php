@@ -213,6 +213,8 @@ class CoursePress_Extension_MarketPress {
 		// Update featured image
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $product_id, $settings['listing_image_thumbnail_id'] );
+		} else {
+			delete_post_thumbnail( $product_id );
 		}
 		// Update the meta
 		$is_sale = ! empty( $settings['mp_sale_price_enabled'] ) ? '1' : '';
