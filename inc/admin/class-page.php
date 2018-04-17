@@ -716,10 +716,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		) );
 		$invited_instructors = (array) get_post_meta( $course_id, 'instructor_invites', true );
 		$invited_instructors = array_filter( $invited_instructors );
-		el( $invited_instructors );
 		$invited_facilitators = (array) get_post_meta( $course_id, 'facilitator_invites', true );
 		$invited_facilitators = array_filter( $invited_facilitators );
-		el( $invited_facilitators );
 		$this->localize_array['invited_instructors'] = $invited_instructors;
 		$this->localize_array['invited_facilitators'] = $invited_facilitators;
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
