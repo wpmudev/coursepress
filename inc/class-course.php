@@ -78,10 +78,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
 		$date_format = get_option( 'date_format', 'F j, Y' );
-		$time_now = current_time( 'timestamp' );
+		$time_now = current_time( 'timestamp', 1 );
 		$date_keys = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
 		foreach ( $settings as $key => $value ) {
 			if ( in_array( $key, $date_keys ) ) {
+				$value = $value ? $value : date_i18n( $date_format, $time_now );
 				if ( preg_match( '/_end_date/', $key ) ) {
 					$value .= ' 23:59:59';
 				}
