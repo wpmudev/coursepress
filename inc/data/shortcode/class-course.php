@@ -100,12 +100,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$shows = explode( ',', $atts['show'] );
 		$shows = array_map( 'trim', $shows );
 		$template = '';
@@ -153,12 +153,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$action = sanitize_html_class( $atts['field'] );
 		// Specify alias values for certain actions.
 		$translate_action = array(
@@ -236,12 +236,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$class = 'course-title';
 		if ( ! empty( $atts['class'] ) ) {
 			$class .= ' ' . $atts['class'];
@@ -287,13 +287,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        $args = array(
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		$args = array(
 			'class' => 'course-summary',
 		);
 		if ( apply_filters( 'coursepress_schema', false, 'description' ) ) {
@@ -334,12 +334,12 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$template = $atts['label'];
 		$class = 'course-description';
 		if ( ! empty( $atts['class'] ) ) {
@@ -386,13 +386,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$template = '';
 		if ( ! empty( $atts['label'] ) ) {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
@@ -454,13 +454,13 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -519,16 +519,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -595,16 +595,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -671,16 +671,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
@@ -743,16 +743,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$date_format = sanitize_text_field( $atts['date_format'] );
 		$label = sanitize_text_field( $atts['label'] );
 		$label_enrolled = sanitize_text_field( $atts['label_enrolled'] );
@@ -837,16 +837,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$show_no_limit = sanitize_html_class( $atts['show_no_limit'] );
 		$show_remaining = sanitize_html_class( $atts['show_remaining'] );
 		$label = sanitize_text_field( $atts['label'] );
@@ -920,16 +920,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
@@ -995,16 +995,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$template = '';
 		if ( ! empty( $atts['label'] ) ) {
 			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
@@ -1052,16 +1052,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
@@ -1127,16 +1127,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$label = sanitize_text_field( $atts['label'] );
 		$label_tag = sanitize_html_class( $atts['label_tag'] );
 		$label_delimeter = $atts['label_delimeter'];
@@ -1222,15 +1222,15 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		if ( ! empty( $course->listing_image ) ) {
 			$class = 'course-feature-image';
 			if ( ! empty( $atts['class'] ) ) {
@@ -1249,7 +1249,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @param int $id
 	 * @param string $src
-	 * @param bool $version
+	 * @param mixed $version Version of resource.
 	 */
 	private function set_external_js( $id, $src, $version = false ) {
 		global $cp_coursepress;
@@ -1266,12 +1266,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	 *
 	 * @param int $id
 	 * @param string $src
+	 * @param mixed $version Version of resource.
 	 */
-	private function set_external_css( $id, $src ) {
+	private function set_external_css( $id, $src, $version = false ) {
 		global $cp_coursepress;
-
 		$plugin_url = $cp_coursepress->plugin_url;
-		wp_enqueue_style( $id, $plugin_url . 'assets/external/css/' . $src );
+		if ( false === $version ) {
+			$version = $cp_coursepress->version;
+		}
+		wp_register_style( 'coursepress-front-video', $plugin_url.'assets/css/front-video.min.css', array(), $cp_coursepress->version );
+		wp_enqueue_style( $id, $plugin_url . 'assets/external/css/' . $src, array( 'coursepress-front-video' ), $version );
 	}
 
 	/**
@@ -1304,23 +1308,25 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
 		}
-        // Check course post status.
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
+		// Check course post status.
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
 		if ( ! empty( $course->featured_video ) ) {
 			$class = 'course-featured-video course-featured-video-' . $course_id;
 			if ( ! empty( $atts['class'] ) ) {
 				$class .= ' ' . $atts['class'];
 			}
-
-			// set css & js for video.js
-			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
-
-			$this->set_external_js( 'coursepress-video', 'video.min.js' );
+			/**
+			 * set css & js for video.js
+			 */
+			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css', '5.19.1' );
+			/**
+			 *  set js for video.js
+			 */
+			$this->set_external_js( 'coursepress-video', 'video.min.js', '5.19.1' );
 			$this->set_external_js( 'coursepress-video-youtube', 'video-youtube.min.js' );
-			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js', '3.0.0' );
-
+			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js' );
 			// No js.
 			$html5 = $this->create_html( 'a',
 				array(
@@ -1330,7 +1336,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			);
 
 			$inner = $this->create_html( 'p', array(
-				'class' => 'vjs-no-js'
+				'class' => 'vjs-no-js',
 			), $html5 );
 
 			// videojs attributes
@@ -1338,32 +1344,30 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$mime_type = '';
 			$featured = wp_parse_url( $course->featured_video );
 			// Source: YouTube.
-			if ( strstr( $featured['host'], 'youtube') !== false ) {
+			if ( strstr( $featured['host'], 'youtube' ) !== false ) {
 				$player_attr = '{"techOrder":["youtube"],"sources":[{"type":"video/youtube","src":"' . esc_attr( $course->featured_video ) . '"}]}';
-			} elseif ( strstr($featured['host'], 'vimeo') !== false ) {
+			} elseif ( strstr( $featured['host'], 'vimeo' ) !== false ) {
 				$player_attr = '{"techOrder":["vimeo"],"sources":[{"type":"video/vimeo","src":"' . esc_attr( $course->featured_video ) . '"}]}';
 			} else {
 				// Get extension.
 				$ext = pathinfo( $course->featured_video, PATHINFO_EXTENSION );
 
-				switch ( $ext ){
-					case "mp4":
+				switch ( $ext ) {
+					case 'mp4':
 						$mime_type = 'video/mp4';
 						break;
-					case "webm":
+					case 'webm':
 						$mime_type = 'video/webm';
 						break;
-					case "ogv":
+					case 'ogv':
 						$mime_type = 'video/ogg';
 						break;
 				}
-
 				$inner = $this->create_html( 'source', array(
 					'type' => $mime_type,
-					'src' => $course->featured_video
+					'src' => $course->featured_video,
 				) );
 			}
-
 			$content = $this->create_html( 'video', array(
 				'id' => 'cp-video-' . $course->ID,
 				'class' => 'video-js',
@@ -1372,11 +1376,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				'controls' => '',
 				'preload' => 'auto',
 				'poster' => $course->listing_image,
-				'data-setup' => $player_attr
+				'data-setup' => $player_attr,
 			), $inner );
-
 			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
-
 			return $content;
 		}
 	}
@@ -1412,16 +1414,16 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		if ( $course->__get( 'is_error' ) ) {
 			return $course->__get( 'error_message' );
-        }
-        /**
-         * Check course post status
-         */
-        if ( 'publish' !==$course->post_status ) {
-            return;
-        }
-        /**
-         * proceder
-         */
+		}
+		/**
+		 * Check course post status
+		 */
+		if ( 'publish' !== $course->post_status ) {
+			return;
+		}
+		/**
+		 * proceder
+		 */
 		$wrapper = sanitize_html_class( $atts['wrapper'] );
 		$class = sanitize_html_class( $atts['class'] );
 		return do_shortcode( '[course_media course_id="' . $course_id . '" wrapper="' . $wrapper . '" class="' . $class . '" type="thumbnail"]' );
@@ -1526,7 +1528,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$type = empty( $type ) ? coursepress_get_setting( 'course/listing_media_type', 'default' ) : $type;
 			$priority = empty( $priority ) ? coursepress_get_setting( 'course/listing_media_priority', 'image' ) : $priority;
 		}
-		$priority = 'default' !==$type ? false : $priority;
+		$priority = 'default' !== $type ? false : $priority;
 		// Saves some overhead by not loading the post again if we don't need to.
 		$class = sanitize_html_class( $class );
 		$course_video = coursepress_course_get_setting( $course_id, 'featured_video' );
@@ -1731,19 +1733,19 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$class = sanitize_html_class( $class );
 		$content = '';
 		$featured_atts = '';
-		if ( 'default' !==$featured_title ) {
+		if ( 'default' !== $featured_title ) {
 			$featured_atts .= 'featured_title="' . $featured_title . '" ';
 		}
-		if ( 'default' !==$button_title ) {
+		if ( 'default' !== $button_title ) {
 			$featured_atts .= 'button_title="' . $button_title . '" ';
 		}
-		if ( 'default' !==$media_type ) {
+		if ( 'default' !== $media_type ) {
 			$featured_atts .= 'media_type="' . $media_type . '" ';
 		}
-		if ( 'default' !==$media_priority ) {
+		if ( 'default' !== $media_priority ) {
 			$featured_atts .= 'media_priority="' . $media_priority . '" ';
 		}
-		if ( 'default' !==$course_class ) {
+		if ( 'default' !== $course_class ) {
 			$featured_atts .= 'class="' . $course_class . '" ';
 		}
 		foreach ( $courses as $course ) {

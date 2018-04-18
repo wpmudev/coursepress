@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                 'assets/js/src/common/add-image.js',
                 'assets/js/src/common/add-video.js',
                 'assets/js/src/common/dropdown-menu.js',
-					 'assets/js/src/common/popup.js',
+                'assets/js/src/common/popup.js',
                 'assets/js/src/common/editor.js',
                 'assets/js/src/common/upload.js',
                 'assets/js/src/common/add-media.js',
@@ -167,6 +167,7 @@ module.exports = function(grunt) {
 		css_files_compile: {
 			'assets/css/admin-global.css': 'assets/sass/admin-global.scss',
 			'assets/css/front.css': 'assets/sass/front.scss',
+			'assets/css/front-video.css': 'assets/sass/front/video.scss',
 			'assets/css/admin-common.css': 'assets/sass/admin-common.scss',
 			'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
 			'assets/css/coursepress_course.css': 'assets/sass/coursepress_course.scss',
