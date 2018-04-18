@@ -86,7 +86,7 @@ name="meta_course_category">
 										) );
 										$total_course = count( $list );
 										foreach ( coursepress_get_enrollment_types() as $id => $label ) :
-											if( $total_course < 2 && 'prerequisite' === $id ) {
+											if ( $total_course < 2 && 'prerequisite' === $id ) {
 												continue;
 											}
 										?>
@@ -105,12 +105,12 @@ name="meta_course_category">
                     <?php if ( ! empty( $courses ) ) : ?>
                     <select name="meta_enrollment_prerequisite" multiple="multiple">
                         <?php
-												foreach ( $courses as $course ) :
-													if( $course->ID !== $course_id ) :
-													?>
-                            <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo $course->post_title; ?></option>
+						foreach ( $courses as $course ) :
+							if ( $course->ID !== $course_id ) :
+							?>
+                            <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo wp_trim_words( $course->post_title, 10 ); ?></option>
                         <?php
-													endif;
+							endif;
 												endforeach;
 												?>
                     </select>
