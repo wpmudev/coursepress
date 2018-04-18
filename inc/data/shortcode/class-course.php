@@ -347,7 +347,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		}
 		// Apply schema.
 		$content_schema = apply_filters( 'coursepress_schema', '', 'description' );
-		$template .= $course->post_content;
+		$template .= wpautop( $course->post_content );
 		$template = '<div class="' . $class . '"' . $content_schema . '>'. $template . '</div>';
 		return $template;
 	}
