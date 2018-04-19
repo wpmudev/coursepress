@@ -390,6 +390,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 
 		$users = new WP_User_Query( $query_args );
 
+		$this->items = array();
 		foreach ( $users->get_results() as $one ) {
 			$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
 			$this->items[] = $one;
