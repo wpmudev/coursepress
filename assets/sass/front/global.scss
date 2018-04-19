@@ -1,45 +1,41 @@
 .coursepress-wrap {
-  display: block;
-  margin: 0;
-  width: 100%;
-  max-width: 100%;
-  @include clearfix;
-  font-size: 100%;
-
-  .container {
-    max-width: 1024px;
-    margin: 0 auto;
-    padding: 0 25px;
-
-    .page-title {
-      font-size: 16px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin: 0 0 15px 0;
-      padding: 0;
+    display: block;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    @include clearfix;
+    font-size: 100%;
+    .container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding-bottom: 1em;
+        .page-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 15px 0;
+            padding: 0;
+        }
     }
-  }
-
-  .course-unit-progress {
-    text-align: center;
-  }
-
-  .error  {
-    margin: 15px 0;
-    text-transform: uppercase;
-    font-size: 13px;
-    background-color: rgba(255, 0, 0, 0.02);
-    padding: 10px 15px;
-    border: 1px solid rgba(255, 0, 0, 0.1);
-
-    &:before {
-      content: '\f06a';
-      font-family: 'FontAwesome';
-      display: inline-block;
-      font-size: 16px;
-      vertical-align: baseline;
-      margin-right: 8px;
-      color: red;
+    .course-unit-progress {
+        text-align: center;
     }
-  }
+    .error  {
+        margin: 15px 0;
+        text-transform: uppercase;
+        font-size: 13px;
+        background-color: rgba(255, 0, 0, 0.02);
+        padding: 10px 15px;
+        border: 1px solid rgba(255, 0, 0, 0.1);
+
+        &:before {
+            content: '\f06a';
+            font-family: 'FontAwesome';
+            display: inline-block;
+            font-size: 16px;
+            vertical-align: baseline;
+            margin-right: 8px;
+            color: red;
+        }
+    }
 }

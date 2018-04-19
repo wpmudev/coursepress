@@ -2,66 +2,59 @@
     display: block;
     margin: 25px 0;
     @include clearfix;
-
     .tree {
         margin: 0;
         padding: 0;
         list-style: none;
         @include clearfix;
     }
-
     .unit {
-          padding-bottom: 25px;
+        padding-bottom: .5em;
     }
-
     @mixin preview {
-            background-color: #ffffff;
-            border: 1.5px solid $grey_3;
-            display: inline-block;
-            float: right;
-            font-size: 11px;
-            @include radius(3px);
+        background-color: #ffffff;
+        border: 1.5px solid $grey_3;
+        display: inline-block;
+        float: right;
+        font-size: 11px;
+        @include radius(3px);
+        @include transition(opacity 0.4s);
+        opacity: 0.3;
+        padding: 4px 12px;
+        text-transform: uppercase;
+        &:hover {
+            opacity: 1;
             @include transition(opacity 0.4s);
-            opacity: 0.3;
-            padding: 4px 12px;
-            text-transform: uppercase;
-            &:hover {
-                opacity: 1;
-                @include transition(opacity 0.4s);
-            }
+        }
     }
-
     .unit-tree {
         .preview {
             @include preview();
         }
-
         .unit-description {
-          clear: both;
-          margin: 0 20px;
+            clear: both;
+            margin: 0 20px;
         }
-
         .fold {
-          display: inline-block;
-          width: 25px;
-          float: left;
-          height: 25px;
-          margin: 33px 15px 0;
-          cursor: pointer;
-          position: relative;
-          z-index: 10000;
-          &:before {
-            content: '\f140';
-            font-family: Dashicons;
-            font-size: 20px;
-            line-height: 1.2;
-          }
+            display: inline-block;
+            width: 25px;
+            float: left;
+            height: 25px;
+            margin: .5em 0 0 0;
+            cursor: pointer;
+            position: relative;
+            z-index: 10000;
+            &:before {
+                content: '\f140';
+                font-family: Dashicons;
+                font-size: 20px;
+                line-height: 1.2;
+            }
 
-          &.folded:before {
-            content: '\f139';
-          }
+            &.folded:before {
+                content: '\f139';
+            }
         }
-
         .timer {
             float: right;
             font-size: 10px;
@@ -119,7 +112,7 @@
             font-size: 96%;
             padding: 5px 0 5px 35px;
             a {
-              box-shadow: none;
+                box-shadow: none;
             }
             &:hover {
                 .preview {
@@ -151,7 +144,7 @@
             font-size: 94%;
             padding: 5px 0 5px 50px;
             a {
-              box-shadow: none;
+                box-shadow: none;
             }
         }
     }

@@ -40,13 +40,15 @@ wp_link_pages(
 	)
 );
 ?>
-<div class="instructors-content"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope-person' ); ?>>
+</div><!-- .entry-content -->
+<footer class="entry-footer">
+    <div class="instructors-content"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope-person' ); ?>>
 <?php
 // Flat hyperlinked list of instructors
 echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
 ?>
-</div>
-<div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
+    </div>
+    <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
 <?php
 echo do_shortcode( '[course_start label="" class="course-time"]' );
 echo do_shortcode( '[course_language label="" class="course-lang"]' );
@@ -54,8 +56,8 @@ echo do_shortcode( '[course_cost label="" show_icon="true"]' );
 echo do_shortcode( '[course_join_button details_text="' . __( 'Details', 'cp' ) . '" course_expired_text="' . __( 'Not Available', 'cp' ) . '" list_page="yes"]' );
 ?>
 <!--go-to-course-button-->
-</div>
-</div><!-- .entry-content -->
+    </div>
+</footer>
 
 		<?php endif; ?>
 	</div>

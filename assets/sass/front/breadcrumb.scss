@@ -1,25 +1,29 @@
 .course-breadcrumb {
-  display: block;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  @include clearfix;
+    display: block;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    @include clearfix;
+    li {
+        display: inline-block;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px;
+        font-size: 0.9em;
 
-  li {
-    display: inline-block;
-    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
-    margin-bottom: 10px;
-    font-size: 0.9em;
+        &:before {
+            content: '\f139';
+            font-family: 'Dashicons';
+            display: inline-block;
+            vertical-align: top;
+            width: 1.5em;
+            text-align: center;
+        }
 
-    &:before {
-      content: '\f139';
-      font-family: 'Dashicons';
-      display: inline-block;
-      vertical-align: top;
+        &:first-of-type{
+            &:before {
+                content: '\f102';
+                text-align: left;
+            }
+        }
     }
-
-    &:first-of-type:before {
-      content: '\f102';
-    }
-  }
 }

@@ -31,10 +31,20 @@
         }
     }
     .course-instructors {
-        h3.label {
-            display:inline-block;
-            font-size: 1.5rem;
-            margin-right: 5px;
+        h3 {
+            &.label {
+                display:inline-block;
+                font-size: 1.5rem;
+                margin-right: 5px;
+            }
+        }
+        a {
+            &.instructor {
+                box-shadow: none;
+                display: block;
+                margin: 5px 0;
+                text-decoration: none;
+            }
         }
     }
     .units-archive-list {
@@ -66,13 +76,20 @@
             float: right;
         }
     }
-
     .page-header {
         padding-bottom: 0;
     }
     .course-content {
         h3 {
             padding: 0;
+        }
+    }
+    .coursepress-wrap {
+        .course {
+            .entry-content {
+                float: none;
+                width: 100%;
+            }
         }
     }
 }
