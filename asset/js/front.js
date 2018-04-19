@@ -1349,22 +1349,23 @@ $(document)
 			var valid = true; // we're optimists
 			$('.bbm-wrapper #error-messages' ).html('');
 
+			var container = 'div.enrolment-container-div ';
 			var errors = [];
+			var password = $( container + '[name="password"]' ).val().trim();
+			var password_confirmed = $( container + '[name="password_confirmation"]' ).val().trim();
 			// All fields required
 			if (
-				'' === $( 'input[name=first_name]' ).val().trim() ||
-				'' === $( 'input[name=last_name]' ).val().trim() ||
-				'' === $( 'input[name=username]' ).val().trim() ||
-				'' === $( 'input[name=email]' ).val().trim() ||
-				'' === $( 'input[name=password]' ).val().trim() ||
-				'' === $( 'input[name=password_confirmation]' ).val().trim()
+				'' === $( container + 'input[name=first_name]' ).val().trim() ||
+				'' === $( container + 'input[name=last_name]' ).val().trim() ||
+				'' === $( container + 'input[name=username]' ).val().trim() ||
+				'' === $( container + 'input[name=email]' ).val().trim() ||
+				'' === password ||
+				'' === password_confirmed
 			) {
 				valid = false;
 				errors.push( _coursepress.signup_errors['all_fields'] );
 			}
 
-			var password = $('[name="password"]').val();
-			var password_confirmed = $('[name="password_confirmation"]').val();
 
 			// Passwords must match
 			if ( password !== password_confirmed ) {
@@ -1374,7 +1375,7 @@ $(document)
 
 			if( typeof wp.passwordStrength.meter !== "undefined" && _coursepress.password_strength_meter_enabled )
 			{
-				var confirm_weak = $( '[name="confirm_weak_password"]'),
+				var confirm_weak = $( container + '[name="confirm_weak_password"]'),
 					strength = wp.passwordStrength.meter(
 						password,
 						[],
@@ -1402,9 +1403,10 @@ $(document)
 		},
 		login_validation: function() {
 			var valid = true,
+				container = 'div.enrolment-container-div ',
 				error_wrapper = $('.bbm-wrapper #error-messages' ),
-				log = $( 'input[name="log"]' ),
-				pwd = $( 'input[name="pwd"]' )
+				log = $( container + 'input[name="log"]' ),
+				pwd = $( container + 'input[name="pwd"]' )
 			;
 
 			error_wrapper.html( '' );
@@ -1423,19 +1425,21 @@ $(document)
 			return valid;
 		},
 		signup_data: function( data ) {
-			data.first_name = $( 'input[name=first_name]' ).val();
-			data.last_name = $( 'input[name=last_name]' ).val();
-			data.username = $( 'input[name=username]' ).val();
-			data.email = $( 'input[name=email]' ).val();
-			data.password = $( 'input[name=password]' ).val();
+			var container = 'div.enrolment-container-div ';
+			data.first_name = $( container + 'input[name=first_name]' ).val();
+			data.last_name = $( container + 'input[name=last_name]' ).val();
+			data.username = $( container + 'input[name=username]' ).val();
+			data.email = $( container + 'input[name=email]' ).val();
+			data.password = $( container + 'input[name=password]' ).val();
 			data.nonce = $( '.bbm-modal-nonce.signup' ).attr('data-nonce');
 
 			return data;
 		},
 		login_data: function( data ) {
+			var container = 'div.enrolment-container-div ';
 			var course_id = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-course');
-			data.username = $( 'input[name=log]' ).val();
-			data.password = $( 'input[name=pwd]' ).val();
+			data.username = $( container + 'input[name=log]' ).val();
+			data.password = $( container + 'input[name=pwd]' ).val();
 			data.course_id = course_id;
 			data.nonce = $( '.bbm-modal-nonce.login' ).attr('data-nonce');
 			return data;
