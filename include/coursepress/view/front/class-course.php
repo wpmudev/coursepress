@@ -630,11 +630,15 @@ class CoursePress_View_Front_Course {
 		if ( is_admin() || ! $wp_query ) {
 			return;
 		}
-
+		/**
+		 * Do it only on main query
+		 */
+		if ( ! $wp_query->is_main_query() ) {
+			return;
+		}
 		$page = get_query_var( 'pagename' );
 		$course = get_query_var( 'course' );
 		$coursename = get_query_var( 'coursename' );
-
 		// Is the user on a CoursePress page?
 		if ( $course || $coursename || 'dashboard' == $page ) {
 			remove_action(

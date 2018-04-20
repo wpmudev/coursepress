@@ -5,6 +5,10 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.6 =
+-------------------------------------------------
+- Fixed: Conflict with another plugins with early get_posts() function usage.
+
 = 2.1.5 =
 -------------------------------------------------
 - Fixed: Added course categories information in the export file.
