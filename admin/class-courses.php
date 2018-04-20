@@ -309,7 +309,12 @@ class CoursePress_Admin_Courses {
 			}
 		}
 
-		if ( 'trash' != $course->post_status && CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) {
+		if (
+			$can_update
+			&& 'trash' != $course->post_status
+			&& CoursePress_Data_Capabilities::can_create_course()
+			&& CoursePress_Data_Capabilities::can_create_course()
+		) {
 			// create a nonce
 			$duplicate_nonce = wp_create_nonce( 'duplicate_course' );
 			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $course->ID, __( 'Duplicate Course', 'CP_TD' ) );
