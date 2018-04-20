@@ -710,7 +710,7 @@ class CoursePress_Data_Student {
 		);
 		// Get last grade
 		if ( ! $response_index ) {
-			$response_index = ( count( $responses ) - 1 );
+			$response_index = $responses ? ( count( $responses ) - 1 ) : -1;
 		}
 		return ! empty( $responses ) && isset( $responses[ $response_index ] ) ? $responses[ $response_index ] : false;
 	}

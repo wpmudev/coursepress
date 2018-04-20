@@ -969,6 +969,7 @@ class CoursePress_View_Front_Course {
 			// Render completion page
 			if ( $cp->is_enrolled ) {
 				$student_progress = CoursePress_Data_Student::get_completion_data( $cp->student_id, $cp->course_id );
+				CoursePress_Data_Student::get_calculated_completion_data( $cp->student_id, $cp->course_id, $student_progress );
 				$is_failed = CoursePress_Helper_Utility::get_array_val(
 					$student_progress,
 					'completion/failed'
