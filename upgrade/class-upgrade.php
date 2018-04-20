@@ -116,7 +116,7 @@ class CoursePress_Upgrade_1x_Data {
 	}
 
 	public static function set_upgrade_page() {
-		$upgrade = add_menu_page( __( 'CoursePress Upgrade', 'cp' ), __( 'CoursePress Upgrade', 'cp' ), 'manage_options', 'coursepress-upgrade', array( __CLASS__, 'get_upgrade_page' ) );
+		$upgrade = add_menu_page( __( 'CoursePress Upgrade', 'coursepress' ), __( 'CoursePress Upgrade', 'coursepress' ), 'manage_options', 'coursepress-upgrade', array( __CLASS__, 'get_upgrade_page' ) );
 
 		add_action( "load-{$upgrade}", array( __CLASS__, 'before_upgrade_page' ) );
 	}
@@ -137,19 +137,19 @@ class CoursePress_Upgrade_1x_Data {
 
 	public static function upgrade_notice( $classes = '' ) {
 		$snapshot_pro = '//premium.wpmudev.org/project/snapshot/';
-		$snapshot = sprintf( '<a href="%s" class="button-primary" target="_blank">%s</a>', $snapshot_pro, __( 'backup', 'cp' ) );
+		$snapshot = sprintf( '<a href="%s" class="button-primary" target="_blank">%s</a>', $snapshot_pro, __( 'backup', 'coursepress' ) );
 		$upgrade_view = add_query_arg( 'page', 'coursepress-upgrade', admin_url() );
-		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'here', 'cp' ) );
+		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'here', 'coursepress' ) );
 
 		if ( current_user_can( 'install_plugins' ) ) {
-			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'coursepress' ), $snapshot, $upgrade ) . '</p>';
 		} else {
-			$message = '<p>' . __( 'This page is undergoing routine maintenance. Please try again later.', 'cp' );
+			$message = '<p>' . __( 'This page is undergoing routine maintenance. Please try again later.', 'coursepress' );
 		}
 
 		// Remind the user to backup their system in upgrade page
 		if ( self::is_upgrade_page() ) {
-			$message = '<p>' . __( 'We strongly recommend that you backup your site before you start updating.', 'cp' ) . '</p>';
+			$message = '<p>' . __( 'We strongly recommend that you backup your site before you start updating.', 'coursepress' ) . '</p>';
 		}
 
 		printf( '<div class="notice notice-warning is-dismissible coursepress-upgrade-nag %s">%s</div>', $classes, $message );
@@ -166,16 +166,16 @@ class CoursePress_Upgrade_1x_Data {
 		wp_enqueue_script( 'coursepress_admin_upgrade_js', $script, array( 'jquery', 'backbone', 'underscore' ), self::$version, true );
 
 		$cp_url = admin_url( 'edit.php?post_type=course' );
-		$cp_url = sprintf( '<a href="%s" class="cp2-button">%s</a>', esc_url( $cp_url ), __( 'here', 'cp' ) );
+		$cp_url = sprintf( '<a href="%s" class="cp2-button">%s</a>', esc_url( $cp_url ), __( 'here', 'coursepress' ) );
 		$localize_array = array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress-upgrade-nonce' ),
 			'flush_nonce' => wp_create_nonce( 'cp2_flushed' ),
 			'settings_nonce' => wp_create_nonce( 'coursepress-settings' ),
-			'server_error' => __( 'An error occur while updating. Please contact your administrator to fix the problem.', 'cp' ),
-			'noloading' => __( 'Please refrain from reloading the page while updating!', 'cp' ),
-			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
-			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %2$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', $cp_url ),
+			'server_error' => __( 'An error occur while updating. Please contact your administrator to fix the problem.', 'coursepress' ),
+			'noloading' => __( 'Please refrain from reloading the page while updating!', 'coursepress' ),
+			'failed' => __( 'Update unsuccessful. Please try again!', 'coursepress' ),
+			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %2$s.', 'coursepress' ),  '<span class="coursepress-counter">5</span>', $cp_url ),
 			'cp2_url' => admin_url( 'edit.php?post_type=course' ),
 			'upgrading_students' => __( 'Please wait while we upgrade and verify the student data. Students yet to be upgraded:' ),
 		);

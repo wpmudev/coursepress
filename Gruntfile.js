@@ -63,9 +63,7 @@ module.exports = function(grunt) {
 				'.idea/',
 				'.sass-cache/'
 			],
-			pot_dir: '/languages/',  // With trailing slash.
-			textdomain_pro: 'cp',   // Campus uses same textdomain.
-			textdomain_free: 'coursepress',
+			pot_dir: 'languages/'  // With trailing slash.
 		},
 
 		// Build branches.
@@ -85,7 +83,9 @@ module.exports = function(grunt) {
 				'../release/2.0/test',
 				'../release/2.0/campus',
 				'../release/2.0/changelog.txt',
-				'../release/2.0/premium/'
+				'../release/2.0/premium/',
+                'languages/*po',
+                'languages/*mo',
 			],
 			base: 'coursepress/2.0-release',
 			pro: 'coursepress/2.0-release-pro',
@@ -109,7 +109,6 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
-				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
 				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' },
@@ -133,7 +132,6 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base|CoursePress Pro/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
-				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -143,7 +141,6 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
-				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -187,7 +184,21 @@ module.exports = function(grunt) {
 
 		// Different plugin settings.
 		plugin_file: 'coursepress.php',
-		plugin_dir: 'coursepress'
+		plugin_dir: 'coursepress',
+
+		// Regex patterns to exclude from transation.
+		translation: {
+			ignore_files: [
+				'.git*',
+				'node_modules/.*',
+				'(^.php)',		 // Ignore non-php files.
+				'release/.*',	  // Temp release files.
+				'.sass-cache/.*',
+				'tests/.*',		// Unit testing.
+			],
+			pot_dir: 'languages/', // With trailing slash.
+			textdomain: 'coursepress',
+		}
 	};
 
 	// Define grunt tasks.
@@ -349,12 +360,12 @@ module.exports = function(grunt) {
 		makepot: {
 			target: {
 				options: {
-					cwd: '',
 					domainPath: conf.translation.pot_dir,
 					exclude: conf.translation.ignore_files,
 					mainFile: conf.plugin_file,
-					potFilename: conf.translation.textdomain_pro + '.pot',
+					potFilename: conf.translation.textdomain + '.pot',
 					potHeaders: {
+						poedit: true, // Includes common Poedit headers.
 						'poedit': true, // Includes common Poedit headers.
 						'language-team': 'WPMU Dev <support@wpmudev.org>',
 						'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/coursepress',
@@ -362,22 +373,25 @@ module.exports = function(grunt) {
 						'x-generator': 'grunt-wp-i18n',
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
-					type: 'wp-plugin', // wp-plugin or wp-theme
-					include: [
-						'coursepress.php',
-						'upgrade/*.',
-						'2.0/coursepress.php',
-						'2.0/admin/*.php',
-						'2.0/admin/.*',
-						'2.0/include/coursepress/.*'
-					]
+					type: 'wp-plugin',
+					updateTimestamp: true,
+					updatePoFiles: true
 				}
 			}
 		},
-		wpmu_pot2mo: {
-			files: {
-				src: 'languages/*.pot',
-				expand: true
+		potomo: {
+			dist: {
+				options: {
+					poDel: false
+				},
+				files: [{
+					expand: true,
+					cwd: conf.translation.pot_dir,
+					src: ['*.po'],
+					dest: conf.translation.pot_dir,
+					ext: '.mo',
+					nonull: true
+				}]
 			}
 		},
 
@@ -695,11 +709,6 @@ module.exports = function(grunt) {
 				],
 				dest: '../release',
 				noEmpty: true
-			},
-			translation: {
-				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
-				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
-				nonull: true
 			}
 		}
 	} );
@@ -724,30 +733,12 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
+	grunt.registerTask( 'i18n', ['makepot', 'potomo' ] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
-	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
-
-	// Adapted from https://github.com/MicheleBertoli/grunt-po2mo
-	grunt.registerMultiTask('wpmu_pot2mo', 'Compile .pot files into binary .mo files with msgfmt.', function() {
-		this.files.forEach(function(file) {
-
-		  var dest = file.dest;
-		  if (dest.indexOf('.pot') > -1) {
-		      dest = dest.replace('.pot', '.mo');
-		  }
-		  grunt.file.write(dest);
-
-		  var exec = require('child_process').exec;
-		  var command = 'msgfmt -o ' + dest + ' ' + file.src[0];
-
-		  grunt.verbose.writeln('Executing: ' + command);
-		  exec(command);
-
-		});
-	});
+	grunt.registerTask( 'default', ['php', 'test', 'js', 'css', 'i18n' ] );
 
 	grunt.registerTask( 'release', 'Generating release copy', function( target ) {
 		if ( ! target ) {

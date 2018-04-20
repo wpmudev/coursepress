@@ -8,7 +8,7 @@
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: cp
+ * Text Domain: coursepress
  * Domain Path: /languages
  * Build Time:  BUILDTIME
  * WDP ID:      913071
@@ -165,7 +165,7 @@ class CoursePressUpgrade {
 
 			include $version_file;
 		} else {
-			$error = sprintf( __( 'Error loading %s v%s plugin!', 'cp' ), 'CoursePress', $version );
+			$error = sprintf( __( 'Error loading %s v%s plugin!', 'coursepress' ), 'CoursePress', $version );
 			throw new Exception( $error );
 		}
 	}
@@ -284,7 +284,7 @@ class CoursePressUpgrade {
 	 */
 	static function load_l10n() {
 		$plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages';
-		load_plugin_textdomain( 'cp', false, $plugin_rel_path );
+		load_plugin_textdomain( 'coursepress', false, $plugin_rel_path );
 	}
 }
 CoursePressUpgrade::init();

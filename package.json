@@ -41,6 +41,7 @@
 		"grunt-phplint": "~0.0.8",
 		"grunt-phpcs": "~0.4.0",
 		"grunt-phpunit": "~0.3.5",
+        "grunt-potomo": "^3",
 		"grunt-jsvalidate": "~0.2.2",
 		"grunt-contrib-jshint": "~1.0.0",
 		"grunt-contrib-concat": "~0.1.2",

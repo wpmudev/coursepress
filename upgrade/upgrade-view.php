@@ -24,10 +24,10 @@ foreach ( $courses as $course_id ) {
 $count = count( $courses_to_upgrade );
 ?>
 <div class="wrap coursepress-upgrade-view">
-	<h2><?php _e( 'CoursePress 2.0 Upgrade', 'cp' ); ?></h2>
+	<h2><?php _e( 'CoursePress 2.0 Upgrade', 'coursepress' ); ?></h2>
 
 	<p class="description"><?php
-		printf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'cp' ), $count );
+		printf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'coursepress' ), $count );
 	?></p>
 	<div class="coursepress-update-holder">
 		<form method="post" id="coursepress-update-form">
@@ -36,7 +36,7 @@ $count = count( $courses_to_upgrade );
 					<input type="hidden" name="course" value="<?php echo $course_id; ?>" data-type="course" data-done="" data-name="<?php echo esc_attr( get_the_title( $course_id ) ); ?>" />
 			<?php endforeach; ?>
 
-			<?php submit_button( __( 'Begin Update', 'cp' ) ); ?>
+			<?php submit_button( __( 'Begin Update', 'coursepress' ) ); ?>
 		</form>
 	</div>
 </div>
