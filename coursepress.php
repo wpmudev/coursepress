@@ -15,7 +15,7 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.1.4';
+	public static $version = '2.1.6';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.

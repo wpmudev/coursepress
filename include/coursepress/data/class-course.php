@@ -229,6 +229,9 @@ class CoursePress_Data_Course {
 			'post_author' => $course ? $course->post_author : $user_id,
 			'post_status' => $post_status,
 			'post_type' => self::get_post_type_name(),
+			'meta_input' => array(
+				'coursepress_version' => CoursePress::$version,
+			),
 		);
 
 		if ( 'auto-draft' == $post['post_status'] ) {
@@ -260,7 +263,6 @@ class CoursePress_Data_Course {
 		if ( ! empty( $course_id ) ) {
 			$post['ID'] = $course_id;
 		}
-
 		// Turn off ping backs
 		$post['ping_status'] = 'closed';
 
