@@ -8,6 +8,7 @@ CHANGELOG
 = 2.1.6 =
 -------------------------------------------------
 - Fixed: Conflict with another plugins with early get_posts() function usage.
+- Fixed: Problem with CoursePress version in export file.
 
 = 2.1.5 =
 -------------------------------------------------
