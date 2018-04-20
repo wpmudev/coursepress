@@ -67,8 +67,9 @@ class CoursePress_Template_Communication {
 			$content = sprintf( '<p class="message">%s</p>', __( 'Discussions are not available for this course.', 'coursepress' ) );
 			return $content;
 		}
-
 		$discussions = CoursePress_Data_Discussion::get_discussions( array( $course_id, 'all' ) );
+		$count = CoursePress_Data_Discussion::get_discussions_count( $course_id );
+		$number = CoursePress_Data_Discussion::get_number_of_discussions();
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
@@ -80,10 +81,18 @@ class CoursePress_Template_Communication {
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html__( 'Start a new discussion', 'coursepress' ) . '</a>
 			</div>
 		';
-		if ( empty( $discussions ) ) {
+		if ( 0 === $count ) {
 			$content .= sprintf(
 				'<p class="message">%s</p>',
 				__( 'This course does not have any discussions.', 'coursepress' )
+			);
+			return $content;
+		}
+
+		if ( empty( $discussions ) ) {
+			$content .= sprintf(
+				'<p class="message">%s</p>',
+				__( 'Ups, something went wrong.', 'coursepress' )
 			);
 			return $content;
 		}
@@ -133,7 +142,25 @@ class CoursePress_Template_Communication {
 				</li>';
 		}
 		$content .= '</ul>';
-
+		global $wp;
+		$current = intval( isset( $wp->query_vars['paged'] )? $wp->query_vars['paged']:0 );
+		if ( $count > $number ) {
+			$url = CoursePress_Data_Course::get_course_url( $course_id ).CoursePress_Core::get_slug( 'discussion' );
+			$i = 0;
+			$content .= '<ul class="cp-pager">';
+			for ( $i = 0; $i < $count; ) {
+				$n = 1 + $i / $number;
+				$content .= sprintf(
+					'<li class="%s"><a href="%s%s">%d</a></li>',
+					esc_attr( $current === $n ? 'current':'' ),
+					esc_url( $url ),
+					esc_url( 0 < $i? '/page/'.$n:'' ),
+					$n
+				);
+				$i += $number;
+			}
+			$content .= '</ul>';
+		}
 		return str_replace( array( "\n" ), '', $content );
 	}
 

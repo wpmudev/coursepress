@@ -4,6 +4,7 @@ class CoursePress_Data_Discussion {
 
 	private static $post_type = 'discussions';  // Plural because of legacy
 	public static $last_discussion;
+	private static $number_of_discussions = 5;
 
 	public static function get_format() {
 
@@ -73,10 +74,10 @@ class CoursePress_Data_Discussion {
 
 	}
 
-	public static function get_discussions( $course ) {
-
-		$course = (array) $course;
-
+	/**
+	 * since 2.1.6
+	 */
+	public static function get_discussions_count( $course ) {
 		$args = array(
 			'post_type' => self::get_post_type_name(),
 			'meta_query' => array(
@@ -86,11 +87,37 @@ class CoursePress_Data_Discussion {
 					'compare' => 'IN',
 				),
 			),
-			'post_per_page' => 20,
+			'fields' => 'ids',
+			'nopaging' => true,
 		);
+		$query = new WP_Query( $args );
+		l( $query->post_count );
+		return $query->post_count;
+	}
 
+
+	public static function get_discussions( $course ) {
+		global $wp;
+		$course = (array) $course;
+		$offset = self::$number_of_discussions * intval( isset( $wp->query_vars['paged'] )? intval( $wp->query_vars['paged'] - 1 ):0 );
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'meta_query' => array(
+				array(
+					'key' => 'course_id',
+					'value' => $course,
+					'compare' => 'IN',
+				),
+			),
+			'posts_per_page' => self::$number_of_discussions,
+			'offset' => $offset,
+		);
 		return get_posts( $args );
 
+	}
+
+	public static function get_number_of_discussions() {
+		return self::$number_of_discussions;
 	}
 
 

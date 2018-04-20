@@ -117,22 +117,45 @@ ul.notification-archive-list {
 	background: none;
 }
 
-.course-discussion-wrapper .course-discussion-content.new input,
-.course-discussion-wrapper .course-discussion-content.new textarea {
-	width: 100%;
+.course-discussion-wrapper {
+    .course-discussion-content {
+        &.new {
+            input,
+            textarea {
+                width: 100%;
+            }
+            textarea {
+                min-height: 400px;
+            }
+            .button-links {
+                text-align: right;
+                margin: 10px 0 0 0;
+                padding: 0;
+                a {
+                    cursor: pointer;
+                    margin-left: 20px;
+                }
+            }
+        }
+    }
 }
 
-.course-discussion-wrapper .course-discussion-content.new textarea {
-	min-height: 400px;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links {
-	text-align: right;
-	margin: 10px 0 0 0;
-	padding: 0;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links a {
-	cursor: pointer;
-	margin-left: 20px;
+.type-course_discussion_archive {
+    .cp-pager {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        li {
+            padding: 5px 10px;
+            a {
+                box-shadow: none;
+                display: block;
+                padding: 5px;
+                text-decoration: none;
+            }
+            &.current {
+                font-weight: 600;
+            }
+        }
+    }
 }

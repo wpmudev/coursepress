@@ -10,6 +10,7 @@ CHANGELOG
 - Fixed: Conflict with another plugins with early get_posts() function usage.
 - Fixed: Problem with CoursePress version in export file.
 - Fixed: Ability to duplicate course for an instructor.
+- Fixed: Problem with missing pagination for a course discussions.
 
 = 2.1.5 =
 -------------------------------------------------
