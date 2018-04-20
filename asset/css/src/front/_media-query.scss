@@ -1,4 +1,14 @@
-@media screen and (min-width: 768px) {
+@media screen and (max-height: 800px) {
+	body .enrolment-container-div .bbm-wrapper {
+		top: 50px;
+	}
+}
+@media screen and (max-height: 700px) {
+	body .enrolment-container-div .bbm-wrapper {
+		top: 10px;
+	}
+}
+@media screen and (min-width: 568px) {
     .enrolment-container-div {
         .bbm-modal {
             margin: 0 auto;
@@ -6,7 +16,7 @@
     }
 }
 
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 600px) {
     body {
         .enrolment-container-div {
             padding: 1em;
@@ -29,7 +39,7 @@
     }
 }
 
-@media screen and (min-height: 801px) {
+@media screen and (min-height: 601px) {
     .cp-mask {
         position: fixed;
     }
