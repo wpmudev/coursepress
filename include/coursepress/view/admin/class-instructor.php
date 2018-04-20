@@ -8,8 +8,8 @@ class CoursePress_View_Admin_Instructor {
 	private static $table_manager = null;
 
 	public static function init() {
-		self::$title = __( 'Courses/Instructors', 'CP_TD' );
-		self::$menu_title = __( 'Instructors', 'CP_TD' );
+		self::$title = __( 'Courses/Instructors', 'coursepress' );
+		self::$menu_title = __( 'Instructors', 'coursepress' );
 
 		add_filter(
 			'coursepress_admin_valid_pages',
@@ -116,7 +116,7 @@ class CoursePress_View_Admin_Instructor {
 				<div id="course-left">
 					<div class="course-holder-wrap" id="edit-sub">
 						<div class="sidebar-name no-movecursor">
-							<h3><?php esc_html_e( 'Courses', 'CP_TD' ); ?></h3>
+							<h3><?php esc_html_e( 'Courses', 'coursepress' ); ?></h3>
 						</div>
 
 						<table cellspacing="0" class="widefat shadow-table">
@@ -147,17 +147,17 @@ class CoursePress_View_Admin_Instructor {
 											<td style="width:25%;">
 												<div class="course_additional_info">
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'Start', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'Start', 'coursepress' ); ?></span>
 														<span class="info">
 															<?php echo $course->start_date; ?>
 														</span>
 													</div>
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'End', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'End', 'coursepress' ); ?></span>
 														<span class="info"><?php echo $course->end_date; ?></span>
 													</div>
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'Duration', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'Duration', 'coursepress' ); ?></span>
 														<span class="info"><?php echo $course->duration; ?></span>
 													</div>
 												</div>
@@ -177,7 +177,7 @@ class CoursePress_View_Admin_Instructor {
 			<div class="course-liquid-right">
 				<div class="course-holder-wrap">
 					<div class="sidebar-name no-movecursor">
-						<h3><?php esc_html_e( 'Profile', 'CP_TD' ); ?></h3>
+						<h3><?php esc_html_e( 'Profile', 'coursepress' ); ?></h3>
 					</div>
 					<div class="instructor-profile-holder" id="sidebar-levels">
 						<div class="sidebar-inner">
@@ -189,15 +189,15 @@ class CoursePress_View_Admin_Instructor {
 											<td>
 												<div class="instructor_additional_info">
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'First Name', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'First Name', 'coursepress' ); ?></span>
 														<span class="info"><?php echo $instructor->first_name; ?></span>
 													</div>
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'Last Name', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'Last Name', 'coursepress' ); ?></span>
 														<span class="info"><?php echo $instructor->last_name; ?></span>
 													</div>
 													<div>
-														<span class="info_caption"><?php esc_html_e( 'Email', 'CP_TD' ); ?></span>
+														<span class="info_caption"><?php esc_html_e( 'Email', 'coursepress' ); ?></span>
 														<span class="info">
 															<a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a>
 														</span>
@@ -209,7 +209,7 @@ class CoursePress_View_Admin_Instructor {
 								</table>
 
 								<div class="edit-profile-link">
-									<a href="<?php echo get_edit_user_link( $instructor_id ); ?>"><?php esc_html_e( 'Edit Profile', 'CP_TD' ); ?></a>
+									<a href="<?php echo get_edit_user_link( $instructor_id ); ?>"><?php esc_html_e( 'Edit Profile', 'coursepress' ); ?></a>
 								</div>
 							</div>
 						</div>

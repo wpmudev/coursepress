@@ -61,7 +61,7 @@ class CoursePress {
 		/**
 		 * Translate plugin name
 		 */
-		self::$name = _x( 'CoursePress Pro', 'plugin name', 'CP_TD' ); // Translated by grunt.
+		self::$name = _x( 'CoursePress Pro', 'plugin name', 'coursepress' ); // Translated by grunt.
 		// Initialise the autoloader.
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 

@@ -204,33 +204,33 @@ class CoursePress_Helper_Integration_WooCommerce {
 		$mp_content = '
 			<div class="wide">
 				<label>' .
-					esc_html__( 'WooCommerce Product Settings', 'CP_TD' ) .
+					esc_html__( 'WooCommerce Product Settings', 'coursepress' ) .
 					'</label>
-				<p class="description">' . esc_html__( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings below.', 'CP_TD' ) . '</p>
+				<p class="description">' . esc_html__( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings below.', 'coursepress' ) . '</p>
 
 				<label class="normal required">
-					' . esc_html__( 'Full Price', 'CP_TD' ) . '
+					' . esc_html__( 'Full Price', 'coursepress' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
 				<label class="normal">
-					' . esc_html__( 'Sale Price', 'CP_TD' ) . '
+					' . esc_html__( 'Sale Price', 'coursepress' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
-					<span>' . esc_html__( 'Enable Sale Price', 'CP_TD' ) . '</span>
+					<span>' . esc_html__( 'Enable Sale Price', 'coursepress' ) . '</span>
 				</label>
 
 				<label class="normal">
-					<span> ' . esc_html__( 'Course SKU:', 'CP_TD' ) . '</span>
+					<span> ' . esc_html__( 'Course SKU:', 'coursepress' ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'CP_TD' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'coursepress' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
-					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'CP_TD' ) . '</span>
+					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'coursepress' ) . '</span>
 				</label>';
 
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
@@ -239,7 +239,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( $product_id ) {
 			// Add WooCommerce product ID as indication.
 			$mp_content .= ' <p class="description">';
-			$mp_content .= sprintf( __( 'WooCommerce Product ID: %d', 'CP_TD' ), $product_id );
+			$mp_content .= sprintf( __( 'WooCommerce Product ID: %d', 'coursepress' ), $product_id );
 			$mp_content .= sprintf(
 				' <a href="%s" target="_blank">%s</a>',
 				esc_url(
@@ -251,7 +251,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 						admin_url( 'post.php' )
 					)
 				),
-				__( 'Edit WooCommerce Product', 'CP_TD' )
+				__( 'Edit WooCommerce Product', 'coursepress' )
 			);
 			$mp_content .= '</p> ';
 		}
@@ -470,7 +470,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function add_post_parent_metabox() {
-		add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'CP_TD' ), array( __CLASS__, 'cp_woo_post_parent_box_content' ), self::$product_ctp, 'side', 'default' );
+		add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'coursepress' ), array( __CLASS__, 'cp_woo_post_parent_box_content' ), self::$product_ctp, 'side', 'default' );
 	}
 
 	public static function cp_woo_post_parent_box_content() {
@@ -551,12 +551,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! $purchased_course ) {
 			return;
 		}
-		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'CP_TD' ) );
-		printf( '<p class="cp_woo_thanks">%s</p>', esc_html__( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'CP_TD' ) );
+		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'coursepress' ) );
+		printf( '<p class="cp_woo_thanks">%s</p>', esc_html__( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'coursepress' ) );
 		if ( is_user_logged_in() && 'wc-completed' == $order->post_status ) {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
-				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'CP_TD' ),
+				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'coursepress' ),
 				( method_exists( 'CoursePress_Core', 'get_slug' ) ) ? CoursePress_Core::get_slug( 'student_dashboard', true ) : ''
 			);
 			echo '</p><hr />';
@@ -665,12 +665,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		foreach ( $cart_data as $cart_item_key => $values ) {
 			$_product = $values['data'];
 			if ( $product_id == $_product->id ) {
-				$content = __( 'This course is already in the cart.', 'CP_TD' );
+				$content = __( 'This course is already in the cart.', 'coursepress' );
 				global $woocommerce;
 				$content .= sprintf(
 					' <button data-link="%s" class="single_show_cart_button button">%s</button>',
 					esc_url( $woocommerce->cart->get_cart_url() ),
-					esc_html__( 'Show cart', 'CP_TD' )
+					esc_html__( 'Show cart', 'coursepress' )
 				);
 				return wpautop( $content );
 			}
@@ -738,12 +738,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Add Course to cart.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Add Course to cart.', 'coursepress' ); ?>
 				</h3>
 			</div>
 			<div class="bbm-modal__section">
 				<p>
-					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'You can now add this course to cart.', 'coursepress' ); ?>
 				</p>
 				<?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
 			</div>

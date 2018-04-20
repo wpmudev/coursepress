@@ -30,18 +30,18 @@ class CoursePress_Data_Module {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Modules', 'CP_TD' ),
-					'singular_name' => __( 'Module', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Module', 'CP_TD' ),
-					'edit_item' => __( 'Edit Module', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Module', 'CP_TD' ),
-					'view_item' => __( 'View Module', 'CP_TD' ),
-					'search_items' => __( 'Search Modules', 'CP_TD' ),
-					'not_found' => __( 'No Modules Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Modules found in Trash', 'CP_TD' ),
-					'view' => __( 'View Module', 'CP_TD' ),
+					'name' => __( 'Modules', 'coursepress' ),
+					'singular_name' => __( 'Module', 'coursepress' ),
+					'add_new' => __( 'Create New', 'coursepress' ),
+					'add_new_item' => __( 'Create New Module', 'coursepress' ),
+					'edit_item' => __( 'Edit Module', 'coursepress' ),
+					'edit' => __( 'Edit', 'coursepress' ),
+					'new_item' => __( 'New Module', 'coursepress' ),
+					'view_item' => __( 'View Module', 'coursepress' ),
+					'search_items' => __( 'Search Modules', 'coursepress' ),
+					'not_found' => __( 'No Modules Found', 'coursepress' ),
+					'not_found_in_trash' => __( 'No Modules found in Trash', 'coursepress' ),
+					'view' => __( 'View Module', 'coursepress' ),
 				),
 				// 'supports' => array( 'title', 'excerpt', 'comments' ),
 				'public' => false,
@@ -429,7 +429,7 @@ class CoursePress_Data_Module {
 		}
 
 		if ( empty( $text ) ) {
-			$text = __( 'Click here to cancel reply.', 'CP_TD' ); }
+			$text = __( 'Click here to cancel reply.', 'coursepress' ); }
 
 		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 
@@ -519,15 +519,15 @@ class CoursePress_Data_Module {
 		$response_count = count( $responses );
 		$unlimited = empty( $attributes['retry_attempts'] );
 		$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
-		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
+		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'coursepress' ), $remaining ) : '';
 		$remaining_message = sprintf(
-			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'CP_TD' ),
+			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'coursepress' ),
 			$remaining_message
 		);
 		$allow_retries = cp_is_true( $attributes['allow_retries'] );
 
 		if ( ! $allow_retries || ( ! $unlimited && 1 > $remaining ) ) {
-			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'CP_TD' );
+			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'coursepress' );
 		}
 
 		$message = array(
@@ -611,15 +611,15 @@ class CoursePress_Data_Module {
 		$response_count = count( $responses );
 		$unlimited = empty( $attributes['retry_attempts'] );
 		$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
-		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
+		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'coursepress' ), $remaining ) : '';
 		$remaining_message = sprintf(
-			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'CP_TD' ),
+			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'coursepress' ),
 			$remaining_message
 		);
 		$allow_retries = cp_is_true( $attributes['allow_retries'] );
 
 		if ( ! $allow_retries || ( ! $unlimited && 1 > $remaining ) ) {
-			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'CP_TD' );
+			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'coursepress' );
 		}
 
 		$message = array(
@@ -639,7 +639,7 @@ class CoursePress_Data_Module {
 					'total_questions' => (int) $total_questions,
 					'passed' => false,
 					'attributes' => $attributes,
-					'message' => __( 'Your submission is awaiting instructor assessment.', 'CP_TD' ),
+					'message' => __( 'Your submission is awaiting instructor assessment.', 'coursepress' ),
 				);
 			}
 		}
@@ -666,8 +666,8 @@ class CoursePress_Data_Module {
 		$quiz_passed = ! empty( $quiz_result['passed'] );
 
 		$passed_class = $quiz_passed ? 'passed' : 'not-passed';
-		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', 'CP_TD' ) : __( 'Quiz not passed.', 'CP_TD' );
-		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'CP_TD' ) : __( 'You did not pass the quiz this time. Here are your results.', 'CP_TD' );
+		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', 'coursepress' ) : __( 'Quiz not passed.', 'coursepress' );
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'coursepress' ) : __( 'You did not pass the quiz this time. Here are your results.', 'coursepress' );
 
 		$template = '<div class="module-quiz-questions"><div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
 			<div class="quiz-message">
@@ -676,10 +676,10 @@ class CoursePress_Data_Module {
 			</div>
 			<div class="quiz-results">
 			<table>
-			<tr><th>' . esc_html__( 'Total Questions', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
-			<tr><th>' . esc_html__( 'Correct', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
-			<tr><th>' . esc_html__( 'Incorrect', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
-			<tr><th>' . esc_html__( 'Grade', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+			<tr><th>' . esc_html__( 'Total Questions', 'coursepress' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Correct', 'coursepress' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Incorrect', 'coursepress' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Grade', 'coursepress' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
 			</table>
 			</div>
 			</div>';
@@ -728,7 +728,7 @@ class CoursePress_Data_Module {
 					$template .= sprintf(
 						'<a class="module-submit-action button-reload-module" href="#module-%d">%s</a>',
 						esc_attr( $module_id ),
-						__( 'Try again!', 'CP_TD' )
+						__( 'Try again!', 'coursepress' )
 					);
 					$template .= ' </div>';
 				}

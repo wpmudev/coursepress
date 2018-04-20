@@ -1,5 +1,5 @@
 <div class="wrap coursepress_wrapper coursepress-instructors">
-	<h2><?php esc_html_e( 'Instructors', 'CP_TD' ); ?></h2>
+	<h2><?php esc_html_e( 'Instructors', 'coursepress' ); ?></h2>
 	<hr />
 
 	<form method="post">

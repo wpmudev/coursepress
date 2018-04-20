@@ -37,7 +37,7 @@ class CoursePress_Template_Student {
 					wp_safe_redirect( $url ); exit;
 
 				} else {
-					$json_data['error_message'] = __( 'Enrollment failed!', 'CP_TD' );
+					$json_data['error_message'] = __( 'Enrollment failed!', 'coursepress' );
 
 					wp_send_json_error( $json_data );
 				}
@@ -61,7 +61,7 @@ class CoursePress_Template_Student {
 			if ( ! empty( $course_list ) ) {
 				$content .= '
 					<div class="dashboard-managed-courses-list">
-						<h1 class="title managed-courses-title">' . esc_html__( 'Courses you manage:', 'CP_TD' ) . '</h1>
+						<h1 class="title managed-courses-title">' . esc_html__( 'Courses you manage:', 'coursepress' ) . '</h1>
 						<div class="course-list course-list-managed course course-student-dashboard">' .
 						$course_list . '
 						</div>
@@ -78,8 +78,8 @@ class CoursePress_Template_Student {
 				// Random Courses
 				$content .= '
 					<div class="dashboard-random-courses-list">
-						<h3 class="title suggested-courses">' . __( 'You are not enrolled in any courses.', 'CP_TD' ) . '</h3>' .
-						esc_html__( 'Here are a few to help you get started:', 'CP_TD' ) . '
+						<h3 class="title suggested-courses">' . __( 'You are not enrolled in any courses.', 'coursepress' ) . '</h3>' .
+						esc_html__( 'Here are a few to help you get started:', 'coursepress' ) . '
 						<hr />
 						<div class="dashboard-random-courses">' . do_shortcode( '[course_random number="3" featured_title="" media_type="image"]' ) . '</div>
 					</div>
@@ -88,7 +88,7 @@ class CoursePress_Template_Student {
 				// Course List
 				$content .= '
 					<div class="dashboard-current-courses-list">
-						<h1 class="title enrolled-courses-title current-courses-title">' . __( 'Your current courses:', 'CP_TD' ) . '</h1>
+						<h1 class="title enrolled-courses-title current-courses-title">' . __( 'Your current courses:', 'coursepress' ) . '</h1>
 						<div class="course-list course-list-current course course-student-dashboard">' .
 						$course_list . '
 						</div>
@@ -104,7 +104,7 @@ class CoursePress_Template_Student {
 				// Course List
 				$content .= '
 					<div class="dashboard-completed-courses-list">
-						<h1 class="title completed-courses-title">' . __( 'Completed courses:', 'CP_TD' ) . '</h1>
+						<h1 class="title completed-courses-title">' . __( 'Completed courses:', 'coursepress' ) . '</h1>
 						<div class="course-list course-list-completed course course-student-dashboard">' .
 						$course_list . '
 						</div>
@@ -150,7 +150,7 @@ class CoursePress_Template_Student {
 
 				if ( ! isset( $_POST['student_settings_nonce'] ) || ! wp_verify_nonce( $_POST['student_settings_nonce'], 'student_settings_save' )
 				) {
-					_e( "Changes can't be saved because nonce didn't verify.", 'CP_TD' );
+					_e( "Changes can't be saved because nonce didn't verify.", 'coursepress' );
 				} else {
 					$student_data = array();
 					$student_data['ID'] = get_current_user_id();
@@ -162,7 +162,7 @@ class CoursePress_Template_Student {
 						if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 							$student_data['user_pass'] = $_POST['password'];
 						} else {
-							$form_message = __( "Passwords don't match", 'CP_TD' );
+							$form_message = __( "Passwords don't match", 'coursepress' );
 							$form_message_class = 'red';
 							$form_errors ++;
 						}
@@ -173,17 +173,17 @@ class CoursePress_Template_Student {
 					$student_data['last_name'] = $_POST['last_name'];
 
 					if ( ! is_email( $_POST['email'] ) ) {
-						$form_message = __( 'E-mail address is not valid.', 'CP_TD' );
+						$form_message = __( 'E-mail address is not valid.', 'coursepress' );
 						$form_message_class = 'red';
 						$form_errors ++;
 					}
 
 					if ( ! $form_errors ) {
 						if ( CoursePress_Data_Student::update_student_data( $student_id, $student_data ) ) {
-							$form_message = __( 'Profile has been updated successfully.', 'CP_TD' );
+							$form_message = __( 'Profile has been updated successfully.', 'coursepress' );
 							$form_message_class = 'regular';
 						} else {
-							$form_message = __( 'An error occured while updating. Please check the form and try again.', 'CP_TD' );
+							$form_message = __( 'An error occured while updating. Please check the form and try again.', 'coursepress' );
 							$form_message_class = 'red';
 						}
 					}
@@ -202,38 +202,38 @@ class CoursePress_Template_Student {
 			<form id="student-settings" name="student-settings" method="post" class="student-settings">' .
 				wp_nonce_field( 'student_settings_save', 'student_settings_nonce', true, false ) . '
 				<label>
-					' . esc_html__( 'First Name', 'CP_TD' ) . ':
+					' . esc_html__( 'First Name', 'coursepress' ) . ':
 					<input type="text" name="first_name" value="' . esc_attr__( $student->user_firstname ) . '"/>
 				</label>
 				' . do_action( 'coursepress_after_settings_first_name' ) . '
 				<label>
-					' . esc_html__( 'Last Name', 'CP_TD' ) . ':
+					' . esc_html__( 'Last Name', 'coursepress' ) . ':
 					<input type="text" name="last_name" value="' . esc_attr__( $student->user_lastname ) . '"/>
 				</label>
 				' . do_action( 'coursepress_after_settings_last_name' ) . '
 				<label>
-					' . esc_html__( 'E-mail', 'CP_TD' ) . ':
+					' . esc_html__( 'E-mail', 'coursepress' ) . ':
 					<input type="text" name="email" value="' . esc_attr__( $student->user_email ) . '"/>
 				</label>
 				' . do_action( 'coursepress_after_settings_email' ) . '
 				<label>
-					' . esc_html__( 'Username', 'CP_TD' ) . ':
+					' . esc_html__( 'Username', 'coursepress' ) . ':
 					<input type="text" name="username" value="'. esc_attr__( $student->user_login ) .'" disabled="disabled"/>
 				</label>
 				' . do_action( 'coursepress_after_settings_username' ) . '
 				<label>
-					' . esc_html__( 'Password', 'CP_TD' ) . ':
-					<input type="password" name="password" value="" placeholder="' . esc_html__( "Won't change if empty.", 'CP_TD' ) .'"/>
+					' . esc_html__( 'Password', 'coursepress' ) . ':
+					<input type="password" name="password" value="" placeholder="' . esc_html__( "Won't change if empty.", 'coursepress' ) .'"/>
 				</label>
 				' . do_action( 'coursepress_after_settings_passwordon' ) . '
 				<label>
-					' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':
+					' . esc_html__( 'Confirm Password', 'coursepress' ) . ':
 					<input type="password" name="password_confirmation" value=""/>
 				</label>
 				' . do_action( 'coursepress_after_settings_pasword' ) . '
-				<label class="weak-password-label"><input type="checkbox" name="weak_password_confirm" value="1" /> ' . __( 'Confirm use of weak password.', 'CP_TD' ) . '</label>
+				<label class="weak-password-label"><input type="checkbox" name="weak_password_confirm" value="1" /> ' . __( 'Confirm use of weak password.', 'coursepress' ) . '</label>
 				<label class="full">
-					<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_html__( 'Save Changes', 'CP_TD' ) .'"/>
+					<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_html__( 'Save Changes', 'coursepress' ) .'"/>
 				</label>
 			</form>
 			';

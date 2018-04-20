@@ -23,7 +23,7 @@ class CoursePress_Helper_Extension_MarketPress {
 	public static function add_to_extensions_list( $plugins ) {
 		$download_source = 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip';
 		$external_url = 'https://wordpress.org/plugins/wordpress-ecommerce/';
-		$source_message = __( 'WordPress Repository', 'CP_TD' );
+		$source_message = __( 'WordPress Repository', 'coursepress' );
 		$is_link = false;
 		$base_path = self::$base_path['free'];
 
@@ -129,11 +129,11 @@ class CoursePress_Helper_Extension_MarketPress {
 				),
 				admin_url( 'edit.php' )
 			);
-			$message = sprintf( '<strong>%s</strong> ', __( 'Install MarketPress plugin in order to sell courses.', 'CP_TD' ) );
-			$message .= sprintf( '<a href="%s">%s</a>', $mp_settings_url, __( 'Install MarketPress', 'CP_TD' ) );
+			$message = sprintf( '<strong>%s</strong> ', __( 'Install MarketPress plugin in order to sell courses.', 'coursepress' ) );
+			$message .= sprintf( '<a href="%s">%s</a>', $mp_settings_url, __( 'Install MarketPress', 'coursepress' ) );
 		} elseif ( ! self::activated() ) {
-			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'CP_TD' ) );
-			$message = sprintf( __( 'Activate %s to start selling courses.', 'CP_TD' ), $mp_link );
+			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'coursepress' ) );
+			$message = sprintf( __( 'Activate %s to start selling courses.', 'coursepress' ), $mp_link );
 		} elseif ( self::activated() ) {
 			if ( defined( 'MP_VERSION' ) ) {
 				if ( version_compare( MP_VERSION, '3.1.2' ) < 0 ) {
@@ -141,8 +141,8 @@ class CoursePress_Helper_Extension_MarketPress {
 					$mp = sprintf( '<a href="%s">%s</a>', $plugin_url, '<strong>MarketPress</strong>' );
 					$cp = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM ? '<strong>CoursePress Pro</strong>' : '<strong>CoursePress</strong>';
 					$cp = sprintf( '<a href="%s">%s</a>', $plugin_url, $cp );
-					$message = __( 'You are using an older version of %s plugin. %s require the latest version for compatilibity.', 'CP_TD' );
-					$message .= __( ' Update your %s now!', 'CP_TD' );
+					$message = __( 'You are using an older version of %s plugin. %s require the latest version for compatilibity.', 'coursepress' );
+					$message .= __( ' Update your %s now!', 'coursepress' );
 					$message = sprintf( $message, $mp, $cp, $mp );
 				}
 			}

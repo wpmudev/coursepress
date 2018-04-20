@@ -89,7 +89,7 @@ class CoursePress_Admin_Controller_Menu {
 
 	public function before_page_load() {
 		if ( ! current_user_can( $this->cap ) ) {
-			wp_die( __( 'You have no permission to access this page!', 'CP_TD' ) );
+			wp_die( __( 'You have no permission to access this page!', 'coursepress' ) );
 		}
 
 		// Set assets
@@ -223,31 +223,31 @@ class CoursePress_Admin_Controller_Menu {
 						'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 						'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 						'date_format' => get_option( 'date_format' ),
-						'editor_visual' => __( 'Visual', 'CP_TD' ),
-						'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'CP_TD' ),
-						'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'CP_TD' ),
+						'editor_visual' => __( 'Visual', 'coursepress' ),
+						'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'coursepress' ),
+						'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'coursepress' ),
 						'is_super_admin' => current_user_can( 'manage_options' ),
 						'user_caps' => CoursePress_Data_Capabilities::get_user_capabilities(),
-						'server_error' => __( 'An error occur while processing your request. Please try again later!', 'CP_TD' ),
+						'server_error' => __( 'An error occur while processing your request. Please try again later!', 'coursepress' ),
 						'labels' => array(
-							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'CP_TD' ),
+							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'coursepress' ),
 						),
 						'messages' => array(
 							'notification' => array(
-								'empty_content' => __( 'No notification content!', 'CP_TD' ),
-								'empty_title' => __( 'No notification title!', 'CP_TD' ),
+								'empty_content' => __( 'No notification content!', 'coursepress' ),
+								'empty_title' => __( 'No notification title!', 'coursepress' ),
 							),
 							'discussion' => array(
-								'empty_content' => __( 'No thread content!', 'CP_TD' ),
-								'empty_title' => __( 'No thread title!', 'CP_TD' ),
+								'empty_content' => __( 'No thread content!', 'coursepress' ),
+								'empty_title' => __( 'No thread title!', 'coursepress' ),
 							),
 							'general' => array(
-								'empty_content' => __( 'No content!', 'CP_TD' ),
-								'empty_title' => __( 'No title!', 'CP_TD' ),
+								'empty_content' => __( 'No content!', 'coursepress' ),
+								'empty_title' => __( 'No title!', 'coursepress' ),
 							),
 							'instructors' => array(
-								'instructor_delete_confirm' => __( 'Please confirm that you want to remove the instructor from this course (%s).', 'CP_TD' ),
-								'instructor_delete_all_confirm' => __( 'Please confirm that you want to remove the instructor from ALL the associated courses.', 'CP_TD' ),
+								'instructor_delete_confirm' => __( 'Please confirm that you want to remove the instructor from this course (%s).', 'coursepress' ),
+								'instructor_delete_all_confirm' => __( 'Please confirm that you want to remove the instructor from ALL the associated courses.', 'coursepress' ),
 							),
 						),
 					),
@@ -333,7 +333,7 @@ class CoursePress_Admin_Controller_Menu {
 ?>
 <div id="minor-publishing-actions">
 <div id="save-action">
-<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft', 'CP_TD' ); ?>" class="button">
+<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft', 'coursepress' ); ?>" class="button">
 <span class="spinner"></span>
 </div>
 <div class="clear"></div>
@@ -343,20 +343,20 @@ class CoursePress_Admin_Controller_Menu {
 		/**
 		 * misc actions
 		 */
-		printf( '<div id="misc-publishing-actions" data-no-options="%s">', esc_attr__( 'no option available', 'CP_TD' ) );
+		printf( '<div id="misc-publishing-actions" data-no-options="%s">', esc_attr__( 'no option available', 'coursepress' ) );
 		do_action( 'coursepress_submitbox_misc_actions', $post );
 		echo '</div>';
 		/**
 		 * major actions
 		 */
 		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
-		$label = __( 'Publish', 'CP_TD' );
+		$label = __( 'Publish', 'coursepress' );
 		if ( ! $post->can_change_status && empty( $post->ID ) ) {
-			$label = __( 'Save', 'CP_TD' );
+			$label = __( 'Save', 'coursepress' );
 		}
 		$class = 'force-publish';
 		if ( 'publish' == $post->post_status || ! $post->can_change_status ) {
-			$label = __( 'Update', 'CP_TD' );
+			$label = __( 'Update', 'coursepress' );
 			$class = '';
 		}
 		printf(
@@ -371,8 +371,8 @@ class CoursePress_Admin_Controller_Menu {
 
 	public static function get_statuses( $post ) {
 		$allowed_statuses = array(
-			'draft'		 => __( 'Draft', 'CP_TD' ),
-			'publish'	   => __( 'Published', 'CP_TD' ),
+			'draft'		 => __( 'Draft', 'coursepress' ),
+			'publish'	   => __( 'Published', 'coursepress' ),
 		);
 		if ( isset( $post ) ) {
 			if ( ! array_key_exists( $post->post_status, $allowed_statuses ) ) {
@@ -457,7 +457,7 @@ foreach ( $allowed_statuses as $status => $label ) {
 			$actions['settings'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $url ),
-				__( 'Settings', 'CP_TD' )
+				__( 'Settings', 'coursepress' )
 			);
 		}
 		$url = 'https://wordpress.org/support/plugin/coursepress';

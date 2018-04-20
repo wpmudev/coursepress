@@ -31,7 +31,7 @@ class CoursePress_View_Front_Dashboard {
 			return;
 		}
 		$content = '';
-		$page_title = __( 'My Courses', 'CP_TD' );
+		$page_title = __( 'My Courses', 'coursepress' );
 		$args = array(
 			'slug' => CoursePress_Core::get_slug( 'student_dashboard' ),
 			'title' => esc_html( $page_title ),

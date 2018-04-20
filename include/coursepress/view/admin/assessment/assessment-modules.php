@@ -14,15 +14,15 @@
 ?>
 <input type="hidden" id="cp_student_id" value="<?php echo $student_id; ?>" />
 <div class="cp-actions">
-	<button style="display: none;" type="button" title="<?php esc_attr_e( 'Revalidate user submission', 'CP_TD' ); ?>" class="button cp-right cp-refresh-progress" data-course="<?php echo $course_id; ?>" data-student="<?php echo $student_id; ?>">
-		<span class="fa fa-refresh"></span> <?php esc_html_e( 'Refresh', 'CP_TD' ); ?>
+	<button style="display: none;" type="button" title="<?php esc_attr_e( 'Revalidate user submission', 'coursepress' ); ?>" class="button cp-right cp-refresh-progress" data-course="<?php echo $course_id; ?>" data-student="<?php echo $student_id; ?>">
+		<span class="fa fa-refresh"></span> <?php esc_html_e( 'Refresh', 'coursepress' ); ?>
 	</button>
 	<div class="cp-box">
-		<label><?php esc_html_e( 'Select Display', 'CP_TD' ); ?></label>
+		<label><?php esc_html_e( 'Select Display', 'coursepress' ); ?></label>
 		<select id="grade-type" class="medium">
-			<option value="all" <?php selected( 'all', $display_type ); ?>><?php esc_html_e( 'Show all modules', 'CP_TD' ); ?></option>
-			<option value="all_answered" <?php selected( 'all_answered', $display_type ); ?>><?php esc_html_e( 'Show all answered modules', 'CP_TD' ); ?></option>
-			<option value="all_assessable" <?php selected( 'all_assessable', $display_type ); ?>><?php esc_html_e( 'Show all assessable modules', 'CP_TD' ); ?></option>
+			<option value="all" <?php selected( 'all', $display_type ); ?>><?php esc_html_e( 'Show all modules', 'coursepress' ); ?></option>
+			<option value="all_answered" <?php selected( 'all_answered', $display_type ); ?>><?php esc_html_e( 'Show all answered modules', 'coursepress' ); ?></option>
+			<option value="all_assessable" <?php selected( 'all_assessable', $display_type ); ?>><?php esc_html_e( 'Show all assessable modules', 'coursepress' ); ?></option>
 		</select>
 	</div>
 </div>

@@ -123,10 +123,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'title' => __( 'Topic', 'CP_TD' ),
-			'course' => __( 'Course', 'CP_TD' ),
-			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'CP_TD' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'CP_TD' ) . '</span></span>',
-			'status' => __( 'Status', 'CP_TD' ),
+			'title' => __( 'Topic', 'coursepress' ),
+			'course' => __( 'Course', 'coursepress' ),
+			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'coursepress' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'coursepress' ) . '</span></span>',
+			'status' => __( 'Status', 'coursepress' ),
 		);
 		return $columns;
 	}
@@ -148,7 +148,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 						'id' => $item->ID,
 					)
 				);
-				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'CP_TD' ) );
+				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'coursepress' ) );
 			} else {
 				$url = add_query_arg(
 					array(
@@ -156,7 +156,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 						'id' => $item->ID,
 					)
 				);
-				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'CP_TD' ) );
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'coursepress' ) );
 			}
 		}
 		if ( $item->user_can_delete ) {
@@ -168,7 +168,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 						'action' => 'delete',
 					)
 				);
-				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'CP_TD' ) );
+				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'coursepress' ) );
 			} else {
 				$url = add_query_arg(
 					array(
@@ -177,13 +177,13 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 						'action' => 'trash',
 					)
 				);
-				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'CP_TD' ) );
+				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'coursepress' ) );
 			}
 		}
 		if ( 'publish' == $item->post_status ) {
 			$url = CoursePress_Data_Discussion::get_url( $item );
 			if ( ! empty( $url ) ) {
-				$row_actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'View', 'CP_TD' ) );
+				$row_actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'View', 'coursepress' ) );
 			}
 		}
 		return $this->row_actions( $row_actions );
@@ -203,10 +203,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 ?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
-			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'coursepress' ); ?>" />
 		</div>
 <?php
-		$this->search_box( __( 'Search Forums', 'CP_TD' ), 'search_discussions' );
+		$this->search_box( __( 'Search Forums', 'coursepress' ), 'search_discussions' );
 	}
 
 	/**

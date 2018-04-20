@@ -18,8 +18,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct( array(
-			'singular' => __( 'Reports', 'CP_TD' ),
-			'plural' => __( 'Reports', 'CP_TD' ),
+			'singular' => __( 'Reports', 'coursepress' ),
+			'plural' => __( 'Reports', 'coursepress' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -83,27 +83,27 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'No students found.', 'CP_TD' );
+		_e( 'No students found.', 'coursepress' );
 	}
 
 	public function get_columns() {
 		return array(
 			'cb' => '<input type="checkbox" />',
-			'id' => __( 'ID', 'CP_TD' ),
-			'name' => __( 'Student Name', 'CP_TD' ),
-			'responses' => __( 'Responses', 'CP_TD' ),
-			'average' => __( 'Average', 'CP_TD' ),
-			'report' => __( 'Download', 'CP_TD' ),
-			'html' => __( 'View', 'CP_TD' ),
+			'id' => __( 'ID', 'coursepress' ),
+			'name' => __( 'Student Name', 'coursepress' ),
+			'responses' => __( 'Responses', 'coursepress' ),
+			'average' => __( 'Average', 'coursepress' ),
+			'report' => __( 'Download', 'coursepress' ),
+			'html' => __( 'View', 'coursepress' ),
 		);
 	}
 
 	public function get_bulk_actions() {
 		$actions = array(
-			'download' => __( 'Download', 'CP_TD' ),
-			'download_summary' => __( 'Download Summary', 'CP_TD' ),
-			'show' => __( 'Show', 'CP_TD' ),
-			'show_summary' => __( 'Show Summary', 'CP_TD' ),
+			'download' => __( 'Download', 'coursepress' ),
+			'download_summary' => __( 'Download Summary', 'coursepress' ),
+			'show' => __( 'Show', 'coursepress' ),
+			'show_summary' => __( 'Show Summary', 'coursepress' ),
 		);
 
 		return $actions;
@@ -165,7 +165,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 				esc_attr( $this->course_id )
 			);
 		}
-		return sprintf( '<span title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
+		return sprintf( '<span title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'coursepress' ) );
 	}
 
 	/**
@@ -198,15 +198,15 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 		$options = array();
 		$options['value'] = $this->course_id;
 		$options['class'] = 'medium dropdown';
-		$options['placeholder'] = __( 'Select course', 'CP_TD' );
+		$options['placeholder'] = __( 'Select course', 'coursepress' );
 		$courses = CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $this->courses, $options );
 		?>
 		<div class="alignleft course-filter">
 			<?php echo $courses; ?>
-			<input type="submit" class="button action" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
+			<input type="submit" class="button action" name="action" value="<?php esc_attr_e( 'Filter', 'coursepress' ); ?>" />
 		</div>
 		<?php
-		$this->search_box( __( 'Search', 'CP_TD' ), 'search_students' );
+		$this->search_box( __( 'Search', 'coursepress' ), 'search_students' );
 	}
 
 	public function pagination( $which ) {

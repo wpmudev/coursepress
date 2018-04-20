@@ -13,21 +13,21 @@ class CoursePress_View_Admin_Student_Workbook {
 					</td>
 					<td valign="top">
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'Student ID', 'CP_TD' ); ?>:</span>
+							<span class="info_caption"><?php esc_html_e( 'Student ID', 'coursepress' ); ?>:</span>
 							<span class="info"><?php echo $student_id; ?></span>
 						</div>
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'First Name', 'CP_TD' ); ?>:</span>
+							<span class="info_caption"><?php esc_html_e( 'First Name', 'coursepress' ); ?>:</span>
 							<span class="info"><?php echo $student->first_name; ?></span>
 						</div>
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'Surname', 'CP_TD' ); ?>:</span>
+							<span class="info_caption"><?php esc_html_e( 'Surname', 'coursepress' ); ?>:</span>
 							<span class="info"><?php echo $student->last_name; ?></span>
 						</div>
 					</td>
 					<td valign="top">
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'Courses', 'CP_TD' ); ?>:</span>
+							<span class="info_caption"><?php esc_html_e( 'Courses', 'coursepress' ); ?>:</span>
 							<span class="info">
 							<?php
 								$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
@@ -37,7 +37,7 @@ class CoursePress_View_Admin_Student_Workbook {
 						</div>
 						<?php if ( CoursePress_Data_Capabilities::can_create_student() ) : ?>
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'Edit', 'CP_TD' ); ?></span>
+							<span class="info_caption"><?php esc_html_e( 'Edit', 'coursepress' ); ?></span>
 							<span class="info">
 							<?php
 								$edit_link = get_edit_user_link( $student_id );
@@ -47,7 +47,7 @@ class CoursePress_View_Admin_Student_Workbook {
 						</div>
 						<?php endif; ?>
 						<div>
-							<span class="info_caption"><?php esc_html_e( 'Profile', 'CP_TD' ); ?></span>
+							<span class="info_caption"><?php esc_html_e( 'Profile', 'coursepress' ); ?></span>
 							<span class="info">
 							<?php
 								$profile_link = add_query_arg(
@@ -69,7 +69,7 @@ class CoursePress_View_Admin_Student_Workbook {
 		$student = get_userdata( $student_id );
 		?>
 		<div class="wrap nocoursesub assessment student-workbook cp-wrap">
-			<h2><?php esc_html_e( 'Student Workbook', 'CP_TD' ); ?></h2>
+			<h2><?php esc_html_e( 'Student Workbook', 'coursepress' ); ?></h2>
 			<hr />
 			<?php
 				self::profile();
@@ -82,11 +82,11 @@ class CoursePress_View_Admin_Student_Workbook {
 			if ( 0 == count( $courses ) ) :
 			?>
 				<div class="zero-courses">
-					<?php echo $student->user_login; esc_html_e( ' did not enroll to any courses yet.', 'CP_TD' ); ?>
+					<?php echo $student->user_login; esc_html_e( ' did not enroll to any courses yet.', 'coursepress' ); ?>
 				</div>
 			<?php else : ?>
 				<div class="tablenav">
-					<span class="info_caption"><?php esc_html_e( 'Select Course', 'CP_TD' ); ?></span>
+					<span class="info_caption"><?php esc_html_e( 'Select Course', 'coursepress' ); ?></span>
 					<?php
 						echo CoursePress_Helper_UI::get_course_dropdown(
 							'course-list',
@@ -108,7 +108,7 @@ class CoursePress_View_Admin_Student_Workbook {
 			if ( ! empty( $units ) ) :
 			?>
 				<div class="units-tab-container">
-					<span class="info_caption"><?php esc_html_e( 'Select Unit', 'CP_TD' ); ?></span>
+					<span class="info_caption"><?php esc_html_e( 'Select Unit', 'coursepress' ); ?></span>
 					<div class="units-tab">
 					<?php
 					$tab = 1;
@@ -145,11 +145,11 @@ class CoursePress_View_Admin_Student_Workbook {
 					<thead>
 						<tr>
 							<th></th>
-							<th><?php esc_html_e( 'Activity', 'CP_TD' ); ?></th>
-							<th><?php esc_html_e( 'Submission', 'CP_TD' ); ?></th>
-							<th><?php esc_html_e( 'Response', 'CP_TD' ); ?></th>
-							<th><?php esc_html_e( 'Grade', 'CP_TD' ); ?></th>
-							<th><?php esc_html_e( 'Feedback', 'CP_TD' ); ?></th>
+							<th><?php esc_html_e( 'Activity', 'coursepress' ); ?></th>
+							<th><?php esc_html_e( 'Submission', 'coursepress' ); ?></th>
+							<th><?php esc_html_e( 'Response', 'coursepress' ); ?></th>
+							<th><?php esc_html_e( 'Grade', 'coursepress' ); ?></th>
+							<th><?php esc_html_e( 'Feedback', 'coursepress' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -221,7 +221,7 @@ class CoursePress_View_Admin_Student_Workbook {
 												),
 												admin_url( 'admin.php' )
 											);
-											$view_link = sprintf( '<a href="%s&view_answer">%s</a>', $view_link, __( 'View', 'CP_TD' ) );
+											$view_link = sprintf( '<a href="%s&view_answer">%s</a>', $view_link, __( 'View', 'coursepress' ) );
 										}
 ?>
 										<tr>
@@ -238,7 +238,7 @@ class CoursePress_View_Admin_Student_Workbook {
 											<td><?php echo $view_link; ?></td>
 											<td>
 <?php
-										echo (-1 == $grade['grade'] ? __( '--', 'CP_TD' ) : sprintf( '%d%%', $grade['grade'] ) );
+										echo (-1 == $grade['grade'] ? __( '--', 'coursepress' ) : sprintf( '%d%%', $grade['grade'] ) );
 ?>
 											</td>
 											<td id="instructor-feedback">

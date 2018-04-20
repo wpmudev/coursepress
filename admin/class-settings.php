@@ -18,8 +18,8 @@ class CoursePress_Admin_Settings extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Settings', 'CP_TD' ),
-			'menu_title' => __( 'Settings', 'CP_TD' )
+			'title' => __( 'CoursePress Settings', 'coursepress' ),
+			'menu_title' => __( 'Settings', 'coursepress' )
 		);
 	}
 

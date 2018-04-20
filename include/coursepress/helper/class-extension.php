@@ -26,14 +26,14 @@ class CoursePress_Helper_Extension {
 			return $content;
 		}
 
-		$content .= '<h3>' . esc_html__( 'Plugins', 'CP_TD' ) . '</h3>';
+		$content .= '<h3>' . esc_html__( 'Plugins', 'coursepress' ) . '</h3>';
 		$content .= '<table class="wp-list-table widefat">
 			<thead>
 				<tr>
-					<th>' . esc_html__( 'Plugin', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Source', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Status', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Action', 'CP_TD' ) . '</th>
+					<th>' . esc_html__( 'Plugin', 'coursepress' ) . '</th>
+					<th>' . esc_html__( 'Source', 'coursepress' ) . '</th>
+					<th>' . esc_html__( 'Status', 'coursepress' ) . '</th>
+					<th>' . esc_html__( 'Action', 'coursepress' ) . '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -58,7 +58,7 @@ class CoursePress_Helper_Extension {
 						<input type="hidden" name="location" value="' . $location . '">
 						<input type="hidden" name="base" value="' . $plugin['base_path'] . '">
 						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'deactivate-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'De-Activate', 'CP_TD' ) . '" />
+						<input type="submit" class="button" value="' . esc_attr__( 'De-Activate', 'coursepress' ) . '" />
 					</form>
 					';
 				}
@@ -74,7 +74,7 @@ class CoursePress_Helper_Extension {
 						<input type="hidden" name="location" value="' . $location . '">
 						<input type="hidden" name="base" value="' . $plugin['base_path'] . '">
 						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'activate-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'Activate', 'CP_TD' ) . '" />
+						<input type="submit" class="button" value="' . esc_attr__( 'Activate', 'coursepress' ) . '" />
 					</form>
 					';
 				}
@@ -94,11 +94,11 @@ class CoursePress_Helper_Extension {
 							<input type="hidden" name="external" value="' . $plugin['external'] . '">
 							<input type="hidden" name="protocol" value="' . $plugin['protocol'] . '">
 							<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'install-plugin' ) . '">
-							<input type="submit" class="button" value="' . esc_attr__( 'Install', 'CP_TD' ) . '" />
+							<input type="submit" class="button" value="' . esc_attr__( 'Install', 'coursepress' ) . '" />
 						</form>
 						';
 					} else {
-						$action = sprintf( '<a href="%1$s" class="button">%2$s</a>', esc_url_raw( $plugin['source'] ), __( 'Install', 'CP_TD') );
+						$action = sprintf( '<a href="%1$s" class="button">%2$s</a>', esc_url_raw( $plugin['source'] ), __( 'Install', 'coursepress') );
 					}
 				}
 			}

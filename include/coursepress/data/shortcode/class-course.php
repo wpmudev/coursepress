@@ -491,7 +491,7 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Start Date', 'CP_TD' ),
+			'label' => __( 'Course Start Date', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ': ',
 			'class' => '',
@@ -516,7 +516,7 @@ class CoursePress_Data_Shortcode_Course {
 		}
 
 		if ( $open_ended || empty( $start_date ) ) {
-			$content .= __( 'already started', 'CP_TD' );
+			$content .= __( 'already started', 'coursepress' );
 		} else {
 			$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) ) );
 			// Add time if different to '00:00:00'
@@ -538,7 +538,7 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_length( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Course Length', 'CP_TD' ),
+			'label' => __( 'Course Length', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ': ',
 			'class' => '',
@@ -592,10 +592,10 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course End Date: ', 'CP_TD' ),
+			'label' => __( 'Course End Date: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'No End Date', 'CP_TD' ),
+			'no_date_text' => __( 'No End Date', 'coursepress' ),
 			'class' => '',
 		), $atts, 'course_end' ) );
 
@@ -636,11 +636,11 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Dates: ', 'CP_TD' ),
+			'label' => __( 'Course Dates: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'No End Date', 'CP_TD' ),
-			'alt_display_text' => __( 'Open-ended', 'CP_TD' ),
+			'no_date_text' => __( 'No End Date', 'coursepress' ),
+			'alt_display_text' => __( 'Open-ended', 'coursepress' ),
 			'show_alt_display' => 'no',
 			'class' => '',
 		), $atts, 'course_dates' ) );
@@ -696,10 +696,10 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Start Date: ', 'CP_TD' ),
+			'label' => __( 'Enrollment Start Date: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime', 'CP_TD' ),
+			'no_date_text' => __( 'Enroll Anytime', 'coursepress' ),
 			'class' => '',
 		), $atts, 'course_enrollment_start' ) );
 
@@ -753,10 +753,10 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment End Date: ', 'CP_TD' ),
+			'label' => __( 'Enrollment End Date: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime ', 'CP_TD' ),
+			'no_date_text' => __( 'Enroll Anytime ', 'coursepress' ),
 			'show_all_dates' => 'no',
 			'class' => '',
 		), $atts, 'course_enrollment_end' ) );
@@ -806,13 +806,13 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Dates: ', 'CP_TD' ),
-			'label_enrolled' => __( 'You Enrolled on: ', 'CP_TD' ),
+			'label' => __( 'Enrollment Dates: ', 'coursepress' ),
+			'label_enrolled' => __( 'You Enrolled on: ', 'coursepress' ),
 			'show_enrolled_display' => 'yes',
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime', 'CP_TD' ),
-			'alt_display_text' => __( 'Open-ended', 'CP_TD' ),
+			'no_date_text' => __( 'Enroll Anytime', 'coursepress' ),
+			'alt_display_text' => __( 'Open-ended', 'coursepress' ),
 			'show_alt_display' => 'no',
 			'class' => '',
 		), $atts, 'course_enrollment_dates' ) );
@@ -881,15 +881,15 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_enrollment_type( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'anyone_text' => __( 'Anyone', 'CP_TD' ),
+			'anyone_text' => __( 'Anyone', 'coursepress' ),
 			'class' => '',
 			'label_delimeter' => ':',
 			'label_tag' => 'strong',
-			'label' => __( 'Who can Enroll: ', 'CP_TD' ),
-			'manual_text' => __( 'Students are added by instructors.', 'CP_TD' ),
-			'passcode_text' => __( 'A passcode is required to enroll.', 'CP_TD' ),
-			'prerequisite_text' => __( 'Students need to complete %s first.', 'CP_TD' ),
-			'registered_text' => __( 'Registered users.', 'CP_TD' ),
+			'label' => __( 'Who can Enroll: ', 'coursepress' ),
+			'manual_text' => __( 'Students are added by instructors.', 'coursepress' ),
+			'passcode_text' => __( 'A passcode is required to enroll.', 'coursepress' ),
+			'prerequisite_text' => __( 'Students need to complete %s first.', 'coursepress' ),
+			'registered_text' => __( 'Registered users.', 'coursepress' ),
 		), $atts, 'course_enrollment_type' ) );
 
 		$course_id = (int) $course_id;
@@ -974,9 +974,9 @@ class CoursePress_Data_Shortcode_Course {
 			'class' => '',
 			'label_delimeter' => ':',
 			'label_tag' => 'strong',
-			'label' => __( 'Class Size: ', 'CP_TD' ),
-			'no_limit_text' => __( 'Unlimited', 'CP_TD' ),
-			'remaining_text' => __( '(%d places left)', 'CP_TD' ),
+			'label' => __( 'Class Size: ', 'coursepress' ),
+			'no_limit_text' => __( 'Unlimited', 'coursepress' ),
+			'remaining_text' => __( '(%d places left)', 'coursepress' ),
 			'show_no_limit' => 'no',
 			'show_remaining' => 'yes',
 		), $atts, 'course_class_size' ) );
@@ -1042,8 +1042,8 @@ class CoursePress_Data_Shortcode_Course {
 			'class' => '',
 			'label_delimeter' => ': ',
 			'label_tag' => 'strong',
-			'label' => __( 'Price:&nbsp;', 'CP_TD' ),
-			'no_cost_text' => __( 'FREE', 'CP_TD' ),
+			'label' => __( 'Price:&nbsp;', 'coursepress' ),
+			'no_cost_text' => __( 'FREE', 'coursepress' ),
 			'show_icon' => 'no',
 		), $atts, 'course_cost' ) );
 
@@ -1097,7 +1097,7 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_language( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Course Language: ', 'CP_TD' ),
+			'label' => __( 'Course Language: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
 			'class' => '',
@@ -1138,10 +1138,10 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_category( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Course Category: ', 'CP_TD' ),
+			'label' => __( 'Course Category: ', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_category_text' => __( 'None', 'CP_TD' ),
+			'no_category_text' => __( 'None', 'coursepress' ),
 			'class' => '',
 		), $atts, 'course_category' ) );
 
@@ -1494,14 +1494,14 @@ class CoursePress_Data_Shortcode_Course {
 		$content = '<div class="apply-links course-action-links course-action-links-' . $course_id . ' ' . $class . '">';
 
 		if ( $withdraw_link_visible ) {
-			$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . esc_html__( 'Withdraw', 'CP_TD' ) . '</a> | ';
+			$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . esc_html__( 'Withdraw', 'coursepress' ) . '</a> | ';
 		}
-		$content .= '<a href="' . get_permalink( $course_id ) . '">' . esc_html__( 'Course Details', 'CP_TD' ) . '</a>';
+		$content .= '<a href="' . get_permalink( $course_id ) . '">' . esc_html__( 'Course Details', 'coursepress' ) . '</a>';
 
 		// Add certificate link.
 		if ( CP_IS_PREMIUM ) {
 			// COMPLETION LOGIC.
-			// $content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ), ' | ' );
+			// $content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'coursepress' ), ' | ' );
 		}
 
 		$content .= '</div>';
@@ -1593,7 +1593,7 @@ class CoursePress_Data_Shortcode_Course {
 
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Estimated Duration:&nbsp;', 'CP_TD' ),
+			'label' => __( 'Estimated Duration:&nbsp;', 'coursepress' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ': ',
 			'wrapper' => 'no',

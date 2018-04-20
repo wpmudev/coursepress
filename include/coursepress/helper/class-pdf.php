@@ -85,88 +85,88 @@ class CoursePress_Helper_PDF extends CP_TCPDF {
 
 		// Saving system resources, we wont scan the font directory.
 		$fonts = array(
-			'cid0cs.php' => __( 'Arial Unicode MS (Simplified Chinese)', 'CP_TD' ),
-			'cid0ct.php' => __( 'Arial Unicode MS (Chinese Traditional)', 'CP_TD' ),
-			'cid0jp.php' => __( 'Arial Unicode MS (Japanese)', 'CP_TD' ),
-			'cid0kr.php' => __( 'Arial Unicode MS (Korean)', 'CP_TD' ),
-			'courier.php' => __( 'Courier', 'CP_TD' ),
+			'cid0cs.php' => __( 'Arial Unicode MS (Simplified Chinese)', 'coursepress' ),
+			'cid0ct.php' => __( 'Arial Unicode MS (Chinese Traditional)', 'coursepress' ),
+			'cid0jp.php' => __( 'Arial Unicode MS (Japanese)', 'coursepress' ),
+			'cid0kr.php' => __( 'Arial Unicode MS (Korean)', 'coursepress' ),
+			'courier.php' => __( 'Courier', 'coursepress' ),
 			'courierb.php' => '',
 			'courierbi.php' => '',
 			'courieri.php' => '',
-			'helvetica.php' => __( 'Helvetica', 'CP_TD' ),
+			'helvetica.php' => __( 'Helvetica', 'coursepress' ),
 			'helveticab.php' => '',
 			'helveticabi.php' => '',
 			'helveticai.php' => '',
-			'dejavusans.php' => __( 'DejaVu Sans', 'CP_TD' ),
+			'dejavusans.php' => __( 'DejaVu Sans', 'coursepress' ),
 			'dejavusansb.php' => '',
 			'dejavusansbi.php' => '',
 			'dejavusansi.php' => '',
-			'symbol.php' => __( 'Symbol', 'CP_TD' ),
-			'times.php' => __( 'Times-Roman', 'CP_TD' ),
+			'symbol.php' => __( 'Symbol', 'coursepress' ),
+			'times.php' => __( 'Times-Roman', 'coursepress' ),
 			'timesb.php' => '',
 			'timesbi.php' => '',
 			'timesi.php' => '',
-			'uni2cid_ac15.php' => __( 'Adobe-CNS1-5', 'CP_TD' ),
-			'uni2cid_ag15.php' => __( 'Adobe-GB1-5', 'CP_TD' ),
-			'uni2cid_aj16.php' => __( 'Adobe-Japan1-6', 'CP_TD' ),
-			'uni2cid_ak12.php' => __( 'Adobe-Korea1-2', 'CP_TD' ),
-			'zapfdingbats.php' => __( 'ZapfDingbats', 'CP_TD' ),
+			'uni2cid_ac15.php' => __( 'Adobe-CNS1-5', 'coursepress' ),
+			'uni2cid_ag15.php' => __( 'Adobe-GB1-5', 'coursepress' ),
+			'uni2cid_aj16.php' => __( 'Adobe-Japan1-6', 'coursepress' ),
+			'uni2cid_ak12.php' => __( 'Adobe-Korea1-2', 'coursepress' ),
+			'zapfdingbats.php' => __( 'ZapfDingbats', 'coursepress' ),
 		);
 
 		if ( defined( 'TCPDF_PLUGIN_ACTIVE' ) && TCPDF_PLUGIN_ACTIVE ) {
 			$fonts = array_merge( $fonts, array(
-				'aealarabiya.php' => __( 'Al Arabiya', 'CP_TD' ),
-				'aefurat.php' => __( 'Furat', 'CP_TD' ),
-				'dejavusanscondensed.php' => __( 'DejaVu Sans Condensed', 'CP_TD' ),
+				'aealarabiya.php' => __( 'Al Arabiya', 'coursepress' ),
+				'aefurat.php' => __( 'Furat', 'coursepress' ),
+				'dejavusanscondensed.php' => __( 'DejaVu Sans Condensed', 'coursepress' ),
 				'dejavusanscondensedb.php' => '',
 				'dejavusanscondensedbi.php' => '',
 				'dejavusanscondensedi.php' => '',
-				'dejavusansextralight.php' => __( 'DejaVu Sans ExtraLight', 'CP_TD' ),
-				'dejavusansmono.php' => __( 'DejaVu Sans Mono', 'CP_TD' ),
+				'dejavusansextralight.php' => __( 'DejaVu Sans ExtraLight', 'coursepress' ),
+				'dejavusansmono.php' => __( 'DejaVu Sans Mono', 'coursepress' ),
 				'dejavusansmonob.php' => '',
 				'dejavusansmonobi.php' => '',
 				'dejavusansmonoi.php' => '',
-				'dejavuserif.php' => __( 'DejaVu Serif', 'CP_TD' ),
+				'dejavuserif.php' => __( 'DejaVu Serif', 'coursepress' ),
 				'dejavuserifb.php' => '',
 				'dejavuserifbi.php' => '',
-				'dejavuserifcondensed.php' => __( 'DejaVu Serif Condensed', 'CP_TD' ),
+				'dejavuserifcondensed.php' => __( 'DejaVu Serif Condensed', 'coursepress' ),
 				'dejavuserifcondensedb.php' => '',
 				'dejavuserifcondensedbi.php' => '',
 				'dejavuserifcondensedi.php' => '',
 				'dejavuserifi.php' => '',
-				'freemono.php' => __( 'Free Mono', 'CP_TD' ),
+				'freemono.php' => __( 'Free Mono', 'coursepress' ),
 				'freemonob.php' => '',
 				'freemonobi.php' => '',
 				'freemonoi.php' => '',
-				'freesans.php' => __( 'Free Sans', 'CP_TD' ),
+				'freesans.php' => __( 'Free Sans', 'coursepress' ),
 				'freesansb.php' => '',
 				'freesansbi.php' => '',
 				'freesansi.php' => '',
-				'freeserif.php' => __( 'Free Serif', 'CP_TD' ),
+				'freeserif.php' => __( 'Free Serif', 'coursepress' ),
 				'freeserifb.php' => '',
 				'freeserifbi.php' => '',
 				'freeserifi.php' => '',
-				'hysmyeongjostdmedium.php' => __( 'MyungJo Medium (Korean)', 'CP_TD' ),
-				'kozgopromedium.php' => __( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'CP_TD' ),
-				'kozminproregular.php' => __( 'Kozuka Mincho Pro (Japanese Serif)', 'CP_TD' ),
-				'msungstdlight.php' => __( 'MSung Light (Traditional Chinese)', 'CP_TD' ),
-				'pdfacourier.php' => __( 'PDFA Courier', 'CP_TD' ),
+				'hysmyeongjostdmedium.php' => __( 'MyungJo Medium (Korean)', 'coursepress' ),
+				'kozgopromedium.php' => __( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'coursepress' ),
+				'kozminproregular.php' => __( 'Kozuka Mincho Pro (Japanese Serif)', 'coursepress' ),
+				'msungstdlight.php' => __( 'MSung Light (Traditional Chinese)', 'coursepress' ),
+				'pdfacourier.php' => __( 'PDFA Courier', 'coursepress' ),
 				'pdfacourierb.php' => '',
 				'pdfacourierbi.php' => '',
 				'pdfacourieri.php' => '',
-				'pdfahelvetica.php' => __( 'PDFA Helvetica', 'CP_TD' ),
+				'pdfahelvetica.php' => __( 'PDFA Helvetica', 'coursepress' ),
 				'pdfahelveticab.php' => '',
 				'pdfahelveticabi.php' => '',
 				'pdfahelveticai.php' => '',
-				'pdfasymbol.php' => __( 'PDFA Symbol', 'CP_TD' ),
-				'pdfatimes.php' => __( 'PDFA Times', 'CP_TD' ),
+				'pdfasymbol.php' => __( 'PDFA Symbol', 'coursepress' ),
+				'pdfatimes.php' => __( 'PDFA Times', 'coursepress' ),
 				'pdfatimesb.php' => '',
 				'pdfatimesbi.php' => '',
 				'pdfatimesi.php' => '',
-				'pdfazapfdingbats.php' => __( 'PDFA ZapfDingbats', 'CP_TD' ),
-				'robotolight.php' => __( 'Roboto Light', 'CP_TD' ),
-				'robotolightitalic.php' => __( 'Robot Light Italic', 'CP_TD' ),
-				'stsongstdlight.php' => __( 'STSong Light (Simplified Chinese)', 'CP_TD' ),
+				'pdfazapfdingbats.php' => __( 'PDFA ZapfDingbats', 'coursepress' ),
+				'robotolight.php' => __( 'Roboto Light', 'coursepress' ),
+				'robotolightitalic.php' => __( 'Robot Light Italic', 'coursepress' ),
+				'stsongstdlight.php' => __( 'STSong Light (Simplified Chinese)', 'coursepress' ),
 			) );
 		}
 
@@ -225,7 +225,7 @@ class CoursePress_Helper_PDF extends CP_TCPDF {
 	 */
 	public static function make_pdf( $html, $args = array() ) {
 		if ( ! isset( $args['title'] ) || empty( $args['title'] ) ) {
-			$args['title'] = __( 'CoursePress Report', 'CP_TD' );
+			$args['title'] = __( 'CoursePress Report', 'coursepress' );
 		}
 
 		$selected_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
@@ -495,7 +495,7 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 		$cache_path = self::cache_path();
 		?>
 		<div class="notice notice-error">
-			<p><?php printf( esc_html__( 'CoursePress cannot generate PDF because directory is not writable: %s', 'CP_TD' ), $cache_path); ?></p>
+			<p><?php printf( esc_html__( 'CoursePress cannot generate PDF because directory is not writable: %s', 'coursepress' ), $cache_path); ?></p>
 		</div>
 		<?php
 	}

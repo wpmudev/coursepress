@@ -14,10 +14,10 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'cp_featured_widget',
-			'description' => __( 'Displays a selected course as featured', 'CP_TD' ),
+			'description' => __( 'Displays a selected course as featured', 'coursepress' ),
 		);
 
-		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'CP_TD' ), $widget_ops );
+		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'coursepress' ), $widget_ops );
 	}
 	
 	public static function enqueue_featured_script() {
@@ -53,11 +53,11 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 		$courses = get_posts( $args );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'CP_TD' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress' ); ?>:
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'CP_TD' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'coursepress' ); ?><br/>
 			<select name="<?php echo $this->get_field_name( 'course' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'course' ); ?>">
 				<?php
 				foreach ( $courses as $course ) {
@@ -69,24 +69,24 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 			</select>
 		</label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php _e( 'Featured Media', 'CP_TD' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php _e( 'Featured Media', 'coursepress' ); ?><br/>
 			<select name="<?php echo $this->get_field_name( 'type' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'type' ); ?>">
-				<option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'CP_TD' ); ?></option>
-				<option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'CP_TD' ); ?></option>
-				<option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'CP_TD' ); ?></option>
+				<option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'coursepress' ); ?></option>
+				<option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'coursepress' ); ?></option>
+				<option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'coursepress' ); ?></option>
 			</select>
 		</label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'priority' ); ?>"><?php _e( 'Priority Media', 'CP_TD' ); ?><br/>
-			<small><?php _e( 'Priority needs to be set above.', 'CP_TD' ); ?></small>
+		<p><label for="<?php echo $this->get_field_id( 'priority' ); ?>"><?php _e( 'Priority Media', 'coursepress' ); ?><br/>
+			<small><?php _e( 'Priority needs to be set above.', 'coursepress' ); ?></small>
 			<select name="<?php echo $this->get_field_name( 'priority' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'priority' ); ?>">
-				<option value="video" <?php selected( $selected_priority, 'video', true ); ?>><?php _e( 'Featured Video (image fallback)', 'CP_TD' ); ?></option>
-				<option value="image" <?php selected( $selected_priority, 'image', true ); ?>><?php _e( 'List Image (video fallback)', 'CP_TD' ); ?></option>
+				<option value="video" <?php selected( $selected_priority, 'video', true ); ?>><?php _e( 'Featured Video (image fallback)', 'coursepress' ); ?></option>
+				<option value="image" <?php selected( $selected_priority, 'image', true ); ?>><?php _e( 'List Image (video fallback)', 'coursepress' ); ?></option>
 			</select>
 		</label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'CP_TD' ); ?>:
-			<input class="widefat" id="<?php echo $this->get_field_id( 'button_title' ); ?>" name="<?php echo $this->get_field_name( 'button_title' ); ?>" type="text" value="<?php echo( ! isset( $button_title ) ? __( 'Find out more', 'CP_TD' ) : esc_attr( $button_title ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'coursepress' ); ?>:
+			<input class="widefat" id="<?php echo $this->get_field_id( 'button_title' ); ?>" name="<?php echo $this->get_field_name( 'button_title' ); ?>" type="text" value="<?php echo( ! isset( $button_title ) ? __( 'Find out more', 'coursepress' ) : esc_attr( $button_title ) ); ?>"/></label>
 		</p>
 	<?php
 	}
@@ -125,7 +125,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 		$selected_type = isset( $instance['type'] ) ? $instance['type'] : 'image';
 		$selected_priority = isset( $instance['priority'] ) ? $instance['priority'] : 'image';
-		$button_label = isset( $instance['button_title'] ) && ! empty( $instance['button_title'] ) ? $instance['button_title'] : __( 'Details', 'CP_TD' );
+		$button_label = isset( $instance['button_title'] ) && ! empty( $instance['button_title'] ) ? $instance['button_title'] : __( 'Details', 'coursepress' );
 
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 

@@ -1,5 +1,5 @@
 <div class="step-title step-6">
-	<?php printf( __( 'Step 6 &ndash; Enrollment %s', 'CP_TD' ), $title2 ); ?>
+	<?php printf( __( 'Step 6 &ndash; Enrollment %s', 'coursepress' ), $title2 ); ?>
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
@@ -7,14 +7,14 @@
 	<input type="hidden" name="meta_setup_step_6" value="saved" />
 
 	<div class="wide">
-		<label><?php _e( 'Enrollment Restrictions', 'CP_TD' ); ?></label>
-		<p class="description"><?php _e( 'Select the limitations on accessing and enrolling in this course.', 'CP_TD' ); ?></p>
+		<label><?php _e( 'Enrollment Restrictions', 'coursepress' ); ?></label>
+		<p class="description"><?php _e( 'Select the limitations on accessing and enrolling in this course.', 'coursepress' ); ?></p>
 		<?php echo CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $enrollment_type, 'chosen-select medium' ); ?>
 	</div>
 
 	<div class="wide enrollment-type-options prerequisite<?php echo $prerequisite_class; ?>">
-		<label><?php _e( 'Prerequisite Courses', 'CP_TD' ); ?></label>
-		<p class="description"><?php _e( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ); ?></p>
+		<label><?php _e( 'Prerequisite Courses', 'coursepress' ); ?></label>
+		<p class="description"><?php _e( 'Select the courses a student needs to complete before enrolling in this course', 'coursepress' ); ?></p>
 		<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course <?php echo $class_extra; ?>" multiple="true" data-placeholder=" ">
 
 			<?php if ( ! empty( $courses ) ) : foreach ( $courses as $course ) : ?>
@@ -25,17 +25,17 @@
 	</div>
 
 	<div class="wide enrollment-type-options passcode <?php echo $passcode_class; ?>">
-		<label><?php _e( 'Course Passcode', 'CP_TD' ); ?></label>
-		<p class="description"><?php _e( 'Enter the passcode required to access this course', 'CP_TD' ); ?></p>
+		<label><?php _e( 'Course Passcode', 'coursepress' ); ?></label>
+		<p class="description"><?php _e( 'Enter the passcode required to access this course', 'coursepress' ); ?></p>
 		<input type="text" name="meta_enrollment_passcode" value="<?php echo esc_attr( $enrollment_passcode ); ?>" />
 	</div>
 
 	<?php if ( false === $disable_payment ) :
 		$one = array(
 				'meta_key' => 'payment_paid_course',
-				'title' => __( 'Course Payment', 'CP_TD' ),
-				'description' => __( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ),
-				'label' => __( 'This is a paid course', 'CP_TD' ),
+				'title' => __( 'Course Payment', 'coursepress' ),
+				'description' => __( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'coursepress' ),
+				'label' => __( 'This is a paid course', 'coursepress' ),
 				'default' => false,
 			);
 		echo '<hr class="separator" />';

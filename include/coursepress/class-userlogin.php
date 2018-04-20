@@ -51,33 +51,33 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 
 				if ( $username && $firstname && $lastname && $email && $passwd && $passwd2 ) {
 					if ( username_exists( $username ) ) {
-						self::$form_message = __( 'Username already exists. Please choose another one.', 'CP_TD' );
+						self::$form_message = __( 'Username already exists. Please choose another one.', 'coursepress' );
 						$found_errors++;
 					} elseif ( ! validate_username( $username ) ) {
-						self::$form_message = __( 'Invalid username!', 'CP_TD' );
+						self::$form_message = __( 'Invalid username!', 'coursepress' );
 						$found_errors++;
 					} elseif ( ! is_email( $email ) ) {
-						self::$form_message = __( 'E-mail address is not valid.', 'CP_TD' );
+						self::$form_message = __( 'E-mail address is not valid.', 'coursepress' );
 						$found_errors++;
 					} elseif ( email_exists( $email ) ) {
-						self::$form_message = __( 'Sorry, that email address is already used!', 'CP_TD' );
+						self::$form_message = __( 'Sorry, that email address is already used!', 'coursepress' );
 						$found_errors++;
 					} elseif ( $passwd != $passwd2 ) {
-						self::$form_message = __( 'Passwords don\'t match', 'CP_TD' );
+						self::$form_message = __( 'Passwords don\'t match', 'coursepress' );
 						$found_errors++;
 					} elseif ( ! CoursePress_Helper_Utility::is_password_strong() ) {
 						if ( CoursePress_Helper_Utility::is_password_strength_meter_enabled() ) {
-							self::$form_message = __( 'Your password is too weak.', 'CP_TD' );
+							self::$form_message = __( 'Your password is too weak.', 'coursepress' );
 						} else {
-							self::$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
+							self::$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'coursepress' ), $min_password_length );
 						}
 						$found_errors++;
 					} elseif ( isset( $_POST['tos_agree'] ) && ! cp_is_true( $_POST['tos_agree'] ) ) {
-						self::$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'CP_TD' );
+						self::$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'coursepress' );
 						$found_errors++;
 					}
 				} else {
-					self::$form_message = __( 'All fields are required.', 'CP_TD' );
+					self::$form_message = __( 'All fields are required.', 'coursepress' );
 					$found_errors++;
 				}
 
@@ -126,7 +126,7 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						}
 						exit;
 					} else {
-						self::$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'CP_TD' );
+						self::$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'coursepress' );
 						self::$form_message_class = 'red';
 					}
 				}

@@ -78,18 +78,18 @@ class CoursePress_Helper_JavaScript {
 			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'date_format' => get_option( 'date_format' ),
-			'editor_visual' => __( 'Visual', 'CP_TD' ),
-			'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'CP_TD' ),
-			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'CP_TD' ),
+			'editor_visual' => __( 'Visual', 'coursepress' ),
+			'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'coursepress' ),
+			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'coursepress' ),
 			'assessment_grid_url' => admin_url( 'admin.php?page=coursepress_assessments' ),
 			'assessment_report_url' => admin_url( 'admin.php?page=coursepress_reports' ),
 			'is_campus' => CP_IS_CAMPUS,
 			'is_super_admin' => $is_super_admin,
 			'user_caps' => CoursePress_Data_Capabilities::get_user_capabilities(),
-			'server_error' => __( 'An error occur while processing your request. Please try again later!', 'CP_TD' ),
+			'server_error' => __( 'An error occur while processing your request. Please try again later!', 'coursepress' ),
 			'labels' => array(
-				'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'CP_TD' ),
-				'required_fields' => __( 'Required fields must not be empty!', 'CP_TD' ),
+				'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'coursepress' ),
+				'required_fields' => __( 'Required fields must not be empty!', 'coursepress' ),
 			),
 		);
 
@@ -149,23 +149,23 @@ class CoursePress_Helper_JavaScript {
 
 			$localize_array['instructor_role_defined'] = defined( 'COURSEPRESS_INSTRUCTOR_ROLE' );
 			$localize_array['instructor_avatars'] = CoursePress_Helper_UI::get_user_avatar_array();
-			$localize_array['instructor_delete_confirm'] = __( 'Please confirm that you want to remove the instructor from this course.', 'CP_TD' );
-			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', 'CP_TD' );
-			$localize_array['facilitator_delete_confirm'] = __( 'Please confirm that you want to remove the facilitator from this course.', 'CP_TD' );
-			$localize_array['facilitator_delete_invite_confirm'] = __( 'Please confirm that you want to remove the facilitator invitation from this course.', 'CP_TD' );
-			$localize_array['instructor_empty_message'] = __( 'Please Assign Instructor', 'CP_TD' );
-			$localize_array['facilitator_empty_message'] = __( 'Assign Facilitator', 'CP_TD' );
-			$localize_array['instructor_pednding_status'] = __( 'Pending', 'CP_TD' );
-			$localize_array['email_validation_pattern'] = __( '.+@.+', 'CP_TD' );
-			$localize_array['student_delete_confirm'] = __( 'Please confirm that you want to remove the student from this course.', 'CP_TD' );
-			$localize_array['student_delete_all_confirm'] = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', 'CP_TD' );
+			$localize_array['instructor_delete_confirm'] = __( 'Please confirm that you want to remove the instructor from this course.', 'coursepress' );
+			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', 'coursepress' );
+			$localize_array['facilitator_delete_confirm'] = __( 'Please confirm that you want to remove the facilitator from this course.', 'coursepress' );
+			$localize_array['facilitator_delete_invite_confirm'] = __( 'Please confirm that you want to remove the facilitator invitation from this course.', 'coursepress' );
+			$localize_array['instructor_empty_message'] = __( 'Please Assign Instructor', 'coursepress' );
+			$localize_array['facilitator_empty_message'] = __( 'Assign Facilitator', 'coursepress' );
+			$localize_array['instructor_pednding_status'] = __( 'Pending', 'coursepress' );
+			$localize_array['email_validation_pattern'] = __( '.+@.+', 'coursepress' );
+			$localize_array['student_delete_confirm'] = __( 'Please confirm that you want to remove the student from this course.', 'coursepress' );
+			$localize_array['student_delete_all_confirm'] = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', 'coursepress' );
 
 			// Discussion / Notification
-			$localize_array['notification_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected notifications. Warning: This cannot be undone. Please make sure this is what you want to do.', 'CP_TD' );
-			$localize_array['notification_delete'] = __( 'Please confirm that you want to delete this notification. Warning: This cannot be undone.', 'CP_TD' );
+			$localize_array['notification_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected notifications. Warning: This cannot be undone. Please make sure this is what you want to do.', 'coursepress' );
+			$localize_array['notification_delete'] = __( 'Please confirm that you want to delete this notification. Warning: This cannot be undone.', 'coursepress' );
 
-			$localize_array['discussion_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected discussions. Warning: This cannot be undone. Please make sure this is what you want to do.', 'CP_TD' );
-			$localize_array['discussion_delete'] = __( 'Please confirm that you want to delete this discussion. Warning: This cannot be undone.', 'CP_TD' );
+			$localize_array['discussion_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected discussions. Warning: This cannot be undone. Please make sure this is what you want to do.', 'coursepress' );
+			$localize_array['discussion_delete'] = __( 'Please confirm that you want to delete this discussion. Warning: This cannot be undone.', 'coursepress' );
 
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
@@ -191,29 +191,29 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_templates'] = CoursePress_Helper_UI_Module::get_template( true );
 			$localize_array['unit_builder_module_types'] = CoursePress_Helper_UI_Module::get_types();
 			$localize_array['unit_builder_module_labels'] = CoursePress_Helper_UI_Module::get_labels();
-			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', 'CP_TD' );
-			$localize_array['unit_builder_delete_page_confirm'] = __( 'Please confirm that you want to remove this page. All modules will be moved to the first available page (or you can drop them on other pages first before deleting this page).', 'CP_TD' );
-			$localize_array['unit_builder_delete_unit_confirm'] = __( 'Please confirm that you want to remove this unit and all its modules and student responses.', 'CP_TD' );
-			$localize_array['unit_builder_new_unit_title'] = __( 'Untitled Unit', 'CP_TD' );
-			$localize_array['unit_builder_add_answer_label'] = __( 'Add Answer', 'CP_TD' );
-			$localize_array['unit_builder_form_pleaceholder_label'] = __( 'Placeholder Text', 'CP_TD' );
-			$localize_array['unit_builder_form_pleaceholder_desc'] = __( 'Placeholder text to put inside the textbox (additional information)', 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['required_fields'] = __( "Answer fields must not be empty!\nPlease check modules:", 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['saving_unit'] = __( 'Unit is saving now...', 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['successfully_saved'] = __( 'Unit was successfully saved!', 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'CP_TD' );
+			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', 'coursepress' );
+			$localize_array['unit_builder_delete_page_confirm'] = __( 'Please confirm that you want to remove this page. All modules will be moved to the first available page (or you can drop them on other pages first before deleting this page).', 'coursepress' );
+			$localize_array['unit_builder_delete_unit_confirm'] = __( 'Please confirm that you want to remove this unit and all its modules and student responses.', 'coursepress' );
+			$localize_array['unit_builder_new_unit_title'] = __( 'Untitled Unit', 'coursepress' );
+			$localize_array['unit_builder_add_answer_label'] = __( 'Add Answer', 'coursepress' );
+			$localize_array['unit_builder_form_pleaceholder_label'] = __( 'Placeholder Text', 'coursepress' );
+			$localize_array['unit_builder_form_pleaceholder_desc'] = __( 'Placeholder text to put inside the textbox (additional information)', 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['required_fields'] = __( "Answer fields must not be empty!\nPlease check modules:", 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['saving_unit'] = __( 'Unit is saving now...', 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['successfully_saved'] = __( 'Unit was successfully saved!', 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'coursepress' );
 			$localize_array['unit_builder']['question_type'] = array(
-				'single' => __( 'Single Choice', 'CP_TD' ),
-				'multiple' => __( 'Multiple Choice', 'CP_TD' ),
-				'short' => __( 'Short Answer', 'CP_TD' ),
-				'long' => __( 'Long Answer', 'CP_TD' ),
-				'selectable' => __( 'Selectable Choice', 'CP_TD' ),
+				'single' => __( 'Single Choice', 'coursepress' ),
+				'multiple' => __( 'Multiple Choice', 'coursepress' ),
+				'short' => __( 'Short Answer', 'coursepress' ),
+				'long' => __( 'Long Answer', 'coursepress' ),
+				'selectable' => __( 'Selectable Choice', 'coursepress' ),
 			);
-			$localize_array['unit_builder_form']['messages']['adding_module'] = __( 'Wait, module adding now...', 'CP_TD' );
+			$localize_array['unit_builder_form']['messages']['adding_module'] = __( 'Wait, module adding now...', 'coursepress' );
 			$localize_array['unit_l8n'] = array(
 				'pre_answers' => array(
-					'a' => __( 'Answer A', 'CP_TD' ),
-					'b' => __( 'Answer B', 'CP_TD' ),
+					'a' => __( 'Answer A', 'coursepress' ),
+					'b' => __( 'Answer B', 'coursepress' ),
 				),
 			);
 		}
@@ -232,10 +232,10 @@ class CoursePress_Helper_JavaScript {
 				'backbone',
 			), CoursePress::$version );
 
-			$localize_array['courselist_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected courses. Warning: This cannot be undone. Please make sure this is what you want to do.', 'CP_TD' );
-			$localize_array['courselist_delete_course'] = __( 'Please confirm that you want to delete this courses. Warning: This cannot be undone.', 'CP_TD' );
-			$localize_array['courselist_duplicate_course'] = __( 'Are you sure you want to create a duplicate copy of this course?', 'CP_TD' );
-			$localize_array['courselist_export'] = __( 'Please select at least one course to export.', 'CP_TD' );
+			$localize_array['courselist_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected courses. Warning: This cannot be undone. Please make sure this is what you want to do.', 'coursepress' );
+			$localize_array['courselist_delete_course'] = __( 'Please confirm that you want to delete this courses. Warning: This cannot be undone.', 'coursepress' );
+			$localize_array['courselist_duplicate_course'] = __( 'Are you sure you want to create a duplicate copy of this course?', 'coursepress' );
+			$localize_array['courselist_export'] = __( 'Please select at least one course to export.', 'coursepress' );
 		}
 
 		if ( 'coursepress_assessments' === $_GET['page'] ) {
@@ -247,22 +247,22 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['courseinstructor_id'] = get_current_user_id();
 			$localize_array['instructor_name'] = CoursePress_Helper_Utility::get_user_name( get_current_user_id(), true );
 			$localize_array['assessment_labels'] = array(
-				'pass' => __( 'Pass', 'CP_TD' ),
-				'fail' => __( 'Fail', 'CP_TD' ),
-				'add_feedback' => __( 'Add Feedback', 'CP_TD' ),
-				'edit_feedback' => __( 'Edit Feedback', 'CP_TD' ),
-				'cancel_feedback' => __( 'Cancel', 'CP_TD' ),
-				'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'CP_TD' ),
-				'minimum_help' => __( 'You may change this minimum grade from course setting.', 'CP_TD' ),
+				'pass' => __( 'Pass', 'coursepress' ),
+				'fail' => __( 'Fail', 'coursepress' ),
+				'add_feedback' => __( 'Add Feedback', 'coursepress' ),
+				'edit_feedback' => __( 'Edit Feedback', 'coursepress' ),
+				'cancel_feedback' => __( 'Cancel', 'coursepress' ),
+				'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'coursepress' ),
+				'minimum_help' => __( 'You may change this minimum grade from course setting.', 'coursepress' ),
 			);
 		}
 
 		/**
 		 * save unit message.
 		 */
-			$localize_array['unit_builder_form']['messages']['setup']['saving'] = __( 'Step is saving now...', 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['setup']['saved'] = __( 'Step was successfully saved!', 'CP_TD' );
-			$localize_array['unit_builder_form']['messages']['setup']['error'] = __( 'Something went wrong. Step was not saved!', 'CP_TD' );
+			$localize_array['unit_builder_form']['messages']['setup']['saving'] = __( 'Step is saving now...', 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['setup']['saved'] = __( 'Step was successfully saved!', 'coursepress' );
+			$localize_array['unit_builder_form']['messages']['setup']['error'] = __( 'Something went wrong. Step was not saved!', 'coursepress' );
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 	}
@@ -327,30 +327,30 @@ class CoursePress_Helper_JavaScript {
 			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
-			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'CP_TD' ),
-			'invalid_upload_message' => __( 'Please only upload any of the following files: ', 'CP_TD' ),
-			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'CP_TD' ),
-			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'CP_TD' ),
-			'response_saved_message' => __( 'Your response was recorded successfully.', 'CP_TD' ),
-			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
+			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'coursepress' ),
+			'invalid_upload_message' => __( 'Please only upload any of the following files: ', 'coursepress' ),
+			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'coursepress' ),
+			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'coursepress' ),
+			'response_saved_message' => __( 'Your response was recorded successfully.', 'coursepress' ),
+			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'coursepress' ),
 			'current_course' => $course_id,
 			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'current_course_type' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' ),
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),
-			'workbook_view_answer' => __( 'View', 'CP_TD' ),
+			'workbook_view_answer' => __( 'View', 'coursepress' ),
 			'labels' => CoursePress_Helper_UI_Module::get_labels(),
 			'signup_errors' => array(
-				'all_fields' => __( 'All fields required.', 'CP_TD' ),
-				'email_invalid' => __( 'Invalid e-mail address.', 'CP_TD' ),
-				'email_exists' => __( 'That e-mail address is already taken.', 'CP_TD' ),
-				'user_exists' => __( 'That username is already taken.', 'CP_TD' ),
-				'weak_password' => __( 'Weak passwords not allowed.', 'CP_TD' ),
-				'mismatch_password' => __( 'Passwords do not match.', 'CP_TD' ),
+				'all_fields' => __( 'All fields required.', 'coursepress' ),
+				'email_invalid' => __( 'Invalid e-mail address.', 'coursepress' ),
+				'email_exists' => __( 'That e-mail address is already taken.', 'coursepress' ),
+				'user_exists' => __( 'That username is already taken.', 'coursepress' ),
+				'weak_password' => __( 'Weak passwords not allowed.', 'coursepress' ),
+				'mismatch_password' => __( 'Passwords do not match.', 'coursepress' ),
 			),
 			'comments' => array(
-				'require_valid_comment' => __( 'Please type a comment.', 'CP_TD' ),
+				'require_valid_comment' => __( 'Please type a comment.', 'coursepress' ),
 			),
 		);
 
@@ -458,46 +458,46 @@ class CoursePress_Helper_JavaScript {
 			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
-			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'CP_TD' ),
-			'invalid_upload_message' => __( 'Invalid file format!', 'CP_TD' ),
-			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'CP_TD' ),
-			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'CP_TD' ),
-			'response_saved_message' => __( 'Your response was recorded successfully.', 'CP_TD' ),
-			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
+			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'coursepress' ),
+			'invalid_upload_message' => __( 'Invalid file format!', 'coursepress' ),
+			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'coursepress' ),
+			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'coursepress' ),
+			'response_saved_message' => __( 'Your response was recorded successfully.', 'coursepress' ),
+			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'coursepress' ),
 			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'current_course_type' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' ),
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),
-			'workbook_view_answer' => __( 'View', 'CP_TD' ),
+			'workbook_view_answer' => __( 'View', 'coursepress' ),
 			'labels' => CoursePress_Helper_UI_Module::get_labels(),
 			'signup_errors' => array(
-				'all_fields' => __( 'All fields are required.', 'CP_TD' ),
-				'email_invalid' => __( 'Invalid e-mail address.', 'CP_TD' ),
-				'email_exists' => __( 'That e-mail address is already taken.', 'CP_TD' ),
-				'user_exists' => __( 'That username is already taken.', 'CP_TD' ),
-				'weak_password' => __( 'Weak passwords not allowed.', 'CP_TD' ),
-				'mismatch_password' => __( 'Passwords do not match.', 'CP_TD' ),
+				'all_fields' => __( 'All fields are required.', 'coursepress' ),
+				'email_invalid' => __( 'Invalid e-mail address.', 'coursepress' ),
+				'email_exists' => __( 'That e-mail address is already taken.', 'coursepress' ),
+				'user_exists' => __( 'That username is already taken.', 'coursepress' ),
+				'weak_password' => __( 'Weak passwords not allowed.', 'coursepress' ),
+				'mismatch_password' => __( 'Passwords do not match.', 'coursepress' ),
 			),
 			'login_errors' => array(
-				'required' => __( 'Your username and/or password is required!', 'CP_TD' ),
+				'required' => __( 'Your username and/or password is required!', 'coursepress' ),
 			),
 			'comments' => array(
-				'require_valid_comment' => __( 'Ooops! You did not write anything!', 'CP_TD' ),
+				'require_valid_comment' => __( 'Ooops! You did not write anything!', 'coursepress' ),
 			),
-			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'CP_TD' ),
+			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'coursepress' ),
 			'module_error' => array(
-				'required' => __( 'You need to complete this module!', 'CP_TD' ),
-				'normal_required' => __( 'You need to complete all required modules!', 'CP_TD' ),
-				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
-				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
-				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
+				'required' => __( 'You need to complete this module!', 'coursepress' ),
+				'normal_required' => __( 'You need to complete all required modules!', 'coursepress' ),
+				'participate' => __( 'Your participation to the discussion is required!', 'coursepress' ),
+				'passcode_required' => __( 'Enter PASSCODE!', 'coursepress' ),
+				'invalid_passcode' => __( 'Invalid PASSCODE!', 'coursepress' ),
 			),
-			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'CP_TD' ),
-			'confirmed_edit' => __( 'Please confirm that you want to edit this course.', 'CP_TD' ),
+			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'coursepress' ),
+			'confirmed_edit' => __( 'Please confirm that you want to edit this course.', 'coursepress' ),
 			'buttons' => array(
-				'ok' => __( 'OK', 'CP_TD' ),
-				'cancel' => __( 'Cancel', 'CP_TD' ),
+				'ok' => __( 'OK', 'coursepress' ),
+				'cancel' => __( 'Cancel', 'coursepress' ),
 			),
 			'password_strength_meter_enabled' => CoursePress_Helper_Utility::is_password_strength_meter_enabled()
 		);

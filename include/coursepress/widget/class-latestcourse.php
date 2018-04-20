@@ -13,10 +13,10 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'cp_latest_courses_widget',
-			'description' => __( 'Displays latest courses', 'CP_TD' ),
+			'description' => __( 'Displays latest courses', 'coursepress' ),
 		);
 
-		parent::__construct( 'CP_Latest_Courses', __( 'Latest Courses', 'CP_TD' ), $widget_ops );
+		parent::__construct( 'CP_Latest_Courses', __( 'Latest Courses', 'coursepress' ), $widget_ops );
 	}
 
 	public function form( $instance ) {
@@ -27,11 +27,11 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 		$button_title = $instance['button_title'];
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'CP_TD' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress' ); ?>:
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Number of Courses', 'CP_TD' ); ?>:<br/>
+		<p><label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Number of Courses', 'coursepress' ); ?>:<br/>
 			<select name="<?php echo $this->get_field_name( 'limit' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'limit' ); ?>">
 			<?php
 			for ( $i = 1; $i <= 30; $i ++ ) {
@@ -43,8 +43,8 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 			</select>
 		</label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'CP_TD' ); ?>:
-			<input class="widefat" id="<?php echo $this->get_field_id( 'button_title' ); ?>" name="<?php echo $this->get_field_name( 'button_title' ); ?>" type="text" value="<?php echo( ! isset( $button_title ) ? __( 'See All Courses', 'CP_TD' ) : esc_attr( $button_title ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'coursepress' ); ?>:
+			<input class="widefat" id="<?php echo $this->get_field_id( 'button_title' ); ?>" name="<?php echo $this->get_field_name( 'button_title' ); ?>" type="text" value="<?php echo( ! isset( $button_title ) ? __( 'See All Courses', 'coursepress' ) : esc_attr( $button_title ) ); ?>"/></label>
 		</p>
 	<?php
 	}

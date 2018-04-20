@@ -11,18 +11,18 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Forums', 'CP_TD' ),
-					'singular_name' => __( 'Forum', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Thread', 'CP_TD' ),
-					'edit_item' => __( 'Edit Thread', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Thread', 'CP_TD' ),
-					'view_item' => __( 'View Thread', 'CP_TD' ),
-					'search_items' => __( 'Search Threads', 'CP_TD' ),
-					'not_found' => __( 'No Threads Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Threads found in Trash', 'CP_TD' ),
-					'view' => __( 'View Thread', 'CP_TD' ),
+					'name' => __( 'Forums', 'coursepress' ),
+					'singular_name' => __( 'Forum', 'coursepress' ),
+					'add_new' => __( 'Create New', 'coursepress' ),
+					'add_new_item' => __( 'Create New Thread', 'coursepress' ),
+					'edit_item' => __( 'Edit Thread', 'coursepress' ),
+					'edit' => __( 'Edit', 'coursepress' ),
+					'new_item' => __( 'New Thread', 'coursepress' ),
+					'view_item' => __( 'View Thread', 'coursepress' ),
+					'search_items' => __( 'Search Threads', 'coursepress' ),
+					'not_found' => __( 'No Threads Found', 'coursepress' ),
+					'not_found_in_trash' => __( 'No Threads found in Trash', 'coursepress' ),
+					'view' => __( 'View Thread', 'coursepress' ),
 				),
 				'public' => false,
 				'show_ui' => false,
@@ -56,11 +56,11 @@ class CoursePress_Data_Discussion {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'coursepress' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		$unit_id = (int) get_post_meta( $n_id, 'unit_id', true );
-		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'CP_TD' );
+		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'coursepress' );
 		$unit_id = ! empty( $unit_id ) ? $unit_id : 'course';
 		$unit_id = 'all' === $course_id ? 'course' : $unit_id;
 
@@ -432,8 +432,8 @@ class CoursePress_Data_Discussion {
 					delete_user_meta( $user_id, 'cp_subscribe_to_' . $post_id );
 
 					// Hooked to the content to show unsubscribe message.
-					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'CP_TD' ) );
-					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'CP_TD' ), get_the_title( $post_id ) ) . '</p>';
+					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'coursepress' ) );
+					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'coursepress' ), get_the_title( $post_id ) ) . '</p>';
 
 					/**
 					 * Filter the unsubscribe message before printing.
@@ -570,11 +570,11 @@ class CoursePress_Data_Discussion {
 		);
 		$next_module_class = array( 'focus-nav-next' );
 		$labels = array(
-			'pre_text' => __( '&laquo; Previous', 'CP_TD' ),
-			'next_text' => __( 'Next &raquo;', 'CP_TD' ),
-			'next_section_title' => __( 'Proceed to the next section', 'CP_TD' ),
-			'next_module_title' => __( 'Proceed to the next module', 'CP_TD' ),
-			'next_section_text' => __( 'Next Section', 'CP_TD' ),
+			'pre_text' => __( '&laquo; Previous', 'coursepress' ),
+			'next_text' => __( 'Next &raquo;', 'coursepress' ),
+			'next_section_title' => __( 'Proceed to the next section', 'coursepress' ),
+			'next_module_title' => __( 'Proceed to the next module', 'coursepress' ),
+			'next_section_text' => __( 'Next Section', 'coursepress' ),
 		);
 		extract( $labels );
 
@@ -618,7 +618,7 @@ class CoursePress_Data_Discussion {
 		$json_data['action'] = $action;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Discussion Update: No action.', 'CP_TD' );
+			$json_data['message'] = __( 'Discussion Update: No action.', 'coursepress' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -651,10 +651,10 @@ class CoursePress_Data_Discussion {
 						$json_data['state'] = $data->data->state;
 						$success = true;
 					} else {
-						$json_data['message'] = __( 'Discussion update failed: post type missmatch.', 'CP_TD' );
+						$json_data['message'] = __( 'Discussion update failed: post type missmatch.', 'coursepress' );
 					}
 				} else {
-					$json_data['message'] = __( 'Discussion update failed: wrong nounce.', 'CP_TD' );
+					$json_data['message'] = __( 'Discussion update failed: wrong nounce.', 'coursepress' );
 				}
 				break;
 

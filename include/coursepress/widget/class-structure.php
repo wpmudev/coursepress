@@ -13,10 +13,10 @@ class CoursePress_Widget_Structure extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'cp_course_strucutre_widget',
-			'description' => __( 'Displays a selected course structure', 'CP_TD' ),
+			'description' => __( 'Displays a selected course structure', 'coursepress' ),
 		);
 
-		parent::__construct( 'CP_Course_Structure', __( 'Course Structure', 'CP_TD' ), $widget_ops );
+		parent::__construct( 'CP_Course_Structure', __( 'Course Structure', 'coursepress' ), $widget_ops );
 	}
 
 	public function form( $instance ) {
@@ -32,13 +32,13 @@ class CoursePress_Widget_Structure extends WP_Widget {
 
 		$courses = get_posts( $args );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'CP_TD' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress' ); ?>:
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'CP_TD' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'coursepress' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'course' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'course' ); ?>">
-					<option value="false" <?php selected( $selected_course, 'false', true ); ?>><?php _e( '- current -', 'CP_TD' ); ?></option>
+					<option value="false" <?php selected( $selected_course, 'false', true ); ?>><?php _e( '- current -', 'coursepress' ); ?></option>
 					<?php
 					foreach ( $courses as $course ) {
 						?>

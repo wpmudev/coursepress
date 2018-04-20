@@ -17,8 +17,8 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Comments', 'CP_TD' ),
-			'menu_title' => __( 'Comments', 'CP_TD' ),
+			'title' => __( 'CoursePress Comments', 'coursepress' ),
+			'menu_title' => __( 'Comments', 'coursepress' ),
 		);
 	}
 
@@ -73,7 +73,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Controller_Menu {
 			default:
 				$this->comments_list = new CoursePress_Admin_Table_Comments;
 				$this->comments_list->prepare_items();
-				add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_comments_per_page', 'label' => __( 'Number of comments per page:', 'CP_TD' ) ) );
+				add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_comments_per_page', 'label' => __( 'Number of comments per page:', 'coursepress' ) ) );
 			break;
 		}
 	}

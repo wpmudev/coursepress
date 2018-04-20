@@ -13,8 +13,8 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Export', 'CP_TD' ),
-			'menu_title' => __( 'Export', 'CP_TD' ),
+			'title' => __( 'CoursePress Export', 'coursepress' ),
+			'menu_title' => __( 'Export', 'coursepress' ),
 		);
 	}
 

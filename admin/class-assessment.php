@@ -14,8 +14,8 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Assessments', 'CP_TD' ),
-			'menu_title' => __( 'Assessments', 'CP_TD' ),
+			'title' => __( 'CoursePress Assessments', 'coursepress' ),
+			'menu_title' => __( 'Assessments', 'coursepress' ),
 		);
 	}
 
@@ -38,19 +38,19 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$this->localize_array['courseinstructor_id'] = get_current_user_id();
 		$this->localize_array['instructor_name'] = CoursePress_Helper_Utility::get_user_name( get_current_user_id() );
 		$this->localize_array['assessment_labels'] = array(
-			'pass' => __( 'Pass', 'CP_TD' ),
-			'fail' => __( 'Fail', 'CP_TD' ),
-			'add_feedback' => __( 'Add Feedback', 'CP_TD' ),
-			'edit_feedback' => __( 'Edit Feedback', 'CP_TD' ),
-			'cancel_feedback' => __( 'Cancel', 'CP_TD' ),
-			'success' => __( 'Success', 'CP_TD' ),
-			'error' => __( 'Unable to save feedback!', 'CP_TD' ),
-			'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'CP_TD' ),
-			'minimum_help' => __( 'You may change this minimum grade from course setting.', 'CP_TD' ),
-			'submit_with_feedback' => __( 'Submit grade with feedback', 'CP_TD' ),
-			'submit_no_feedback' => __( 'Submit grade without feedback', 'CP_TD' ),
-			'edit_with_feedback' => __( 'Edit grade with feedback', 'CP_TD' ),
-			'edit_no_feedback' => __( 'Edit grade without feedback', 'CP_TD' ),
+			'pass' => __( 'Pass', 'coursepress' ),
+			'fail' => __( 'Fail', 'coursepress' ),
+			'add_feedback' => __( 'Add Feedback', 'coursepress' ),
+			'edit_feedback' => __( 'Edit Feedback', 'coursepress' ),
+			'cancel_feedback' => __( 'Cancel', 'coursepress' ),
+			'success' => __( 'Success', 'coursepress' ),
+			'error' => __( 'Unable to save feedback!', 'coursepress' ),
+			'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'coursepress' ),
+			'minimum_help' => __( 'You may change this minimum grade from course setting.', 'coursepress' ),
+			'submit_with_feedback' => __( 'Submit grade with feedback', 'coursepress' ),
+			'submit_no_feedback' => __( 'Submit grade without feedback', 'coursepress' ),
+			'edit_with_feedback' => __( 'Edit grade with feedback', 'coursepress' ),
+			'edit_no_feedback' => __( 'Edit grade without feedback', 'coursepress' ),
 		);
 
 		// We will not need media buttons and we only need teeny editor for our feedback
@@ -730,27 +730,27 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 					$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload', 'input-form' );
 
 					if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
-						$no_feedback_button_label = __( 'Submit Grade without Feedback', 'CP_TD' );
-						$with_feedback_button_label = __( 'Submit Grade with Feedback', 'CP_TD' );
-						$pass_label = sprintf( __( 'The minimum grade to pass: %s', 'CP_TD' ), $min_grade );
+						$no_feedback_button_label = __( 'Submit Grade without Feedback', 'coursepress' );
+						$with_feedback_button_label = __( 'Submit Grade with Feedback', 'coursepress' );
+						$pass_label = sprintf( __( 'The minimum grade to pass: %s', 'coursepress' ), $min_grade );
 						$pass_label .= '<br />';
-						$pass_label .= __( 'You can change this minimum score from course settings.', 'CP_TD' );
-						$module_status = $is_pass ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' );
+						$pass_label .= __( 'You can change this minimum score from course settings.', 'coursepress' );
+						$module_status = $is_pass ? __( 'Pass', 'coursepress' ) : __( 'Fail', 'coursepress' );
 
 						if ( false === $is_pass && ( empty( $graded_by ) || 'auto' === $graded_by ) ) {
-							$module_status = __( 'Pending', 'CP_TD' );
+							$module_status = __( 'Pending', 'coursepress' );
 						}
 
 						if ( ! empty( $graded_by ) && 'auto' != $graded_by ) {
-							$no_feedback_button_label = __( 'Edit Grade without Feedback', 'CP_TD' );
-							$with_feedback_button_label = __( 'Edit Grade with Feedback', 'CP_TD' );
+							$no_feedback_button_label = __( 'Edit Grade without Feedback', 'coursepress' );
+							$with_feedback_button_label = __( 'Edit Grade with Feedback', 'coursepress' );
 						}
 
 						$page_content .= '<div class="cp-grade-editor">
                                     <div class="cp-right cp-assessment-div">
                                         <div>
                                             <div class="cp-module-grade-info">
-                                                <label class="cp-assess-label">' . __( 'Assessment Result: ', 'CP_TD' ) . '</label>
+                                                <label class="cp-assess-label">' . __( 'Assessment Result: ', 'coursepress' ) . '</label>
                                                 <span class="cp-current-grade">'. $grade . '%</span>
                                                 <span class="cp-check ' . $pass_class . '">' . $module_status . '</span>
                                             </div>
@@ -761,16 +761,16 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
                                     <textarea class="cp_feedback_content" style="display:none;">'. esc_textarea( $feedback_text ) . '</textarea>
                                     <div class="cp-grade-editor-box" style="display:none;">
                                         <div class="coursepress-tooltip cp-right cp-edit-grade-box">
-                                            <label class="cp-assess-label">'. __( 'Grade', 'CP_TD' ) . '</label>
+                                            <label class="cp-assess-label">'. __( 'Grade', 'coursepress' ) . '</label>
                                             <input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
-                                            <button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'CP_TD' ) . '</button>
-                                            <button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'CP_TD' ) . '</button>
-                                            <button type="button" class="button cp-cancel">' . __( 'Cancel', 'CP_TD' ) . '</button>
+                                            <button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'coursepress' ) . '</button>
+                                            <button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'coursepress' ) . '</button>
+                                            <button type="button" class="button cp-cancel">' . __( 'Cancel', 'coursepress' ) . '</button>
                                             <p class="description">' . $pass_label . '</p>
                                         </div>
                                         <div class="cp-feedback-editor">
-                                            <label class="cp-feedback-title">' . __( 'Feedback', 'CP_TD' ) . '</label>
-                                            <p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'CP_TD' ) . '</p>
+                                            <label class="cp-feedback-title">' . __( 'Feedback', 'coursepress' ) . '</label>
+                                            <p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'coursepress' ) . '</p>
                                         </div>
                                     </div>
                                 </div>
@@ -798,13 +798,13 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 								);
 								$action_url .= '&view_answer#unit-' . $unit_id . '-module-' . $module_id;
 								$page_content .= '<form method="post" action="' . $action_url . '" enctype="multipart/form-data" class="has-disabled">';
-								$page_content .= sprintf( '<label class="cp-assess-label">%s</label>', __( 'Upload File', 'CP_TD' ) );
+								$page_content .= sprintf( '<label class="cp-assess-label">%s</label>', __( 'Upload File', 'coursepress' ) );
 								$page_content .= '<input type="file" name="module-' . $module_id .'" class="input-key" />';
 								$page_content .= '<input type="hidden" name="module_id" value="' . $module_id . '" />';
 								$page_content .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
 								$page_content .= '<input type="hidden" name="student_id" value="' . $student_id . '" />';
 								$page_content .= '<input type="hidden" name="unit_id" value="' . $unit_id . '" />';
-								$page_content .= '<input type="submit" class="button-primary disabled" value="' . __( 'Submit', 'CP_TD' ) . '" />';
+								$page_content .= '<input type="submit" class="button-primary disabled" value="' . __( 'Submit', 'coursepress' ) . '" />';
 								$page_content .= '</form>';
 							}
 
@@ -813,16 +813,16 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							if ( in_array( $module_type, $excluded_modules ) ) {
 								$page_content .= '<div class="cp-right cp-assessment-div">
                                             <div class="cp-module-grade-info">
-                                                <label class="cp-assess-label">' . __( 'Non-gradable', 'CP_TD' ) . '</label>
+                                                <label class="cp-assess-label">' . __( 'Non-gradable', 'coursepress' ) . '</label>
                                             </div>
                                         </div>';
 							} else {
 								$page_content .= '<div class="cp-right cp-assessment-div">
                                                 <div>
                                                     <div class="cp-module-grade-info">
-                                                        <label class="cp-assess-label">' . __( 'Module Grade: ', 'CP_TD' ) . '</label>
+                                                        <label class="cp-assess-label">' . __( 'Module Grade: ', 'coursepress' ) . '</label>
                                                         <span class="cp-current-grade">'. $grade . '%</span>
-                                                        <span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '</span>
+                                                        <span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'coursepress' ) : __( 'Fail', 'coursepress' ) ) . '</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -958,17 +958,17 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$page_content .= '</div>';
 					}
 					if ( 0 === count( $response ) ) {
-						$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'CP_TD' ) );
+						$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'coursepress' ) );
 					} else {
 						if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
 
 							$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 
 							$page_content .= '<div class="cp-instructor-feedback" style="display: '. ( ! empty( $feedback ) ? 'block' : 'none' ) . '">
-                                        <h4>' . __( 'Instructor Feedback', 'CP_TD' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'CP_TD' ) . ']</span></h4>
+                                        <h4>' . __( 'Instructor Feedback', 'coursepress' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'coursepress' ) . ']</span></h4>
                                     ';
 							$page_content .= sprintf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
-							$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'CP_TD' ) );
+							$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'coursepress' ) );
 							$page_content .= '</div>';
 						}
 					}
@@ -993,7 +993,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		}
 
 		if ( empty( $content ) ) {
-			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'CP_TD' ) );
+			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'coursepress' ) );
 		}
 
 		$content .= implode( ' ', $hidden_fields );

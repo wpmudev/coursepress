@@ -112,7 +112,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 		$success = false;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Enrolment: No action.', 'CP_TD' );
+			$json_data['message'] = __( 'Enrolment: No action.', 'coursepress' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -319,7 +319,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 						$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
 						$the_course['post_author'] = get_current_user_id();
 						$the_course['comment_count'] = 0;
-						$the_course['post_title'] = $the_course['post_title'] . ' ' . __( 'Copy', 'CP_TD' );
+						$the_course['post_title'] = $the_course['post_title'] . ' ' . __( 'Copy', 'coursepress' );
 						$the_course['post_status'] = 'draft';
 						unset( $the_course['ID'] );
 						unset( $the_course['post_date'] );
@@ -418,7 +418,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				if ( wp_verify_nonce( $data->data->nonce, 'coursepress_enrollment_action_signup' ) ) {
 					$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
 				} else {
-					$json_data['message'] = __( 'Enrolment: Invalid request. Please try reloading the page.', 'CP_TD' );
+					$json_data['message'] = __( 'Enrolment: Invalid request. Please try reloading the page.', 'coursepress' );
 					wp_send_json_error( $json_data );
 					return;
 				}
@@ -447,15 +447,15 @@ class CoursePress_View_Front_EnrollmentPopup {
 				 * check user name
 				 */
 				if ( empty( $username ) ) {
-					$signup_errors[] = __( 'Username can not be empty.', 'CP_TD' );
+					$signup_errors[] = __( 'Username can not be empty.', 'coursepress' );
 					$registration_data_are_valid = false;
 				} elseif ( ! validate_username( $username ) ) {
-					$signup_errors[] = __( 'Invalid username. Please choose another one.', 'CP_TD' );
+					$signup_errors[] = __( 'Invalid username. Please choose another one.', 'coursepress' );
 					$registration_data_are_valid = false;
 				} else {
 					$user_id = username_exists( $username );
 					if ( ! empty( $user_id ) ) {
-						$signup_errors[] = __( 'Username already exists. Please choose another one.', 'CP_TD' );
+						$signup_errors[] = __( 'Username already exists. Please choose another one.', 'coursepress' );
 						$registration_data_are_valid = false;
 					}
 				}
@@ -464,12 +464,12 @@ class CoursePress_View_Front_EnrollmentPopup {
 				 * check email
 				 */
 				if ( ! is_email( $email ) ) {
-					$signup_errors[] = __( 'E-mail address is not valid.', 'CP_TD' );
+					$signup_errors[] = __( 'E-mail address is not valid.', 'coursepress' );
 					$registration_data_are_valid = false;
 				} else {
 					$email_exists = email_exists( $email );
 					if ( $email_exists ) {
-						$signup_errors[] = __( 'E-mail address already used.', 'CP_TD' );
+						$signup_errors[] = __( 'E-mail address already used.', 'coursepress' );
 						$registration_data_are_valid = false;
 					}
 				}
@@ -544,7 +544,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;
 				} else {
-					$json_data['error_message'] = __( 'Could not enroll at this time.', 'CP_TD' );
+					$json_data['error_message'] = __( 'Could not enroll at this time.', 'coursepress' );
 					$json_data['success'] = false;
 				}
 
@@ -561,7 +561,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 				if ( $course_passcode != $passcode ) {
 					$json_data['success'] = false;
-					$json_data['message'] = __( 'Invalid PASSCODE!', 'CP_TD' );
+					$json_data['message'] = __( 'Invalid PASSCODE!', 'coursepress' );
 				} else {
 					CoursePress_Data_Course::enroll_student( $student_id, $course_id );
 					$json_data['success'] = true;

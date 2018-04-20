@@ -45,7 +45,7 @@ class CoursePress_Helper_Upgrade {
 			/**
 			 * Message: migration is ended.
 			 */
-			$message = __( 'Migration was done. There is no more students to migrate.', 'CP_TD' );
+			$message = __( 'Migration was done. There is no more students to migrate.', 'coursepress' );
 			add_user_meta( $user_id, self::$message_meta_name, $message, false );
 			return;
 		}
@@ -58,7 +58,7 @@ class CoursePress_Helper_Upgrade {
 				'Found %d course to migrate. Course id: %s.',
 				'Found %d courses to migrate. Course ids: %s.',
 				$count,
-				'CP_TD'
+				'coursepress'
 			),
 			$count,
 			implode( ', ', $ids )
@@ -75,7 +75,7 @@ class CoursePress_Helper_Upgrade {
 		$message = '';
 		if ( ! empty( $results ) ) {
 			$message = sprintf(
-				__( 'Update students (%d) data in course: %d.', 'CP_TD' ),
+				__( 'Update students (%d) data in course: %d.', 'coursepress' ),
 				count( $results ),
 				$course_id
 			);
@@ -84,7 +84,7 @@ class CoursePress_Helper_Upgrade {
 			}
 		} else {
 			$message = sprintf(
-				__( 'We tried to update the students data in course: %d, but there were no students enrolled to this course.', 'CP_TD' ),
+				__( 'We tried to update the students data in course: %d, but there were no students enrolled to this course.', 'coursepress' ),
 				$course_id
 			);
 		}
@@ -103,7 +103,7 @@ class CoursePress_Helper_Upgrade {
 					'There is %d course to migrate. Course id: %s.',
 					'There are %d courses to migrate. Course ids: %s.',
 					$count,
-					'CP_TD'
+					'coursepress'
 				),
 				$count,
 				implode( ', ', $ids )
@@ -220,7 +220,7 @@ class CoursePress_Helper_Upgrade {
 	public static function course_upgrade( $course ) {
 		$already_upgraded = get_post_meta( $course->ID, '_cp_updated_to_version_2', true );
 		if ( $already_upgraded ) {
-			return __( 'This course was already updated.', 'CP_TD' );
+			return __( 'This course was already updated.', 'coursepress' );
 		}
 		$updates = array(
 			'begin',
@@ -304,7 +304,7 @@ class CoursePress_Helper_Upgrade {
 			self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 		}
 		$title = sprintf( '<b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
-		$content = sprintf( __( 'Course %s was successful updated.', 'CP_TD' ), $title );
+		$content = sprintf( __( 'Course %s was successful updated.', 'coursepress' ), $title );
 		CoursePress_Helper_Utility::add_meta_unique( $course->ID, '_cp_updated_to_version_2', true );
 		return $content;
 	}
@@ -325,7 +325,7 @@ class CoursePress_Helper_Upgrade {
 			|| ! isset( $_POST['course_id'] )
 			|| ! isset( $_POST['section'] )
 		) {
-			$message = __( 'Course update fail: wrong data!', 'CP_TD' );
+			$message = __( 'Course update fail: wrong data!', 'coursepress' );
 			self::print_json_and_die( $message );
 		}
 		/**
@@ -334,7 +334,7 @@ class CoursePress_Helper_Upgrade {
 		$user_id = intval( $_POST['user_id'] );
 		$nonce_name = self::get_update_nonce( $user_id );
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_name ) ) {
-			$message = __( 'Course update fail: security check!', 'CP_TD' );
+			$message = __( 'Course update fail: security check!', 'coursepress' );
 			self::print_json_and_die( $message );
 		}
 		/**
@@ -342,7 +342,7 @@ class CoursePress_Helper_Upgrade {
 		 */
 		$course_id = intval( $_POST['course_id'] );
 		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
-			$message = __( 'Course update fail: wrong course ID!', 'CP_TD' );
+			$message = __( 'Course update fail: wrong course ID!', 'coursepress' );
 			self::print_json_and_die( $message );
 		}
 		/**
@@ -350,7 +350,7 @@ class CoursePress_Helper_Upgrade {
 		 */
 		$course = get_post( $course_id );
 		if ( empty( $course ) ) {
-			$message = __( 'Course update fail: wrong course!', 'CP_TD' );
+			$message = __( 'Course update fail: wrong course!', 'coursepress' );
 			self::print_json_and_die( $message );
 		}
 		/**
@@ -358,14 +358,14 @@ class CoursePress_Helper_Upgrade {
 		 */
 		$success = self::course_upgrade( $course );
 		if ( is_string( $success ) ) {
-			$message = sprintf( __( 'Course update fail: %s!', 'CP_TD' ), $success );
+			$message = sprintf( __( 'Course update fail: %s!', 'coursepress' ), $success );
 			self::print_json_and_die( $message );
 		}
 		/**
 		 * return data
 		 */
 		$title = sprintf( '<b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
-		$message = sprintf( __( 'Course %s was successful updated.', 'CP_TD' ), $title );
+		$message = sprintf( __( 'Course %s was successful updated.', 'coursepress' ), $title );
 		self::print_json_and_die( $message, true );
 	}
 
@@ -392,7 +392,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_details_video( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course video settings do not need to be updated.', 'CP_TD' );
+			return __( 'Course video settings do not need to be updated.', 'coursepress' );
 		}
 		$fields = array(
 			array(
@@ -403,7 +403,7 @@ class CoursePress_Helper_Upgrade {
 		);
 		self::update_array( $course->ID, $fields );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Course video settings have been updated.', 'CP_TD' );
+		return __( 'Course video settings have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -412,7 +412,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_details_structure( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course structure settings do not need to be updated.', 'CP_TD' );
+			return __( 'Course structure settings do not need to be updated.', 'coursepress' );
 		}
 		$fields = array(
 			array(
@@ -522,7 +522,7 @@ class CoursePress_Helper_Upgrade {
 		}
 		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Course structure settings have been updated.', 'CP_TD' );
+		return __( 'Course structure settings have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -531,7 +531,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_dates( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course Dates settings do not need to be updated.', 'CP_TD' );
+			return __( 'Course Dates settings do not need to be updated.', 'coursepress' );
 		}
 		$dates = array(
 			array(
@@ -583,7 +583,7 @@ class CoursePress_Helper_Upgrade {
 		);
 		self::update_array( $course->ID, $dates );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Course Dates settings have been updated.', 'CP_TD' );
+		return __( 'Course Dates settings have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -592,7 +592,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_instructors( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Instructors settings do not need to be updated.', 'CP_TD' );
+			return __( 'Instructors settings do not need to be updated.', 'coursepress' );
 		}
 		$fields = array(
 			array(
@@ -603,7 +603,7 @@ class CoursePress_Helper_Upgrade {
 		);
 		self::update_array( $course->ID, $fields );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Instructors settings have been updated.', 'CP_TD' );
+		return __( 'Instructors settings have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -612,7 +612,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_classes_discusion_and_workbook( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Classes, Discussion & Workbook settings do not need to be updated.', 'CP_TD' );
+			return __( 'Classes, Discussion & Workbook settings do not need to be updated.', 'coursepress' );
 		}
 		$fields = array(
 			array(
@@ -634,7 +634,7 @@ class CoursePress_Helper_Upgrade {
 		);
 		self::update_array( $course->ID, $fields );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Classes, Discussion & Workbook settings have been updated.', 'CP_TD' );
+		return __( 'Classes, Discussion & Workbook settings have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -643,7 +643,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_enrollment_and_cost( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course Enrollment & Cost settings do not need to be updated.', 'CP_TD' );
+			return __( 'Course Enrollment & Cost settings do not need to be updated.', 'coursepress' );
 		}
 		$fields = array(
 			array(
@@ -665,13 +665,13 @@ class CoursePress_Helper_Upgrade {
 		);
 		self::update_array( $course->ID, $fields );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Course Enrollment & Cost settings have been updated.', 'CP_TD' );
+		return __( 'Course Enrollment & Cost settings have been updated.', 'coursepress' );
 	}
 
 	private static function course_upgrade_student_enrolled( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course enrolled students do not need to be updated.', 'CP_TD' );
+			return __( 'Course enrolled students do not need to be updated.', 'coursepress' );
 		}
 		$meta_key = sprintf( 'enrolled_course_date_%d', $course->ID );
 		$args = array(
@@ -685,7 +685,7 @@ class CoursePress_Helper_Upgrade {
 		$user_query = new WP_User_Query( $args );
 		$ids = $user_query->get_results();
 		if ( empty( $ids ) ) {
-			return __( 'There is no enrolled students to update.', 'CP_TD' );
+			return __( 'There is no enrolled students to update.', 'coursepress' );
 		}
 		foreach ( $ids as $user_id ) {
 			$success = update_post_meta( $course->ID, 'course_enrolled_student_id', $user_id, $user_id );
@@ -696,9 +696,9 @@ class CoursePress_Helper_Upgrade {
 		}
 		$count = count( $ids );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		$message = __( 'Course Enrollment & Cost settings have been updated.', 'CP_TD' );
+		$message = __( 'Course Enrollment & Cost settings have been updated.', 'coursepress' );
 		$message .= ' ';
-		$message .= sprintf( _n( '%s student enrolled to this course.', '%s students enroled to this course.', $count, 'CP_TD' ), $count );
+		$message .= sprintf( _n( '%s student enrolled to this course.', '%s students enroled to this course.', $count, 'coursepress' ), $count );
 		return $message;
 	}
 
@@ -708,7 +708,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_student_progress( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Student Progress do not need to be updated.', 'CP_TD' );
+			return __( 'Student Progress do not need to be updated.', 'coursepress' );
 		}
 		/**
 		 * get units
@@ -985,7 +985,7 @@ class CoursePress_Helper_Upgrade {
 			CoursePress_Data_Student::update_completion_data( $student_id, $course->ID, $student_progress );
 		}
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Students progress have been updated.', 'CP_TD' );
+		return __( 'Students progress have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -1032,7 +1032,7 @@ class CoursePress_Helper_Upgrade {
 	public static function course_upgrade_module_page( $course ) {
 		$units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
 		if ( empty( $units ) ) {
-			return __( 'Page breaks do not need to be updated.', 'CP_TD' );
+			return __( 'Page breaks do not need to be updated.', 'coursepress' );
 		}
 		foreach ( $units as $unit_id ) {
 			$split_to_pages = get_post_meta( $unit_id, '_cp_split_to_pages', true );
@@ -1061,7 +1061,7 @@ class CoursePress_Helper_Upgrade {
 				CoursePress_Helper_Utility::add_meta_unique( $unit_id, '_cp_split_to_pages', 'done' );
 			}
 		}
-		return __( 'Page breaks have been updated.', 'CP_TD' );
+		return __( 'Page breaks have been updated.', 'coursepress' );
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_completion( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Course Completion do not need to be updated.', 'CP_TD' );
+			return __( 'Course Completion do not need to be updated.', 'coursepress' );
 		}
 		$settings = CoursePress_Data_Course::get_setting( $course->ID, true );
 		CoursePress_Data_Course::set_setting( $settings, 'minimum_grade_required', 100 );
@@ -1083,7 +1083,7 @@ class CoursePress_Helper_Upgrade {
 		}
 		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return  __( 'Added content of default Course Completion pages.', 'CP_TD' );
+		return  __( 'Added content of default Course Completion pages.', 'coursepress' );
 	}
 
 	/**
@@ -1092,7 +1092,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_unit_page_title( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Units pages do not need to be updated.', 'CP_TD' );
+			return __( 'Units pages do not need to be updated.', 'coursepress' );
 		}
 		$units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
 		foreach ( $units as $unit_id ) {
@@ -1110,7 +1110,7 @@ class CoursePress_Helper_Upgrade {
 			CoursePress_Helper_Utility::add_meta_unique( $unit_id, 'page_title', $new );
 		}
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-		return __( 'Section titles (former page titles) inside units converted.', 'CP_TD' );
+		return __( 'Section titles (former page titles) inside units converted.', 'coursepress' );
 	}
 
 	/**

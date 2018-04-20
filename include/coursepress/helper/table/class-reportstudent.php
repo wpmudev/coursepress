@@ -16,8 +16,8 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct( array(
-			'singular' => __( 'Student', 'CP_TD' ),
-			'plural' => __( 'Students', 'CP_TD' ),
+			'singular' => __( 'Student', 'coursepress' ),
+			'plural' => __( 'Students', 'coursepress' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -36,13 +36,13 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', 'CP_TD' ),
-			'display_name' => __( 'Username', 'CP_TD' ),
-			'first_name' => __( 'First Name', 'CP_TD' ),
-			'last_name' => __( 'Last Name', 'CP_TD' ),
-			'responses' => __( 'Responses', 'CP_TD' ) . '<span style="display:inline-block;" class="help-tooltip">' . __( 'Assessable items only.', 'CP_TD' ) . '</span>',
-			'average' => __( 'Average', 'CP_TD' ),
-			'report' => __( 'Report', 'CP_TD' ),
+			'ID' => __( 'ID', 'coursepress' ),
+			'display_name' => __( 'Username', 'coursepress' ),
+			'first_name' => __( 'First Name', 'coursepress' ),
+			'last_name' => __( 'Last Name', 'coursepress' ),
+			'responses' => __( 'Responses', 'coursepress' ) . '<span style="display:inline-block;" class="help-tooltip">' . __( 'Assessable items only.', 'coursepress' ) . '</span>',
+			'average' => __( 'Average', 'coursepress' ),
+			'report' => __( 'Report', 'coursepress' ),
 		);
 
 		return $columns;
@@ -113,7 +113,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 				esc_attr( $this->course_id )
 			);
 		}
-		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
+		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'coursepress' ) );
 	}
 
 	public function prepare_items() {
@@ -166,6 +166,6 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'There are no students enrolled in this course.', 'CP_TD' );
+		_e( 'There are no students enrolled in this course.', 'coursepress' );
 	}
 }

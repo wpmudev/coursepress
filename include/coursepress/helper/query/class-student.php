@@ -114,7 +114,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			) );
 
 			if ( $this->paging_text ) {
-				$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'CP_TD' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
+				$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'coursepress' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
 				);
 			}
 		}
@@ -133,7 +133,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		$pagination->target_url( $target_url );
 		$pagination->parameter_name( 'page_num' );
 		$pagination->current_page( $this->page_num );
-		$pagination->title( __( 'student', 'CP_TD' ), __( 'students', 'CP_TD' ) );
+		$pagination->title( __( 'student', 'coursepress' ), __( 'students', 'coursepress' ) );
 
 		$pagination->show();
 	}

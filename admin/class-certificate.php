@@ -25,8 +25,8 @@ class CoursePress_Admin_Certificate extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Certificates', 'CP_TD' ),
-			'menu_title' => __( 'Certificates', 'CP_TD' ),
+			'title' => __( 'CoursePress Certificates', 'coursepress' ),
+			'menu_title' => __( 'Certificates', 'coursepress' ),
 		);
 	}
 
@@ -38,7 +38,7 @@ class CoursePress_Admin_Certificate extends CoursePress_Admin_Controller_Menu {
 				'show_ui' => true,
 				'capability_type' => 'certificate',
 				'map_meta_cap' => null,
-				'label' => __( 'Certificates', 'CP_TD' ),
+				'label' => __( 'Certificates', 'coursepress' ),
 			)
 		);
 	}

@@ -20,19 +20,19 @@ class CoursePress_Data_Course {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => _x( CoursePress::$name, 'post type & admin menu', 'CP_TD' ),
-					'singular_name' => __( 'Course', 'CP_TD' ),
-					'add_new' => __( 'New Course', 'CP_TD' ),
-					'add_new_item' => __( 'New Course', 'CP_TD' ),
-					'edit_item' => __( 'Edit Course', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Course', 'CP_TD' ),
-					'view_item' => __( 'View Course', 'CP_TD' ),
-					'search_items' => __( 'Search Courses', 'CP_TD' ),
-					'not_found' => __( 'No Courses Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Courses found in Trash', 'CP_TD' ),
-					'view' => __( 'View Course', 'CP_TD' ),
-					'all_items' => __( 'Courses', 'CP_TD' ),
+					'name' => _x( CoursePress::$name, 'post type & admin menu', 'coursepress' ),
+					'singular_name' => __( 'Course', 'coursepress' ),
+					'add_new' => __( 'New Course', 'coursepress' ),
+					'add_new_item' => __( 'New Course', 'coursepress' ),
+					'edit_item' => __( 'Edit Course', 'coursepress' ),
+					'edit' => __( 'Edit', 'coursepress' ),
+					'new_item' => __( 'New Course', 'coursepress' ),
+					'view_item' => __( 'View Course', 'coursepress' ),
+					'search_items' => __( 'Search Courses', 'coursepress' ),
+					'not_found' => __( 'No Courses Found', 'coursepress' ),
+					'not_found_in_trash' => __( 'No Courses found in Trash', 'coursepress' ),
+					'view' => __( 'View Course', 'coursepress' ),
+					'all_items' => __( 'Courses', 'coursepress' ),
 				),
 				'public' => true,
 				'exclude_from_search' => false,
@@ -128,15 +128,15 @@ class CoursePress_Data_Course {
 				'coursepress_register_course_category',
 				array(
 					'labels' => array(
-						'name' => __( 'Categories', 'CP_TD' ),
-						'singular_name' => __( 'Category', 'CP_TD' ),
-						'search_items' => __( 'Search Course Categories', 'CP_TD' ),
-						'all_items' => __( 'All Course Categories', 'CP_TD' ),
-						'edit_item' => __( 'Edit Course Categories', 'CP_TD' ),
-						'update_item' => __( 'Update Course Category', 'CP_TD' ),
-						'add_new_item' => __( 'Add New Course Category', 'CP_TD' ),
-						'new_item_name' => __( 'New Course Category Name', 'CP_TD' ),
-						'menu_name' => __( 'Categories', 'CP_TD' ),
+						'name' => __( 'Categories', 'coursepress' ),
+						'singular_name' => __( 'Category', 'coursepress' ),
+						'search_items' => __( 'Search Course Categories', 'coursepress' ),
+						'all_items' => __( 'All Course Categories', 'coursepress' ),
+						'edit_item' => __( 'Edit Course Categories', 'coursepress' ),
+						'update_item' => __( 'Update Course Category', 'coursepress' ),
+						'add_new_item' => __( 'Add New Course Category', 'coursepress' ),
+						'new_item_name' => __( 'New Course Category Name', 'coursepress' ),
+						'menu_name' => __( 'Categories', 'coursepress' ),
 					),
 					'hierarchical' => true,
 					'sort' => true,
@@ -171,19 +171,19 @@ class CoursePress_Data_Course {
 		return apply_filters(
 			'coursepress_course_messages',
 			array(
-				'ca' => __( 'New Course added successfully!', 'CP_TD' ),
-				'cu' => __( 'Course updated successfully.', 'CP_TD' ),
-				'usc' => __( 'Unit status changed successfully', 'CP_TD' ),
-				'ud' => __( 'Unit deleted successfully', 'CP_TD' ),
-				'ua' => __( 'New Unit added successfully!', 'CP_TD' ),
-				'uu' => __( 'Unit updated successfully.', 'CP_TD' ),
-				'as' => __( 'Student added to the class successfully.', 'CP_TD' ),
-				'ac' => __( 'New class has been added successfully.', 'CP_TD' ),
-				'dc' => __( 'Selected class has been deleted successfully.', 'CP_TD' ),
-				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'CP_TD' ),
-				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'CP_TD' ),
-				'is' => __( 'Invitation sent sucessfully.', 'CP_TD' ),
-				'ia' => __( 'Successfully added as instructor.', 'CP_TD' ),
+				'ca' => __( 'New Course added successfully!', 'coursepress' ),
+				'cu' => __( 'Course updated successfully.', 'coursepress' ),
+				'usc' => __( 'Unit status changed successfully', 'coursepress' ),
+				'ud' => __( 'Unit deleted successfully', 'coursepress' ),
+				'ua' => __( 'New Unit added successfully!', 'coursepress' ),
+				'uu' => __( 'Unit updated successfully.', 'coursepress' ),
+				'as' => __( 'Student added to the class successfully.', 'coursepress' ),
+				'ac' => __( 'New class has been added successfully.', 'coursepress' ),
+				'dc' => __( 'Selected class has been deleted successfully.', 'coursepress' ),
+				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'coursepress' ),
+				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'coursepress' ),
+				'is' => __( 'Invitation sent sucessfully.', 'coursepress' ),
+				'ia' => __( 'Successfully added as instructor.', 'coursepress' ),
 			),
 			$key
 		);
@@ -506,7 +506,7 @@ class CoursePress_Data_Course {
 			'setup_step_5' => '',
 			'setup_step_6' => '',
 			'setup_step_7' => '',
-			'course_language' => __( 'English', 'CP_TD' ),
+			'course_language' => __( 'English', 'coursepress' ),
 			'course_view' => 'normal',
 			'structure_level' => 'unit',
 			'structure_show_empty_units' => false,
@@ -527,12 +527,12 @@ class CoursePress_Data_Course {
 			'enrollment_type' => CoursePress_Data_Course::get_enrollment_type_default( $course_id ),
 			'payment_paid_course' => false,
 			'enrollment_passcode' => '',
-			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
+			'pre_completion_title' => __( 'Almost there!', 'coursepress' ),
 			'pre_completion_content' => '',
 			'minimum_grade_required' => 100,
-			'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
+			'course_completion_title' => __( 'Congratulations, You Passed!', 'coursepress' ),
 			'course_completion_content' => '',
-			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
+			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'coursepress' ),
 			'course_failed_content' => '',
 			'basic_certificate_layout' => CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content(),
 			'basic_certificate' => false,
@@ -2351,7 +2351,7 @@ class CoursePress_Data_Course {
 
 		$course->start_date = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) );
 		$course->end_date = $duration > 0 ? date_i18n( $date_format, CoursePress_Data_Course::strtotime( $end_date ) ) : '--';
-		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'coursepress' ), $duration ) : __( 'Open-ended', 'coursepress' );
 
 		// Links
 		$course->permalink = self::get_course_url( $course_id );
@@ -2416,7 +2416,7 @@ class CoursePress_Data_Course {
 		$the_course['comment_count'] = 0;
 		if ( apply_filters( 'coursepress_course_duplicated_add_copy', true ) ) {
 			$the_course['post_title'] = sprintf(
-				_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'CP_TD' ),
+				_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'coursepress' ),
 				$the_course['post_title']
 			);
 		}
@@ -2787,7 +2787,7 @@ class CoursePress_Data_Course {
 			$start_date = self::strtotime( $start_date );
 
 			if ( $start_date > $now ) {
-				$status = sprintf( __( 'This course will open on %s', 'CP_TD' ), date_i18n( $date_format, $start_date ) );
+				$status = sprintf( __( 'This course will open on %s', 'coursepress' ), date_i18n( $date_format, $start_date ) );
 			} else {
 				// Check if it has end date
 				$is_open_ended = self::get_setting( $course_id, 'course_open_ended' );
@@ -2798,7 +2798,7 @@ class CoursePress_Data_Course {
 					$end_date = self::strtotime( $end_date );
 
 					if ( $end_date < $now ) {
-						$status = __( 'This course is already closed.', 'CP_TD' );
+						$status = __( 'This course is already closed.', 'coursepress' );
 					}
 				}
 			}
@@ -2856,7 +2856,7 @@ class CoursePress_Data_Course {
 					$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
 
 					if ( ! empty( $unit_availability_date ) ) {
-						$error_message = sprintf( __( 'This unit will be available on %s', 'CP_TD' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
+						$error_message = sprintf( __( 'This unit will be available on %s', 'coursepress' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
 					} else {
 						if ( $previous_unit_id > 0 ) {
 							$shortcode = sprintf( '[module_status unit_id="%s" previous_unit="%s"]', $unit_id, $previous_unit_id );
@@ -2881,7 +2881,7 @@ class CoursePress_Data_Course {
 							$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 							if ( ! $is_done ) {
-								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
+								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'coursepress' );
 								$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 								continue;
 							}
@@ -2911,7 +2911,7 @@ class CoursePress_Data_Course {
 						$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'coursepress' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						}
@@ -2940,7 +2940,7 @@ class CoursePress_Data_Course {
 						$title = get_the_title( $_module_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'coursepress' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						} else {
@@ -2963,7 +2963,7 @@ class CoursePress_Data_Course {
 								);
 
 								if ( ! $pass && ! in_array( $module_type, $excluded_modules ) ) {
-									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
+									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'coursepress' );
 									$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 									continue;
 								}
@@ -3560,19 +3560,19 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_enrollment_types_array( $course_id = 0 ) {
 		$enrollment_types = array(
-			'manually' => __( 'Manually added only', 'CP_TD' ),
+			'manually' => __( 'Manually added only', 'coursepress' ),
 		);
 		if ( CoursePress_Helper_Utility::users_can_register() ) {
 			$enrollment_types = array_merge( $enrollment_types, array(
-				'anyone' => __( 'Any registered users', 'CP_TD' ),
-				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
+				'anyone' => __( 'Any registered users', 'coursepress' ),
+				'passcode' => __( 'Any registered users with a pass code', 'coursepress' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'coursepress' ),
 			) );
 		} else {
 			$enrollment_types = array_merge( $enrollment_types, array(
-				'registered' => __( 'Any registered users', 'CP_TD' ),
-				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
+				'registered' => __( 'Any registered users', 'coursepress' ),
+				'passcode' => __( 'Any registered users with a pass code', 'coursepress' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'coursepress' ),
 			) );
 		}
 		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
@@ -3611,20 +3611,20 @@ class CoursePress_Data_Course {
 		/**
 		 * Pre-Completion Page
 		 */
-		$defaults['pre_completion']['title'] = __( 'Almost there!', 'CP_TD' );
-		$defaults['pre_completion']['content'] = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'CP_TD' ) );
-		$defaults['pre_completion']['content'] .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'CP_TD' ) );
+		$defaults['pre_completion']['title'] = __( 'Almost there!', 'coursepress' );
+		$defaults['pre_completion']['content'] = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'coursepress' ) );
+		$defaults['pre_completion']['content'] .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'coursepress' ) );
 		/**
 		 * Course Completion Page
 		 */
-		$defaults['course_completion']['title'] = __( 'Congratulations, You Passed!', 'CP_TD' );
-		$defaults['course_completion']['content'] = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'CP_TD' ) );
+		$defaults['course_completion']['title'] = __( 'Congratulations, You Passed!', 'coursepress' );
+		$defaults['course_completion']['content'] = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'coursepress' ) );
 
 		/**
 		 * Course Fail Page
 		 */
-		$defaults['course_failed']['title'] = __( 'Sorry, you did not pass this course!', 'CP_TD' );
-		$defaults['course_failed']['content'] = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'CP_TD' );
+		$defaults['course_failed']['title'] = __( 'Sorry, you did not pass this course!', 'coursepress' );
+		$defaults['course_failed']['content'] = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'coursepress' );
 		/**
 		 * Filter for defaults values allow in easy way change all defaults values.
 		 *

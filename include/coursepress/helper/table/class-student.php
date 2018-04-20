@@ -40,9 +40,9 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 				)
 		);
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
-			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
-			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'coursepress' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'coursepress' ) ),
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'coursepress' ) ),
 		);
 
 		return $actions;
@@ -78,11 +78,11 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'username' => __( 'Username', 'CP_TD' ),
-			'name' => __( 'Name', 'CP_TD' ),
-			'registered' => __( 'Registered', 'CP_TD' ),
-			'last_activity' => __( 'Last Activity', 'CP_TD' ),
-			'courses' => __( 'Courses', 'CP_TD' ),
+			'username' => __( 'Username', 'coursepress' ),
+			'name' => __( 'Name', 'coursepress' ),
+			'registered' => __( 'Registered', 'coursepress' ),
+			'last_activity' => __( 'Last Activity', 'coursepress' ),
+			'courses' => __( 'Courses', 'coursepress' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_delete_student() ) {
@@ -117,32 +117,32 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 					$last_activity_kind = 'login';
 				}
 				if ( empty( $last_activity ) ) {
-					return sprintf( '<small>%s</small>', __( '[never]', 'CP_TD' ) );
+					return sprintf( '<small>%s</small>', __( '[never]', 'coursepress' ) );
 				}
 				$return = date_i18n( $date_format . ' ' . $time_format, CoursePress_Data_Course::strtotime( $last_activity ) );
 				$return .= '<br /><small>';
 
 				switch ( $last_activity_kind ) {
 					case 'course_module_seen':
-						$return .= __( 'Course module seen.', 'CP_TD' );
+						$return .= __( 'Course module seen.', 'coursepress' );
 					break;
 					case 'course_seen':
-						$return .= __( 'Course seen', 'CP_TD' );
+						$return .= __( 'Course seen', 'coursepress' );
 					break;
 					case 'course_unit_seen':
-						$return .= __( 'Course unit seen.', 'CP_TD' );
+						$return .= __( 'Course unit seen.', 'coursepress' );
 					break;
 					case 'enrolled':
-						$return .= __( 'User enrolled to a course.', 'CP_TD' );
+						$return .= __( 'User enrolled to a course.', 'coursepress' );
 					break;
 					case 'login':
-						$return .= __( 'User have logged in.', 'CP_TD' );
+						$return .= __( 'User have logged in.', 'coursepress' );
 					break;
 					case 'module_answered':
-						$return .= __( 'Answered a module.', 'CP_TD' );
+						$return .= __( 'Answered a module.', 'coursepress' );
 					break;
 					default:
-						$return .= __( 'Unknown student action.', 'CP_TD' );
+						$return .= __( 'Unknown student action.', 'coursepress' );
 					break;
 				}
 				$return .= '</small>';
@@ -166,7 +166,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	}
 
 	public function no_items() {
-		esc_html_e( 'No students found.', 'CP_TD' );
+		esc_html_e( 'No students found.', 'coursepress' );
 	}
 
 	public function display() {
@@ -174,12 +174,12 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		<div class="wrap">
 			<h2>
 				<?php
-				esc_html_e( 'Students', 'CP_TD' );
+				esc_html_e( 'Students', 'coursepress' );
 				if ( CoursePress_Data_Capabilities::can_create_student() ) {
 					$add_link = admin_url( 'user-new.php' );
 					?>
 					<a href="<?php echo $add_link; ?>" class="add-new-h2">
-						<?php esc_html_e( 'Add New', 'CP_TD' ); ?>
+						<?php esc_html_e( 'Add New', 'coursepress' ); ?>
 					</a>
 				<?php
 				}
@@ -188,7 +188,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 			<hr />
 			<form method="post">
 				<?php
-					$this->search_box( __( 'Search', 'CP_TD' ), 'student' );
+					$this->search_box( __( 'Search', 'coursepress' ), 'student' );
 					parent::display();
 				?>
 			</form>

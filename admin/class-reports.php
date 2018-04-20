@@ -14,8 +14,8 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Reports', 'CP_TD' ),
-			'menu_title' => __( 'Reports', 'CP_TD' ),
+			'title' => __( 'CoursePress Reports', 'coursepress' ),
+			'menu_title' => __( 'Reports', 'coursepress' ),
 		);
 	}
 
@@ -73,7 +73,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 					self::report_content( $students, $course_id, $mode );
 					exit;
 				} else {
-					self::$warning_message = __( 'Select students to generate the report!', 'CP_TD' );
+					self::$warning_message = __( 'Select students to generate the report!', 'coursepress' );
 				}
 			break;
 			case 'download_summary':
@@ -85,7 +85,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 					self::report_content_multi( $students, $course_id, $mode );
 					exit;
 				} else {
-					self::$warning_message = __( 'Select students to generate the report!', 'CP_TD' );
+					self::$warning_message = __( 'Select students to generate the report!', 'coursepress' );
 				}
 			break;
 		}
@@ -113,10 +113,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 
 		if ( 1 < count( $students ) ) {
 			$html .= '<br />';
-			$html .= sprintf( '<h2>%s</h2>', __( 'Units list', 'CP_TD' ) );
+			$html .= sprintf( '<h2>%s</h2>', __( 'Units list', 'coursepress' ) );
 			$html .= CoursePress_Data_Course::get_units_html_list( $course_id );
 			$html .= '<br />';
-			$html .= sprintf( '<h2>%s</h2>', __( 'Student list', 'CP_TD' ) );
+			$html .= sprintf( '<h2>%s</h2>', __( 'Student list', 'coursepress' ) );
 			$html .= '<ul>';
 			foreach ( $students as $student_id ) {
 				$student_name = CoursePress_Helper_Utility::get_user_name( $student_id );
@@ -190,7 +190,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 						$total += false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] : 0;
 						$grade_display = false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] . '%' : '--';
 						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$date_display = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', 'CP_TD' );
+						$date_display = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', 'coursepress' );
 						$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
 
 						$html .= '
@@ -207,7 +207,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 				if ( empty( $assessable_modules ) ) {
 					$html .= '
 							<tr style="font-style:oblique; font-size: 4mm; background-color: ' . esc_attr( $colors['item_bg'] ) . '; color: ' . esc_attr( $colors['no_items'] ) . ';">
-								<td colspan="3"><em>' . esc_html__( 'No assessable items.', 'CP_TD' ) . '</em></td>
+								<td colspan="3"><em>' . esc_html__( 'No assessable items.', 'coursepress' ) . '</em></td>
 							</tr>
 						';
 				}
@@ -222,9 +222,9 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 			}
 
 			$average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-			$average_display = ! $course_answered && ! $assessable_modules ? '' : sprintf( __( 'Average response grade: %d%%', 'CP_TD' ), $average );
+			$average_display = ! $course_answered && ! $assessable_modules ? '' : sprintf( __( 'Average response grade: %d%%', 'coursepress' ), $average );
 			$course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
-			$course_average_display = ! $assessable_modules ? __( 'No assessable items in this course.', 'CP_TD' ) : sprintf( __( 'Total Average: %d%%', 'CP_TD' ), $course_average );
+			$course_average_display = ! $assessable_modules ? __( 'No assessable items in this course.', 'coursepress' ) : sprintf( __( 'Total Average: %d%%', 'coursepress' ), $course_average );
 
 			$html .= '
 					<tfoot>
@@ -249,7 +249,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		}
 
 		$pdf_args['filename'] = sanitize_title( strtolower( str_replace( ' ', '-', $pdf_args['filename'] ) ) ).'.pdf';
-		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
+		$pdf_args['footer'] = __( 'Course Report', 'coursepress' );
 
 		if ( 'html' == $mode ) {
 			CoursePress_Helper_HTML::make( $html, $pdf_args );
@@ -289,10 +289,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 			$colors['footer']
 		);
 		$html .= '<tr>';
-		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Student', 'CP_TD' ) );
-		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Responses', 'CP_TD' ) );
-		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Average response grade', 'CP_TD' ) );
-		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Total Average', 'CP_TD' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Student', 'coursepress' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Responses', 'coursepress' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Average response grade', 'coursepress' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Total Average', 'coursepress' ) );
 		$html .= '</tr>';
 
 		$i = 0;
@@ -355,7 +355,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		$pdf_args['filename'] = $course_title . '_bulk';
 
 		$pdf_args['filename'] = sanitize_title( strtolower( str_replace( ' ', '-', $pdf_args['filename'] ) ) ).'.pdf';
-		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
+		$pdf_args['footer'] = __( 'Course Report', 'coursepress' );
 
 		if ( 'html' == $mode ) {
 			CoursePress_Helper_HTML::make( $html, $pdf_args );

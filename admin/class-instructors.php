@@ -25,8 +25,8 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 		);
 
 		return array(
-			'title' => __( 'CoursePress Instructors', 'CP_TD' ),
-			'menu_title' => __( 'Instructors', 'CP_TD' ),
+			'title' => __( 'CoursePress Instructors', 'coursepress' ),
+			'menu_title' => __( 'Instructors', 'coursepress' ),
 		);
 	}
 
@@ -36,7 +36,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			// Set up instructors table
 			$this->instructors_list = new CoursePress_Admin_Table_Instructors;
 			$this->instructors_list->prepare_items();
-			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_instructors_per_page', 'label' => __( 'Number of instructors per page', 'CP_TD' ) ) );
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_instructors_per_page', 'label' => __( 'Number of instructors per page', 'coursepress' ) ) );
 
 		} else {
 			$view = $_REQUEST['view'];

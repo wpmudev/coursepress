@@ -22,13 +22,6 @@ class CoursePress_Core {
 		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
 		if ( ! defined( 'CP_IS_CAMPUS' ) ) { define( 'CP_IS_CAMPUS', false ); }
 
-		// We speak languages!
-		load_plugin_textdomain(
-			'CP_TD', // Text domain.
-			false, // Deprecated. Set to false.
-			CoursePress::$dir . '/language'
-		);
-
 		// Initialize Capabilities.
 		CoursePress_Data_Capabilities::init();
 

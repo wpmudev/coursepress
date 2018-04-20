@@ -26,7 +26,7 @@
 		<input type="hidden" name="course_id" value="<?php echo $course_id; ?>"/>
 		<input type="hidden" name="redirect_url" value="<?php echo esc_url( $redirect_url ); ?>"/>
 		<label class="firstname">
-			<span><?php _e( 'First Name', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'First Name', 'coursepress' ); ?>:</span>
 			<input type="text" name="first_name" value="<?php echo esc_attr( $first_name ); ?>"/>
 		</label>
 		<?php
@@ -37,7 +37,7 @@
 		?>
 
 		<label class="lastname">
-			<span><?php _e( 'Last Name', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'Last Name', 'coursepress' ); ?>:</span>
 			<input type="text" name="last_name" value="<?php echo esc_attr( $last_name ); ?>"/>
 		</label>
 		<?php
@@ -48,7 +48,7 @@
 		?>
 
 		<label class="username">
-			<span><?php _e( 'Username', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'Username', 'coursepress' ); ?>:</span>
 			<input type="text" name="username" value="<?php echo esc_attr( $username ); ?>" />
 		</label>
 		<?php
@@ -59,7 +59,7 @@
 		?>
 
 		<label class="email">
-			<span><?php _e( 'E-mail', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'E-mail', 'coursepress' ); ?>:</span>
 			<input type="text" name="email" value="<?php echo esc_attr( $email ); ?>" />
 		</label>
 		<?php
@@ -70,7 +70,7 @@
 		?>
 
 		<label class="password">
-			<span><?php _e( 'Password', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'Password', 'coursepress' ); ?>:</span>
 			<input type="password" name="password" value=""/>
 		</label>
 		<?php
@@ -81,12 +81,12 @@
 		?>
 
 		<label class="password-confirm right">
-			<span><?php _e( 'Confirm Password', 'CP_TD' ); ?>:</span>
+			<span><?php _e( 'Confirm Password', 'coursepress' ); ?>:</span>
 			<input type="password" name="password_confirmation" value=""/>
 		</label>
 		<label class="weak-password-confirm">
 			<input type="checkbox" name="confirm_weak_password" value="1" />
-			<span><?php _e( 'Confirm use of weak password', 'CP_TD' ); ?></span>
+			<span><?php _e( 'Confirm use of weak password', 'coursepress' ); ?></span>
 		</label>
 
 		<?php if ( shortcode_exists( 'signup-tos' ) && '1' == get_option( 'show_tos', 0 ) ) : ?>
@@ -103,10 +103,10 @@
 		?>
 
 		<label class="existing-link full">
-			<?php printf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ); ?>
+			<?php printf( __( 'Already have an account? %s%s%s!', 'coursepress' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'coursepress' ), '</a>' ); ?>
 		</label>
 		<label class="submit-link full-right">
-			<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php esc_attr_e( 'Create an Account', 'CP_TD' ); ?>" />
+			<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php esc_attr_e( 'Create an Account', 'coursepress' ); ?>" />
 		</label>
 
 		<?php

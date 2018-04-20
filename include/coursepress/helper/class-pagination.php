@@ -188,7 +188,7 @@ class CoursePress_Helper_Pagination {
 
 			$this->pagination .= '&nbsp;<span class="paging-input">' .
 				sprintf(
-					__( '%s of %s', 'CP_TD' ),
+					__( '%s of %s', 'coursepress' ),
 					$this->page,
 					'<span class="total-pages">' . $lastpage . '</span>'
 				) . '</span>&nbsp;';
@@ -203,7 +203,7 @@ class CoursePress_Helper_Pagination {
 				if ( $this->show_page_counter ) {
 					$this->pagination .= '<div class="pagination_data">' .
 						sprintf(
-							__( '(%s Pages)', 'CP_TD' ),
+							__( '(%s Pages)', 'coursepress' ),
 							$this->total_items
 						) .
 						'</div>';

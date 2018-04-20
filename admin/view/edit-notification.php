@@ -32,7 +32,7 @@ wp_nonce_field( 'edit_notification' );
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
 			<div id="post-body-content">
-				<?php echo CoursePress_Helper_UI::get_admin_edit_title_field( $post->post_title, __( 'Notification Title', 'CP_TD' ) ); ?>
+				<?php echo CoursePress_Helper_UI::get_admin_edit_title_field( $post->post_title, __( 'Notification Title', 'coursepress' ) ); ?>
 				<br />
 				<div id="postdivrich" class="postarea wp-editor-expand">
 					<?php

@@ -78,7 +78,7 @@ class CoursePress_Data_Discussion_Email {
 		$post_id = self::_get_post_id( $post );
 		$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
 		$course = get_post( $course_id );
-		$subject = __( 'New Comment: ', 'CP_TD' );
+		$subject = __( 'New Comment: ', 'coursepress' );
 		$subject .= substr( $course->post_title . ' at ' . $post->post_title , 0, 50 );
 
 		/**

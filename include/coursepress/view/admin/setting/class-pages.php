@@ -16,8 +16,8 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 
 		self::$slug = 'pages';
 		$tabs[ self::$slug ] = array(
-			'title' => __( 'Pages', 'CP_TD' ),
-			'description' => __( 'Configure the pages for CoursePress.', 'CP_TD' ),
+			'title' => __( 'Pages', 'coursepress' ),
+			'description' => __( 'Configure the pages for CoursePress.', 'coursepress' ),
 			'order' => 1,
 		);
 
@@ -32,7 +32,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$pages_args = array(
 			'selected' => CoursePress_Core::get_setting( 'pages/enrollment', 0 ),
 			'echo' => 0,
-			'show_option_none' => __( '&mdash; Select &mdash;', 'CP_TD' ),
+			'show_option_none' => __( '&mdash; Select &mdash;', 'coursepress' ),
 			'option_none_value' => 0,
 			'name' => 'coursepress_settings[pages][enrollment]',
 		);
@@ -67,54 +67,54 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		 * Student Dashboard
 		 */
 		$content .= self::row(
-			__( 'Student Dashboard', 'CP_TD' ),
+			__( 'Student Dashboard', 'coursepress' ),
 			$page_dropdowns['student_dashboard'],
-			__( 'Select a page where students can view courses.', 'CP_TD' )
+			__( 'Select a page where students can view courses.', 'coursepress' )
 		);
 
 		/**
 		 * Student Settings
 		 */
 		$content .= self::row(
-			__( 'Student Settings', 'CP_TD' ),
+			__( 'Student Settings', 'coursepress' ),
 			$page_dropdowns['student_settings'],
-			__( 'Select a page where students can change their account settings.', 'CP_TD' )
+			__( 'Select a page where students can change their account settings.', 'coursepress' )
 		);
 
 		/**
 		 * login
 		 */
 		$content .= self::row(
-			__( 'Login', 'CP_TD' ),
+			__( 'Login', 'coursepress' ),
 			$page_dropdowns['login'],
-			__( 'Select a page where students can login.', 'CP_TD' )
+			__( 'Select a page where students can login.', 'coursepress' )
 		);
 
 		/**
 		 * Signup
 		 */
 		$content .= self::row(
-			__( 'Signup', 'CP_TD' ),
+			__( 'Signup', 'coursepress' ),
 			$page_dropdowns['signup'],
-			__( 'Select a page where students can create an account.', 'CP_TD' )
+			__( 'Select a page where students can create an account.', 'coursepress' )
 		);
 
 		/**
 		 * Instructor.
 		 */
 		$content .= self::row(
-			__( 'Instructor', 'CP_TD' ),
+			__( 'Instructor', 'coursepress' ),
 			$page_dropdowns['instructor'],
-			__( 'Select a page where we display the instructor profile.', 'CP_TD' )
+			__( 'Select a page where we display the instructor profile.', 'coursepress' )
 		);
 
 		/**
 		 * Enrollment
 		 */
 		$content .= self::row(
-			__( 'Enrollment Process Page', 'CP_TD' ),
+			__( 'Enrollment Process Page', 'coursepress' ),
 			$page_dropdowns['enrollment'],
-			sprintf( __( 'Select a page where we display the enrollment process.', 'CP_TD' ) . '</a>' )
+			sprintf( __( 'Select a page where we display the enrollment process.', 'coursepress' ) . '</a>' )
 		);
 		$content .= self::table_end();
 		return $content;

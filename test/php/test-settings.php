@@ -131,8 +131,8 @@ class CoursePress_Settings_Test extends CoursePress_UnitTestCase {
 		// Add test tabs.
 		$test_tabs = array(
 			'test_tab' => array(
-				'title' => __( 'Test Tabs', 'CP_TD' ),
-				'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
+				'title' => __( 'Test Tabs', 'coursepress' ),
+				'description' => __( 'This is the description of what you can do on this page.', 'coursepress' ),
 			),
 			'tab1' => array(
 				'title' => 'Test Tab 1',

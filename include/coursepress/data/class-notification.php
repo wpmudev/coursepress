@@ -10,23 +10,23 @@ class CoursePress_Data_Notification {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Notifications', 'CP_TD' ),
-					'singular_name' => __( 'Notification', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Notification', 'CP_TD' ),
-					'edit_item' => __( 'Edit Notification', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Notification', 'CP_TD' ),
-					'view_item' => __( 'View Notification', 'CP_TD' ),
-					'search_items' => __( 'Search Notifications', 'CP_TD' ),
-					'not_found' => __( 'No Notifications Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Notifications found in Trash', 'CP_TD' ),
-					'view' => __( 'View Notification', 'CP_TD' ),
-					'insert_into_item' => __( 'Insert into notification', 'CP_TD' ),
-					'uploaded_to_this_item' => __( 'Uploaded to this notification', 'CP_TD' ),
-					'items_list' => __( 'Notifications list', 'CP_TD' ),
-					'filter_items_list' => __( 'Filter notification list', 'CP_TD' ),
-					'items_list_navigation' => __( 'Notifications list navigation', 'CP_TD' ),
+					'name' => __( 'Notifications', 'coursepress' ),
+					'singular_name' => __( 'Notification', 'coursepress' ),
+					'add_new' => __( 'Create New', 'coursepress' ),
+					'add_new_item' => __( 'Create New Notification', 'coursepress' ),
+					'edit_item' => __( 'Edit Notification', 'coursepress' ),
+					'edit' => __( 'Edit', 'coursepress' ),
+					'new_item' => __( 'New Notification', 'coursepress' ),
+					'view_item' => __( 'View Notification', 'coursepress' ),
+					'search_items' => __( 'Search Notifications', 'coursepress' ),
+					'not_found' => __( 'No Notifications Found', 'coursepress' ),
+					'not_found_in_trash' => __( 'No Notifications found in Trash', 'coursepress' ),
+					'view' => __( 'View Notification', 'coursepress' ),
+					'insert_into_item' => __( 'Insert into notification', 'coursepress' ),
+					'uploaded_to_this_item' => __( 'Uploaded to this notification', 'coursepress' ),
+					'items_list' => __( 'Notifications list', 'coursepress' ),
+					'filter_items_list' => __( 'Filter notification list', 'coursepress' ),
+					'items_list_navigation' => __( 'Notifications list navigation', 'coursepress' ),
 				),
 				'public' => false,
 				'show_ui' => false,
@@ -60,7 +60,7 @@ class CoursePress_Data_Notification {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'coursepress' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		return array(
@@ -193,7 +193,7 @@ class CoursePress_Data_Notification {
 		$json_data['action'] = $action;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Notification Update: No action.', 'CP_TD' );
+			$json_data['message'] = __( 'Notification Update: No action.', 'coursepress' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -224,7 +224,7 @@ class CoursePress_Data_Notification {
 						$json_data['state'] = $data->data->state;
 						$success = true;
 					} else {
-						$json_data['message'] = __( 'Notification update failed.', 'CP_TD' );
+						$json_data['message'] = __( 'Notification update failed.', 'coursepress' );
 						$json_data['ID'] = $notification_id;
 					}
 				}

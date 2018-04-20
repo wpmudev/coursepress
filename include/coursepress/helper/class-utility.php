@@ -699,7 +699,7 @@ class CoursePress_Helper_Utility {
 			header( 'Connection: close' );
 			echo $body;
 		} else {
-			_e( 'Something went wrong.', 'CP_TD' );
+			_e( 'Something went wrong.', 'coursepress' );
 		}
 		exit();
 	}
@@ -746,7 +746,7 @@ class CoursePress_Helper_Utility {
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
 
-			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'coursepress' ) . '</a>';
 
 			if ( file_exists( $file_path ) ) {
 				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
@@ -1381,7 +1381,7 @@ class CoursePress_Helper_Utility {
 	 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
 	 */
 	public static function add_nav_menu_meta_boxes() {
-		add_meta_box( 'coursepress_endpoints_nav_link', __( 'CoursePress Menu', 'CP_TD' ), array( __CLASS__, 'nav_menu_links' ), 'nav-menus', 'side', 'low' );
+		add_meta_box( 'coursepress_endpoints_nav_link', __( 'CoursePress Menu', 'coursepress' ), array( __CLASS__, 'nav_menu_links' ), 'nav-menus', 'side', 'low' );
 	}
 
 	/**
@@ -1390,19 +1390,19 @@ class CoursePress_Helper_Utility {
 	public static function nav_menu_links() {
 		$end_points = array(
 			'courses' => array(
-				'label' => __( 'Courses', 'CP_TD' ),
+				'label' => __( 'Courses', 'coursepress' ),
 				'value' => '#coursepress-endpoints-courses',
 			),
 			'login' => array(
-				'label' => __( 'Log In/Out', 'CP_TD' ),
+				'label' => __( 'Log In/Out', 'coursepress' ),
 				'value' => '#coursepress-endpoints-login',
 			),
 			'dashboard' => array(
-				'label' => __( 'Dashboard', 'CP_TD' ),
+				'label' => __( 'Dashboard', 'coursepress' ),
 				'value' => '#coursepress-endpoints-dashboard',
 			),
 			'profile' => array(
-				'label' => __( 'Profile', 'CP_TD' ),
+				'label' => __( 'Profile', 'coursepress' ),
 				'value' => '#coursepress-endpoints-profile',
 			),
 		);
@@ -1431,10 +1431,10 @@ class CoursePress_Helper_Utility {
 			</div>
 			<p class="button-controls">
 				<span class="list-controls">
-					<a href="<?php echo admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-coursepress-endpoints' ); ?>" class="select-all"><?php _e( 'Select All', 'CP_TD' ); ?></a>
+					<a href="<?php echo admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-coursepress-endpoints' ); ?>" class="select-all"><?php _e( 'Select All', 'coursepress' ); ?></a>
 				</span>
 				<span class="add-to-menu">
-					<input type="submit" class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'CP_TD' ); ?>" name="add-post-type-menu-item" id="submit-posttype-coursepress-endpoints">
+					<input type="submit" class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'coursepress' ); ?>" name="add-post-type-menu-item" id="submit-posttype-coursepress-endpoints">
 					<span class="spinner"></span>
 				</span>
 			</p>

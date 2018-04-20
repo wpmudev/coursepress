@@ -73,27 +73,11 @@ module.exports = function(grunt) {
 			'!**/external/**/*.php'
 		],
 
-		// Regex patterns to exclude from transation.
-		translation: {
-			ignore_files: [
-				'(^.php)',      // Ignore non-php files.
-				'bin/.*',       // Unit testing.
-				'test/.*',      // Unit testing.
-				'node_modules/.*',
-				'lib/TCPDF/.*', // External module.
-				'themes/.*',    // External module.
-			],
-			pot_dir: 'language/',  // With trailing slash.
-			textdomain_pro: 'cp',   // Campus uses same textdomain.
-			textdomain_free: 'coursepress',
-		},
-
 		// BUILD branches.
 		plugin_branches: {
 			exclude_pro: [
 				'./test',
 				'./readme.txt',
-				'./language/coursepress.pot',
 				'./campus',
 				'./node_modules',
 				'./vendor',
@@ -110,7 +94,6 @@ module.exports = function(grunt) {
 			],
 			exclude_free: [
 				'./test',
-				'./language/cp.pot',
 				'./premium',
 				'./campus',
 				'./node_modules',
@@ -126,7 +109,6 @@ module.exports = function(grunt) {
 			exclude_campus: [
 				'./test',
 				'./readme.txt',
-				'./language/coursepress.pot',
 				'./node_modules',
 				'./vendor',
 				'./.gitattributes',
@@ -148,8 +130,6 @@ module.exports = function(grunt) {
 			pro: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
 				{ match: /BUILDTIME/g, replace: buildtime },
-				{ match: /'CP_TD'/g, replace: '\'cp\'' },
-				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: cp' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
 				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' },
@@ -158,8 +138,6 @@ module.exports = function(grunt) {
 			free: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
-				{ match: /'CP_TD'/g, replace: '\'coursepress\'' },
-				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: coursepress' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -168,8 +146,6 @@ module.exports = function(grunt) {
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
 				{ match: /BUILDTIME/g, replace: buildtime },
-				{ match: /'CP_TD'/g, replace: '\'cp\'' },
-				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: cp' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -187,7 +163,6 @@ module.exports = function(grunt) {
 					'**/*.txt',
 					'!node_modules/**',
 					'!vendor/**',
-					'!language/**',
 					'!release/**',
 					'!test/**',
 					'!asset/file/**',
@@ -389,35 +364,8 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// POT: Create the .pot translation index.
-		makepot: {
-			target: {
-				options: {
-					cwd: '',
-					domainPath: conf.translation.pot_dir,
-					exclude: conf.translation.ignore_files,
-					mainFile: conf.plugin_file,
-					potFilename: conf.translation.textdomain_pro + '.pot',
-					potHeaders: {
-						'poedit': true, // Includes common Poedit headers.
-						'language-team': 'WPMU Dev <support@wpmudev.org>',
-						'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/coursepress',
-						'last-translator': 'WPMU Dev <support@wpmudev.org>',
-						'x-generator': 'grunt-wp-i18n',
-						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
-					},
-					type: 'wp-plugin' // wp-plugin or wp-theme
-				}
-			}
-		},
-
 		// BUILD: Copy files.
 		copy: {
-			translation: {
-				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
-				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
-				nonull: true
-			},
 			pro: {
 				src: conf.plugin_patterns.files.src,
 				dest: 'release/<%= pkg.version %>-pro/'
@@ -685,15 +633,6 @@ module.exports = function(grunt) {
 		},
 
 	} );
-
-	// Translate plugin.
-	grunt.registerTask( 'lang', 'Create all translation files', function() {
-		// Generate the text-domain for Pro/Campus.
-		grunt.task.run( 'makepot' );
-
-		// Simply copy the pro-translations to the Free plugin .pot file.
-		grunt.task.run( 'copy:translation' );
-	});
 
 	// Plugin build tasks
 	grunt.registerTask( 'build', 'Run all tasks.', function(target) {

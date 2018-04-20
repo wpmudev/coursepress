@@ -278,7 +278,7 @@ class CoursePress_View_Front_Course {
 
 		if ( ! $course_id && ! $unit_id && ! $module_id ) {
 			// We have invalid/missing Form data...
-			$json_data['response'] = __( 'Invalid data submitted', 'CP_TD' );
+			$json_data['response'] = __( 'Invalid data submitted', 'coursepress' );
 			$json_data['success'] = false;
 			$process_file = false;
 		} else {
@@ -312,7 +312,7 @@ class CoursePress_View_Front_Course {
 				}
 
 				if ( ! $is_enabled ) {
-					$json_data['response'] = __( 'Maximum allowed retries exceeded.', 'CP_TD' );
+					$json_data['response'] = __( 'Maximum allowed retries exceeded.', 'coursepress' );
 					$json_data['success'] = false;
 					$process_file = false;
 				}
@@ -369,7 +369,7 @@ class CoursePress_View_Front_Course {
 					}
 				}
 			} else {
-				$json_data['response'] = __( 'No files uploaded.', 'CP_TD' );
+				$json_data['response'] = __( 'No files uploaded.', 'coursepress' );
 				$json_data['success'] = false;
 			}
 		}
@@ -915,7 +915,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Course', 'CP_TD' ),
+				__( 'Course', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -995,7 +995,7 @@ class CoursePress_View_Front_Course {
 					'COURSE_OVERVIEW' => $course->post_excerpt,
 					'COURSE_UNIT_LIST' => self::course_unit_list( $cp->course_id ),
 					'DOWNLOAD_CERTIFICATE_LINK' => self::download_certificate_link( $cp->course_id ),
-					'DOWNLOAD_CERTIFICATE_BUTTON' => sprintf( '<a href="%s" class="download-certificate-button">%s</a>', esc_url( self::download_certificate_link( $cp->course_id ) ), __( 'Download Certificate', 'CP_TD' ) ),
+					'DOWNLOAD_CERTIFICATE_BUTTON' => sprintf( '<a href="%s" class="download-certificate-button">%s</a>', esc_url( self::download_certificate_link( $cp->course_id ) ), __( 'Download Certificate', 'coursepress' ) ),
 					'STUDENT_WORKBOOK' => $workbook,
 				);
 
@@ -1024,11 +1024,11 @@ class CoursePress_View_Front_Course {
 			if ( $tax ) {
 				$cp->title = sprintf(
 					'%s %s',
-					__( 'Courses in', 'CP_TD' ),
+					__( 'Courses in', 'coursepress' ),
 					$tax->name
 				);
 			} elseif ( 'all' === $cp->cp_category ) {
-				$cp->title = __( 'All Courses', 'CP_TD' );
+				$cp->title = __( 'All Courses', 'coursepress' );
 			} else {
 				self::archive_redirect();
 				// Invalid category... Redirect to course-list!
@@ -1099,7 +1099,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Discussions', 'CP_TD' ),
+				__( 'Discussions', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1124,7 +1124,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Discussions', 'CP_TD' ),
+				__( 'Discussions', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1150,7 +1150,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Grades', 'CP_TD' ),
+				__( 'Grades', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1176,7 +1176,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Workbook', 'CP_TD' ),
+				__( 'Workbook', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1202,7 +1202,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Notifications', 'CP_TD' ),
+				__( 'Notifications', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1224,7 +1224,7 @@ class CoursePress_View_Front_Course {
 
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Units', 'CP_TD' ),
+				__( 'Units', 'coursepress' ),
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
@@ -1303,8 +1303,8 @@ class CoursePress_View_Front_Course {
 			// It must be the archive!
 			$cp->title = sprintf(
 				'%s | %s',
-				__( 'Courses', 'CP_TD' ),
-				__( 'All Courses', 'CP_TD' )
+				__( 'Courses', 'coursepress' ),
+				__( 'All Courses', 'coursepress' )
 			);
 
 			$cp->vp_args = array(
@@ -1409,7 +1409,7 @@ class CoursePress_View_Front_Course {
 		$success = false;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Course Update: No action.', 'CP_TD' );
+			$json_data['message'] = __( 'Course Update: No action.', 'coursepress' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -1430,7 +1430,7 @@ class CoursePress_View_Front_Course {
 				$module_type = $data->module_type;
 
 				if ( CoursePress_Data_Course::get_course_status( $course_id ) == 'closed' ) {
-					$json_data['message'] = __( 'This course is completed, you can not submit answers anymore.', 'CP_TD' );
+					$json_data['message'] = __( 'This course is completed, you can not submit answers anymore.', 'coursepress' );
 					wp_send_json_error( $json_data );
 				}
 
@@ -1800,7 +1800,7 @@ class CoursePress_View_Front_Course {
 			$current_user_id = get_current_user_id();
 			if ( $student_id != $current_user_id ) {
 				if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
-					_e( 'Cheatin&#8217; uh?', 'CP_TD' );
+					_e( 'Cheatin&#8217; uh?', 'coursepress' );
 					exit;
 				}
 			}

@@ -168,8 +168,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
 			self::$tabs['setup'] = array(
-				'title' => __( 'Course Setup', 'CP_TD' ),
-				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+				'title' => __( 'Course Setup', 'coursepress' ),
+				'description' => __( 'Edit your course specific settings below.', 'coursepress' ),
 				'order' => 10,
 				'buttons' => 'none',
 				'is_form' => false,
@@ -180,8 +180,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 					$units = self::$data_course->get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 					self::$tabs['units'] = array(
-						'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
-						'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+						'title' => sprintf( __( 'Units (%s)', 'coursepress' ), count( $units ) ),
+						'description' => __( 'Edit your course specific settings below.', 'coursepress' ),
 						'order' => 20,
 						'buttons' => 'none',
 						'is_form' => false,
@@ -191,10 +191,10 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
 					self::$tabs['students'] = array(
 						'title' => sprintf(
-							__( 'Students (%s)', 'CP_TD' ),
+							__( 'Students (%s)', 'coursepress' ),
 							self::$data_course->count_students( $course_id )
 						),
-						'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+						'description' => __( 'Edit your course specific settings below.', 'coursepress' ),
 						'order' => 30,
 						'buttons' => 'none',
 						'is_form' => false,
@@ -260,7 +260,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			$publish_toggle = '';
 
 			$ui = array(
-				'label' => __( 'Publish Course', 'CP_TD' ),
+				'label' => __( 'Publish Course', 'coursepress' ),
 				'left' => '<i class="fa fa-ban"></i>',
 				'left_class' => 'red',
 				'right' => '<i class="fa fa-check"></i>',
@@ -314,7 +314,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$content .= sprintf(
 					'<input type="button" class="button step prev step-%d" value="%s" />',
 					esc_attr( $step ),
-					esc_attr__( 'Previous', 'CP_TD' )
+					esc_attr__( 'Previous', 'coursepress' )
 				);
 			}
 
@@ -322,7 +322,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$content .= sprintf(
 					'<input type="button" class="button step next step-%d" value="%s" />',
 					esc_attr( $step ),
-					esc_attr__( 'Next', 'CP_TD' )
+					esc_attr__( 'Next', 'coursepress' )
 				);
 			}
 
@@ -330,7 +330,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			if ( 7 == $step ) {
 				$content .= sprintf(
 					'<input type="button" class="button step finish step-7" value="%s" />',
-					esc_attr__( 'Finish', 'CP_TD' )
+					esc_attr__( 'Finish', 'coursepress' )
 				);
 			}
 			/**
@@ -340,7 +340,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$content .= sprintf(
 					'<input type="button" class="button step update hidden step-%d" value="%s" />',
 					esc_attr( $step ),
-					esc_attr__( 'Update', 'CP_TD' )
+					esc_attr__( 'Update', 'coursepress' )
 				);
 			}
 			/**
@@ -507,19 +507,19 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			$label = $description = $placeholder = '';
 
 			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Instructor or Facilitator', 'CP_TD' );
-				$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'instructor-or-facilitator@email.com', 'CP_TD' );
+				$label = esc_html__( 'Invite New Instructor or Facilitator', 'coursepress' );
+				$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'coursepress' );
+				$placeholder = __( 'instructor-or-facilitator@email.com', 'coursepress' );
 
 			} else if ( $can_assign_instructor ) {
-				$label = esc_html__( 'Invite New Instructor', 'CP_TD' );
-				$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'facilitator@email.com', 'CP_TD' );
+				$label = esc_html__( 'Invite New Instructor', 'coursepress' );
+				$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'coursepress' );
+				$placeholder = __( 'facilitator@email.com', 'coursepress' );
 
 			} else if ( $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Facilitator', 'CP_TD' );
-				$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'instructor@email.com', 'CP_TD' );
+				$label = esc_html__( 'Invite New Facilitator', 'coursepress' );
+				$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'coursepress' );
+				$placeholder = __( 'instructor@email.com', 'coursepress' );
 			}
 
 			self::render( 'admin/view/steps/step-3', array(
@@ -603,20 +603,20 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				admin_url( 'edit.php' )
 			);
 
-			$install_message = __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' );
+			$install_message = __( 'Please contact your administrator to enable MarketPress for your site.', 'coursepress' );
 			$install_message2 = '';
 			$installed = $mp_class->installed();
 
 			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
-				$install_message = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'CP_TD' );
+				$install_message = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'coursepress' );
 
 				if ( $installed && $mp_class->activated() ) {
-					$install_message = __( 'To start selling your course, please <a href="%s">complete setup</a> of MarketPress.', 'CP_TD' );
+					$install_message = __( 'To start selling your course, please <a href="%s">complete setup</a> of MarketPress.', 'coursepress' );
 					$install_url = $mp_url;
 				}
 
 				if ( false === $installed ) {
-					$install_message2 = __( 'The full version of MarketPress has been bundled with CoursePress.', 'CP_TD' );
+					$install_message2 = __( 'The full version of MarketPress has been bundled with CoursePress.', 'coursepress' );
 				}
 			}
 			$install_message = sprintf( $install_message, esc_url_raw( $install_url ) );
@@ -627,10 +627,10 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			$payment_message = sprintf(
 				'<div class="payment-message %1$s"><h4>%2$s</h4>%3$s%4$s<p>%5$s: WooCommerce</p></div>',
 				esc_attr( $is_paid_course ? '' : 'hidden' ),
-				__( 'Sell your courses online with MarketPress.', 'CP_TD' ),
+				__( 'Sell your courses online with MarketPress.', 'coursepress' ),
 				! empty( $install_message2 ) ? sprintf( '<p>%s</p>', $install_message2 ) : '',
 				! empty( $install_message ) ? sprintf( '<p>%s</p>', $install_message ) : '',
-				__( 'Other supported plugins', 'CP_TD' )
+				__( 'Other supported plugins', 'coursepress' )
 			);
 			$payment_message = apply_filters( 'coursepress_course_payment_message', $payment_message, self::$course_id );
 
@@ -641,7 +641,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				'course_id' => self::$course_id,
 				'setup_class' => $setup_class,
 				'disable_payment' => $disable_payment,
-				'title2' => false === $disable_payment ? __( '& Course Cost', 'CP_TD' ) : '',
+				'title2' => false === $disable_payment ? __( '& Course Cost', 'coursepress' ) : '',
 				'enrollment_types' => self::$data_course->get_enrollment_types_array( self::$course_id ),
 				'enrollment_type' => self::$settings['enrollment_type'],
 				'prerequisite_class' => 'prerequisite' === self::$settings['enrollment_type'] ? '' : ' hidden',
@@ -674,23 +674,23 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 			$pre_completion_content = self::$settings['pre_completion_content'];
 			if ( empty( $pre_completion_content ) ) {
-				$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'CP_TD' ) );
-				$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'CP_TD' ) );
+				$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'coursepress' ) );
+				$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'coursepress' ) );
 			}
 
 			$completion_content = self::$settings['course_completion_content'];
 			if ( empty( $completion_content ) ) {
 				$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
-					__( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'CP_TD' ),
-					__( 'You can download your certificate here.', 'CP_TD' )
+					__( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'coursepress' ),
+					__( 'You can download your certificate here.', 'coursepress' )
 				);
 			}
 
 			$failed_content = self::$settings['course_failed_content'];
 			if ( empty( $failed_content ) ) {
 				$failed_content = sprintf( '<p>%s</p><p>%s</p>',
-					__( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
-					__( 'Better luck next time!', 'CP_TD' )
+					__( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'coursepress' ),
+					__( 'Better luck next time!', 'coursepress' )
 				);
 			}
 
@@ -712,7 +712,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				'setup_class' => $setup_class,
 				'course_id' => self::$course_id,
 				'minimum_grade_required' => self::$settings['minimum_grade_required'],
-				'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ),
+				'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'coursepress' ), implode( ', ', $tokens ) ),
 				'precompletion' => array(
 					'title' => self::$settings['pre_completion_title'],
 					'content' => htmlspecialchars_decode( $pre_completion_content ),
@@ -732,7 +732,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						'course_id' => self::$course_id,
 					) ),
 					'enabled' => ! empty( self::$settings['basic_certificate'] ),
-					'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $certificate_tokens ) ),
+					'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'coursepress' ), implode( ', ', $certificate_tokens ) ),
 					'background' => self::$settings['certificate_background'],
 					'logo' => self::$settings['certificate_logo'],
 					'logo_position' => self::$settings['logo_position'],
@@ -767,9 +767,9 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				 */
 				$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 				$vars = array(
-					'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
-					'LAST_NAME' => __( 'Snow', 'CP_TD' ),
-					'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+					'FIRST_NAME' => __( 'Jon', 'coursepress' ),
+					'LAST_NAME' => __( 'Snow', 'coursepress' ),
+					'COURSE_NAME' => __( 'Example Course Title', 'coursepress' ),
 					'COMPLETION_DATE' => date_i18n( $date_format, CoursePress_Data_Course::time_now() ),
 					'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
 				);
@@ -907,7 +907,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
 				// Set PDF args
 				$args = array(
-					'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+					'title' => __( 'Course Completion Certificate', 'coursepress' ),
 					'orientation' => $orientation,
 					'image' => $background,
 					'filename' => $filename,
@@ -933,12 +933,12 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		 */
 		public static function notice_about_pro_when_try_to_add_new_course() {
 			echo '<p>';
-			_e( 'The free version of CoursePress is limited to one course. To add more courses, upgrade to CoursePress Pro for unlimited courses and more payment gateways.', 'CP_TD' );
+			_e( 'The free version of CoursePress is limited to one course. To add more courses, upgrade to CoursePress Pro for unlimited courses and more payment gateways.', 'coursepress' );
 			echo '</p>';
 			printf(
 				'<p><a href="%s" class="button-primary">%s</a></p>',
-				esc_url( __( 'https://premium.wpmudev.org/project/coursepress-pro/', 'CP_TD' ) ),
-				esc_html__( 'Try CoursePress Pro for Free', 'CP_TD' )
+				esc_url( __( 'https://premium.wpmudev.org/project/coursepress-pro/', 'coursepress' ) ),
+				esc_html__( 'Try CoursePress Pro for Free', 'coursepress' )
 			);
 		}
 

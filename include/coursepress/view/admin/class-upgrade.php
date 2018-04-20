@@ -25,7 +25,7 @@ class CoursePress_View_Admin_Upgrade {
 			delete_option( 'coursepress_courses_need_update' );
 			printf(
 				'<p>%s</p>',
-				__( 'There is no courses to update.', 'CP_TD' )
+				__( 'There is no courses to update.', 'coursepress' )
 			);
 			return;
 		}
@@ -38,14 +38,14 @@ class CoursePress_View_Admin_Upgrade {
 		 */
 		printf(
 			'<p>%s</p>',
-			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'CP_TD' ), $count )
+			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'coursepress' ), $count )
 		);
 
 		$labels = array(
-			'working' => __( 'Working...', 'CP_TD' ),
-			'empty-list' => __( 'There is no courses to update!', 'CP_TD' ),
-			'done' => __( 'Upgrade is done.', 'CP_TD' ),
-			'fail' => __( 'Something went wrong.', 'CP_TD' ),
+			'working' => __( 'Working...', 'coursepress' ),
+			'empty-list' => __( 'There is no courses to update!', 'coursepress' ),
+			'done' => __( 'Upgrade is done.', 'coursepress' ),
+			'fail' => __( 'Something went wrong.', 'coursepress' ),
 		);
 
 		echo '<div id="coursepress-updater-holder">';
@@ -58,7 +58,7 @@ class CoursePress_View_Admin_Upgrade {
 		printf( '<input type="hidden" value="%d" name="course" />', esc_attr( $courses_ids[0] ) );
 		$nonce_name = CoursePress_Helper_Upgrade::get_update_nonce();
 		wp_nonce_field( $nonce_name );
-		submit_button( __( 'Beginning update!', 'CP_TD' ) );
+		submit_button( __( 'Beginning update!', 'coursepress' ) );
 		echo '</form></div>';
 		echo '</div>';
 	}

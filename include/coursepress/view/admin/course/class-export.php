@@ -14,8 +14,8 @@ class CoursePress_View_Admin_Course_Export {
 	 * @since 2.0.0
 	 */
 	public static function init() {
-		self::$title = __( 'Export', 'CP_TD' );
-		self::$menu_title = __( 'Export', 'CP_TD' );
+		self::$title = __( 'Export', 'coursepress' );
+		self::$menu_title = __( 'Export', 'coursepress' );
 
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -518,7 +518,7 @@ foreach ( $c_meta as $meta ) :
 		switch ( $_REQUEST['m'] ) {
 			case 'no-courses':
 				$content = CoursePress_Helper_UI::admin_notice(
-					__( 'Export Courses: please select some courses first.', 'CP_TD' ),
+					__( 'Export Courses: please select some courses first.', 'coursepress' ),
 					'error'
 				).$content;
 			break;

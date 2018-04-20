@@ -24,7 +24,7 @@ class CoursePress_View_Front_Settings {
 			return;
 		}
 		$content = '';
-		$page_title = __( 'My Profile', 'CP_TD' );
+		$page_title = __( 'My Profile', 'coursepress' );
 		$args = array(
 			'slug' => CoursePress_Core::get_slug( 'student_settings' ),
 			'title' => esc_html( $page_title ),

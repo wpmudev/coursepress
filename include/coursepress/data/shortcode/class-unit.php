@@ -54,7 +54,7 @@ class CoursePress_Data_Shortcode_Unit {
 					'additional' => '2',
 					'style' => 'flat',
 					'class' => 'course-name-content',
-					'tooltip_alt' => __( 'Percent of the unit completion', 'CP_TD' ),
+					'tooltip_alt' => __( 'Percent of the unit completion', 'coursepress' ),
 					'knob_fg_color' => '#24bde6',
 					'knob_bg_color' => '#e0e6eb',
 					'knob_data_thickness' => '.35',
@@ -64,7 +64,7 @@ class CoursePress_Data_Shortcode_Unit {
 					'unit_page_title_tag' => 'h3',
 					'unit_page_title_tag_class' => '',
 					'last_visited' => 'false',
-					'parent_course_preceding_content' => __( 'Course: ', 'CP_TD' ),
+					'parent_course_preceding_content' => __( 'Course: ', 'coursepress' ),
 					'student_id' => get_current_user_id(),
 				)
 			),
@@ -133,7 +133,7 @@ class CoursePress_Data_Shortcode_Unit {
 		$content = '
 		<div class="submenu-main-container cp-submenu">
 			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'unit/' ) ) . '" class="course-units-link">' . esc_html__( 'Units', 'CP_TD' ) . '</a></li>
+				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'unit/' ) ) . '" class="course-units-link">' . esc_html__( 'Units', 'coursepress' ) . '</a></li>
 		';
 
 		$student_id = is_user_logged_in() ? get_current_user_id() : false;
@@ -143,25 +143,25 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( $enrolled || $is_instructor ) {
 			$content .= '
-				<li class="submenu-item submenu-notifications ' . ( 'notifications' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'notification' ) ) . '">' . esc_html__( 'Notifications', 'CP_TD' ) . '</a></li>
+				<li class="submenu-item submenu-notifications ' . ( 'notifications' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'notification' ) ) . '">' . esc_html__( 'Notifications', 'coursepress' ) . '</a></li>
 			';
 		}
 
 		$pages = CoursePress_Data_Course::allow_pages( $course_id );
 
 		if ( $pages['course_discussion'] && ( $enrolled || $is_instructor ) ) {
-			$content .= '<li class="submenu-item submenu-discussions ' . ( 'discussions' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'discussion' ) ) . '">' . esc_html__( 'Discussions', 'CP_TD' ) . '</a></li>';
+			$content .= '<li class="submenu-item submenu-discussions ' . ( 'discussions' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'discussion' ) ) . '">' . esc_html__( 'Discussions', 'coursepress' ) . '</a></li>';
 		}
 
 		if ( $pages['workbook'] && $enrolled ) {
-			$content .= '<li class="submenu-item submenu-workbook ' . ( 'workbook' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'workbook' ) ) . '">' . esc_html__( 'Workbook', 'CP_TD' ) . '</a></li>';
+			$content .= '<li class="submenu-item submenu-workbook ' . ( 'workbook' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'workbook' ) ) . '">' . esc_html__( 'Workbook', 'coursepress' ) . '</a></li>';
 		}
 
 		if ( $pages['grades'] && $enrolled ) {
-			$content .= '<li class="submenu-item submenu-grades ' . ( 'grades' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'grades' ) ) . '">' . esc_html__( 'Grades', 'CP_TD' ) . '</a></li>';
+			$content .= '<li class="submenu-item submenu-grades ' . ( 'grades' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'grades' ) ) . '">' . esc_html__( 'Grades', 'coursepress' ) . '</a></li>';
 		}
 
-		$content .= '<li class="submenu-item submenu-info"><a href="' . esc_url_raw( $course_base_url ) . '">' . esc_html__( 'Course Details', 'CP_TD' ) . '</a></li>';
+		$content .= '<li class="submenu-item submenu-info"><a href="' . esc_url_raw( $course_base_url ) . '">' . esc_html__( 'Course Details', 'coursepress' ) . '</a></li>';
 
 		$show_link = false;
 
@@ -173,7 +173,7 @@ class CoursePress_Data_Shortcode_Unit {
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
 			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) {
-				$certificate = CoursePress_Data_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
+				$certificate = CoursePress_Data_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'coursepress' ) );
 
 				$content .= '<li class="submenu-item submenu-certificate ' . ( 'certificate' == $subpage ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			}
@@ -194,7 +194,7 @@ class CoursePress_Data_Shortcode_Unit {
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'unit_id' => CoursePress_Helper_Utility::the_post( true ),
 				'previous_unit' => false,
-				'message' => __( '%d of %d required elements completed.', 'CP_TD' ),
+				'message' => __( '%d of %d required elements completed.', 'coursepress' ),
 				'format' => 'true',
 			),
 			$atts,
@@ -223,23 +223,23 @@ class CoursePress_Data_Shortcode_Unit {
 			$content .= do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '" message="' . $message . '"]' );
 		} else {
 			if ( $unit_status['mandatory_required']['enabled'] && ! $unit_status['mandatory_required']['result'] && ! $unit_status['completion_required']['enabled'] ) {
-				$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
+				$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'coursepress' );
 				$content .= CoursePress_Helper_UI::get_message_required_modules( $first_line );
 			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
-				$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
+				$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'coursepress' );
 				$content .= CoursePress_Helper_UI::get_message_required_modules( $first_line );
 			} elseif ( $unit_status['passed_required']['enabled'] && ! $unit_status['passed_required']['result'] ) {
 				/**
 				 * User also needs to pass all required assessments
 				 */
-				$first_line = __( 'You need to pass all the REQUIRED modules before this unit.', 'CP_TD' );
+				$first_line = __( 'You need to pass all the REQUIRED modules before this unit.', 'coursepress' );
 				$content .= CoursePress_Helper_UI::get_message_required_modules( $first_line );
 			}
 			if ( ! empty( $unit_status['date_restriction'] ) && ! $unit_status['date_restriction']['result'] ) {
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
 				if ( ! empty( $unit_availability_date ) ) {
 					$available_on = date_i18n( get_option( 'date_format' ), CoursePress_Data_Course::strtotime( $unit_availability_date ) );
-					$content .= esc_html__( 'This unit will be available on ', 'CP_TD' ) . ' ' . $available_on;
+					$content .= esc_html__( 'This unit will be available on ', 'coursepress' ) . ' ' . $available_on;
 				}
 			}
 		}

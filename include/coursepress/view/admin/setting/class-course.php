@@ -10,8 +10,8 @@ class CoursePress_View_Admin_Setting_Course {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['setup'] = array(
-			'title' => __( 'Setup Guide', 'CP_TD' ),
-			'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
+			'title' => __( 'Setup Guide', 'coursepress' ),
+			'description' => __( 'This is the description of what you can do on this page.', 'coursepress' ),
 			'order' => 20,
 		);
 

@@ -997,7 +997,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 			foreach ( $values as $course_id ) {
 				$assert = CoursePress_Data_Student::get_course_status( $course_id, $student_id );
 				$this->assertInternalType( 'string', $assert );
-				$this->assertEquals( __( 'Incomplete', 'CP_TD' ), $assert );
+				$this->assertEquals( __( 'Incomplete', 'coursepress' ), $assert );
 			}
 		}
 		/**
@@ -1005,7 +1005,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		 */
 		$assert = CoursePress_Data_Student::get_course_status( $this->course->ID, $this->student->ID );
 		$this->assertInternalType( 'string', $assert );
-		$this->assertEquals( __( 'Ongoing', 'CP_TD' ), $assert );
+		$this->assertEquals( __( 'Ongoing', 'coursepress' ), $assert );
 	}
 
 	/**

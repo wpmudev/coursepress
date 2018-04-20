@@ -87,7 +87,7 @@ class CoursePress_Template_Unit {
 		$can_preview_page = ! $can_preview_page ? $can_update_course : $can_preview_page;
 
 		if ( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
-			return __( 'Sorry. You are not permitted to view this part of the course.', 'CP_TD' );
+			return __( 'Sorry. You are not permitted to view this part of the course.', 'coursepress' );
 		}
 
 		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
@@ -149,7 +149,7 @@ class CoursePress_Template_Unit {
 			if ( $previous_unit_id ) {
 				$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
 				$format = '<span class="next-button unit unit-%s"><a href="%s"><button>%s</button></a></span> ';
-				$content .= sprintf( $format, $previous_unit_id, esc_url_raw( $unit_url ), __( 'Previous Unit', 'CP_TD' ) );
+				$content .= sprintf( $format, $previous_unit_id, esc_url_raw( $unit_url ), __( 'Previous Unit', 'coursepress' ) );
 			}
 
 			return $content;
@@ -281,8 +281,8 @@ class CoursePress_Template_Unit {
 		$url_path = CoursePress_Data_Unit::get_unit_url( $unit->ID );
 		$url_path .= trailingslashit( 'page' );
 		$has_submit_button = false;
-		$next_text = __( 'Next &raquo;', 'CP_TD' );
-		$prev_text = __( '&laquo; Previous', 'CP_TD' );
+		$next_text = __( 'Next &raquo;', 'coursepress' );
+		$prev_text = __( '&laquo; Previous', 'coursepress' );
 		$previous_page = false;
 
 		$unit_pager = '';
@@ -415,7 +415,7 @@ class CoursePress_Template_Unit {
 		if ( 'normal' == $view_mode && $enrolled && $has_submit_button && ! $error ) {
 			$save_progress_link = sprintf(
 				'<div class="save-progress-and-exit-container"><a href="#" class="save-progress-and-exit">%s</a></div>',
-				__( 'Save Progress &amp; Exit', 'CP_TD' )
+				__( 'Save Progress &amp; Exit', 'coursepress' )
 			);
 		}
 
@@ -468,7 +468,7 @@ class CoursePress_Template_Unit {
 					$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 					if ( ! $is_done ) {
-						$first_line    = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
+						$first_line    = __( 'You need to complete all the REQUIRED modules before this unit.', 'coursepress' );
 						$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 						continue;
 					}

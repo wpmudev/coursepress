@@ -1,5 +1,5 @@
 <div class="wrap coursepress_wrapper coursepress-comments">
-	<h1><?php esc_html_e( 'Comments', 'CP_TD' ); ?></h1>
+	<h1><?php esc_html_e( 'Comments', 'coursepress' ); ?></h1>
 	<hr />
 
 	<form method="post">

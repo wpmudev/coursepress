@@ -27,7 +27,7 @@ class CoursePress_Template_Grades {
 		 */
 		$content .= '<div class="total_grade">';
 		$shortcode = sprintf( '[course_progress course_id="%d"]', $course_id );
-		$content .= apply_filters( 'coursepress_grade_caption', __( 'Total:', 'CP_TD' ) );
+		$content .= apply_filters( 'coursepress_grade_caption', __( 'Total:', 'coursepress' ) );
 		$content .= ' ';
 		$content .= do_shortcode( $shortcode );
 		$content .= '%</div>';

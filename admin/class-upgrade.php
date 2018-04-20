@@ -21,8 +21,8 @@ class CoursePress_Admin_Upgrade extends CoursePress_Admin_Controller_Menu {
 		if ( 'yes' == $coursepress_courses_need_update ) {
 			$this->init();
 			return array(
-				'title' => __( 'CoursePress Upgrade', 'CP_TD' ),
-				'menu_title' => __( 'Upgrade', 'CP_TD' ),
+				'title' => __( 'CoursePress Upgrade', 'coursepress' ),
+				'menu_title' => __( 'Upgrade', 'coursepress' ),
 			);
 		}
 		return array();
