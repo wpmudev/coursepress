@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the CoursePress Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2018-04-10 09:22:53+0000\n"
+"PO-Revision-Date: 2018-04-20 11:11:09+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -874,7 +874,7 @@ msgstr "Wyświetla obrazek kursu wyświetlany na listach. (Patrz [course_media])
 
 #: 2.0/include/coursepress/template/class-communication.php:14
 msgid "This course does not have any notifications."
-msgstr ""
+msgstr "Curs nie ma żadnego powiadomienia."
 
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1122
 msgid "Width of image."
@@ -898,7 +898,7 @@ msgstr "Wysokość obrazka."
 
 #: 2.0/include/coursepress/template/class-communication.php:80
 msgid "Start a new discussion"
-msgstr ""
+msgstr "Rozpocznij dyskusję"
 
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1127
 msgid "Original height"
@@ -946,7 +946,7 @@ msgstr "Domyślna wysokość odtwarzacza"
 
 #: 2.0/include/coursepress/template/class-communication.php:245
 msgid "Add discussion"
-msgstr ""
+msgstr "Dodaj dyskusję"
 
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1200
 msgid "Width of media."
@@ -954,7 +954,7 @@ msgstr ""
 
 #: 2.0/include/coursepress/template/class-communication.php:248
 msgid "Title of the discussion"
-msgstr ""
+msgstr "Tytuł dyskusji"
 
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1201
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1205
@@ -963,7 +963,7 @@ msgstr "Ustawienia CoursePressa."
 
 #: 2.0/include/coursepress/template/class-communication.php:249
 msgid "Type your discussion or question here…"
-msgstr ""
+msgstr "Pisz lub pytaj tutaj ..."
 
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1204
 msgid "Height of media."
@@ -1886,7 +1886,7 @@ msgstr "Przypisz pomocnika do jakiegoś kursu"
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:161
 #: 2.0/include/coursepress/view/front/class-course.php:1149
 msgid "Grades"
-msgstr ""
+msgstr "Postęp"
 
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:204
 msgid "View units in every course (also from other instructors)"
@@ -2860,7 +2860,7 @@ msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-student.php:195
 msgid "Course completion: "
-msgstr ""
+msgstr "Stan ukończenia:"
 
 #: 2.0/admin/class-reports.php:227
 #: 2.0/include/coursepress/view/admin/assessment/class-report.php:193
