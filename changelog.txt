@@ -5,6 +5,20 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.6 =
+-------------------------------------------------
+- Fixed: Ability to duplicate a course for an instructor.
+- Fixed: Compatibility with plugins/themes which use login form.
+- Fixed: Conflict with other plugins with early get_posts() function usage.
+- Fixed: Display on medium size tablets.
+- Fixed: Enrollment popup does not work.
+- Fixed: Login overlay is not accessible in some situations.
+- Fixed: Problem with CoursePress version in the export file.
+- Fixed: Problem with missing pagination for course discussions.
+- Fixed: Problem with the single instructor template.
+- Fixed: Showing a unit description.
+- Fixed: Turn off autocompletion for a unit.
+
 = 2.1.5 =
 -------------------------------------------------
 - Fixed: Added course categories information in the export file.
@@ -29,6 +43,8 @@ CHANGELOG
 * Fixed: Typo in notifications configuration.
 * Fixed: Typo in MarketPress integration box.
 * Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+* Improved: Prevent save units before fetching all data.
+* Improved: Force recalculate number of courses on Instructors Screen.
 * Improved: Prevent saves units before fetching all data.
 
 = 2.1.3 =
@@ -78,6 +94,7 @@ CHANGELOG
 * Fixed: Unable to send feedback about assessments.
 * Fixed: Units inside the course are available agains the settings options.
 * Fixed: Visual editor is blank and missing data after module reorder.
+* Fixed: PHP warnings during export, when we try to fetch deleted user data.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
@@ -93,29 +110,28 @@ CHANGELOG
 
 = 2.1 =
 -------------------------------------------------
-* Added: Text color option for course certificate.
 * Added: Categories argument to [course_list] shortcode to filter courses.
 * Added: HTML rel attribute to next and previous buttons.
-* Added: Password strength meter on student profile
-* Added: The ability to disable the strength meter in the enrollment pup-up.
-* Added: Option to disable emails individually
-* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
 * Added: New filter: coursepress_comment_form_args to filter new comment form arguments.
+* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
+* Added: Option to disable emails individually
+* Added: Password strength meter on student profile
+* Added: Text color option for course certificate.
+* Added: The ability to disable the strength meter in the enrollment pup-up.
 * Added: Unit slug will be updated when you change unit title.
+* Improved: Added certificate filter on students list on course edit screen.
 * Improved: Add individual nonce when withdraw a student from a course.
+* Improved: Automatic migration from users upgrading from version 1.x
+* Improved: Better section title display - added information about no title.
+* Improved: Form module UI for better display.
+* Improved: Image display.
+* Improved: Increase a course assessments page load time.
+* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
+* Improved: Smaller download size.
 * Improved: Students list on assessment screen can be sorted by username and display name.
 * Improved: Students list on assessment screen is more like users list.
 * Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
 * Improved: Students list on course edit screen is more like users list.
-* Improved: Added certificate filter on students list on course edit screen.
-* Improved: Increase a course assessments page load time.
-* Improved: Image display.
-* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
-* Improved: Better section title display - added information about no title.
-* Improved: Automatic migration from users upgrading from version 1.x
-* Improved: Smaller download size.
-* Improved: Form module UI for better display.
-
 * Fixed: Default unit title height to avoid collapse when empty.
 * Fixed: Instructor profile course lists on multisite.
 * Fixed: Empty dashboard page to non-enrolled user.
@@ -133,6 +149,7 @@ CHANGELOG
 * Added: Ability to sort by title for course_list shortcode.
 * Added: Instructors notification for new enrolled students.
 * Added: Text color option for basic certificate.
+* Added: Preview without saving for basic and course certificates.
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
@@ -191,10 +208,12 @@ Fixed: Preview button.
 * Fixed: Ignoring "User also needs to pass all required assessments" unit option.
 * Fixed: "Passing Grade" value one assessments page.
 * Fixed: Link to student profile in "Number of Courses" column.
+* Fixed: form imput, there was a problem with correct grade.
 * Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.
@@ -202,10 +221,12 @@ Fixed: Preview button.
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Added new option "Show empty units" which allow to show units without modules.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
 * Improved HTML login & signup forms.
+* Improved TinyMCE editor on course edit screen.
 * FIxed on signup form double error messages.
 * Fixed "Grades" screen.
 * Fixed a wrong link to student profile from students tab on a course edit screen.
@@ -218,8 +239,10 @@ Fixed: Preview button.
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
-* Added sanitization of course id in "course_join_button" shortcode.
+* Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.
 * Added filter "coursepress_unit_add_open_date" to allow display open unit date.
 * Added auto-creating missing directories for PDF certificates.
@@ -232,26 +255,22 @@ Fixed: Preview button.
 * Limiting facilitator role, from now on it can only edit allowed courses.
 * Improved the appearance of buttons on course frontend page.
 * Improved "My Profile" screen.
-* Delete related course data from usermeta table when deleting a course.
-* Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
+* Delete related course data from a usermeta table when deleting a course.
+* Improve "Student Profile" screen by adding a nonce check, to avoid any profile display.
 * Improve login and signup screens for small screens.
 * Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
-* Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
+* Fixed a "60 seconds" bug - when a module uses a timer, there was no chance to show different amount of seconds then "60".
 * Fixed a bug with the sum of time for pages and units on course edit page.
 * Fixed a bug related to the inability to disable CoursePress login form.
 * Fixed a bug with previewing units & modules.
 * Fixed a problem with "Manage Course" button.
 * Fixed a problem with access to CoursePress menu for instructors.
 * Fixed a problem with enrolling students using MarketPress.
-* Fixed a problem with sections pagination when course is in normal mode.
+* Fixed a problem with sections pagination when a course is in normal mode.
 * Fixed untranslated texts.
-* Fixed a bug with ability to approve comments to discussions.
-* Fixed a bug when user can enroll in the course without paying to paid course.
-* Fixed a bug with combination when we do not have required modules, but we check "User needs to answer all required[...]".
-
-= 2.0.3.1 =
--------------------------------------------------
-* Fixed: Fatal error thrown on old PHP version
+* Fixed a bug with the ability to approve comments to discussions.
+* Fixed a bug when a user can enroll in the course without paying to paid course.
+* Fixed a bug with the combination when we do not have required modules, but we check "User needs to answer all required[...]".
 
 = 2.0.3 =
 -------------------------------------------------
@@ -278,13 +297,13 @@ Fixed: Preview button.
 
 = 2.0.2 =
 -------------------------------------------------
-* Fixed a bug with class autoloder function.
+* Fixed a bug with class autoloader function.
 * Added better default CoursePress certificate.
 * Added "Settings" and "Support" links on WP plugins page.
 * Fixed a bug with import students to course when MarketPress is active.
 * Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
-* Added check to import json file.
+* Added check to import JSON file.
 * Added confirmation popup when student withdraw from the course.
 * Fixed non-virtual student login page.
 * Removed fakepath file location in file upload.
@@ -294,7 +313,7 @@ Fixed: Preview button.
 * Added allow weak password registration.
 
 = 2.0.1 =
-----------------------------------------------------
+------------------------------------------------------
 * Fixed: Chat module support for wordpress-chat plugin
 * Fixed: Module's unlimited retry attempts
 * Fixed: Language Internationalization
@@ -324,9 +343,6 @@ Fixed: Preview button.
 * Improved course/students lists.
 * Removed section break module.
 * Delete certificate when deleting student.
-
--------------------------------------------------
-
 
 = 1.2.5.8 =
 -------------------------------------------------
