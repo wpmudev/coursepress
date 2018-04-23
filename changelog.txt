@@ -10,11 +10,13 @@ CHANGELOG
 - Fixed: Ability to duplicate a course for an instructor.
 - Fixed: Compatibility with plugins/themes which use login form.
 - Fixed: Conflict with other plugins with early get_posts() function usage.
+- Fixed: Display on medium size tablets.
 - Fixed: Enrollment popup does not work.
 - Fixed: Login overlay is not accessible in some situations.
 - Fixed: Problem with CoursePress version in the export file.
 - Fixed: Problem with missing pagination for course discussions.
 - Fixed: Problem with the single instructor template.
+- Fixed: Showing a unit description.
 - Fixed: Turn off autocompletion for a unit.
 
 = 2.1.5 =
