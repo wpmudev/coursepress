@@ -1061,8 +1061,15 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			$additional_class = '';
 			$additional_li_class = '';
+			$force_current_unit_completion = cp_is_true(
+				get_post_meta( $unit_id, 'force_current_unit_completion', true )
+			);
+			$force_current_unit_successful_completion = cp_is_true(
+				get_post_meta( $unit_id, 'force_current_unit_successful_completion', true )
+			);
 
-			if ( ! $can_update_course && $last_module_id > 0 && $clickable ) {
+			if ( ! $can_update_course && $last_module_id > 0 && $clickable
+					&& ( $force_current_unit_completion || $force_current_unit_successful_completion ) ) {
 				// Check if the last module is already answered.
 				$is_last_module_done = CoursePress_Data_Module::is_module_done_by_student( $last_module_id, $student_id );
 
