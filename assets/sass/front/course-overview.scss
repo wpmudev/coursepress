@@ -109,4 +109,15 @@
             }
         }
     }
+    @media screen and (min-width: 44.375em) {
+        .coursepress-wrap {
+            .course {
+                .entry-content,
+                .entry-header {
+                    margin: 0 7%;
+                    width: 86%;
+                }
+            }
+        }
+    }
 }
