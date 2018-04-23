@@ -125,21 +125,38 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
 		}
 		foreach ( $settings['email'] as $key => $email ) {
-			$settings['email'][ $key ]['enabled'] = ( ! $settings['email'][ $key ]['enabled'] ) ? '' : 1;
+			$value = '';
+			if ( ! isset( $settings['email'][ $key ] ) ) {
+				$settings['email'][ $key ] = array();
+			}
+			if ( isset( $settings['email'][ $key ]['enabled'] ) && $settings['email'][ $key ]['enabled'] ) {
+				$value = 1;
+			}
+			$settings['email'][ $key ]['enabled'] = $value;
 		}
 
 		// Migrate caps.
-		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor']  );
+		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor'] );
 		$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
 
 		// Migrate certificate.
-		$settings['basic_certificate']['certificate_logo']               = $settings['basic_certificate']['logo_image'];
-		$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
-		$settings['basic_certificate']['certificate_logo_position']['x'] = $settings['basic_certificate']['logo']['x'];
-		$settings['basic_certificate']['certificate_logo_position']['y'] = $settings['basic_certificate']['logo']['y'];
-		$settings['basic_certificate']['certificate_logo_position']['w'] = $settings['basic_certificate']['logo']['width'];
-		$settings['basic_certificate']['cert_text_color']                = $settings['basic_certificate']['text_color'];
-
+		if ( isset( $settings['basic_certificate'] ) ) {
+			if ( isset( $settings['basic_certificate']['logo_image'] ) ) {
+				$settings['basic_certificate']['certificate_logo']               = $settings['basic_certificate']['logo_image'];
+			}
+			if ( isset( $settings['basic_certificate']['logo'] ) ) {
+				$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
+				$keys = array( 'x', 'y', 'width' );
+				foreach ( $key as $key ) {
+					if ( isset( $settings['basic_certificate']['logo'][ $key ] ) ) {
+						$settings['basic_certificate']['certificate_logo_position'][ $key ] = $settings['basic_certificate']['logo'][ $key ];
+					}
+				}
+			}
+			if ( isset( $settings['basic_certificate']['text_color'] ) ) {
+				$settings['basic_certificate']['cert_text_color']                = $settings['basic_certificate']['text_color'];
+			}
+		}
 		return $settings;
 	}
 
@@ -311,6 +328,18 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				}
 				$args['meta_input']['page_description'] = $page_description;
 			}
+			/**
+			 * unit availability
+			 */
+			if ( isset( $unit->unit_availability ) ) {
+				$args['unit_availability'] = $unit->unit_availability;
+				if ( 'on_date' === $args['unit_availability'] ) {
+					$value = get_post_meta( $unit->ID, 'unit_date_availability', true );
+					$args['meta_input']['unit_availability_date'] = $value ;
+					$args['meta_input']['unit_availability_date_timestamp'] = strtotime( $value );
+				}
+			}
+
 			wp_update_post( $args );
 		}
 		/**
@@ -340,11 +369,13 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 						$answers = get_post_meta( $step_id, 'answers', true );
 						$checked = array();
 						$answer = get_post_meta( $step_id, 'answers_selected', true );
-						foreach ( $answers as $id => $a ) {
-							if ( is_array( $answer ) ) {
-								$checked[ $id ] = in_array( $id, $answer )? 1:'';
-							} else {
-								$checked[ $id ] = $id == $answer? 1:'';
+						if ( is_array( $answers ) ) {
+							foreach ( $answers as $id => $a ) {
+								if ( is_array( $answer ) ) {
+									$checked[ $id ] = in_array( $id, $answer )? 1:'';
+								} else {
+									$checked[ $id ] = $id == $answer? 1:'';
+								}
 							}
 						}
 						$args['meta_input']['module_type'] = 'input-quiz';
