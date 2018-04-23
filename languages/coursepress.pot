@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2018-04-20 11:14:28+00:00\n"
+"POT-Creation-Date: 2018-04-23 07:55:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -71,8 +71,7 @@ msgstr ""
 #: 2.0/include/coursepress/data/shortcode/class-student.php:529
 #: 2.0/include/coursepress/helper/class-javascript.php:254
 #: 2.0/include/coursepress/helper/class-javascript.php:500
-#: 2.0/include/coursepress/template/class-communication.php:251
-#: 2.0/themes/coursepress/page-add-new-discussion.php:82
+#: 2.0/include/coursepress/template/class-communication.php:278
 msgid "Cancel"
 msgstr ""
 
@@ -245,8 +244,6 @@ msgstr ""
 
 #: 2.0/admin/class-comments.php:21 2.0/admin/table/class-forums.php:128
 #: 2.0/admin/view/comments.php:2
-#: 2.0/themes/coursepress/archive-discussions.php:103
-#: 2.0/themes/coursepress/content-discussion.php:33
 msgid "Comments"
 msgstr ""
 
@@ -282,12 +279,12 @@ msgstr ""
 #: 2.0/admin/class-courses.php:92 2.0/admin/class-courses.php:192
 #: 2.0/admin/class-courses.php:286
 #: 2.0/include/coursepress/data/class-unit.php:26
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2210
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2217
 #: 2.0/include/coursepress/data/shortcode/class-template.php:573
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:136
 #: 2.0/include/coursepress/helper/class-setting.php:388
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:119
-#: 2.0/include/coursepress/view/front/class-course.php:1227
+#: 2.0/include/coursepress/view/front/class-course.php:1228
 msgid "Units"
 msgstr ""
 
@@ -347,22 +344,13 @@ msgstr ""
 #: 2.0/admin/view/comment-edit.php:71
 #: 2.0/include/coursepress/data/class-certificate.php:53
 #: 2.0/include/coursepress/data/class-course.php:28
-#: 2.0/include/coursepress/data/class-discussion.php:19
+#: 2.0/include/coursepress/data/class-discussion.php:20
 #: 2.0/include/coursepress/data/class-module.php:38
 #: 2.0/include/coursepress/data/class-notification.php:18
 #: 2.0/include/coursepress/data/class-unit.php:31
-#: 2.0/include/coursepress/template/class-communication.php:178
+#: 2.0/include/coursepress/template/class-communication.php:205
 #: 2.0/include/coursepress/view/admin/course/class-student.php:213
 #: 2.0/include/coursepress/view/admin/student/class-workbook.php:40
-#: 2.0/themes/coursepress/content-course-overview.php:144
-#: 2.0/themes/coursepress/content-discussion.php:54
-#: 2.0/themes/coursepress/content-page.php:27
-#: 2.0/themes/coursepress/content-single.php:69
-#: 2.0/themes/coursepress/content.php:85
-#: 2.0/themes/coursepress/inc/template-tags.php:133
-#: 2.0/themes/coursepress/inc/template-tags.php:176
-#: 2.0/themes/coursepress/inc/template-tags.php:234
-#: 2.0/themes/coursepress/inc/template-tags.php:273
 msgid "Edit"
 msgstr ""
 
@@ -674,7 +662,7 @@ msgid "CoursePress Forums"
 msgstr ""
 
 #: 2.0/admin/class-forums.php:80
-#: 2.0/include/coursepress/data/class-discussion.php:14
+#: 2.0/include/coursepress/data/class-discussion.php:15
 msgid "Forums"
 msgstr ""
 
@@ -707,7 +695,7 @@ msgid "Select Course"
 msgstr ""
 
 #: 2.0/admin/class-forums.php:380
-#: 2.0/include/coursepress/data/class-discussion.php:63
+#: 2.0/include/coursepress/data/class-discussion.php:64
 #: 2.0/include/coursepress/view/admin/assessment/class-report.php:278
 msgid "All units"
 msgstr ""
@@ -767,7 +755,6 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/class-instructor.php:12
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:123
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:217
-#: 2.0/themes/coursepress/content-course-overview.php:83
 msgid "Instructors"
 msgstr ""
 
@@ -800,7 +787,7 @@ msgstr ""
 #: 2.0/admin/class-notifications.php:345 2.0/admin/table/class-comments.php:205
 #: 2.0/admin/table/class-instructors.php:134
 #: 2.0/admin/table/class-notifications.php:311 2.0/admin/view/export.php:12
-#: 2.0/include/coursepress/data/class-discussion.php:59
+#: 2.0/include/coursepress/data/class-discussion.php:60
 #: 2.0/include/coursepress/data/class-notification.php:63
 msgid "All courses"
 msgstr ""
@@ -979,7 +966,7 @@ msgstr ""
 
 #: 2.0/admin/controller/class-course.php:82
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:1269
-#: 2.0/include/coursepress/view/front/class-course.php:1412
+#: 2.0/include/coursepress/view/front/class-course.php:1413
 msgid "Course Update: No action."
 msgstr ""
 
@@ -1229,7 +1216,7 @@ msgstr ""
 #: 2.0/admin/controller/class-unit.php:193 2.0/admin/view/steps/step-7.php:62
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:547
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:901
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1348
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1355
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:166
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:1151
 #: 2.0/include/coursepress/view/admin/course/class-unitbuilder.php:132
@@ -1421,7 +1408,7 @@ msgstr ""
 #: 2.0/include/coursepress/helper/table/class-coursestudent.php:267
 #: 2.0/include/coursepress/helper/table/class-student.php:44
 #: 2.0/include/coursepress/template/class-course.php:123
-#: 2.0/include/coursepress/view/front/class-course.php:1179
+#: 2.0/include/coursepress/view/front/class-course.php:1180
 msgid "Workbook"
 msgstr ""
 
@@ -1453,7 +1440,7 @@ msgstr ""
 #: 2.0/admin/view/instructor-courses.php:23
 #: 2.0/include/coursepress/data/class-course.php:24
 #: 2.0/include/coursepress/helper/integration/class-woocommerce.php:554
-#: 2.0/include/coursepress/template/class-communication.php:227
+#: 2.0/include/coursepress/template/class-communication.php:254
 #: 2.0/include/coursepress/template/class-course.php:38
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:74
 #: 2.0/include/coursepress/view/front/class-course.php:918
@@ -1504,8 +1491,8 @@ msgstr ""
 #: 2.0/admin/table/class-instructors.php:119
 #: 2.0/admin/table/class-students.php:96
 #: 2.0/include/coursepress/data/class-course.php:35
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2196
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2206
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2203
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2213
 #: 2.0/include/coursepress/data/shortcode/class-template.php:388
 #: 2.0/include/coursepress/helper/class-utility.php:1393
 #: 2.0/include/coursepress/helper/table/class-instructor.php:90
@@ -1515,9 +1502,8 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:111
 #: 2.0/include/coursepress/view/admin/student/class-profile.php:15
 #: 2.0/include/coursepress/view/admin/student/class-workbook.php:30
-#: 2.0/include/coursepress/view/front/class-course.php:1306
+#: 2.0/include/coursepress/view/front/class-course.php:1307
 #: 2.0/include/coursepress/view/front/class-general.php:42
-#: 2.0/themes/coursepress/single-instructor.php:32
 msgid "Courses"
 msgstr ""
 
@@ -1928,7 +1914,6 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:170
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1633
 #: 2.0/include/coursepress/widget/class-structure.php:19
-#: 2.0/themes/coursepress/content-course-overview.php:67
 msgid "Course Structure"
 msgstr ""
 
@@ -2361,7 +2346,6 @@ msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:95
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:190
-#: 2.0/themes/coursepress/inc/customizer.php:118
 msgid "Logo"
 msgstr ""
 
@@ -2526,7 +2510,6 @@ msgstr ""
 
 #: 2.0/include/coursepress/class-email.php:140
 #: 2.0/include/coursepress/view/admin/setting/class-email.php:83
-#: 2.0/themes/coursepress/part-contact.php:78
 msgid "Subject"
 msgstr ""
 
@@ -2560,7 +2543,7 @@ msgstr ""
 #: 2.0/include/coursepress/template/class-module-old.php:1021
 #: 2.0/include/coursepress/template/class-module-old.php:1127
 #: 2.0/include/coursepress/template/class-module.php:396
-#: 2.0/include/coursepress/view/front/class-course.php:1433
+#: 2.0/include/coursepress/view/front/class-course.php:1434
 msgid "This course is completed, you can not submit answers anymore."
 msgstr ""
 
@@ -2614,7 +2597,6 @@ msgstr ""
 #: 2.0/include/coursepress/template/class-student.php:176
 #: 2.0/include/coursepress/view/front/class-enrollmentpopup.php:467
 #: 2.0/include/coursepress/view/front/class-student.php:237
-#: 2.0/themes/coursepress/part-contact.php:20
 msgid "E-mail address is not valid."
 msgstr ""
 
@@ -2646,7 +2628,6 @@ msgstr ""
 
 #: 2.0/include/coursepress/class-userlogin.php:80
 #: 2.0/include/coursepress/helper/class-javascript.php:475
-#: 2.0/themes/coursepress/part-contact.php:17
 msgid "All fields are required."
 msgstr ""
 
@@ -2657,7 +2638,7 @@ msgid ""
 msgstr ""
 
 #: 2.0/include/coursepress/data/class-certificate.php:50
-#: 2.0/include/coursepress/data/class-discussion.php:16
+#: 2.0/include/coursepress/data/class-discussion.php:17
 #: 2.0/include/coursepress/data/class-module.php:35
 #: 2.0/include/coursepress/data/class-notification.php:15
 #: 2.0/include/coursepress/data/class-unit.php:28
@@ -2713,7 +2694,6 @@ msgid "Search Courses"
 msgstr ""
 
 #: 2.0/include/coursepress/data/class-course.php:32
-#: 2.0/themes/coursepress/content-none.php:13
 msgid "No Courses Found"
 msgstr ""
 
@@ -2865,7 +2845,7 @@ msgid "You need to complete all the REQUIRED modules before this unit."
 msgstr ""
 
 #: 2.0/include/coursepress/data/class-course.php:2914
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1273
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1280
 msgid "You need to complete all the REQUIRED modules before this section."
 msgstr ""
 
@@ -2911,49 +2891,49 @@ msgstr ""
 msgid "I'm sorry to say you didn't pass COURSE_NAME. Better luck next time!"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:15
+#: 2.0/include/coursepress/data/class-discussion.php:16
 msgid "Forum"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:17
+#: 2.0/include/coursepress/data/class-discussion.php:18
 msgid "Create New Thread"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:18
+#: 2.0/include/coursepress/data/class-discussion.php:19
 msgid "Edit Thread"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:20
+#: 2.0/include/coursepress/data/class-discussion.php:21
 msgid "New Thread"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:21
-#: 2.0/include/coursepress/data/class-discussion.php:25
+#: 2.0/include/coursepress/data/class-discussion.php:22
+#: 2.0/include/coursepress/data/class-discussion.php:26
 msgid "View Thread"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:22
+#: 2.0/include/coursepress/data/class-discussion.php:23
 msgid "Search Threads"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:23
+#: 2.0/include/coursepress/data/class-discussion.php:24
 msgid "No Threads Found"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:24
+#: 2.0/include/coursepress/data/class-discussion.php:25
 msgid "No Threads found in Trash"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:435
+#: 2.0/include/coursepress/data/class-discussion.php:461
 msgid "Unsubscribe Successful"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:436
+#: 2.0/include/coursepress/data/class-discussion.php:462
 msgid "You have been removed from \"%s\" discussion."
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:573
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1501
+#: 2.0/include/coursepress/data/class-discussion.php:599
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1508
 #: 2.0/include/coursepress/data/shortcode/class-template.php:462
 #: 2.0/include/coursepress/template/class-unit.php:285
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1389
@@ -2961,8 +2941,8 @@ msgstr ""
 msgid "&laquo; Previous"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:574
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1500
+#: 2.0/include/coursepress/data/class-discussion.php:600
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1507
 #: 2.0/include/coursepress/data/shortcode/class-template.php:463
 #: 2.0/include/coursepress/template/class-unit.php:284
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1385
@@ -2970,30 +2950,30 @@ msgstr ""
 msgid "Next &raquo;"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:575
+#: 2.0/include/coursepress/data/class-discussion.php:601
 #: 2.0/include/coursepress/data/shortcode/class-template.php:464
 msgid "Proceed to the next section"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:576
+#: 2.0/include/coursepress/data/class-discussion.php:602
 #: 2.0/include/coursepress/data/shortcode/class-template.php:465
 msgid "Proceed to the next module"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:577
+#: 2.0/include/coursepress/data/class-discussion.php:603
 #: 2.0/include/coursepress/data/shortcode/class-template.php:466
 msgid "Next Section"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:621
+#: 2.0/include/coursepress/data/class-discussion.php:647
 msgid "Discussion Update: No action."
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:654
+#: 2.0/include/coursepress/data/class-discussion.php:680
 msgid "Discussion update failed: post type missmatch."
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-discussion.php:657
+#: 2.0/include/coursepress/data/class-discussion.php:683
 msgid "Discussion update failed: wrong nounce."
 msgstr ""
 
@@ -3119,7 +3099,7 @@ msgstr ""
 #: 2.0/include/coursepress/data/class-notification.php:13
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:146
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:135
-#: 2.0/include/coursepress/view/front/class-course.php:1205
+#: 2.0/include/coursepress/view/front/class-course.php:1206
 msgid "Notifications"
 msgstr ""
 
@@ -3306,7 +3286,6 @@ msgid "Anyone"
 msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-course.php:888
-#: 2.0/themes/coursepress/content-course-overview.php:36
 msgid "Who can Enroll: "
 msgstr ""
 
@@ -3397,7 +3376,6 @@ msgstr ""
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:87
 #: 2.0/include/coursepress/data/shortcode/class-template.php:213
 #: 2.0/include/coursepress/widget/class-featuredcourse.php:128
-#: 2.0/themes/coursepress/content-course.php:56
 msgid "Details"
 msgstr ""
 
@@ -3422,7 +3400,6 @@ msgid "Access Course"
 msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:93
-#: 2.0/themes/coursepress/content-course.php:56
 msgid "Not Available"
 msgstr ""
 
@@ -3448,30 +3425,30 @@ msgstr ""
 msgid "Untitled Page %s"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1120
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1127
 msgid " [DRAFT]"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1130
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1137
 msgid ""
 "This unit is available, but you need to complete all the REQUIRED modules "
 "before this unit."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1161
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1168
 msgid "You need to complete the REQUIRED unit before this unit."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1172
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1179
 msgid "Opens %s"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1174
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1181
 msgid "This unit will be available on the scheduled start date."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1280
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1282
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1287
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1289
 #: 2.0/include/coursepress/helper/ui/class-module.php:374
 #: 2.0/include/coursepress/helper/ui/class-module.php:391
 #: 2.0/include/coursepress/helper/ui/class-module.php:408
@@ -3492,122 +3469,121 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1347
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1354
 msgid "You need to completed all the REQUIRED modules before this module."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1358
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1365
 msgid "Mod"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1417
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1424
 msgid "No visible units in the course currently. Please check back later."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1424
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1431
 msgid "No units in the course currently. Please check back later."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1443
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1450
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:166
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1564
 #: 2.0/include/coursepress/widget/class-featuredcourse.php:20
 msgid "Featured Course"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1444
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1451
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1568
 msgid "Find out more."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1553
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1560
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1426
 msgid "Completed courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1555
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1562
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1435
 msgid "Current Courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1557
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1564
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1443
 msgid "Facilitated Courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1559
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1566
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1451
 msgid "Starting soon"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1560
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1567
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1455
 msgid "Incomplete courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1561
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1568
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1459
 msgid "The Instructor does not have any courses assigned yet."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1564
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1571
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1472
 msgid "Manage Courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1567
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1574
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1487
 msgid "Past courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1570
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1577
 msgid ""
 "You are not enrolled in any courses. <a href=\"%s\">See available "
 "courses.</a>"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1572
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1579
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1515
 msgid "Suggested courses"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1573
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1580
 msgid ""
 "You are not enrolled in any courses.<br />Here are a few you might like, or "
 "<a href=\"%s\">see all available courses.</a>"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1829
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1836
 msgid "You are not enrolled to any course."
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1838
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1845
 msgid "Manage Course"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1920
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1927
 msgid "Share"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2003
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2010
 #: 2.0/include/coursepress/view/admin/course/class-student.php:156
-#: 2.0/themes/coursepress/part-contact.php:87
 msgid "Send"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2005
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2012
 msgid "Write a Reply or Comment"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2044
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2051
 msgid "Reply"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2076
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2083
 msgid "-- General --"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2156
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2163
 msgid "0 course units prepared yet. Please check back later."
 msgstr ""
 
@@ -3888,13 +3864,13 @@ msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:153
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:139
-#: 2.0/include/coursepress/view/front/class-course.php:1102
-#: 2.0/include/coursepress/view/front/class-course.php:1127
+#: 2.0/include/coursepress/view/front/class-course.php:1103
+#: 2.0/include/coursepress/view/front/class-course.php:1128
 msgid "Discussions"
 msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:161
-#: 2.0/include/coursepress/view/front/class-course.php:1153
+#: 2.0/include/coursepress/view/front/class-course.php:1154
 msgid "Grades"
 msgstr ""
 
@@ -5448,7 +5424,7 @@ msgid "Zipped Object"
 msgstr ""
 
 #: 2.0/include/coursepress/helper/ui/class-module.php:323
-#: 2.0/include/coursepress/template/class-communication.php:169
+#: 2.0/include/coursepress/template/class-communication.php:196
 msgid "Discussion"
 msgstr ""
 
@@ -5772,47 +5748,51 @@ msgstr ""
 msgid "Discussions are not available for this course."
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:80
+#: 2.0/include/coursepress/template/class-communication.php:81
 msgid "Start a new discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:86
+#: 2.0/include/coursepress/template/class-communication.php:87
 msgid "This course does not have any discussions."
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:128
+#: 2.0/include/coursepress/template/class-communication.php:95
+msgid "Ups, something went wrong."
+msgstr ""
+
+#: 2.0/include/coursepress/template/class-communication.php:137
 msgid "Applies to:"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:159
+#: 2.0/include/coursepress/template/class-communication.php:186
 msgid "Unknown Discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:160
+#: 2.0/include/coursepress/template/class-communication.php:187
 msgid "The discussion you were looking for could not be found."
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:203
+#: 2.0/include/coursepress/template/class-communication.php:230
 msgid "New Discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:232
+#: 2.0/include/coursepress/template/class-communication.php:259
 msgid "This discussion is about "
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:245
+#: 2.0/include/coursepress/template/class-communication.php:272
 msgid "Update discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:245
+#: 2.0/include/coursepress/template/class-communication.php:272
 msgid "Add discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:248
+#: 2.0/include/coursepress/template/class-communication.php:275
 msgid "Title of the discussion"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:249
+#: 2.0/include/coursepress/template/class-communication.php:276
 msgid "Type your discussion or question here…"
 msgstr ""
 
@@ -6185,7 +6165,6 @@ msgid ""
 msgstr ""
 
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:447
-#: 2.0/themes/coursepress/inc/extras.php:69
 msgid "Page %s"
 msgstr ""
 
@@ -8501,20 +8480,20 @@ msgstr ""
 msgid "No files uploaded."
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-course.php:998
+#: 2.0/include/coursepress/view/front/class-course.php:999
 msgid "Download Certificate"
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-course.php:1027
+#: 2.0/include/coursepress/view/front/class-course.php:1028
 msgid "Courses in"
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-course.php:1031
-#: 2.0/include/coursepress/view/front/class-course.php:1307
+#: 2.0/include/coursepress/view/front/class-course.php:1032
+#: 2.0/include/coursepress/view/front/class-course.php:1308
 msgid "All Courses"
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-course.php:1803
+#: 2.0/include/coursepress/view/front/class-course.php:1804
 msgid "Cheatin&#8217; uh?"
 msgstr ""
 
@@ -8905,400 +8884,6 @@ msgstr ""
 msgid "Test Tabs"
 msgstr ""
 
-#: 2.0/themes/coursepress/404.php:17
-msgid "Oops! That page can&rsquo;t be found."
-msgstr ""
-
-#: 2.0/themes/coursepress/404.php:23
-msgid ""
-"It looks like nothing was found at this location. Maybe try one of the "
-"links below or a search?"
-msgstr ""
-
-#: 2.0/themes/coursepress/404.php:34
-msgid "Most Used Categories"
-msgstr ""
-
-#: 2.0/themes/coursepress/404.php:56
-#. Translators: %1$s: smiley.
-msgid "Try looking in the monthly archives. %1$s"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-discussions.php:36
-msgid "Ask a Question"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-discussions.php:115
-msgid "This course has no discussions yet. Start one, ask a question!"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-notifications.php:84
-msgid "This course has no notifications yet. Please check back later."
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-unit-grades.php:36
-msgid "Total"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-unit-grades.php:42
-msgid "This course has no units yet. Please check back later."
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-unit-workbook.php:26
-#: 2.0/themes/coursepress/archive-unit-workbook.php:70
-msgid "completed"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-unit-workbook.php:44
-msgid "Course Complete"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive-unit-workbook.php:83
-msgid "0 Units in the course"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:32
-msgid "Author: %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:40
-msgid "Day: %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:43
-msgid "Month: %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:46
-msgid "Year: %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:49
-msgid "Asides"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:52
-msgid "Images"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:55
-msgid "Videos"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:58
-msgid "Quotes"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:61
-msgid "Links"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:64 2.0/themes/coursepress/sidebar.php:17
-msgid "Archives"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:29
-#: 2.0/themes/coursepress/comments-discussion.php:50
-#: 2.0/themes/coursepress/comments.php:46
-#: 2.0/themes/coursepress/comments.php:67
-msgid "Comment navigation"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:30
-#: 2.0/themes/coursepress/comments-discussion.php:51
-#: 2.0/themes/coursepress/comments.php:47
-#: 2.0/themes/coursepress/comments.php:68
-msgid "&larr; Older Comments"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:31
-#: 2.0/themes/coursepress/comments-discussion.php:52
-#: 2.0/themes/coursepress/comments.php:48
-#: 2.0/themes/coursepress/comments.php:69
-msgid "Newer Comments &rarr;"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:62
-#: 2.0/themes/coursepress/comments.php:79
-msgid "Comments are closed."
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:71
-#: 2.0/themes/coursepress/comments-discussion.php:74
-msgid "Answer the Question"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:72
-msgid "Leave a Reply to %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:73
-msgid "Cancel Reply"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments-discussion.php:76
-msgid "Write a response"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:50
-msgid "SHARE"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:62
-msgid "About the Course"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:74
-#: 2.0/themes/coursepress/content-course.php:46
-#: 2.0/themes/coursepress/content-page.php:19
-#: 2.0/themes/coursepress/content-single.php:29
-#: 2.0/themes/coursepress/content.php:39
-msgid "Pages:"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:109
-#: 2.0/themes/coursepress/content-course.php:68
-#: 2.0/themes/coursepress/content-course.php:78
-#: 2.0/themes/coursepress/content-single.php:40
-#: 2.0/themes/coursepress/content-single.php:43
-#: 2.0/themes/coursepress/content.php:51 2.0/themes/coursepress/content.php:61
-#. Translators: Used between list items, there is a space after the comma.
-#. translators: Used between list items, there is a space after the comma.
-#. translators: Used between list items, there is a space after the comma.
-msgid ", "
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:114
-#: 2.0/themes/coursepress/content-single.php:50
-msgid "Bookmark the <a href=\"%3$s\" rel=\"bookmark\">permalink</a>."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:121
-#: 2.0/themes/coursepress/content-single.php:48
-msgid ""
-"This entry was tagged %2$s. Bookmark the <a href=\"%3$s\" "
-"rel=\"bookmark\">permalink</a>."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:128
-#: 2.0/themes/coursepress/content-single.php:55
-msgid ""
-"This entry was posted in %1$s and tagged %2$s. Bookmark the <a "
-"href=\"%3$s\" rel=\"bookmark\">permalink</a>."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course-overview.php:130
-#: 2.0/themes/coursepress/content-single.php:57
-msgid ""
-"This entry was posted in %1$s. Bookmark the <a href=\"%3$s\" "
-"rel=\"bookmark\">permalink</a>."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course.php:72
-msgid "Courses in %1$s"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-course.php:82
-#: 2.0/themes/coursepress/content.php:65
-msgid "Tagged %1$s"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-discussion.php:44
-msgid "Comments are disabled"
-msgstr ""
-
-#: 2.0/themes/coursepress/content-none.php:21
-msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-none.php:29
-msgid ""
-"Sorry, but nothing matched your search terms. Please try again with some "
-"different keywords."
-msgstr ""
-
-#: 2.0/themes/coursepress/content-none.php:36
-msgid ""
-"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
-"searching can help."
-msgstr ""
-
-#: 2.0/themes/coursepress/content.php:35
-msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
-msgstr ""
-
-#: 2.0/themes/coursepress/content.php:55
-msgid "Posted in %1$s"
-msgstr ""
-
-#: 2.0/themes/coursepress/content.php:75
-msgid "Leave a comment"
-msgstr ""
-
-#: 2.0/themes/coursepress/content.php:76
-msgid "1 comment"
-msgstr ""
-
-#: 2.0/themes/coursepress/content.php:77
-msgid "% comments"
-msgstr ""
-
-#: 2.0/themes/coursepress/functions.php:54
-msgid "Primary Menu"
-msgstr ""
-
-#: 2.0/themes/coursepress/functions.php:55
-msgid "Footer Menu"
-msgstr ""
-
-#: 2.0/themes/coursepress/functions.php:144
-msgid "Sidebar"
-msgstr ""
-
-#: 2.0/themes/coursepress/functions.php:155
-msgid "Footer"
-msgstr ""
-
-#: 2.0/themes/coursepress/header.php:70
-msgid "Skip to content"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:21
-msgid "Body Text Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:27
-msgid "Content Text Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:33
-msgid "Content Header Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:39
-msgid "Content Links Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:45
-msgid "Content Links Hover Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:51
-msgid "Main Navigation Links Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:57
-msgid "Main Navigation Links Hover Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:63
-msgid "Footer Background Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:69
-msgid "Footer Links Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:75
-msgid "Footer Links Hover Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:81
-msgid "Widgets Title Color"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/customizer.php:137
-msgid "Upload a logo"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:25
-msgid "Posts navigation"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:33
-msgid "%s&larr;%s Older posts"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:47
-msgid "Newer posts %s&rarr;%s"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:86
-msgid "Post navigation"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:130
-#: 2.0/themes/coursepress/inc/template-tags.php:231
-msgid "Pingback:"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:153
-msgid "%s says:"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:185
-#: 2.0/themes/coursepress/inc/template-tags.php:250
-msgid "Your comment is awaiting moderation."
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:322
-msgid ""
-"<span class=\"posted-on\">Posted on %1$s</span><span class=\"byline\"> by "
-"%2$s</span>"
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:17
-msgid "Question title is required."
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:20
-msgid "Question description is required."
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:62
-msgid "Course General"
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:69
-msgid "Title of your question"
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:72
-msgid "Question description..."
-msgstr ""
-
-#: 2.0/themes/coursepress/page-add-new-discussion.php:76
-msgid "Ask this Question"
-msgstr ""
-
-#: 2.0/themes/coursepress/part-contact.php:46
-msgid "E-mail sent successfully! We will respond as soon as possible."
-msgstr ""
-
-#: 2.0/themes/coursepress/part-contact.php:49
-msgid "An error occured while trying to send the e-mail. Please try again later."
-msgstr ""
-
-#: 2.0/themes/coursepress/part-contact.php:68
-msgid "Your Name"
-msgstr ""
-
-#: 2.0/themes/coursepress/part-contact.php:73
-msgid "Your E-mail"
-msgstr ""
-
-#: 2.0/themes/coursepress/part-contact.php:83
-msgid "Message"
-msgstr ""
-
-#: 2.0/themes/coursepress/search.php:20
-msgid "Search Results for: %s"
-msgstr ""
-
-#: 2.0/themes/coursepress/sidebar.php:24
-msgid "Meta"
-msgstr ""
-
 #: coursepress.php:168
 msgid "Error loading %s v%s plugin!"
 msgstr ""
@@ -9450,17 +9035,17 @@ msgctxt "Default title for a duplicated course. Variable is original title."
 msgid "%s Copy"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1166
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1173
 msgctxt "Unit available date with year for future unit."
 msgid "M d, Y"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1166
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1173
 msgctxt "Unit available date without year for future unit."
 msgid "M d"
 msgstr ""
 
-#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2009
+#: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2016
 #: 2.0/include/coursepress/data/shortcode/class-unit.php:269
 msgctxt "noun"
 msgid "Comment"
@@ -9482,59 +9067,7 @@ msgctxt "paging"
 msgid "%1$s of %2$s"
 msgstr ""
 
-#: 2.0/include/coursepress/template/class-communication.php:170
+#: 2.0/include/coursepress/template/class-communication.php:197
 msgctxt "separator between \"Discussion\" text and title"
 msgid ": "
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:43
-msgctxt "monthly archives date format"
-msgid "F Y"
-msgstr ""
-
-#: 2.0/themes/coursepress/archive.php:46
-msgctxt "yearly archives date format"
-msgid "Y"
-msgstr ""
-
-#: 2.0/themes/coursepress/comments.php:30
-msgctxt "comments title"
-msgid "One thought on &ldquo;%2$s&rdquo;"
-msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] ""
-msgstr[1] ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:93
-msgctxt "Previous post link"
-msgid "%s&larr;%s %%title"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:101
-msgctxt "Next post link"
-msgid "%%title %s&rarr;%s"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:167
-msgctxt "1: date, 2: time"
-msgid "%1$s at %2$s"
-msgstr ""
-
-#: 2.0/themes/coursepress/inc/template-tags.php:261
-msgctxt "1: author, 2: time of comment"
-msgid "%1$s, %2$s ago"
-msgstr ""
-
-#: 2.0/themes/coursepress/searchform.php:10
-msgctxt "label"
-msgid "Search for:"
-msgstr ""
-
-#: 2.0/themes/coursepress/searchform.php:11
-msgctxt "placeholder"
-msgid "Search &hellip;"
-msgstr ""
-
-#: 2.0/themes/coursepress/searchform.php:13
-msgctxt "submit button"
-msgid "Search"
 msgstr ""

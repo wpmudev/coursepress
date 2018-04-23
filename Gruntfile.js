@@ -48,22 +48,28 @@ module.exports = function(grunt) {
 		// Regex patterns to exclude from transation.
 		translation: {
 			ignore_files: [
-				'(^.php)',      // Ignore non-php files.
-				'tests/', // Upgrade tests
-				'node_modules/',
-				'2.0/test/',      // Unit testing.
-				'2.0/.sass-cache/',
-				'2.0/node_modules/.*',
-				'2.0/tcpdf/.*',
-				'2.0/themes/.*',
-				'2.0/include/tcpdf/.*', // External module.
-				'2.0/themes/.*',    // External module.,
 				'2.0/campus/*',
+				'2.0/include/tcpdf/.*', // External module.
+				'2.0/node_modules/.*',
 				'2.0/premium/',
+				'2.0/.sass-cache/',
+				'2.0/tcpdf/.*',
+				'2.0/test/',      // Unit testing.
+				'2.0/themes/.*',
+				'2.0/themes/.*',    // External module.,
+				'.git*',
 				'.idea/',
-				'.sass-cache/'
+				'node_modules/.*',
+				'node_modules/',
+				'(^.php)',		 // Ignore non-php files.
+				'release/.*',	  // Temp release files.
+				'.sass-cache/.*',
+				'.sass-cache/',
+				'tests/.*',		// Unit testing.
+				'tests/' // Upgrade tests
 			],
-			pot_dir: 'languages/'  // With trailing slash.
+			pot_dir: 'languages/', // With trailing slash.
+			textdomain: 'coursepress'
 		},
 
 		// Build branches.
@@ -184,21 +190,8 @@ module.exports = function(grunt) {
 
 		// Different plugin settings.
 		plugin_file: 'coursepress.php',
-		plugin_dir: 'coursepress',
+		plugin_dir: 'coursepress'
 
-		// Regex patterns to exclude from transation.
-		translation: {
-			ignore_files: [
-				'.git*',
-				'node_modules/.*',
-				'(^.php)',		 // Ignore non-php files.
-				'release/.*',	  // Temp release files.
-				'.sass-cache/.*',
-				'tests/.*',		// Unit testing.
-			],
-			pot_dir: 'languages/', // With trailing slash.
-			textdomain: 'coursepress',
-		}
 	};
 
 	// Define grunt tasks.
@@ -365,7 +358,6 @@ module.exports = function(grunt) {
 					mainFile: conf.plugin_file,
 					potFilename: conf.translation.textdomain + '.pot',
 					potHeaders: {
-						poedit: true, // Includes common Poedit headers.
 						'poedit': true, // Includes common Poedit headers.
 						'language-team': 'WPMU Dev <support@wpmudev.org>',
 						'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/coursepress',
