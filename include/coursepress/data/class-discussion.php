@@ -91,7 +91,6 @@ class CoursePress_Data_Discussion {
 			'nopaging' => true,
 		);
 		$query = new WP_Query( $args );
-		l( $query->post_count );
 		return $query->post_count;
 	}
 
