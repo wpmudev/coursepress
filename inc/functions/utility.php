@@ -100,6 +100,7 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 			'details_media_type' => 'default',
 			'details_show_language' => true,
 			'details_show_price_free' => true,
+			'details_show_instructors' => true,
 			'image_height' => 235,
 			'image_width' => 235,
 			'listing_media_priority' => 'default',

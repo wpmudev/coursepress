@@ -79,7 +79,12 @@ if ( $show || $is_paid ) {
 					<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
 				</div>
 
-				<?php echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' ); ?>
+                <?php
+				$show = coursepress_get_setting( 'general/details_show_instructors', 1 );
+				if ( $show ) {
+					echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' );
+				}
+?>
 
 			</div>
 		</div>

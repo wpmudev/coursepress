@@ -44,7 +44,6 @@
 					'type' => 'checkbox',
 					'title' => $toggle_input . __( 'Show course language', 'cp' ),
 					'value' => coursepress_get_setting( 'general/listing_show_language', 1 ),
-					'desc' => __( 'Show course language.', 'cp' ),
 				),
 			),
 		);
@@ -86,7 +85,11 @@
 					'type' => 'checkbox',
 					'title' => $toggle_input . __( 'Show course language', 'cp' ),
 					'value' => coursepress_get_setting( 'general/details_show_language', 1 ),
-					'desc' => __( 'Show course language.', 'cp' ),
+				),
+				'details_show_instructors' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Show course instructors', 'cp' ),
+					'value' => coursepress_get_setting( 'general/details_show_instructors', 1 ),
 				),
 			),
 		);
