@@ -92,38 +92,40 @@ function coursepress_get_categories() {
  */
 function coursepress_get_setting( $key = true, $default = '' ) {
 	global $coursepress_data_users;
-
 	$caps = coursepress_get_array_val( $coursepress_data_users->__get( 'capabilities' ), 'instructor' );
 	$settings = coursepress_get_option( 'coursepress_settings', array() );
-
 	$defaults = array(
 		'general' => array(
+			'details_media_priority' => 'default',
 			'details_media_type' => 'default',
-	        'details_media_priority' => 'default',
-	        'listing_media_type' => 'default',
-	        'listing_media_priority' => 'default',
-	        'image_width' => 235,
-	        'image_height' => 235,
+			'details_show_language' => true,
+			'details_show_price_free' => true,
+			'image_height' => 235,
+			'image_width' => 235,
+			'listing_media_priority' => 'default',
+			'listing_media_type' => 'default',
+			'listing_show_language' => true,
+			'listing_show_price_free' => true,
 		),
 		'slugs' => array(
 			'course' => 'courses',
-	        'course_category' => 'course_category',
-	        'units' => 'units',
-	        'notifications' => 'notifications',
-	        'discussions' => 'discussion',
-	        'discussions_new' => 'add_new_discussion',
-	        'grades' => 'grades',
-	        'workbook' => 'workbook',
-	        'login' => 'student-login',
-	        'signup' => 'courses-signup',
-	        'student_dashboard' => 'courses-dashboard',
-	        'student_settings' => 'student-settings',
-	        'instructor_profile' => 'instructor',
-	        'pages' => array(
-	        	'student_dashboard' => 0,
-		        'student_settings' => 0,
-		        'login' => 0,
-	        ),
+			'course_category' => 'course_category',
+			'units' => 'units',
+			'notifications' => 'notifications',
+			'discussions' => 'discussion',
+			'discussions_new' => 'add_new_discussion',
+			'grades' => 'grades',
+			'workbook' => 'workbook',
+			'login' => 'student-login',
+			'signup' => 'courses-signup',
+			'student_dashboard' => 'courses-dashboard',
+			'student_settings' => 'student-settings',
+			'instructor_profile' => 'instructor',
+			'pages' => array(
+				'student_dashboard' => 0,
+				'student_settings' => 0,
+				'login' => 0,
+			),
 		),
 		'emails' => array(),
 		'capabilities' => array(
@@ -215,15 +217,12 @@ function coursepress_get_setting( $key = true, $default = '' ) {
  */
 function coursepress_update_setting( $key = true, $value ) {
 	$settings = coursepress_get_setting( true );
-
 	if ( ! is_bool( $key )  ) {
 		$settings = coursepress_set_array_val( $settings, $key, $value );
 	} else {
 		$settings = $value;
 	}
-
 	coursepress_update_option( 'coursepress_settings', $settings );
-
 	return $settings;
 }
 
