@@ -223,6 +223,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					'type' => 'checkbox',
 					'value' => 1,
 					'name' => $name,
+					'autocomplete' => 'off',
 				);
 				if ( $this->is_preview() ) {
 					$attr['readonly'] = 'readonly';
@@ -263,6 +264,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					'type' => 'radio',
 					'value' => $pos,
 					'name' => $name,
+					'autocomplete' => 'off',
 				);
 				if ( $this->is_preview() ) {
 					$attr['readonly'] = 'readonly';
@@ -294,6 +296,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			$name = sprintf( 'module[%d][%d][%d][%s]', $course_id, $unit_id, $step_id, $index );
 			$attr = array(
 				'name' => $name,
+				'autocomplete' => 'off',
 			);
 			if ( $this->is_preview() ) {
 				$attr['readonly'] = 'readonly';
