@@ -299,6 +299,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		$units = array();
 		$data = array_keys( $course->structure_visible_pages );
 		foreach ( $course_units as $unit ) {
+			$unit->__set( 'upgrading', true );
 			$units[ $unit->ID ] = $unit->get_steps( false, true );
 		}
 		/**
@@ -345,6 +346,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			'input-radio' => 'single',
 			'input-quiz' => 'multiple',
 		);
+
 		foreach ( $units as $unit_id => $steps ) {
 			foreach ( $steps as $step_id => $step ) {
 				$args = array(
@@ -360,7 +362,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				switch ( $type ) {
 					case 'input-select':
 					case 'input-radio':
-					case 'input-quiz':
 						$answers = get_post_meta( $step_id, 'answers', true );
 						$checked = array();
 						$answer = get_post_meta( $step_id, 'answers_selected', true );
@@ -374,33 +375,78 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 							}
 						}
 						$args['meta_input']['module_type'] = 'input-quiz';
-						/**
-					 * Quiz is an exception.
-					 */
-						if ( 'input-quiz' === $type ) {
-							if ( isset( $step->questions ) ) {
-								$q = array();
-								foreach (  $step->questions as $q_id => $q_data ) {
-									$q_data['title'] = __( 'Untitled', 'cp' );
-									$q_data['order'] = $q_id;
-									$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
-									$q[ $view ] = $q_data;
-								}
-								$args['meta_input']['questions'] = $q;
-							}
-						} else {
-							$args['meta_input']['questions'] = array(
-							'view'.$step_id => array(
-								'title' => $step->post_title,
-								'question' => $step->post_content,
-								'order' => 0,
-								'type' => $types[ $type ],
-								'options' => array(
-									'answers' => $answers,
-									'checked' => $checked,
-								),
+						$args['meta_input']['questions'] = array(
+						'view'.$step_id => array(
+							'title' => $step->post_title,
+							'question' => $step->post_content,
+							'order' => 0,
+							'type' => $types[ $type ],
+							'options' => array(
+								'answers' => $answers,
+								'checked' => $checked,
 							),
-							);
+						),
+						);
+					break;
+					case 'input-quiz':
+						if ( isset( $step->questions ) ) {
+							$q = array();
+							foreach (  $step->questions as $q_id => $q_data ) {
+								$q_data['title'] = __( 'Untitled', 'cp' );
+								$q_data['order'] = $q_id;
+								$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
+								$q[ $view ] = $q_data;
+							}
+							$args['meta_input']['questions'] = $q;
+						}
+					break;
+					case 'input-form':
+						if ( isset( $step->questions ) ) {
+							$q = array();
+							foreach (  $step->questions as $q_id => $q_data ) {
+								$args['meta_input']['module_type'] = 'input-quiz';
+								switch ( $q_data['type'] ) {
+									case 'short':
+									case 'long':
+										$new_step = array();
+										$new_step['post_type'] = 'module';
+										$new_step['post_content'] = $step->post_content;
+										$new_step['post_status'] = 'publish';
+										$new_step['post_parent'] = $step->post_parent;
+										$new_step['post_title'] = $step->post_title;
+										$new_step['meta_input'] = array(
+										'allow_retries' => $step->allow_retries,
+										'retry_attempts' => $step->retry_attempts,
+										'minimum_grade' => $step->minimum_grade,
+										'module_type' => 'input-written',
+										'module_page' => $step->module_page,
+										'unit_id' => $step->unit_id,
+										'unit_id' => $step->unit_id,
+										'assessable' => $step->assessable,
+										'show_title' => $step->show_title,
+										'course_id' => $step->course_id,
+										);
+										$q_data['title'] = __( 'Untitled', 'cp' );
+										$q_data['order'] = $q_id;
+										$q_data['type'] = 'writable';
+										$q_data['word_limit'] = 0;
+										$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
+										$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
+										$new_step['meta_input']['questions'] = array(
+										$view => $q_data,
+										);
+										wp_insert_post( $new_step );
+									break;
+									default:
+										$args['meta_input']['module_type'] = 'input-quiz';
+										$q_data['title'] = __( 'Untitled', 'cp' );
+										$q_data['order'] = $q_id;
+										$q_data['type'] = 'select';
+										$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
+										$q[ $view ] = $q_data;
+								}
+							}
+							$args['meta_input']['questions'] = $q;
 						}
 					break;
 				}

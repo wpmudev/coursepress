@@ -445,11 +445,12 @@ class CoursePress_Unit extends CoursePress_Utility {
 		}
 		$results = get_posts( $args );
 		$steps = array();
+		$upgrading = $this->__get( 'upgrading', false );
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
 				$stepClass = coursepress_get_course_step( $result->ID );
 				if ( ! is_wp_error( $stepClass ) && is_object( $stepClass ) ) {
-					if ( 'input-form' === $stepClass->__get( 'module_type' ) ) {
+					if ( 'input-form' === $stepClass->__get( 'module_type' ) && true != $upgrading ) {
 						// @todo: Handle form module?
 						continue;
 					}
