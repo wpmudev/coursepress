@@ -423,28 +423,26 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 										$new_step['post_parent'] = $step->post_parent;
 										$new_step['post_title'] = $step->post_title;
 										$new_step['meta_input'] = array(
-										'allow_retries' => $step->allow_retries,
-										'retry_attempts' => $step->retry_attempts,
-										'minimum_grade' => $step->minimum_grade,
-										'module_type' => 'input-written',
-										'module_page' => $step->module_page,
-										'unit_id' => $step->unit_id,
-										'unit_id' => $step->unit_id,
-										'assessable' => $step->assessable,
-										'show_title' => $step->show_title,
-										'course_id' => $step->course_id,
+											'allow_retries' => $step->allow_retries,
+											'retry_attempts' => $step->retry_attempts,
+											'minimum_grade' => $step->minimum_grade,
+											'module_type' => 'input-written',
+											'module_page' => $step->module_page,
+											'unit_id' => $step->unit_id,
+											'unit_id' => $step->unit_id,
+											'assessable' => $step->assessable,
+											'show_title' => $step->show_title,
+											'course_id' => $step->course_id,
 										);
 										$q_data['title'] = __( 'Untitled', 'cp' );
 										$q_data['order'] = $q_id;
-										$q_data['type'] = 'writable';
+										$q_data['type'] = 'written';
 										$q_data['word_limit'] = 0;
+										$q_data['question'] = '';
 										$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
-										$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
-										$new_step['meta_input']['questions'] = array(
-										$view => $q_data,
-										);
+										$new_step['meta_input']['questions'] = array( (object) $q_data );
 										wp_insert_post( $new_step );
-									break;
+										break;
 									default:
 										$args['meta_input']['module_type'] = 'input-quiz';
 										$q_data['title'] = __( 'Untitled', 'cp' );
