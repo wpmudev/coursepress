@@ -119,6 +119,10 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['general']['instructor_show_username'] = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : 0;
 			$settings['instructor_show_username']            = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : '';
 		}
+
+		// Migrate pages.
+		$settings['slugs']['pages'] = wp_parse_args( $settings['pages'], $settings['slugs']['pages'] );
+
 		// Migrate Emails.
 		if ( ! empty( $settings['email']['instructor_module_feedback'] ) ) {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
@@ -133,9 +137,11 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			}
 			$settings['email'][ $key ]['enabled'] = $value;
 		}
+
 		// Migrate caps.
 		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor'] );
 		$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
+
 		// Migrate certificate.
 		if ( isset( $settings['basic_certificate'] ) ) {
 			if ( isset( $settings['basic_certificate']['logo_image'] ) ) {
@@ -235,6 +241,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		if ( preg_match( '/page_coursepress_upgrade$/', $screen_id ) ) {
 			return;
 		}
+
 		$class = 'notice notice-error';
 		$message = esc_html( sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $this->count, 'cp' ), $this->count ) );
 		$message .= PHP_EOL.PHP_EOL;
@@ -335,6 +342,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 					$args['meta_input']['unit_availability_date_timestamp'] = strtotime( $value );
 				}
 			}
+
 			wp_update_post( $args );
 		}
 		/**
@@ -374,22 +382,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 							}
 						}
 						$args['meta_input']['module_type'] = 'input-quiz';
-						/**
-					 * Quiz is an exception.
-					 */
-						if ( 'input-quiz' === $type ) {
-							if ( isset( $step->questions ) ) {
-								$q = array();
-								foreach (  $step->questions as $q_id => $q_data ) {
-									$q_data['title'] = __( 'Untitled', 'cp' );
-									$q_data['order'] = $q_id;
-									$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
-									$q[ $view ] = $q_data;
-								}
-								$args['meta_input']['questions'] = $q;
-							}
-						} else {
-							$args['meta_input']['questions'] = array(
+						$args['meta_input']['questions'] = array(
 							'view'.$step_id => array(
 								'title' => $step->post_title,
 								'question' => $step->post_content,
@@ -400,9 +393,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 									'checked' => $checked,
 								),
 							),
-							);
-						}
-					break;
+						);
+						break;
 				}
 				wp_update_post( $args );
 			}
