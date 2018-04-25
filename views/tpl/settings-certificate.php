@@ -126,7 +126,7 @@
 			'fields'      => array(
 				'certificate_logo_position.x' => array(
 					'type'  => 'number',
-					'label' => __( 'X', 'cp' ),
+					'label' => __( 'Left', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/x', 0 ),
 					'flex'  => true,
 					'data'  => array(
@@ -135,7 +135,7 @@
 				),
 				'certificate_logo_position.y' => array(
 					'type'  => 'number',
-					'label' => __( 'Y', 'cp' ),
+					'label' => __( 'Top', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo_position/y', 0 ),
 					'flex'  => true,
 					'data'  => array(

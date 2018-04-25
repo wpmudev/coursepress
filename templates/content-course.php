@@ -51,8 +51,15 @@ echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
     <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
 <?php
 echo do_shortcode( '[course_start label="" class="course-time"]' );
-echo do_shortcode( '[course_language label="" class="course-lang"]' );
-echo do_shortcode( '[course_cost label="" show_icon="true"]' );
+$show = coursepress_get_setting( 'general/listing_show_language', 1 );
+if ( $show ) {
+	echo do_shortcode( '[course_language label="" class="course-lang"]' );
+}
+$show = coursepress_get_setting( 'general/listing_show_price_free', 1 );
+$is_paid = $course->is_paid_course();
+if ( $show || $is_paid ) {
+	echo do_shortcode( '[course_cost label="" show_icon="true"]' );
+}
 echo do_shortcode( '[course_join_button details_text="' . __( 'Details', 'cp' ) . '" course_expired_text="' . __( 'Not Available', 'cp' ) . '" list_page="yes"]' );
 ?>
 <!--go-to-course-button-->
