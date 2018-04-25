@@ -345,34 +345,25 @@ function coursepress_set_array_val( $array, $path, $value ) {
 }
 
 /**
- * Helper function to get global option in either single or multi site.
+ * Helper function to get global option in each site.
  *
  * @param string $key
  * @param mixed $default
  * @return mixed
  */
 function coursepress_get_option( $key, $default = '' ) {
-	if ( is_multisite() ) {
-		$value = get_site_option( $key, $default );
-	} else {
-	    $value = get_option( $key, $default );
-	}
-
+	$value = get_option( $key, $default );
 	return $value;
 }
 
 /**
- * Helper function to update global option in either single or multi site.
+ * Helper function to update global option in each site.
  *
  * @param $key
  * @param $value
  */
 function coursepress_update_option( $key, $value ) {
-	if ( is_multisite() ) {
-		update_site_option( $key, $value );
-	} else {
-		update_option( $key, $value );
-	}
+	update_option( $key, $value );
 }
 
 /**
