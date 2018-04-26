@@ -472,7 +472,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
 					$meta_name = sprintf( 'course_%d_progress', $course_id );
-					$progress = get_user_meta( $student_id, $meta_name, true );
+					// $progress = get_user_meta( $student_id, $meta_name, true );
+					$progress = get_user_option( $meta_name, $student_id );
 					if ( isset( $progress['completion'] ) ) {
 						foreach ( $progress['completion'] as $unit_id => $data ) {
 							$completed = isset( $data['completed'] ) && coursepress_is_true( $data['completed'] );
@@ -514,12 +515,30 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 									 */
 									$response = array_shift( $step_response );
 									if ( isset( $response['response'] ) ) {
+										$response_key = 0;
+										$step         = coursepress_get_course_step( $step_id );
+										if ( ! empty( $step->questions ) ) {
+											$question = $step->questions;
+											if ( count( $question ) > 1 ) {
+												$i = 0;
+												foreach ( $step->questions as $key => $question ) {
+													$response['response'][ $key ] = $response['response'][ $i ];
+													$i++;
+												}
+											} else {
+												$question_key = array_keys( $question );
+												$response_key = array_shift( $question_key );
+											}
+										}
+
 										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id, $response );
-										$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );
-										/**
-										 * TODO: multi quiz recalculate value
-										 */
-										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response', array( $fixed_response ) );
+										if ( count( $question ) <= 1 ) {
+											$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );
+											/**
+											 * TODO: multi quiz recalculate value
+											 */
+											$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response', array( $response_key => $fixed_response ) );
+										}
 									}
 									/**
 									 * TODO: check where is last grade
