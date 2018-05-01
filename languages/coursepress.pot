@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2018-04-23 07:55:21+00:00\n"
+"POT-Creation-Date: 2018-05-01 06:50:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -438,25 +438,25 @@ msgid "Duplicating course <b>%s</b>, please wait!"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:171
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1216
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1215
 msgid "Course Setup"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:172 2.0/admin/class-edit.php:184
 #: 2.0/admin/class-edit.php:197
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1217
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1228
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1240
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1216
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1227
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1239
 msgid "Edit your course specific settings below."
 msgstr ""
 
 #: 2.0/admin/class-edit.php:183
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1227
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1226
 msgid "Units (%s)"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:194
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1237
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1236
 msgid "Students (%s)"
 msgstr ""
 
@@ -466,24 +466,24 @@ msgid "Publish Course"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:317
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1787
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1786
 msgid "Previous"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:325
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1797
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1796
 msgid "Next"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:333
 #: 2.0/include/coursepress/data/shortcode/class-template.php:984
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1805
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1804
 msgid "Finish"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:343 2.0/admin/controller/class-menu.php:359
 #: 2.0/admin/view/comment-edit.php:133
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1815
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1814
 msgid "Update"
 msgstr ""
 
@@ -559,6 +559,7 @@ msgid "The full version of MarketPress has been bundled with CoursePress."
 msgstr ""
 
 #: 2.0/admin/class-edit.php:630
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:972
 msgid "Sell your courses online with MarketPress."
 msgstr ""
 
@@ -613,7 +614,7 @@ msgid "Example Course Title"
 msgstr ""
 
 #: 2.0/admin/class-edit.php:910
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1874
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1873
 msgid "Course Completion Certificate"
 msgstr ""
 
@@ -965,28 +966,28 @@ msgid "Upgrade"
 msgstr ""
 
 #: 2.0/admin/controller/class-course.php:82
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1269
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1268
 #: 2.0/include/coursepress/view/front/class-course.php:1413
 msgid "Course Update: No action."
 msgstr ""
 
 #: 2.0/admin/controller/class-course.php:364
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1548
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1547
 msgid "Unable to add facilitator!"
 msgstr ""
 
 #: 2.0/admin/controller/class-course.php:458
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1636
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1635
 msgid "No email sent!"
 msgstr ""
 
 #: 2.0/admin/controller/class-course.php:489
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1667
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1666
 msgid "No students found!"
 msgstr ""
 
 #: 2.0/admin/controller/class-course.php:555
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1731
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1730
 msgid "%d email have been sent successfully."
 msgid_plural "%d emails have been sent successfully."
 msgstr[0] ""
@@ -995,7 +996,7 @@ msgstr[1] ""
 #: 2.0/admin/controller/class-course.php:569
 #: 2.0/include/coursepress/helper/class-utility.php:702
 #: 2.0/include/coursepress/view/admin/class-upgrade.php:48
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1745
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1744
 msgid "Something went wrong."
 msgstr ""
 
@@ -1218,7 +1219,7 @@ msgstr ""
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:901
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:1355
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:166
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1151
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1150
 #: 2.0/include/coursepress/view/admin/course/class-unitbuilder.php:132
 #: 2.0/include/coursepress/view/admin/course/class-unitbuilder.php:196
 #: 2.0/include/coursepress/view/admin/course/class-unitbuilder.php:197
@@ -2257,24 +2258,24 @@ msgid "Step 7 &ndash; Course Completion"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:10
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1054
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1053
 msgid "Minimum Grade Required"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:12
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1058
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1057
 msgid ""
 "The minimum grade required to marked course completion and send course "
 "certficates."
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:17
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1075
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1074
 msgid "Pre-Completion Page"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:18
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1076
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1075
 msgid ""
 "Use the fields below to show custom pre-completion page after the student "
 "completed the course but require final assessment from instructors."
@@ -2282,39 +2283,39 @@ msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:20 2.0/admin/view/steps/step-7.php:33
 #: 2.0/admin/view/steps/step-7.php:47
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1077
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1088
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1106
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1076
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1087
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1105
 msgid "Page Title"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:22 2.0/admin/view/steps/step-7.php:36
 #: 2.0/admin/view/steps/step-7.php:50
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1079
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1092
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1108
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1078
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1091
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1107
 msgid "Page Content"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:31
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1086
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1085
 msgid "Course Completion Page"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:32
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1087
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1086
 msgid ""
 "Use the fields below to show a custom page after successfull course "
 "completion."
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:45
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1104
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1103
 msgid "Failed Page"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:46
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1105
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1104
 msgid ""
 "Use the fields below to display failure page when an student completed a "
 "course but fail to reach the minimum required grade."
@@ -2329,18 +2330,18 @@ msgid "Use custom certificate for this course."
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:75
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1159
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1158
 msgid "Certificate Content"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:81
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1164
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1163
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:165
 msgid "Background Image"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:87
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1170
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1169
 msgid "Choose background image"
 msgstr ""
 
@@ -2379,37 +2380,37 @@ msgid "Content Margin"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:122
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1182
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1181
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:244
 msgid "Top"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:124
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1184
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1183
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:250
 msgid "Left"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:126
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1185
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1184
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:256
 msgid "Right"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:131
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1187
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1186
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:266
 msgid "Page Orientation"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:134
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1188
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1187
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:273
 msgid "Landscape"
 msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:137
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1189
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1188
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:276
 msgid "Portrait"
 msgstr ""
@@ -6213,47 +6214,39 @@ msgid ""
 "courses.</p>"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:970
-msgid ""
-"\n"
-"\t\t\t\t<div class=\"payment-message %s\">\n"
-"\t\t\t\t\t<h3>Sell your courses online with MarketPress.</h3>\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\t<p>Other supported plugins: WooCommerce</p>\n"
-"\t\t\t\t</div>\n"
-"\t\t\t"
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:973
+msgid "Other supported plugins: WooCommerce"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1043
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1042
 msgid "Step 7 - Course Completion"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1146
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1145
 msgid "Course Certificate"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1154
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1153
 msgid "Override course certificate."
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1157
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1156
 msgid "Use this field to override general course certificate setting."
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1160
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1159
 msgid "Useful tokens: "
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1181
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1180
 msgid "Content Padding"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1183
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1182
 msgid "Bottom"
 msgstr ""
 
-#: 2.0/include/coursepress/view/admin/course/class-edit.php:1929
+#: 2.0/include/coursepress/view/admin/course/class-edit.php:1928
 msgid "Test mail sent!"
 msgstr ""
 
