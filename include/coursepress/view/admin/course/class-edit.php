@@ -966,16 +966,15 @@ class CoursePress_View_Admin_Course_Edit {
 
 			/**
 			 * Hook this filter to get rid of the payment message
-			 */
-			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( __( '
-				<div class="payment-message %s">
-					<h3>Sell your courses online with MarketPress.</h3>
-					%s
-					%s
-					<p>Other supported plugins: WooCommerce</p>
-				</div>
-			', 'coursepress' ), $class, $version_message, $install_message ), $course_id );
-
+             */
+            $message = sprintf(
+                '<div class="payment-message %%s"><h3>%s</h3>%%s%%s<p>%s</p></div>',
+                esc_html__( 'Sell your courses online with MarketPress.', 'coursepress' ),
+                esc_html__( 'Other supported plugins: WooCommerce', 'coursepress' )
+            );
+            $payment_message = apply_filters( 'coursepress_course_payment_message',
+                sprintf( $message, $class, $version_message, $install_message ), $course_id
+            );
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
 
