@@ -256,7 +256,7 @@
 
 <script type="text/template" id="coursepress-unit-item-tpl">
     <span class="cp-count" data-count="{{count}}">{{count}}</span>
-    <span class="unit-title">{{post_title}}</span>
+    <span class="unit-title" data-post-id="{{ID}}">{{post_title}}</span>
 </script>
 
 <script type="text/template" id="coursepress-unit-tpl">

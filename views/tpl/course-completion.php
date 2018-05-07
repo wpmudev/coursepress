@@ -98,11 +98,11 @@
             <div class="box-inner-content">
                 <div class="cp-flex">
                     <div class="cp-pad-right">
-                        <h3 class="label"><?php _e( 'X', 'cp' ); ?></h3>
+                        <h3 class="label"><?php _e( 'Top', 'cp' ); ?></h3>
                         <input type="number" name="meta_certificate_logo_position.x" value="{{certificate_logo_position.x}}" />
                     </div>
                     <div class="cp-pad-right">
-                        <h3 class="label"><?php _e( 'Y', 'cp' ); ?></h3>
+                        <h3 class="label"><?php _e( 'Left', 'cp' ); ?></h3>
                         <input type="number" name="meta_certificate_logo_position.y" value="{{certificate_logo_position.y}}" />
                     </div>
                     <div class="cp-pad-right">

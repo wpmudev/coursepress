@@ -99,6 +99,7 @@ class CoursePress_Step_Written extends CoursePress_Step {
 					'class' => 'course-step-written',
 					'data-limit' => (int) $question['word_limit'],
 					'placeholder' => esc_attr( $question['placeholder_text'] ),
+					'autocomplete' => 'off',
 				);
 				if ( $this->is_preview() ) {
 					$attr['readonly'] = 'readonly';

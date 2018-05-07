@@ -120,26 +120,46 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['instructor_show_username']            = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : '';
 		}
 
+		// Migrate pages.
+		$settings['slugs']['pages'] = wp_parse_args( $settings['pages'], $settings['slugs']['pages'] );
+
 		// Migrate Emails.
 		if ( ! empty( $settings['email']['instructor_module_feedback'] ) ) {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
 		}
 		foreach ( $settings['email'] as $key => $email ) {
-			$settings['email'][ $key ]['enabled'] = ( ! $settings['email'][ $key ]['enabled'] ) ? '' : 1;
+			$value = '';
+			if ( ! isset( $settings['email'][ $key ] ) ) {
+				$settings['email'][ $key ] = array();
+			}
+			if ( isset( $settings['email'][ $key ]['enabled'] ) && $settings['email'][ $key ]['enabled'] ) {
+				$value = 1;
+			}
+			$settings['email'][ $key ]['enabled'] = $value;
 		}
 
 		// Migrate caps.
-		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor']  );
+		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor'] );
 		$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
 
 		// Migrate certificate.
-		$settings['basic_certificate']['certificate_logo']               = $settings['basic_certificate']['logo_image'];
-		$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
-		$settings['basic_certificate']['certificate_logo_position']['x'] = $settings['basic_certificate']['logo']['x'];
-		$settings['basic_certificate']['certificate_logo_position']['y'] = $settings['basic_certificate']['logo']['y'];
-		$settings['basic_certificate']['certificate_logo_position']['w'] = $settings['basic_certificate']['logo']['width'];
-		$settings['basic_certificate']['cert_text_color']                = $settings['basic_certificate']['text_color'];
-
+		if ( isset( $settings['basic_certificate'] ) ) {
+			if ( isset( $settings['basic_certificate']['logo_image'] ) ) {
+				$settings['basic_certificate']['certificate_logo']               = $settings['basic_certificate']['logo_image'];
+			}
+			if ( isset( $settings['basic_certificate']['logo'] ) ) {
+				$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
+				$keys = array( 'x', 'y', 'width' );
+				foreach ( $key as $key ) {
+					if ( isset( $settings['basic_certificate']['logo'][ $key ] ) ) {
+						$settings['basic_certificate']['certificate_logo_position'][ $key ] = $settings['basic_certificate']['logo'][ $key ];
+					}
+				}
+			}
+			if ( isset( $settings['basic_certificate']['text_color'] ) ) {
+				$settings['basic_certificate']['cert_text_color']                = $settings['basic_certificate']['text_color'];
+			}
+		}
 		return $settings;
 	}
 
@@ -286,6 +306,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 		$units = array();
 		$data = array_keys( $course->structure_visible_pages );
 		foreach ( $course_units as $unit ) {
+			$unit->__set( 'upgrading', true );
 			$units[ $unit->ID ] = $unit->get_steps( false, true );
 		}
 		/**
@@ -311,6 +332,18 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				}
 				$args['meta_input']['page_description'] = $page_description;
 			}
+			/**
+			 * unit availability
+			 */
+			if ( isset( $unit->unit_availability ) ) {
+				$args['unit_availability'] = $unit->unit_availability;
+				if ( 'on_date' === $args['unit_availability'] ) {
+					$value = get_post_meta( $unit->ID, 'unit_date_availability', true );
+					$args['meta_input']['unit_availability_date'] = $value ;
+					$args['meta_input']['unit_availability_date_timestamp'] = strtotime( $value );
+				}
+			}
+
 			wp_update_post( $args );
 		}
 		/**
@@ -321,6 +354,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			'input-radio' => 'single',
 			'input-quiz' => 'multiple',
 		);
+
 		foreach ( $units as $unit_id => $steps ) {
 			foreach ( $steps as $step_id => $step ) {
 				$args = array(
@@ -336,31 +370,91 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				switch ( $type ) {
 					case 'input-select':
 					case 'input-radio':
-					case 'input-quiz':
 						$answers = get_post_meta( $step_id, 'answers', true );
 						$checked = array();
 						$answer = get_post_meta( $step_id, 'answers_selected', true );
-						foreach ( $answers as $id => $a ) {
-							if ( is_array( $answer ) ) {
-								$checked[ $id ] = in_array( $id, $answer )? 1:'';
-							} else {
-								$checked[ $id ] = $id == $answer? 1:'';
+						if ( is_array( $answers ) ) {
+							foreach ( $answers as $id => $a ) {
+								if ( is_array( $answer ) ) {
+									$checked[ $id ] = in_array( $id, $answer )? 1:'';
+								} else {
+									$checked[ $id ] = $id == $answer? 1:'';
+								}
 							}
 						}
 						$args['meta_input']['module_type'] = 'input-quiz';
 						$args['meta_input']['questions'] = array(
-							'view'.$step_id => array(
-								'title' => $step->post_title,
-								'question' => $step->post_content,
-								'order' => 0,
-								'type' => $types[ $type ],
-								'options' => array(
-									'answers' => $answers,
-									'checked' => $checked,
-								),
+						'view'.$step_id => array(
+							'title' => $step->post_title,
+							'question' => $step->post_content,
+							'order' => 0,
+							'type' => $types[ $type ],
+							'options' => array(
+								'answers' => $answers,
+								'checked' => $checked,
 							),
+						),
 						);
-						break;
+					break;
+					case 'input-quiz':
+						if ( isset( $step->questions ) ) {
+							$q = array();
+							foreach (  $step->questions as $q_id => $q_data ) {
+								$q_data['title'] = __( 'Untitled', 'cp' );
+								$q_data['order'] = $q_id;
+								$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
+								$q[ $view ] = $q_data;
+							}
+							$args['meta_input']['questions'] = $q;
+						}
+					break;
+					case 'input-form':
+						if ( isset( $step->questions ) ) {
+							$q = array();
+							foreach (  $step->questions as $q_id => $q_data ) {
+								$args['meta_input']['module_type'] = 'input-quiz';
+								switch ( $q_data['type'] ) {
+									case 'short':
+									case 'long':
+										$new_step = array();
+										$new_step['post_type'] = 'module';
+										$new_step['post_content'] = $step->post_content;
+										$new_step['post_status'] = 'publish';
+										$new_step['post_parent'] = $step->post_parent;
+										$new_step['post_title'] = $step->post_title;
+										$new_step['meta_input'] = array(
+											'allow_retries' => $step->allow_retries,
+											'retry_attempts' => $step->retry_attempts,
+											'minimum_grade' => $step->minimum_grade,
+											'module_type' => 'input-written',
+											'module_page' => $step->module_page,
+											'unit_id' => $step->unit_id,
+											'unit_id' => $step->unit_id,
+											'assessable' => $step->assessable,
+											'show_title' => $step->show_title,
+											'course_id' => $step->course_id,
+										);
+										$q_data['title'] = __( 'Untitled', 'cp' );
+										$q_data['order'] = $q_id;
+										$q_data['type'] = 'written';
+										$q_data['word_limit'] = 0;
+										$q_data['question'] = '';
+										$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
+										$new_step['meta_input']['questions'] = array( (object) $q_data );
+										wp_insert_post( $new_step );
+										break;
+									default:
+										$args['meta_input']['module_type'] = 'input-quiz';
+										$q_data['title'] = __( 'Untitled', 'cp' );
+										$q_data['order'] = $q_id;
+										$q_data['type'] = 'select';
+										$view = sprintf( 'view%d%d', rand( 1, 999 ), $q_id );
+										$q[ $view ] = $q_data;
+								}
+							}
+							$args['meta_input']['questions'] = $q;
+						}
+					break;
 				}
 				wp_update_post( $args );
 			}
@@ -378,7 +472,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
 					$meta_name = sprintf( 'course_%d_progress', $course_id );
-					$progress = get_user_meta( $student_id, $meta_name, true );
+					// $progress = get_user_meta( $student_id, $meta_name, true );
+					$progress = get_user_option( $meta_name, $student_id );
 					if ( isset( $progress['completion'] ) ) {
 						foreach ( $progress['completion'] as $unit_id => $data ) {
 							$completed = isset( $data['completed'] ) && coursepress_is_true( $data['completed'] );
@@ -420,12 +515,30 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 									 */
 									$response = array_shift( $step_response );
 									if ( isset( $response['response'] ) ) {
+										$response_key = 0;
+										$step         = coursepress_get_course_step( $step_id );
+										if ( ! empty( $step->questions ) ) {
+											$question = $step->questions;
+											if ( count( $question ) > 1 ) {
+												$i = 0;
+												foreach ( $step->questions as $key => $question ) {
+													$response['response'][ $key ] = $response['response'][ $i ];
+													$i++;
+												}
+											} else {
+												$question_key = array_keys( $question );
+												$response_key = array_shift( $question_key );
+											}
+										}
+
 										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id, $response );
-										$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );
-										/**
-										 * TODO: multi quiz recalculate value
-										 */
-										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response', array( $fixed_response ) );
+										if ( count( $question ) <= 1 ) {
+											$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );
+											/**
+											 * TODO: multi quiz recalculate value
+											 */
+											$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response', array( $response_key => $fixed_response ) );
+										}
 									}
 									/**
 									 * TODO: check where is last grade

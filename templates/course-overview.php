@@ -12,7 +12,7 @@ $course = coursepress_get_course(); ?>
     </header>
     <div class="entry-content">
 	<?php $messages = apply_filters( 'coursepress_overview_messages', array() ); ?>
-	<?php if ( !empty( $messages ) ) : ?>
+	<?php if ( ! empty( $messages ) ) : ?>
 		<div class="cp-warning-box">
 		<?php foreach ( $messages as $message ) : ?>
 			<p><?php echo $message; ?></p>
@@ -41,19 +41,36 @@ $course = coursepress_get_course(); ?>
 				<span class="meta-title"><?php _e( 'Who can Enroll:', 'cp' ); ?></span>
 				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_type(); ?></span>
 			</p>
+<?php
+	/**
+	 * language
+	 */
+	$show = coursepress_get_setting( 'general/details_show_language', 1 );
+if ( $show ) {
+?>
+		<p class="course-meta">
+			<span class="meta-title"><?php _e( 'Language:', 'cp' ); ?></span>
+			<span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
+		</p>
+<?php
+}
+	/**
+	 * price
+	 */
+	$show = coursepress_get_setting( 'general/details_show_price_free', 1 );
+	$is_paid = $course->is_paid_course();
+if ( $show || $is_paid ) {
+	$price = $course->get_course_cost();
+	if ( ! empty( $price ) ) {
+?>
 			<p class="course-meta">
-				<span class="meta-title"><?php _e( 'Language:', 'cp' ); ?></span>
-				<span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
+				<span class="meta-title"><?php _e( 'Price:', 'cp' ); ?></span>
+				<span class="course-meta course-meta-price"><?php echo $price; ?></span>
 			</p>
-			<?php
-				$price = $course->get_course_cost();
-				if ( ! empty( $price ) ) :
-				?>
-				<p class="course-meta">
-					<span class="meta-title"><?php _e( 'Price:', 'cp' ); ?></span>
-					<span class="course-meta course-meta-price"><?php echo $price; ?></span>
-				</p>
-				<?php endif; ?>
+<?php
+	}
+}
+?>
             <p class="course-button">
                 <?php echo do_shortcode( '[course_join_button ]' ); ?>
             </p>
@@ -62,7 +79,12 @@ $course = coursepress_get_course(); ?>
 					<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
 				</div>
 
-				<?php echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' ); ?>
+                <?php
+				$show = coursepress_get_setting( 'general/details_show_instructors', 1 );
+				if ( $show ) {
+					echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' );
+				}
+?>
 
 			</div>
 		</div>
