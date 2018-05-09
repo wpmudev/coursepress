@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2018-05-01 06:50:40+00:00\n"
+"POT-Creation-Date: 2018-05-09 06:19:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3350,7 +3350,7 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:78
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1278
 #: 2.0/include/coursepress/view/front/class-facilitator.php:132
-#: 2.0/include/coursepress/view/front/class-instructor.php:133
+#: 2.0/include/coursepress/view/front/class-instructor.php:125
 msgid "Course Details"
 msgstr ""
 
@@ -3764,7 +3764,7 @@ msgstr ""
 #: 2.0/include/coursepress/data/shortcode/class-template.php:1202
 #: 2.0/include/coursepress/view/admin/setting/class-pages.php:88
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1696
-#: 2.0/include/coursepress/view/front/class-instructor.php:105
+#: 2.0/include/coursepress/view/front/class-instructor.php:97
 msgid "Login"
 msgstr ""
 
@@ -8536,7 +8536,7 @@ msgid "You must log in to confirm this invitation."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:125
-#: 2.0/include/coursepress/view/front/class-instructor.php:126
+#: 2.0/include/coursepress/view/front/class-instructor.php:118
 msgid "Invitation activated"
 msgstr ""
 
@@ -8546,55 +8546,55 @@ msgid "Congratulations. You are now a facilitator of this course. "
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:140
-#: 2.0/include/coursepress/view/front/class-instructor.php:141
+#: 2.0/include/coursepress/view/front/class-instructor.php:133
 msgid "Invalid invitation"
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:143
 #: 2.0/include/coursepress/view/front/class-facilitator.php:188
-#: 2.0/include/coursepress/view/front/class-instructor.php:144
-#: 2.0/include/coursepress/view/front/class-instructor.php:189
+#: 2.0/include/coursepress/view/front/class-instructor.php:136
+#: 2.0/include/coursepress/view/front/class-instructor.php:181
 msgid "This invitation link is not associated with your email address."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:144
 #: 2.0/include/coursepress/view/front/class-facilitator.php:189
-#: 2.0/include/coursepress/view/front/class-instructor.php:145
-#: 2.0/include/coursepress/view/front/class-instructor.php:190
+#: 2.0/include/coursepress/view/front/class-instructor.php:137
+#: 2.0/include/coursepress/view/front/class-instructor.php:182
 msgid ""
 "Please contact your course administator and ask them to send a new "
 "invitation to the email address that you have associated with your account."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:154
-#: 2.0/include/coursepress/view/front/class-instructor.php:155
+#: 2.0/include/coursepress/view/front/class-instructor.php:147
 msgid "Invitation not found"
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:157
-#: 2.0/include/coursepress/view/front/class-instructor.php:158
+#: 2.0/include/coursepress/view/front/class-instructor.php:150
 msgid "This invitation could not be found or is no longer available."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:158
-#: 2.0/include/coursepress/view/front/class-instructor.php:159
+#: 2.0/include/coursepress/view/front/class-instructor.php:151
 msgid "Please contact us if you believe this to be an error."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:173
-#: 2.0/include/coursepress/view/front/class-instructor.php:174
+#: 2.0/include/coursepress/view/front/class-instructor.php:166
 msgid "Invitation activated."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:179
 #: 2.0/include/coursepress/view/front/class-facilitator.php:192
-#: 2.0/include/coursepress/view/front/class-instructor.php:180
-#: 2.0/include/coursepress/view/front/class-instructor.php:193
+#: 2.0/include/coursepress/view/front/class-instructor.php:172
+#: 2.0/include/coursepress/view/front/class-instructor.php:185
 msgid "Continue..."
 msgstr ""
 
 #: 2.0/include/coursepress/view/front/class-facilitator.php:185
-#: 2.0/include/coursepress/view/front/class-instructor.php:186
+#: 2.0/include/coursepress/view/front/class-instructor.php:178
 msgid "Invalid invitation."
 msgstr ""
 
@@ -8608,24 +8608,24 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-instructor.php:47
-msgid "The requested instuctor does not exists"
+#: 2.0/include/coursepress/view/front/class-instructor.php:44
+msgid "The requested instuctor does not exists."
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-instructor.php:52
+#: 2.0/include/coursepress/view/front/class-instructor.php:47
 msgid "Instructor not found."
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-instructor.php:105
+#: 2.0/include/coursepress/view/front/class-instructor.php:97
 msgid "to continue."
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-instructor.php:109
+#: 2.0/include/coursepress/view/front/class-instructor.php:101
 msgid "Instructor Invitation"
 msgstr ""
 
-#: 2.0/include/coursepress/view/front/class-instructor.php:129
-#: 2.0/include/coursepress/view/front/class-instructor.php:177
+#: 2.0/include/coursepress/view/front/class-instructor.php:121
+#: 2.0/include/coursepress/view/front/class-instructor.php:169
 msgid "Congratulations. You are now an instructor of this course. "
 msgstr ""
 
