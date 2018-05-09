@@ -951,8 +951,8 @@ class CoursePress_Data_Shortcode_Student {
 
 							case 'input-form':
 								$questions = $attributes['questions'];
+								$add = false;
 								if ( $response_display ) {
-									$add = false;
 									foreach ( $questions as $q_index => $question ) {
 										$answer = $response_display[ $q_index ];
 										if ( $answer ) {
