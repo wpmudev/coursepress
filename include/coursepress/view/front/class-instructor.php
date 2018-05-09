@@ -17,26 +17,23 @@ class CoursePress_View_Front_Instructor {
 
 	}
 
+	/**
+	 * Try to load "single-instructor.php" template.
+	 */
 	public static function render_instructor_page() {
 		CoursePress_Core::$is_cp_page = true;
-
-		$theme_file = locate_template( array( 'instructor-single.php' ) );
-
+		$theme_file = locate_template( array( 'single-instructor.php' ) );
 		if ( $theme_file ) {
 			CoursePress_View_Front_Course::$template = $theme_file;
 			$content = '';
 		} else {
 			$content = CoursePress_Template_User::render_instructor_page();
 		}
-
 		return $content;
 	}
 
-
 	public static function parse_request( &$wp ) {
-
 		if ( array_key_exists( 'instructor_username', $wp->query_vars ) ) {
-
 			$username = sanitize_text_field( $wp->query_vars['instructor_username'] );
 			$instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
 			if ( empty( $instructor ) ) {
@@ -44,11 +41,9 @@ class CoursePress_View_Front_Instructor {
 			}
 			$content = '';
 			if ( empty( $instructor ) ) {
-				$content = __( 'The requested instuctor does not exists', 'coursepress' );
+				$content = __( 'The requested instuctor does not exists.', 'coursepress' );
 			}
-
 			self::$last_instructor = empty( $instructor ) ? 0 : $instructor->ID;
-
 			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'coursepress' );
 			$args = array(
 				'slug' => 'instructor_' . self::$last_instructor,
@@ -56,11 +51,8 @@ class CoursePress_View_Front_Instructor {
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_instructor_page(),
 				'type' => 'coursepress_instructor',
 			);
-
 			$pg = new CoursePress_Data_VirtualPage( $args );
-
 			return;
-
 		}
 	}
 
