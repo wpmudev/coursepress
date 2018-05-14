@@ -1,4 +1,4 @@
-/*! CoursePress - v2.1.5
+/*! CoursePress - v2.1.6-beta.3
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2018; * Licensed GPLv2+ */
 (function( $ ){

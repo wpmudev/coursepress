@@ -1512,11 +1512,6 @@ ul.notification-archive-list:after {
 /** Media Queries **/
 @media screen and (max-height: 800px) {
   body .enrolment-container-div .bbm-wrapper {
-    top: 50px;
-  }
-}
-@media screen and (max-height: 700px) {
-  body .enrolment-container-div .bbm-wrapper {
     top: 10px;
   }
 }
@@ -1525,7 +1520,7 @@ ul.notification-archive-list:after {
     margin: 0 auto;
   }
 }
-@media screen and (max-height: 600px) {
+@media screen and (max-height: 650px) {
   body .enrolment-container-div {
     padding: 1em;
   }
@@ -1545,7 +1540,7 @@ ul.notification-archive-list:after {
     border-top: 4px solid #5dd5fb;
   }
 }
-@media screen and (min-height: 601px) {
+@media screen and (min-height: 651px) {
   .cp-mask {
     position: fixed;
   }
