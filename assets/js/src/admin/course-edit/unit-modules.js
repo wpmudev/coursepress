@@ -84,7 +84,7 @@
                 };
                 step = this.setStep(data);
                 $('html, body').animate({
-                    scrollTop: step.$el.offset().top
+                    scrollTop: step.$el.closest( '.unit-step-module' ).offset().top - 40
                 });
             },
 
