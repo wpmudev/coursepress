@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2018-05-14 07:15:55+00:00\n"
+"POT-Creation-Date: 2018-05-24 12:44:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -730,6 +730,88 @@ msgstr ""
 msgid "Comments order"
 msgstr ""
 
+#: 2.0/admin/class-gdpr.php:71 2.0/admin/table/class-instructors.php:117
+#: 2.0/admin/table/class-students.php:93
+#: 2.0/include/coursepress/helper/table/class-instructor.php:88
+#: 2.0/include/coursepress/helper/table/class-student.php:82
+msgid "Name"
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:75
+msgid "Date Enrollment"
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:83 2.0/admin/table/class-courses.php:82
+#: 2.0/include/coursepress/data/class-certificate.php:49
+#: 2.0/include/coursepress/data/shortcode/class-unit.php:176
+#: 2.0/include/coursepress/template/class-course.php:45
+msgid "Certificate"
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:132
+msgid "This email has no courses."
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:158
+msgid "Plugin: CoursePress"
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:169
+msgid ""
+"\n"
+"We collect information about you during the enrollment to our courses or "
+"ckout process on our site.\n"
+"\n"
+"<h3>What we collect and store</h3>\n"
+"\n"
+"While you visit our site, we’ll track:\n"
+"\n"
+"<ul>\n"
+"    <li>Courses you’ve enrolled.</li>\n"
+"    <li>Courses your answers, comments, files.</li>\n"
+"</ul>\n"
+"\n"
+"When you purchase from us, we’ll ask you to provide information including "
+"your name, billing address, shipping address, email address, phone number, "
+"credit card/payment details and optional account information like username "
+"and password. We’ll use this information to:\n"
+"<ul>\n"
+"\t<li>Send you information about your account and order.</li>\n"
+"\t<li>Respond to your requests, including refunds and complaints.</li>\n"
+"\t<li>Process payments and prevent fraud.</li>\n"
+"</ul>\n"
+"\n"
+"If you create an account, we will store your name, address, email and phone "
+"number, which will be used to populate the checkout for future orders.\n"
+"\n"
+"We will store order information for XXX years for tax and accounting "
+"purposes. This includes your name, email address and billing and shipping "
+"addresses.\n"
+"\n"
+"We will also store comments or reviews, if you chose to leave them.\n"
+"\n"
+"<h3>Who on our team has access</h3>\n"
+"\n"
+"Members of our team have access to the information you provide us. "
+"Administrators, Instructors and Facilitators can access:\n"
+"<ul>\n"
+"\t<li>Customer information like your name, email address and billing.</li>\n"
+"</ul>\n"
+"\n"
+"Our team members have access to this information to help fulfill orders, "
+"process refunds, and support you.\n"
+"\n"
+"<h3>What we share with others</h3>\n"
+"\n"
+"<h4>Payments</h4>\n"
+"We accept payments through PayPal. When processing payments, some of your "
+"data will be passed to PayPal, including information required to process or "
+"support the payment, such as the purchase total and billing information.\n"
+"Please see the <a "
+"href=\"https://www.paypal.com/us/webapps/mpp/ua/privacy-full\">PayPal "
+"Privacy Policy</a> for more details.\n"
+msgstr ""
+
 #: 2.0/admin/class-import.php:19
 msgid "CoursePress Import"
 msgstr ""
@@ -1392,13 +1474,6 @@ msgstr ""
 msgid "Average"
 msgstr ""
 
-#: 2.0/admin/table/class-courses.php:82
-#: 2.0/include/coursepress/data/class-certificate.php:49
-#: 2.0/include/coursepress/data/shortcode/class-unit.php:176
-#: 2.0/include/coursepress/template/class-course.php:45
-msgid "Certificate"
-msgstr ""
-
 #: 2.0/admin/table/class-courses.php:98
 msgid "Course ID: %d"
 msgstr ""
@@ -1473,13 +1548,6 @@ msgstr ""
 #: 2.0/include/coursepress/helper/class-setting.php:382
 #: 2.0/include/coursepress/helper/table/class-reportstudent.php:39
 msgid "ID"
-msgstr ""
-
-#: 2.0/admin/table/class-instructors.php:117
-#: 2.0/admin/table/class-students.php:93
-#: 2.0/include/coursepress/helper/table/class-instructor.php:88
-#: 2.0/include/coursepress/helper/table/class-student.php:82
-msgid "Name"
 msgstr ""
 
 #: 2.0/admin/table/class-instructors.php:118
@@ -8974,6 +9042,11 @@ msgstr ""
 #: 2.0/admin/class-courses.php:363
 msgctxt "verb"
 msgid "Trash"
+msgstr ""
+
+#: 2.0/admin/class-gdpr.php:33
+msgctxt "Plugin name in personal data exporter."
+msgid "CoursePress Plugin"
 msgstr ""
 
 #: 2.0/admin/controller/class-menu.php:227
