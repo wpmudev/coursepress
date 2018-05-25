@@ -92,4 +92,32 @@
             }
         }
     }
+    .course-details {
+        .apply-button {
+            background: #1a1a1a;
+            border-radius: 2px;
+            border: 0;
+            color: #fff;
+            display: block;
+            font-weight: 700;
+            line-height: 1;
+            margin-top: 1em;
+            padding: 0.84375em 0.875em;
+            text: {
+                transform: uppercase;
+                align: center;
+            }
+        }
+    }
+    @media screen and (min-width: 44.375em) {
+        .coursepress-wrap {
+            .course {
+                .entry-content,
+                .entry-header {
+                    margin: 0 7%;
+                    width: 86%;
+                }
+            }
+        }
+    }
 }

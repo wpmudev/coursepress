@@ -5,8 +5,8 @@ Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Tags: LMS, learning management system, online course, education, e-learning, classes, courses, teach, assignments, lessons
 Requires at least: 4.1
-Tested up to: 4.8.2
-Stable tag: 2.1.1
+Tested up to: 4.9.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,49 @@ You can find [in-depth setup and usage instructions with screenshots here »](ht
 7. Massively customizable
 
 == Changelog ==
+
+= 2.1.5 =
+* Fixed: Added course categories information in the export file.
+* Fixed: Check MarketPress integration to avoid warnings.
+* Fixed: Mistakes in language strings.
+* Fixed: Problem with the login form on small screens like mobile.
+* Fixed: Show CoursePress Theme instructors box only when a course has at least one instructor.
+* Fixed: Warnings on the "Grade" tab, when one of a module is a quiz.
+* Fixed: Warnings when we use WooCommerce 3x.
+* Improved: Added CoursePress version to export file.
+
+= 2.1.4 =
+* Fixed: Course certificate email settings were hidden for nonpremium users.
+* Fixed: Discussion layout issue.
+* Fixed: Missing new instructor on instructors list.
+* Fixed: On a course structure show section without modules if "Show units without modules" is checked.
+* Fixed: PHP notices when try to edit not exited unit.
+* Fixed: Problem with display course sub-menu on the frontend.
+* Fixed: Show unit progress on admin panel.
+* Fixed: There was no ability to remove instructor.
+* Fixed: Typo in notifications configuration.
+* Fixed: Typo in MarketPress integration box.
+* Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+* Improved: Prevent saves units before fetching all data.
+
+= 2.1.3 =
+* Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.
+
+= 2.1.2 =
+* Improved: Add ability to define certificate logo.
+* Improved: Show instructor feedback on student workbook frontend.
+* CoursePress Theme: Fixed display of HTML Bullet points.
+* CoursePress Theme: Fixed expanded unit list view mode.
+* CoursePress Theme: Improved bbPress compatibility.
+* Fixed: Expanded unit list view mode not working for students.
+* Fixed: Export problem on PHP 5.2, json_encode() have only one parameter.
+* Fixed: Missing upgrade scripts.
+* Fixed: Module access with URL.
+* Fixed: Prevent access modules when previously required modules haven't been completed.
+* Fixed: Problem loading translations.
+* Fixed: Problem with TinyMCE.
+* Fixed: Try Again button is not showing while Retry is set to 1.
+* Fixed: Visual editor load problem when a user disables in the profile.
 
 = 2.1.1 =
 * Improved: Added `editor-rtl.css` file.

@@ -36,17 +36,17 @@
                 this.model = model;
                 this.unitModel = unitModulesModel.unitModel;
                 this.moduleView = unitModulesModel;
-	            this.model.steps = this.sortByMenuOrder(this.model.steps);
+                this.model.steps = this.sortByMenuOrder(this.model.steps);
                 this.on( 'view_rendered', this.setUI, this );
 
                 this.render();
             },
 
-	        sortByMenuOrder: function (steps) {
-		        return _.sortBy(steps, function (step) {
-			        return step.get !== undefined ? step.get('menu_order') : step.menu_order;
-		        });
-	        },
+            sortByMenuOrder: function (steps) {
+                return _.sortBy(steps, function (step) {
+                    return step.get !== undefined ? step.get('menu_order') : step.menu_order;
+                });
+            },
 
             setUI: function() {
                 var self;
@@ -59,7 +59,7 @@
                     container: this.$('.cp-module-description'),
                     callback: function(content) {
                         self.model.description = content;
-	                    self.trigger('coursepress:update_module_description', content, this);
+                        self.trigger('coursepress:update_module_description', content, this);
                     }
                 });
 
@@ -76,13 +76,16 @@
 
                 sender = this.$(ev.currentTarget);
                 type = sender.data('step');
-	            this.menu_order += 1;
+                this.menu_order += 1;
                 data = {
                     module_type: type,
                     meta_module_type: type,
-	                menu_order: this.menu_order
+                    menu_order: this.menu_order
                 };
                 step = this.setStep(data);
+                $('html, body').animate({
+                    scrollTop: step.$el.closest( '.unit-step-module' ).offset().top - 40
+                });
             },
 
             setStep: function( model ) {
@@ -95,14 +98,14 @@
 
                 cid = model.cid ? model.cid : step.model.cid;
                 this.steps[cid] = step;
-	            this.stepsModel[cid] = step.model;
+                this.stepsModel[cid] = step.model;
                 this.updateModuleSteps(step.model);
 
-	            step.on('coursepress:step_reordered', this.reorderSteps, this);
+                step.on('coursepress:step_reordered', this.reorderSteps, this);
 
-	            if (step.model.get('menu_order') > this.menu_order) {
-		            this.menu_order = step.model.get('menu_order');
-	            }
+                if (step.model.get('menu_order') > this.menu_order) {
+                    this.menu_order = step.model.get('menu_order');
+                }
 
                 return step;
             },
@@ -304,7 +307,7 @@
                 this.moduleView = new ModuleSteps(model, this);
                 this.moduleView.$el.appendTo( this.stepsContainer );
                 this.moduleView.on('coursepress:update_module_title', this.updateActiveTitle, this);
-	            this.moduleView.on('coursepress:update_module_description', this.updateActiveDescription, this);
+                this.moduleView.on('coursepress:update_module_description', this.updateActiveDescription, this);
             },
 
             updateActiveTitle: function( title ) {
@@ -312,9 +315,9 @@
                 this.updateModuleModel();
             },
 
-	        updateActiveDescription: function ( description ) {
-		        this.active.find('.module-description').html( description );
-	        },
+            updateActiveDescription: function ( description ) {
+                this.active.find('.module-description').html( description );
+            },
 
             updateModuleModel: function() {
                 if ( ! this.moduleView ) {
