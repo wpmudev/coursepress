@@ -45,10 +45,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//if ( is_admin() ) {
-	//require_once 'inc/admin/admin-functions.php';
-//}
-
 final class CoursePress {
 	/**
 	 * @var string Current version number.
@@ -88,6 +84,7 @@ final class CoursePress {
 		'CoursePress_Admin_Page',
 		'CoursePress_Admin_Ajax',
 		'CoursePress_Admin_Actions',
+		'CoursePress_Admin_GDPR',
 	);
 
 	/**
@@ -102,7 +99,6 @@ final class CoursePress {
 	public function __construct() {
 		$this->plugin_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
 		$this->plugin_url = plugins_url( 'coursepress/' );
-
 		// Load functions files
 		try {
 			require_once $this->plugin_path . 'inc/functions/utility.php';
@@ -116,33 +112,16 @@ final class CoursePress {
 			// @todo: Throw error
 			return;
 		}
-
 		// Autload classes on demand
 		spl_autoload_register( array( $this, 'class_loader' ) );
-
 		// Register activation hook
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-
 		// Register deactivation hook
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
-
 		// Load core files
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
-
 		// Register CP theme directory
 		$this->register_cp_theme();
-
-		/********************************************************
-		 * LEGACY CALL
-		 * Note*: WHILE DEVELOPMENT ONLY, REMOVE AFTERWARDS!
-		********************************************************/
-		// Run legacy
-		//$legacy_key = 'coursepress_legacy_beta_c6';
-		//add_action( $legacy_key, array( 'CoursePress_Legacy', 'instance' ) );
-
-		//if ( ! wp_get_schedule( $legacy_key ) )
-		//wp_schedule_single_event( time(), $legacy_key );
-		/*********************************************************/
 		/**
 		 * Install new tables.
 		 */
@@ -175,23 +154,15 @@ final class CoursePress {
 		if ( ! preg_match( '%CoursePress_%', $class_name ) ) {
 			return false;
 		}
-
 		$class = explode( '_', strtolower( str_replace( 'CoursePress_', '', $class_name ) ) );
 		array_unshift( $class, 'inc' );
 		$file = array_pop( $class );
 		array_push( $class, 'class-' . $file );
-
 		$filename = implode( DIRECTORY_SEPARATOR, $class );
-
-//		try {
 			$file = $this->plugin_path . $filename . '.php';
-
-			if ( file_exists( $file ) && is_readable( $file ) ) {
-				require_once $file;
-			}
-//		} catch ( Exception $e ) {
-			// @todo: Log error?
-//		}
+		if ( file_exists( $file ) && is_readable( $file ) ) {
+			require_once $file;
+		}
 	}
 
 	public function get_class( $class_name ) {
@@ -213,24 +184,19 @@ final class CoursePress {
 	public function load_core() {
 		// Load core classses
 		array_map( array( $this, 'get_class' ), $this->core_classes );
-
 		if ( is_admin() ) {
 			coursepress_render( 'inc/admin/class-page' );
 			array_map( array( $this, 'get_class' ), $this->core_admin_classes );
-
 		} else {
 			array_map( array( $this, 'get_class' ), $this->core_front_classes );
 		}
-
 		/**
 		 * Trigger when all CP classes are loaded.
 		 *
 		 * @since 2.0
 		 */
 		do_action( 'coursepress_initialized' );
-
 		add_action( 'init', array( $this, 'set_current_user' ) );
-
 		// We speak languages!
 		load_plugin_textdomain(
 			'cp',

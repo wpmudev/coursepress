@@ -242,12 +242,16 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id ) {
 			return false;
 		}
+		/**
+		 * cache key
+		 */
+		$key = sprintf( 'cp_course_%d_user_%d', $course_id, $id );
 		// Get from cache if exist.
-		$student_id = wp_cache_get( 'student_id', 'cp_user_' . $id );
+		$student_id = wp_cache_get( $key, 'student_id' );
 		if ( false === $student_id ) {
 			$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d AND `course_id`=%d", $id, $course_id );
 			$student_id = $wpdb->get_var( $sql );
-			wp_cache_set( 'student_id', $student_id, 'cp_user_' . $id );
+			wp_cache_set( $key, $student_id, 'student_id' );
 		}
 		return $student_id;
 	}
@@ -1164,20 +1168,15 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return Returns the feedback given if not empty, otherwise false.
 	 **/
 	public function get_instructor_feedback( $course_id, $unit_id, $module_id, $feedback_index = false, $progress = false ) {
-
 		if ( false === $progress ) {
 			$progress = $this->get_completion_data( $course_id );
 		}
-
 		$response = $this->get_response( $course_id, $unit_id, $module_id, $progress );
-
 		$feedback = isset( $response['feedback'] ) ? $response['feedback'] : array();
-
 		// Get last grade
 		if ( ! $feedback_index ) {
 			$feedback_index = ( count( $feedback ) - 1 );
 		}
-
 		return ! empty( $feedback ) && isset( $feedback[ $feedback_index ] ) ? $feedback[ $feedback_index ] : false;
 	}
 
@@ -1266,27 +1265,21 @@ class CoursePress_User extends CoursePress_Utility {
 			case 'course_module_seen':
 			return __( 'Module seen', 'cp' );
 			break;
-
 			case 'course_seen':
 			return __( 'Course seen', 'cp' );
 			break;
-
 			case 'course_unit_seen':
 			return __( 'Unit seen', 'cp' );
 			break;
-
 			case 'course_step_seen':
 			return __( 'Step seen', 'cp' );
 			break;
-
 			case 'enrolled':
 			return __( 'Enrolled to course', 'cp' );
 			break;
-
 			case 'login':
 			return __( 'Login', 'cp' );
 			break;
-
 			case 'module_answered':
 			return __( 'Module answered', 'cp' );
 			break;
