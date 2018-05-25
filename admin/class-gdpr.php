@@ -167,7 +167,7 @@ class CoursePress_Admin_GDPR {
 	 */
 	public function get_privacy_message() {
 		$content = wp_kses_post( apply_filters( 'coursepress_privacy_policy_content', wpautop( __( '
-We collect information about you during the enrollment to our courses or ckout process on our site.
+We collect information about you during the enrollment to our courses or checkout process on our site.
 
 <h3>What we collect and store</h3>
 
