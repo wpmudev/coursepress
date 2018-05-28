@@ -7,12 +7,6 @@ CHANGELOG
 
 = 2.2.0 =
 -------------------------------------------------
-- GDPR: Added ability to erase user personal data.
-- GDPR: Added ability to export user personal data.
-- GDPR: Added plugin information to default "Private Policy" page during auto-creation of this page.
-
-= 2.1.6 =
--------------------------------------------------
 - Fixed: Ability to duplicate a course for an instructor.
 - Fixed: Compatibility with plugins/themes which use login form.
 - Fixed: Conflict with other plugins with early get_posts() function usage.
@@ -24,6 +18,9 @@ CHANGELOG
 - Fixed: Problem with the single instructor template.
 - Fixed: Showing a unit description.
 - Fixed: Turn off autocompletion for a unit.
+- GDPR: Added ability to erase user personal data.
+- GDPR: Added ability to export user personal data.
+- GDPR: Added plugin information to default "Private Policy" page during auto-creation of this page.
 
 = 2.1.5 =
 -------------------------------------------------
