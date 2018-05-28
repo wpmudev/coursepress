@@ -297,7 +297,7 @@ function coursepress_get_course_description( $course_id = 0 ) {
  *
  * @return null|string
  */
-function coursepress_get_course_media( $course_id = 0, $width = 235, $height = 235 ) {
+function coursepress_get_course_media( $course_id = 0, $width = 220, $height = 220 ) {
 	$course = coursepress_get_course( $course_id );
 
 	if ( ! is_wp_error( $course ) ) {
@@ -996,15 +996,15 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 	$vp_type = $vp->__get( 'type' );
 	$with_modules = $course->is_with_modules();
 	$has_access = $user->has_access_at( $course->__get( 'ID' ) );
-	$module_id = !empty( $_course_module['id'] ) ? $_course_module['id'] : false;
-	$module_url = !empty( $_course_module['url'] ) ? $_course_module['url'] : false;
+	$module_id = ! empty( $_course_module['id'] ) ? $_course_module['id'] : false;
+	$module_url = ! empty( $_course_module['url'] ) ? $_course_module['url'] : false;
 	$steps = $unit->get_steps( ! $has_access, $with_modules, $module_id );
 	$link = '';
 
 	if ( 'previous' === $type ) {
 		$previous_unit = $unit->get_previous_unit();
 		$prev_module = $unit->get_previous_module( $module_id );
-		$prev_module_id = !empty( $prev_module['id'] ) ? $prev_module['id'] : false;
+		$prev_module_id = ! empty( $prev_module['id'] ) ? $prev_module['id'] : false;
 		$prev_step = $_course_step ? $_course_step->get_previous_step() : false;
 		if ( $prev_step ) {
 			$link = $prev_step->get_permalink();
@@ -1026,11 +1026,10 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 			if ( $prev_modules ) {
 				$last_module = array_pop( $prev_modules );
 				$link = $last_module['url'];
-				if ( !empty( $last_module['steps'] ) ) {
+				if ( ! empty( $last_module['steps'] ) ) {
 					$last_step = array_pop( $last_module['steps'] );
 					$link = $last_step->get_permalink();
 				}
-
 			} elseif ( $prev_steps ) {
 				$prev_step = array_pop( $prev_steps );
 				$link = $prev_step->get_permalink();
@@ -1952,7 +1951,7 @@ function coursepress_get_discussion() {
 		'post_status' => 'publish',
 		'posts_per_page' => 1,
 	) );
-	 if ( $posts ) {
+	if ( $posts ) {
 		$found_post = $posts[0];
 	}
 

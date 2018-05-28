@@ -9,12 +9,42 @@
         max-width: 1024px;
         margin: 0 auto;
         padding-bottom: 1em;
-        .page-title {
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 0 0 15px 0;
-            padding: 0;
+        .content-area {
+            float: none;
+            margin: 0;
+            width: 100%;
+            .page-title {
+                font-size: 16px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin: 0 0 15px 0;
+                padding: 0;
+            }
+            .course-info {
+                width: 100%;
+                display: flex;
+                .thumbnail {
+                    img {
+                        max-width: inherit;
+                    }
+                    padding-right: 30px;
+                }
+                .course-entry-wrap {
+                    .entry-content,
+                    .entry-footer {
+                        float: none;
+                        width: 100%;
+                    }
+                    .entry-content {
+                        .entry-summary {
+                            ol, ul {
+                                margin-left: 1.25em;
+                            }
+                        }
+
+                    }
+                }
+            }
         }
     }
     .course-unit-progress {
@@ -27,7 +57,6 @@
         background-color: rgba(255, 0, 0, 0.02);
         padding: 10px 15px;
         border: 1px solid rgba(255, 0, 0, 0.1);
-
         &:before {
             content: '\f06a';
             font-family: 'FontAwesome';

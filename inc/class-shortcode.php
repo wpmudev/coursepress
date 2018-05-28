@@ -291,8 +291,8 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 	public function get_course_list_image( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
-			'width' => coursepress_get_setting( 'course/image_width', 235 ),
-			'height' => coursepress_get_setting( 'course/image_height', 235 ),
+			'width' => coursepress_get_setting( 'course/image_width', 220 ),
+			'height' => coursepress_get_setting( 'course/image_height', 220 ),
 			'class' => '',
 		), $atts, 'course_list_image' );
 		$course = $this->get_course_class( $atts['course_id'] );
@@ -318,8 +318,8 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 	public function get_course_featured_video( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
-			'width' => coursepress_get_setting( 'course/image_width', 235 ),
-			'height' => coursepress_get_setting( 'course/image_height', 235 ),
+			'width' => coursepress_get_setting( 'course/image_width', 220 ),
+			'height' => coursepress_get_setting( 'course/image_height', 220 ),
 			'class' => '',
 		), $atts, 'course_featured_video' );
 		$course = $this->get_course_class( $atts['course_id'] );
@@ -341,8 +341,8 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 		$atts = shortcode_atts( array(
 			'course_id' => get_the_ID(),
 			'class' => '',
-			'height' => coursepress_get_setting( 'course/image_height', 235 ),
-			'width' => coursepress_get_setting( 'course/image_width', 235 ),
+			'height' => coursepress_get_setting( 'course/image_height', 220 ),
+			'width' => coursepress_get_setting( 'course/image_width', 220 ),
 			'priority' => coursepress_get_setting( 'course/listing_media_priority', 'image' ),
 			'type' => coursepress_get_setting( 'course/listing_media_type', 'image' ),
 			'wrapper' => 'div',

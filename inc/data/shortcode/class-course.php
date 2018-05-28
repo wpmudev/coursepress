@@ -1201,8 +1201,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_list_image( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'width' => coursepress_get_setting( 'course/image_width', 235 ),
-			'height' => coursepress_get_setting( 'course/image_height', 235 ),
+			'width' => coursepress_get_setting( 'course/image_width', 220 ),
+			'height' => coursepress_get_setting( 'course/image_height', 220 ),
 			'class' => '',
 		), $atts, 'course_list_image' );
 		/**

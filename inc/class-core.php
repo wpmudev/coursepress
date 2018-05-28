@@ -18,33 +18,48 @@ final class CoursePress_Core extends CoursePress_Utility {
 	protected $category_type = 'course_category';
 	protected $notification_post_type = 'cp_notification';
 
-	public function __construct() {
-		// Register CP post types
-		add_action( 'init', array( $this, 'register_post_types' ) );
-		// Set capabilities.
-		CoursePress_Data_Capabilities::init();
-		// If front end set schema.
-		if ( ! is_admin() ) {
-			CoursePress_Data_Schema::init();
-			CoursePress_Data_Instructor::init();
-			CoursePress_Data_Facilitator::init();
-		}
-		// Initialize unsubscribe
-		add_action( 'init', array( $this, 'init_unsubscribe' ) );
-		// Initialize email alerts.
-		add_action( 'init', array( $this, 'init_email_alerts' ) );
-		// Register CP query vars
-		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
-		// Add CP rewrite rules
-		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
-		// Listen to comment submission
-		add_filter( 'comments_open', array( $this, 'comments_open' ), 10, 2 );
-		/**
-		 * try to regenerate missing pdf
-		 */
-		add_action( 'template_redirect', array( $this, 'regenerate_pdf' ) );
-		add_action( 'parse_request', array( $this, 'course_signup' ), 1 );
-	}
+    public function __construct() {
+        // Register CP post types
+        add_action( 'init', array( $this, 'register_post_types' ) );
+        // Set capabilities.
+        CoursePress_Data_Capabilities::init();
+        // If front end set schema.
+        if ( ! is_admin() ) {
+            CoursePress_Data_Schema::init();
+            CoursePress_Data_Instructor::init();
+            CoursePress_Data_Facilitator::init();
+        }
+        // Initialize unsubscribe
+        add_action( 'init', array( $this, 'init_unsubscribe' ) );
+        // Initialize email alerts.
+        add_action( 'init', array( $this, 'init_email_alerts' ) );
+        // Register CP query vars
+        add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
+        // Add CP rewrite rules
+        add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
+        // Listen to comment submission
+        add_filter( 'comments_open', array( $this, 'comments_open' ), 10, 2 );
+        /**
+         * try to regenerate missing pdf
+         */
+        add_action( 'template_redirect', array( $this, 'regenerate_pdf' ) );
+        add_action( 'parse_request', array( $this, 'course_signup' ), 1 );
+        /**
+         * add image size
+         */
+        add_action( 'after_setup_theme', array( $this, 'theme_setup' ) );
+    }
+
+    /**
+     * theme setup
+	 *
+	 * @since 3.0.0
+     */
+    public function theme_setup() {
+		$width = coursepress_get_setting( 'course/image_width', 220 );
+        $height = coursepress_get_setting( 'course/image_height', 220 );
+        add_image_size( 'course-thumbnail', $width, $height, true );
+    }
 
 	/**
 	 * Try to regenerate Certificate file.
