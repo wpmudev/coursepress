@@ -660,9 +660,10 @@ class CoursePress_Unit extends CoursePress_Utility {
 			} else {
 				$is_accessible = true;
 			}
-						$step_url = esc_url( $step->get_permalink() );
-						$step_suffix = '';
-						$step_class = array( 'course-step' );
+			$step_url = esc_url( $step->get_permalink() );
+			$step_suffix = '';
+			$step_class = array( 'course-step' );
+			$step_class[] = sprintf( 'course-step-%s', esc_attr( $step->__get( 'module_type' ) ) );
 			if ( ! $step->is_show_title() ) {
 				continue;
 			}

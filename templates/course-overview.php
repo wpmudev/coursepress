@@ -9,6 +9,7 @@ $course = coursepress_get_course(); ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( '' ); ?>>
     <header class="entry-header">
         <h1 class="entry-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
+	    <?php echo do_shortcode( '[course_category label="" no_category_show="hide"]' ); ?>
     </header>
     <div class="entry-content">
 	<?php $messages = apply_filters( 'coursepress_overview_messages', array() ); ?>
@@ -18,10 +19,17 @@ $course = coursepress_get_course(); ?>
 			<p><?php echo $message; ?></p>
 		<?php endforeach; ?>
 		</div>
-	<?php endif; ?>
-        <div class="course-details">
+    <?php endif;
+
+$media = coursepress_get_course_media( false, 440, 330 );
+$class = '';
+if ( ! empty( $media ) ) {
+	$class = ' course-has-media';
+}
+
+?>
+        <div class="course-details<?php echo esc_attr( $class ); ?>">
 	<?php
-	$media = coursepress_get_course_media( false, 420, 220 );
 	if ( ! empty( $media ) ) :
 		?>
 		<div class="course-media">
@@ -64,7 +72,6 @@ if ( $show || $is_paid ) {
 	if ( ! empty( $price ) ) {
 ?>
 			<p class="course-meta">
-				<span class="meta-title"><?php _e( 'Price:', 'cp' ); ?></span>
 				<span class="course-meta course-meta-price"><?php echo $price; ?></span>
 			</p>
 <?php
@@ -79,12 +86,6 @@ if ( $show || $is_paid ) {
 					<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
 				</div>
 
-                <?php
-				$show = coursepress_get_setting( 'general/details_show_instructors', 1 );
-				if ( $show ) {
-					echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' );
-				}
-?>
 
 			</div>
 		</div>
@@ -94,6 +95,12 @@ if ( $show || $is_paid ) {
 			<?php echo apply_filters( 'the_content', coursepress_get_course_description() ); ?>
 		</div>
 
+<?php
+				$show = coursepress_get_setting( 'general/details_show_instructors', 1 );
+if ( $show ) {
+	echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' );
+}
+?>
 		<div class="course-structure">
 			<h3 class="sub-title course-sub-title"><?php _e( 'Course Structure', 'cp' ); ?></h3>
 			<?php echo coursepress_get_course_structure(); ?>

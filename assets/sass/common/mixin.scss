@@ -152,3 +152,10 @@ $code_font: Consolas, Monaco, monospace;
 		color: inherit;
 	}
 }
+@mixin random_border_color() {
+    border: 1px solid rgb(random(255),random(255),random(255));
+}
+
+@mixin font_awesome {
+    font-family: fontawesome;
+}

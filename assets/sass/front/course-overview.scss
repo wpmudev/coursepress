@@ -47,35 +47,6 @@
             }
         }
     }
-    .units-archive-list {
-        li {
-            background-color: transparent;
-        }
-        .preview {
-            background-color: #ffffff;
-            border: 1.5px solid $grey_3;
-            display: inline-block;
-            float: right;
-            font-size: 11px;
-            @include radius(3px);
-            @include transition(opacity 0.4s);
-            opacity: 0.3;
-            padding: 4px 12px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            &:hover {
-                opacity: 1;
-                @include transition(opacity 0.4s);
-            }
-        }
-        .unit-description,
-        .module {
-            @include clearfix;
-        }
-        .unit-progress {
-            float: right;
-        }
-    }
     .page-header {
         padding-bottom: 0;
     }

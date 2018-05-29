@@ -903,6 +903,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'label' => __( 'Price', 'cp' ),
 			'no_cost_text' => __( 'FREE', 'cp' ),
 			'show_icon' => 'no',
+			'tag' => 'div',
 		), $atts, 'course_cost' );
 		/**
 		 * Check course ID
@@ -956,7 +957,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 				$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 			}
 			$content .= $display_content;
-			$content = $this->create_html( 'div', array( 'class' => $class ), $content );
+			$tag = sanitize_html_class( $atts['tag'] );
+			$content = $this->create_html( $tag, array( 'class' => $class ), $content );
 		}
 		// Return the html in the buffer.
 		return $content;
@@ -1034,7 +1036,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			'label_tag' => 'strong',
 			'label_delimeter' => ': ',
 			'no_category_text' => __( 'None', 'cp' ),
+			'no_category_show' => 'show',
 			'class' => '',
+			'tag' => 'div',
 		), $atts, 'course_category' );
 		/**
 		 * Check course ID
@@ -1070,6 +1074,9 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		$content = '';
 		$categories = coursepress_get_course_categories( $course_id );
 		if ( empty( $categories ) ) {
+			if ( 'hide' === $atts['no_category_show'] ) {
+				return '';
+			}
 			return $no_category_text;
 		}
 		$counter = 0;
@@ -1085,7 +1092,8 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 			$content .= $this->create_html( esc_html( $label_tag ), array( 'class' => 'label' ), esc_html( $label ) . esc_html( $label_delimeter ) );
 		}
 		$content .= $display_content;
-		$content = $this->create_html( 'div', array( 'class' => $class ), $content );
+		$tag = sanitize_html_class( $atts['tag'] );
+		$content = $this->create_html( $tag, array( 'class' => $class ), $content );
 		return $content;
 	}
 
