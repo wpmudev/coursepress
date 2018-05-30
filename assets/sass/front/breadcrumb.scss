@@ -5,25 +5,21 @@
     list-style: none;
     @include clearfix;
     li {
-        display: inline-block;
-        border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+        display: inline;
         margin-bottom: 10px;
         font-size: 0.9em;
-
         &:before {
-            content: '\f139';
-            font-family: 'Dashicons';
-            display: inline-block;
-            vertical-align: top;
-            width: 1.5em;
-            text-align: center;
+            @include icon( "\f105" );
+            padding: 0 .5em;
+            font-weight: bold;
         }
-
         &:first-of-type{
             &:before {
-                content: '\f102';
-                text-align: left;
+                display: none;
             }
         }
+    }
+    a {
+        color: $dark_1;
     }
 }

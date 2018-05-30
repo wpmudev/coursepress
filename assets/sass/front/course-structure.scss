@@ -1,7 +1,10 @@
-.course {
+.course-structure {
+    display: block;
+    max-width: $width_a;
+    margin: 25px auto;
+}
+.single-course {
     .course-structure {
-        display: block;
-        margin: 25px 0;
         @include clearfix;
         a {
             text-decoration: none;
@@ -85,26 +88,32 @@
                     margin-right: 15px;
                 }
             }
-
-            .has-progress {
-                position: relative;
-
-                .unit-progress {
-                    position: absolute;
-                    top: 25px;
-                    right: 25px;
-                    height: 36px;
-                    width: 36px;
-
-                    span {
+            .unit {
+                &.has-progress {
+                    position: relative;
+                    .unit-progress {
                         position: absolute;
-                        font-size: 7px;
-                        text-align: center;
+                        top: 25px;
+                        right: 25px;
                         height: 36px;
                         width: 36px;
-                        line-height: 36px;
-                        left: 0;
+
+                        span {
+                            position: absolute;
+                            font-size: 7px;
+                            text-align: center;
+                            height: 36px;
+                            width: 36px;
+                            line-height: 36px;
+                            left: 0;
+                        }
                     }
+                }
+                .unit-progress-text {
+                    display: inline-block;
+                    float: right;
+                    font-weight: normal;
+                    margin-right: 20px;
                 }
             }
         }
@@ -128,6 +137,9 @@
                 }
             }
             .module {
+                border-top: 1px solid $grey_12;
+                margin-top: 5px;
+                padding-top: 5px;
                 &.has-preview {
                     .module-title {
                         &:after {
@@ -136,6 +148,15 @@
                             display: block;
                             height: 1px;
                         }
+                    }
+                }
+            }
+            >li {
+                &:first-of-type {
+                    .module {
+                        margin: 0;
+                        padding: 0;
+                        border: 0;
                     }
                 }
             }
@@ -148,6 +169,14 @@
                 padding: 5px 0 5px 25px;
                 a {
                     box-shadow: none;
+                }
+                &.step-completed {
+                    &:after {
+                        float: right;
+                        @include icon("\f058");
+                        padding-right: 20px;
+                        font-size: 1.4em;
+                    }
                 }
             }
         }
@@ -204,8 +233,10 @@
                             padding-right: 10px;
                         }
                         &.course-step-audio:before        { content: "\f1c7"; }
+                        &.course-step-discussion:before   { content: "\f086"; }
                         &.course-step-download:before     { content: "\f019"; }
                         &.course-step-image:before        { content: "\f1c5"; }
+                        &.course-step-input-quiz:before   { content: "\f0ca"; }
                         &.course-step-input-upload:before { content: "\f093"; }
                         &.course-step-quiz:before         { content: "\f0ca"; }
                         &.course-step-video:before        { content: "\f1c8"; }

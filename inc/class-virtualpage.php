@@ -78,11 +78,11 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	public function check_exists() {
 		$is_404 = false;
 		$type = $this->__get( 'type' );
-		$course_id = !empty( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : get_the_ID();
+		$course_id = ! empty( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : get_the_ID();
 
 		if (
 			'single-course' === $type
-			&& !empty( $course_id )
+			&& ! empty( $course_id )
 			&& isset( $_REQUEST['action'] )
 			&& 'coursepress_enroll' === $_REQUEST['action']
 		) {
@@ -258,6 +258,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Units', 'cp' ), $coursepress_course->get_units_url() );
 				break;
 			case 'grades':
 			case 'forum':

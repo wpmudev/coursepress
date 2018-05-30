@@ -493,6 +493,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	}
 
 	public function get_unit_structure( $items_only = true, $show_details = false ) {
+		global $coursepress_core;
 		$course = $this->get_course();
 		$course_id = $course->__get( 'ID' );
 		$unit_id = $this->__get( 'ID' );
@@ -540,8 +541,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 				 *
 				 * @param array $attr An array of wheel attributes.
 				 */
+				$attr['mode'] = 'text';
 				$attr = apply_filters( 'coursepress_unit_progress_wheel_atts', $attr );
-				$unit_suffix .= coursepress_progress_wheel( $attr );
+				$unit_suffix .= coursepress_progress_display( $attr );
 			}
 		} elseif ( $this->__get( 'preview' ) ) {
 			$attr        = array(

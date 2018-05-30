@@ -18,7 +18,7 @@ get_header(); ?>
 
 					<div class="course-unit-progress">
 						<?php
-						echo coursepress_progress_wheel(
+						echo coursepress_progress_display(
 							array(
 								'class'      => 'per-course-progress',
 								'data-value' => $user->get_course_progress( $course->ID ),
