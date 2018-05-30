@@ -1,3 +1,12 @@
+.archive {
+    .coursepress-wrap {
+        article {
+            border: 1px solid $grey_12;
+            padding: 14px;
+            margin-bottom: 30px;
+        }
+    }
+}
 .coursepress-wrap {
     display: block;
     margin: 0;
@@ -6,54 +15,60 @@
     @include clearfix;
     font-size: 100%;
     .container {
-        max-width: 1024px;
         margin: 0 auto;
         padding-bottom: 1em;
         .content-area {
             float: none;
             margin: 0;
             width: 100%;
-            .page-title {
-                font-size: 16px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin: 0 0 15px 0;
+            .page-header {
+                border: 0;
+                font-size: 2em;
                 padding: 0;
-            }
-            .course-info {
-                width: 100%;
-                display: flex;
-                .thumbnail {
-                    img {
-                        max-width: inherit;
-                    }
-                    padding-right: 30px;
+                margin: 0 0 1em 0;
+                .page-title {
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    margin: 0;
+                    padding: 0;
                 }
-                .course-entry-wrap {
+            }
+            article {
+                .course-info {
                     width: 100%;
-                    .entry-content,
-                    .entry-footer {
-                        float: none;
-                        width: 100%;
+                    display: flex;
+                    .thumbnail {
+                        img {
+                            max-width: inherit;
+                        }
+                        padding-right: 30px;
                     }
-                    .entry-title {
-                        margin-bottom: 10px;
-                    }
-                    .entry-footer {
+                    .course-entry-wrap {
                         width: 100%;
-                        .quick-course-info {
-                            display: flex;
-                            justify-content: space-between;
+                        .entry-content,
+                        .entry-footer {
+                            float: none;
+                            width: 100%;
+                        }
+                        .entry-title {
+                            margin-bottom: 10px;
+                        }
+                        .entry-footer {
+                            width: 100%;
+                            .quick-course-info {
+                                display: flex;
+                                justify-content: space-between;
+                            }
                         }
                     }
-                }
-                .course-instructors {
-                    margin: 0 0 1em 0;
-                    border: 0;
-                    padding: 0;
-                    .label {
-                        display: inline;
-                        margin-right: 0;
+                    .course-instructors {
+                        margin: 0 0 1em 0;
+                        border: 0;
+                        padding: 0;
+                        .label {
+                            display: inline;
+                            margin-right: 0;
+                        }
                     }
                 }
             }
