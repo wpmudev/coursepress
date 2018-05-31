@@ -40,6 +40,7 @@ $args = array(
 	'container_next' => 'span',
 	'container_previous' => 'span',
 	'navigation_separator' => ' | ',
+	'previous' => __( 'Prev', 'cp' ),
 );
 echo coursepress_get_current_course_cycle( $args );
 ?>

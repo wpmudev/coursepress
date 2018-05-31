@@ -685,6 +685,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 			'navigation' => 'bottom',
 			'navigation_separator' => '',
 			'next' => __( 'Next', 'cp' ),
+			'previous' => __( 'Previous', 'cp' ),
 		)
 	);
 	$course = coursepress_get_course();
@@ -811,7 +812,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 	$previous = coursepress_create_html(
 		$args['container_previous'],
 		array( 'class' => 'course-previous-item' ),
-		coursepress_get_previous_course_cycle_link()
+		coursepress_get_previous_course_cycle_link( $args['previous'] )
 	);
 
 	$template .= coursepress_create_html(

@@ -17,6 +17,8 @@
 
     .module-step-title {
         margin-top: 0;
+        font-size: 1.3em;
+        margin-right: 5em;
     }
 
     .question {
@@ -143,14 +145,18 @@
         }
     }
 }
-
-.course-step-nav {
-    display: block;
-    margin: 0 0 -2em 0;
-    text-align: right;
-    a, button {
-        display: inline;
-        @include reset;
+.course-content {
+    position: relative;
+    .course-step-nav {
+        display: block;
+        position: absolute;
+        right: 0;
+        text-align: right;
+        z-index: 1;
+        a, button {
+            display: inline;
+            @include reset;
+        }
     }
 }
 

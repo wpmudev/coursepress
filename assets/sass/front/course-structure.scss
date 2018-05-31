@@ -176,27 +176,34 @@
                         @include icon("\f058");
                         padding-right: 20px;
                         font-size: 1.4em;
+                        margin-top: -1.5em;
+                    }
+                }
+                &.course-current-step {
+                    background-color: $dark_1;
+                    color: $white;
+                    a {
+                        color: $white;
                     }
                 }
             }
         }
-
         &.course-structure-nav {
             margin: 0;
-
             .module-tree {
-                border: 1px solid $grey_5;
             }
-
             .module-title {
                 padding: 5px 10px;
-                font-size: 14px;
-                background-color: $grey_5;
+                font-size: 1.2em;
             }
-
             .course-step {
                 padding: 5px 12px;
                 background-color: $grey_6;
+                &.step-completed {
+                    &:after {
+                        content: none;
+                    }
+                }
             }
             .course-current-step {
                 font-weight: bolder;
@@ -225,22 +232,26 @@
                         }
                     }
                 }
-                li {
-                    .course-step {
-                        &:before {
-                            float: left;
-                            @include icon("\f15c");
-                            padding-right: 10px;
-                        }
-                        &.course-step-audio:before        { content: "\f1c7"; }
-                        &.course-step-discussion:before   { content: "\f086"; }
-                        &.course-step-download:before     { content: "\f019"; }
-                        &.course-step-image:before        { content: "\f1c5"; }
-                        &.course-step-input-quiz:before   { content: "\f0ca"; }
-                        &.course-step-input-upload:before { content: "\f093"; }
-                        &.course-step-quiz:before         { content: "\f0ca"; }
-                        &.course-step-video:before        { content: "\f1c8"; }
-                        &.course-step-zipped:before       { content: "\f1c6"; }
+            }
+            li {
+                .course-step {
+                    &:before {
+                        float: left;
+                        @include icon("\f15c");
+                    }
+                    &.course-step-audio:before        { content: "\f1c7"; }
+                    &.course-step-discussion:before   { content: "\f086"; }
+                    &.course-step-download:before     { content: "\f019"; }
+                    &.course-step-image:before        { content: "\f1c5"; }
+                    &.course-step-input-quiz:before   { content: "\f0ca"; }
+                    &.course-step-input-upload:before { content: "\f093"; }
+                    &.course-step-quiz:before         { content: "\f0ca"; }
+                    &.course-step-video:before        { content: "\f1c8"; }
+                    &.course-step-zipped:before       { content: "\f1c6"; }
+                    a,
+                    span {
+                        display: block;
+                        padding-left: 1.6em;
                     }
                 }
             }

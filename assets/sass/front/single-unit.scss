@@ -4,11 +4,11 @@
         margin: 0;
     }
     h2.course-title {
-      margin: 25px 0 0;
-      @include clearfix;
+        margin: 25px 0 0;
+        @include clearfix;
     }
     .course-after-title {
-      @include clearfix;
+        @include clearfix;
     }
     .course-unit-progress {
         position: absolute;

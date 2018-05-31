@@ -677,6 +677,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 				if ( ! $is_accessible ) {
 					$step_class[] = 'step-locked';
 					$step_title = $step->__get( 'post_title' );
+					$step_title = $this->create_html( 'span', array(), $step_title );
 				} elseif ( $user->is_step_completed( $course_id, $unit_id, $step_id ) ) {
 					$step_class[] = 'step-seen step-completed';
 				} elseif ( $user->is_step_seen( $course_id, $unit_id, $step_id ) ) {
