@@ -2,8 +2,6 @@
     position: relative;
     display: block;
     margin: 0 0 25px 0;
-    padding: 30px;
-    background-color: $grey_9;
     @include clearfix;
 
     .required {
@@ -148,7 +146,11 @@
     }
 }
 .course-content {
-    position: relative;
+    form {
+        position: relative;
+        padding: 30px;
+        background-color: $grey_9;
+    }
     .course-step-nav {
         display: block;
         position: absolute;
