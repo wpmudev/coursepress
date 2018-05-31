@@ -278,6 +278,16 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					exit;
 				}
 				break;
+			case 'notifications':
+				// Check if user is logged in
+				if ( ! is_user_logged_in() ) {
+					// Redirect back to course overview
+					wp_safe_redirect( $coursepress_course->get_permalink() );
+					exit;
+				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Notifications', 'cp' ), $coursepress_course->get_notifications_url() );
+				break;
 		}
 		return $template;
 	}

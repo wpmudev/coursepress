@@ -1,170 +1,168 @@
 /* Notifications and Discussions */
-.course-discussion-wrapper {
-    .button {
-        @include button;
-    }
-}
-.discussion-new {
-    display: block;
-    margin: 15px 0 25px 0;
-    text-align: right;
-    .button {
-        @include button;
-    }
-}
-ul {
-    &.discussion-archive-list,
-    &.notification-archive-list {
-        list-style: none;
-        margin-left: 0;
-        padding-left: 0;
-
-        *,
-        &:before,
-        &:after {
-            box-sizing: border-box;
-        }
-
-        li {
-            margin-bottom: 1em;
+.coursepress-notifications {
+    .course-discussion-wrapper {
+        .button {
+            @include button;
         }
     }
-}
-
-.discussion-archive-single-meta,
-.notification-archive-single-meta {
-    clear: both;
-    display: inline-block;
-    float: left;
-    margin-right: 5%;
-    vertical-align: top;
-    width: 10%;
-    .discussion-comment,
-    .notification-date {
-        width: 55px;
-        height: 55px;
-        background: rgba(0, 0, 0, 0.05);
-        padding: 5px;
-        text-align: center;
-        border-radius: 50px;
-    }
-}
-.notification-archive-single-meta {
-    .day {
-        font-size: 1.3em;
-        margin: 0;
-        padding: 0;
-        line-height: 0;
-    }
-    .month {
-        margin: 0;
-        padding: 0;
-        font-size: 0.9em;
-        line-height: 0;
-    }
-    .year {
-        display: none;
-    }
-    .notification-time {
-        font-size: 0.8em;
-        font-style: italic;
-        opacity: 0.5;
-        text-align: center;
-    }
-    .discussion-comment {
-        padding: 0;
-        transform-style: preserve-3d;
-        position: relative;
-
-        .comment {
-            font-size: 1.3em;
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.2, 1);
+    .discussion-new {
+        display: block;
+        margin: 15px 0 25px 0;
+        text-align: right;
+        .button {
+            @include button;
         }
     }
-}
+    ul {
+        &.discussion-archive-list,
+        &.notification-archive-list {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 0;
+            max-width: $width_a;
+            margin: 25px auto;
+            *,
+            &:before,
+            &:after {
+                box-sizing: border-box;
+            }
+            li {
+                background-color: $grey_12;
+                margin-bottom: 1em;
+                &.date {
+                    background-color: transparent;
+                    span {
+                        @include button;
+                        @include radius( 20px );
+                    }
+                }
+            }
+        }
+    }
 
-.discussion-archive-single,
-.notification-archive-single {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    vertical-align: top;
-    width: 85%;
-    h3 {
+    .discussion-archive-single-meta,
+    .notification-archive-single-meta {
+        clear: both;
+        display: inline-block;
+        float: left;
+        margin-right: 5%;
+        vertical-align: top;
+        width: 10%;
+        .discussion-comment,
+        .notification-date {
+            width: 55px;
+            height: 55px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px;
+            text-align: center;
+            border-radius: 50px;
+        }
+    }
+    .notification-archive-single-meta {
+        .discussion-comment {
+            padding: 0;
+            transform-style: preserve-3d;
+            position: relative;
+
+            .comment {
+                font-size: 1.3em;
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(1.2, 1);
+            }
+        }
+    }
+
+    .discussion-archive-single,
+    .notification-archive-single {
+        display: inline-block;
         margin: 0;
         padding: 0;
         vertical-align: top;
-        border-bottom: 4px solid rgba(0, 0, 0, 0.05);
-        width: 100%;
-        font-size: 1.5em;
+        width: 85%;
+        h3 {
+            margin: 0;
+            padding: 0;
+            vertical-align: top;
+            border-bottom: 4px solid rgba(0, 0, 0, 0.05);
+            width: 100%;
+            font-size: 1.5em;
+        }
     }
-}
 
-.discussion-archive-single .meta,
-.notification-archive-single .notification_author {
-    font-size: 0.8em;
-    font-style: italic;
-}
-
-.discussion-archive-single {
-    hr {
-        border: none;
-        border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
-        margin: 10px 0 0 0;
-        background: none;
+    .discussion-archive-single .meta,
+    .notification-archive-single .notification_author {
+        font-size: 0.8em;
+        font-style: italic;
     }
-}
 
-.course-discussion-wrapper {
-    .course-discussion-content {
-        padding-bottom: 1em;
-        &.new {
-            input,
-            textarea {
-                width: 100%;
-            }
-            textarea {
-                min-height: 400px;
-            }
-            .button-links {
-                text-align: right;
-                margin: 10px 0 0 0;
-                padding: 0;
-                a {
-                    cursor: pointer;
-                    margin-left: 20px;
+    .discussion-archive-single {
+        hr {
+            border: none;
+            border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
+            margin: 10px 0 0 0;
+            background: none;
+        }
+    }
+
+    .course-discussion-wrapper {
+        .course-discussion-content {
+            padding-bottom: 1em;
+            &.new {
+                input,
+                textarea {
+                    width: 100%;
                 }
+                textarea {
+                    min-height: 400px;
+                }
+                .button-links {
+                    text-align: right;
+                    margin: 10px 0 0 0;
+                    padding: 0;
+                    a {
+                        cursor: pointer;
+                        margin-left: 20px;
+                    }
 
+                }
+            }
+        }
+        .form-submit {
+            text-align: right;
+        }
+    }
+
+    .course-discussion {
+        .discussion-section {
+            padding: 1em 0;
+        }
+        .discussion-title,
+        .discussion-content {
+            margin-bottom: 1em;
+        }
+        .button-links {
+            text-align: right;
+            a {
+                &.button {
+                    float: left;
+                }
+            }
+        }
+        textarea {
+            min-height: 200px;
+        }
+    }
+    .coursepress-wrap {
+        .content-area {
+            .page-header {
+                .page-title {
+                    max-width: $width_a;
+                    margin: 25px auto;
+                }
             }
         }
     }
-    .form-submit {
-        text-align: right;
-    }
 }
-
-.course-discussion {
-    .discussion-section {
-        padding: 1em 0;
-    }
-    .discussion-title,
-    .discussion-content {
-        margin-bottom: 1em;
-    }
-    .button-links {
-        text-align: right;
-        a {
-            &.button {
-                float: left;
-            }
-        }
-    }
-    textarea {
-        min-height: 200px;
-    }
-}
-
