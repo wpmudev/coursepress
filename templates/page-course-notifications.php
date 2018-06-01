@@ -25,6 +25,7 @@ coursepress_breadcrumb();
 ?>
                     <h1 class="page-title"><?php _e( 'Course Notifications', 'cp' ); ?></h1>
                 </header>
+                <div class="notifications-content">
 <?php
 if ( empty( $notifications ) ) {
 	echo '<p>';
@@ -65,6 +66,7 @@ foreach ( $notifications as $notification ) {
 <?php } ?>
                     </ul>
 <?php } ?>
+                </div>
             </div>
         </div>
     </div>

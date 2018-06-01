@@ -1,5 +1,20 @@
 /* Notifications and Discussions */
 .coursepress-notifications {
+    .notifications-content {
+        max-width: $width_a;
+        margin: 25px auto;
+    }
+}
+.coursepress-forum {
+    .discussions-content,
+    .course-discussion-content {
+        max-width: $width_a;
+        margin: 25px auto;
+    }
+}
+
+.coursepress-notifications,
+.coursepress-forum {
     .course-discussion-wrapper {
         .button {
             @include button;

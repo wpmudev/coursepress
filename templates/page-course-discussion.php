@@ -13,18 +13,19 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
+<?php
+/**
+ * To override course submenu template to your theme or a child-theme,
+ * create a template `course-submenu.php` and it will be loaded instead.
+ *
+ * @since 3.0
+ */
+coursepress_get_template( 'course', 'submenu' );
+coursepress_breadcrumb();
+?>
 					<h1 class="page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
-					<h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
 				</header>
-				<?php
-				/**
-				 * To override course submenu template to your theme or a child-theme,
-				 * create a template `course-submenu.php` and it will be loaded instead.
-				 *
-				 * @since 3.0
-				 */
-				coursepress_get_template( 'course', 'submenu' );
-				?>
+                <div class="discussions-content">
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );
 				if ( ! $allowed ) :
@@ -40,6 +41,7 @@ get_header(); ?>
 				) );
 				endif;
 				?>
+			</div>
 			</div>
 		</div>
 	</div>
