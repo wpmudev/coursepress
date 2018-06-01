@@ -29,12 +29,34 @@
             li {
                 background-color: $grey_12;
                 margin-bottom: 1em;
+                padding: 30px;
                 &.date {
+                    padding: 0 0 30px 0;
                     background-color: transparent;
                     span {
                         @include button;
-                        @include radius( 20px );
+                        @include radius( 22px );
+                        line-height: 44px;
+                        padding: 0 2em;
+                        font-weight: 200;
+                        text-transform: uppercase;
+                        &:hover {
+                            box-shadow: none;
+                        }
                     }
+                }
+                .notification-title {
+                    font-size: 1.5em;
+                }
+                .notification-meta {
+                    strong {
+                        span {
+                            font-weight: normal;
+                        }
+                    }
+                }
+                .notification-content {
+                    margin-top: 1em;
                 }
             }
         }

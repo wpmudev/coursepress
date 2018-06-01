@@ -41,11 +41,20 @@ if ( empty( $notifications ) ) {
 foreach ( $notifications as $notification ) {
 	$timestamp = strtotime( $notification->post_date );
 	$d = strtotime( date( 'Y-m-d', $timestamp ) );
+	$diff = $today_start - $timestamp;
+	$show = date_i18n( $format, $d );
+	if ( 2 * DAY_IN_SECONDS > $diff ) {
+		$d = __( 'Yesterday', 'cp' );
+		if ( $today_start < $timestamp ) {
+			$d = __( 'Today', 'cp' );
+		}
+		$show = $d;
+	}
 	if ( $date !== $d ) {
-		printf( '<li class="date"><span>%s</span></li>', date_i18n( $format, $d ) );
+		printf( '<li class="date"><span>%s</span></li>', $show );
 		$date = $d;
 	}
-	$author = sprintf( __( 'By <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) );
+	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
 
 ?>
 <li>
