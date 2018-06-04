@@ -5,7 +5,12 @@
  * @since 3.0
  * @package CoursePress
  */
-get_header(); ?>
+get_header();
+
+global $coursepress_course;
+$user = coursepress_get_user();
+$is_enrolled = $user->is_enrolled_at( $coursepress_course->ID );
+?>
 
 	<div class="coursepress-wrap">
 		<div class="container">
@@ -17,7 +22,12 @@ get_header(); ?>
 				 *
 				 * @since 3.0
 				 */
-				coursepress_get_template( 'course', 'overview' );
+
+				$slug = 'overview';
+				if ( $is_enrolled ) {
+					$slug .= '-enrolled';
+				}
+				coursepress_get_template( 'course', $slug );
 				?>
 			</div>
 		</div>

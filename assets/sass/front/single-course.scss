@@ -67,11 +67,21 @@
                 }
             }
         }
+        .content-area {
+            article {
+                @include width;
+            }
+        }
     }
     .entry-header {
         padding-bottom: 20px;
         .entry-title {
             margin-bottom: 10px;
+        }
+        .course-category {
+            &:before {
+                @include icon("\f02b");
+            }
         }
     }
     .entry-content {

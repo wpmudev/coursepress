@@ -275,6 +275,15 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				switch ( $type ) {
+					case 'grades':
+						$this->add_breadcrumb( __( 'Grades', 'cp' ), $coursepress_course->get_grades_url() );
+					break;
+					case 'workbook':
+						$this->add_breadcrumb( __( 'Workbook', 'cp' ), $coursepress_course->get_workbook_url() );
+					break;
+				}
 				break;
 			case 'notifications':
 				// Check if user is logged in
@@ -297,6 +306,13 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				}
 				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
 				$this->add_breadcrumb( __( 'Discussions', 'cp' ), $coursepress_course->get_discussion_url() );
+				break;
+
+			case 'single-course':
+				if ( is_user_logged_in() ) {
+					$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+					$this->add_breadcrumb( __( 'Course Details', 'cp' ), $coursepress_course->get_permalink() );
+				}
 				break;
 		}
 		return $template;

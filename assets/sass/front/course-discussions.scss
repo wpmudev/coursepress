@@ -1,15 +1,13 @@
 /* Notifications and Discussions */
 .coursepress-notifications {
     .notifications-content {
-        max-width: $width_a;
-        margin: 25px auto;
+        @include width;
     }
 }
 .coursepress-forum {
     .discussions-content,
     .course-discussion-content {
-        max-width: $width_a;
-        margin: 25px auto;
+        @include width;
     }
 }
 
@@ -38,8 +36,7 @@
             list-style: none;
             margin-left: 0;
             padding-left: 0;
-            max-width: $width_a;
-            margin: 25px auto;
+            @include width;
             *,
             &:before,
             &:after {
@@ -175,8 +172,7 @@
             text-align: right;
         }
         .comments-area {
-            max-width: $width_a;
-            margin: 25px auto;
+            @include width;
             form {
                 margin-top: 1em;
                 background-color: $grey_12;
@@ -190,7 +186,6 @@
                 font-weight: bold;
                 &:before {
                     @include icon("\f3e5");
-                    padding-right: 5px;
                 }
             }
         }
@@ -232,8 +227,7 @@
         .content-area {
             .page-header {
                 .page-title {
-                    max-width: $width_a;
-                    margin: 25px auto;
+                    @include width;
                 }
             }
         }

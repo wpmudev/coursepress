@@ -89,8 +89,9 @@ $code_font: Consolas, Monaco, monospace;
 }
 @mixin icon($icon) {
     content: $icon;
-    font-family: FontAwesome, sans-serif;
     display: inline-block;
+    font-family: FontAwesome, sans-serif;
+    padding-right: 5px;
 }
 @mixin hide {
     opacity: 0;
@@ -164,4 +165,9 @@ $code_font: Consolas, Monaco, monospace;
 
 @mixin font_awesome {
     font-family: FontAwesome;
+}
+
+@mixin width {
+    max-width: $width_a;
+    margin: 25px auto;
 }
