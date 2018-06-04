@@ -25,24 +25,21 @@
 	endforeach;
 	?>
 	<div class="discussion-section">
-		<label><span>
-		<?php
-			esc_html_e( 'This discussion is about ', 'cp' );
-			coursepress_html_select( $options_unit, true );
-		?>
-		</span></label>
+        <label><?php esc_html_e( 'This discussion is about?', 'cp' ); ?></label>
+        <p><?php coursepress_html_select( $options_unit, true ); ?></p>
 	</div>
 	<?php
 		$button      = $id ? esc_html__( 'Update discussion', 'cp' ) : esc_html__( 'Add discussion', 'cp' );
 		$cancel_link = $course->get_discussion_url();
 	?>
-	<div class="new_question">
-		<div class="rounded"><span>Q</span></div>
+    <div class="new_question">
+        <label><?php esc_html_e( 'Title', 'coursepress' ); ?></label>
 		<input class="discussion-title" name="title" type="text" placeholder="<?php esc_attr_e( 'Title of the discussion', 'cp' ); ?>" value=""/>
+        <label><?php esc_html_e( 'Discussion', 'coursepress' ); ?></label>
 		<textarea class="discussion-content" name="content" placeholder="<?php esc_attr_e( 'Type your discussion or question here…', 'cp' ); ?>"></textarea>
 		<div class="button-links">
-			<input type="submit" class="button_submit" name="new_question_submit" value="<?php esc_html_e( 'Ask this Question', 'cp' ); ?>"/>
 			<a href="<?php echo esc_url( $cancel_link ); ?>" class="button_cancel"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
+			<input type="submit" class="button_submit" name="new_question_submit" value="<?php esc_html_e( 'Ask this Question', 'cp' ); ?>"/>
 		</div>
 	</div>
 </form>

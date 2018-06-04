@@ -1930,14 +1930,11 @@ function coursepress_get_disscusions( $course ) {
 		$post->course_id = $post->post_parent;
 		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
 		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
-
 		$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
 		$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
 		$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
 		$post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
-
 		$post->url = $url.$post->post_name;
-
 		$data[] = $post;
 	}
 	return $data;

@@ -14,11 +14,6 @@ else :
 	foreach ( $data as $discussion ) :
 		echo '<li>';
 		$comments_count = wp_count_comments( $discussion->ID );
-		echo '<div class="discussion-archive-single-meta">';
-		echo '<div class="discussion-comment"><div class="comment">';
-		echo $comments_count->approved;
-		echo '</div></div>';
-		echo '</div>';
 
 		$author = coursepress_get_user_name( $discussion->post_author, false, false );
 
@@ -36,13 +31,22 @@ else :
 						<div class="discussion-content">
 							' . $discussion->post_content . '
 						</div>
-						<hr />
-						<div class="meta">' . esc_html( $author ) . ' | ' . esc_html( $date ) . ' | ' . esc_html__( 'Applies to:', 'cp' ) . ' ' . $applies_to . '</div>
+						<div class="meta"><span>' .__( 'Started by: ', 'coursepress' ). '</span>' .esc_html( $author ) . ' | ' . esc_html( $date ) . ' | <span>' . esc_html__( 'Applies to:', 'cp' ) . '</span> ' . $applies_to . '</div>
 					</div>
 			';
 
-		echo '
-				</li>';
+		echo '<div class="discussion-archive-single-meta">';
+		if ( 0 == $comments_count->approved ) {
+			_e( 'No responces', 'coursepress' );
+		} else {
+			$c = sprintf( '<span>%d</span>', $comments_count->approved );
+			printf(
+				_n( '%s Responce', '%s Responces', $comments_count->approved, 'coursepress' ),
+				$c
+			);
+		}
+		echo '</div>';
+		echo ' </li>';
 	endforeach;
 	echo '</ul>';
 endif;

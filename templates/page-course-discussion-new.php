@@ -23,16 +23,8 @@ coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
 					<h1 class="page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
-				</header>
-				<?php
-				/**
-				 * To override course submenu template to your theme or a child-theme,
-				 * create a template `course-submenu.php` and it will be loaded instead.
-				 *
-				 * @since 3.0
-				 */
-				coursepress_get_template( 'course', 'submenu' );
-				?>
+                </header>
+<div class="discussions-content">
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );
 				if ( ! $allowed ) :
@@ -46,6 +38,7 @@ coursepress_breadcrumb();
 				endif;
 				?>
 			</div>
+		</div>
 		</div>
 	</div>
 <?php

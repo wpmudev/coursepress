@@ -15,6 +15,10 @@
 
 .coursepress-notifications,
 .coursepress-forum {
+    color: $dark_1;
+    a {
+        color: $dark_1;
+    }
     .course-discussion-wrapper {
         .button {
             @include button;
@@ -77,25 +81,18 @@
         }
     }
 
-    .discussion-archive-single-meta,
-    .notification-archive-single-meta {
+    .discussion-archive-single-meta {
         clear: both;
         display: inline-block;
-        float: left;
-        margin-right: 5%;
+        float: right;
+        margin-left: 2%;
         vertical-align: top;
-        width: 10%;
-        .discussion-comment,
-        .notification-date {
-            width: 55px;
-            height: 55px;
-            background: rgba(0, 0, 0, 0.05);
-            padding: 5px;
-            text-align: center;
-            border-radius: 50px;
+        width: 13%;
+        text-align: center;
+        font-weight: bold;
+        span {
+            display: block;
         }
-    }
-    .notification-archive-single-meta {
         .discussion-comment {
             padding: 0;
             transform-style: preserve-3d;
@@ -123,13 +120,20 @@
             margin: 0;
             padding: 0;
             vertical-align: top;
-            border-bottom: 4px solid rgba(0, 0, 0, 0.05);
             width: 100%;
             font-size: 1.5em;
         }
     }
 
-    .discussion-archive-single .meta,
+    .discussion-archive-single {
+        .meta {
+            margin-top: 1em;
+            span {
+                font-weight: bold;
+            }
+        }
+    }
+
     .notification-archive-single .notification_author {
         font-size: 0.8em;
         font-style: italic;
@@ -170,11 +174,34 @@
         .form-submit {
             text-align: right;
         }
+        .comments-area {
+            max-width: $width_a;
+            margin: 25px auto;
+            form {
+                margin-top: 1em;
+                background-color: $grey_12;
+                padding: 20px;
+            }
+            .comment-reply-title {
+                border: 0;
+            }
+            .comment-reply-link {
+                @include reset;
+                font-weight: bold;
+                &:before {
+                    @include icon("\f3e5");
+                    padding-right: 5px;
+                }
+            }
+        }
     }
 
     .course-discussion {
         .discussion-section {
             padding: 1em 0;
+            p {
+                margin: 0;
+            }
         }
         .discussion-title,
         .discussion-content {
@@ -187,9 +214,18 @@
                     float: left;
                 }
             }
+            input {
+                margin-left: 3em;
+            }
         }
         textarea {
             min-height: 200px;
+        }
+        label {
+            font: {
+                size: .9em;
+                weight: bold;
+            }
         }
     }
     .coursepress-wrap {
