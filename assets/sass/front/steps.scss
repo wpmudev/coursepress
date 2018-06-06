@@ -162,6 +162,11 @@
             display: inline;
             @include reset;
         }
+        .course-next-item {
+            &:before {
+                content: " | ";
+            }
+        }
     }
 }
 
