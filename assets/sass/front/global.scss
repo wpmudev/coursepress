@@ -9,9 +9,9 @@
 }
 .coursepress-wrap {
     display: block;
-    margin: 0;
+    margin: 0 auto;
     width: 100%;
-    max-width: 100%;
+    max-width: 1000px;
     @include clearfix;
     font-size: 100%;
     .container {
@@ -25,6 +25,8 @@
                 border: 0;
                 padding: 0;
                 margin: 0 0 1em 0;
+                float: none;
+                width: 100%;
                 .page-title {
                     font-size: 2em;
                     font-weight: 700;
