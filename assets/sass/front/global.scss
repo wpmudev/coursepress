@@ -39,10 +39,11 @@
                     width: 100%;
                     display: flex;
                     .thumbnail {
-                        img {
-                            max-width: inherit;
-                        }
                         padding-right: 30px;
+                        max-width: 30%;
+                        img {
+                            max-width: 100%;
+                        }
                     }
                     .course-entry-wrap {
                         width: 100%;
