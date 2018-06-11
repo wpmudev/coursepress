@@ -53,7 +53,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 	public function get_course_instructors( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
-			'avatar_size' => 80,
+			'avatar_size' => 100,
 			'default_avatar' => '',
 			'label' => __( 'Instructor', 'cp' ),
 			'label_delimiter' => ':',
@@ -111,22 +111,37 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 			);
 			if ( $link_all ) {
 				$template .= $this->create_html( 'a', $attr, $instructor_name );
-			} else {
-				$template .= $instructor_name;
-				if ( 'block' === $atts['style'] ) {
-					$template .= $this->create_html( 'a', $attr, $atts['link_text'] );
-				}
 			}
 			if ( 'block' === $atts['style'] ) {
+				$description = '';
+				if ( ! empty( $instructor_name ) ) {
+					$description = sprintf( '<span class="instructor-name">%s</span>', $instructor_name );
+				}
 				if ( $atts['summary_length'] && isset( $instructor->description ) && $instructor->description ) {
-					$description = wp_trim_words( $instructor->description, $atts['summary_length'] );
+					if ( ! empty( $description ) ) {
+						$description .= ', ';
+					}
+					$description .= wp_trim_words( $instructor->description, $atts['summary_length'] );
 					if ( $link_all ) {
 						$attr = array( 'href' => esc_url( $link ) );
 						$description = $this->create_html( 'a', $attr, $description );
+					} else if ( 'block' === $atts['style'] ) {
+						$description .= PHP_EOL.PHP_EOL.$this->create_html( 'a', $attr, $atts['link_text'] );
 					}
+					$description = wpautop( $description );
+				} else {
+					if ( 'block' === $atts['style'] ) {
+						$description .= PHP_EOL.PHP_EOL.$this->create_html( 'a', $attr, $atts['link_text'] );
+					}
+					$description = wpautop( $description );
+
+				}
+				if ( ! empty( $description ) ) {
 					$template .= $this->create_html( 'div', array( 'class' => 'description profile-description' ), $description );
 				}
 				$template .= '</div>';
+			} else {
+				$template = $instructor_name;
 			}
 			$instructors_template[] = $template;
 		}

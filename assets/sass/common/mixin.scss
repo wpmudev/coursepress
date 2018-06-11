@@ -1,4 +1,7 @@
 $width: 100%;
+$width_3: 1000px;
+$width_7: 750px;
+$width_9: 400px;
 
 $white: #fff;
 $black: #000;
@@ -50,105 +53,130 @@ $wp_admin_width_to_hide_left_menu: 782px;
 $code_font: Consolas, Monaco, monospace;
 
 @mixin boxsizing {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 @mixin transition($trans) {
-  -webkit-transition: $trans;
-  -moz-transition: $trans;
-  -ms-transition: $trans;
-  -o-transition: $trans;
-  transition: $trans;
+    -webkit-transition: $trans;
+    -moz-transition: $trans;
+    -ms-transition: $trans;
+    -o-transition: $trans;
+    transition: $trans;
 }
 @mixin column($col) {
-  width: $width/12*$col;
+    width: $width/12*$col;
 }
 @mixin radius($radius) {
-  -webkit-border-radius: $radius;
-  -moz-border-radius: $radius;
-  border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
 }
 @mixin boxshadow($shadow) {
-  -webkit-box-shadow: $shadow;
-  -moz-box-shadow: $shadow;
-  box-shadow: $shadow;
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    box-shadow: $shadow;
 }
 @mixin clearfix {
-  &:before,
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
+    &:before,
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
 }
 @mixin bordered {
-  border-top: 1px solid #eaeaea;
-  border-bottom: 1px solid #fbfbfb;
+    border-top: 1px solid #eaeaea;
+    border-bottom: 1px solid #fbfbfb;
 }
 @mixin icon($icon) {
-  content: $icon;
-  font-family: 'FontAwesome', sans-serif;
-  display: inline-block;
+    content: $icon;
+    display: inline-block;
+    font-family: FontAwesome, sans-serif;
+    padding-right: 5px;
 }
 @mixin hide {
-  opacity: 0;
-  @include transition(opacity 0.4s);
+    opacity: 0;
+    @include transition(opacity 0.4s);
 }
 @mixin show {
-  opacity: 1;
-  @include transition(opactiy 0.4s);
+    opacity: 1;
+    @include transition(opactiy 0.4s);
 }
 @mixin columns($columns) {
-  -webkit-columns: $columns;
-  -moz-columns: $columns;
-  columns: $columns;
+    -webkit-columns: $columns;
+    -moz-columns: $columns;
+    columns: $columns;
 }
 @mixin reset() {
-  position: static;
-  line-height: 1.2;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  display: inline;
-  top: auto;
-  left: auto;
-  right: auto;
-  bottom: auto;
-  list-style: none;
-  background-color: transparent;
-  color: #333333;
-  font: {
-    size: 100%;
-    family: 'Helvetica Neue Light', sans-serif;
-    style: normal;
-    weight: 200;
-  }
-  @include boxshadow(none);
-  @include radius(0);
+    position: static;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    display: inline;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    list-style: none;
+    background: none transparent;
+    color: #333333;
+    font: {
+        size: 100%;
+        family: 'Helvetica Neue Light', sans-serif;
+        style: normal;
+        weight: 200;
+    }
+    text-transform: none;
+    @include boxshadow(none);
+    @include radius(0);
+    &:hover {
+        background: none transparent;
+    }
 }
 
 @mixin button {
-	border: 1px solid rgba(0, 0, 0, 0.1);
-	padding: 5px 12px;
-	text-decoration: none;
-	text-decoration-style: none;
-	border: 1px solid $grey_1;
-	background-color: $grey_5;
-	cursor: pointer;
-	color: inherit;
-	line-height: 1.2;
-	font-weight: 400;
-	box-shadow: none;
+    background: #1a1a1a;
+    border-radius: 2px;
+    border: 0;
+    color: $white;
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 1em;
+    padding: 20px 80px;
+    text: {
+        transform: uppercase;
+        align: center;
+    }
+    &:hover {
+        text-decoration: none;
+        box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 3px 0 rgba(0, 0, 0, 1);
+    }
+    a {
+        text-decoration: none;
+        border: 0;
+        color: inherit;
+    }
+}
+@mixin random_border_color() {
+    border: 1px solid rgb(random(255),random(255),random(255));
+}
 
-	&:hover {
-		text-decoration: none;
-		box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 3px 0 rgba(0, 0, 0, 1);
-	}
-	a {
-		text-decoration: none;
-		border: 0;
-		color: inherit;
-	}
+@mixin font_awesome {
+    font-family: FontAwesome;
+}
+
+@mixin width {
+    max-width: $width_7;
+    margin: 25px auto;
+}
+
+@mixin padding_width_7 {
+    padding: {
+        left: 10px;
+        right: 10px;
+    }
 }

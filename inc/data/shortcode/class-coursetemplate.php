@@ -171,7 +171,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 			'enrollment_finished' => array(
 				'label' => sanitize_text_field( $atts['enrollment_finished_text'] ),
 				'attr' => array(
-					'class' => 'apply-button apply-button-enrollment-finished ' . $class,
+					'class' => 'apply-button-enrollment-finished ' . $class,
 				),
 				'type' => 'label',
 			),
@@ -596,7 +596,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				);
 			}
 			$title_suffix = '';
-			if ( 'publish' !==$the_unit->post_status && $can_update_course ) {
+			if ( 'publish' !== $the_unit->post_status && $can_update_course ) {
 				$title_suffix = esc_html__( ' [DRAFT]', 'cp' );
 			}
 			if ( ! $is_unit_available && $enrolled ) {
@@ -630,7 +630,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
 				$_unit_date = $this->strtotime( $unit_availability_date );
 				$now = $this->date_time_now();
-				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' !==$unit_availability_date ) {
+				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' !== $unit_availability_date ) {
 					$status_type = get_post_meta( $unit_id, 'unit_availability', true );
 					if ( 'instant' === $status_type ) {
 						$unit_status = esc_attr__( 'You need to complete the REQUIRED unit before this unit.', 'cp' );
@@ -1272,7 +1272,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		$student = 0;
 		$include_ids = array();
 		// Sanitize show_withdraw_link.
-		if ( empty( $atts['student'] ) || 'incomplete' !==$atts['status'] ) {
+		if ( empty( $atts['student'] ) || 'incomplete' !== $atts['status'] ) {
 			$atts['show_withdraw_link'] = false;
 		}
 		if ( ! empty( $atts['instructor'] ) ) {
@@ -1321,11 +1321,11 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 					if ( isset( $atts['status'] ) ) {
 						foreach ( $courses_to_add as $course_id ) {
 							$status = get_post_status( $course_id );
-							if ( 'publish' !==$status ) {
+							if ( 'publish' !== $status ) {
 								continue;
 							}
 							$add = true;
-							if ( 'publish' !==$atts['status'] ) {
+							if ( 'publish' !== $atts['status'] ) {
 								$status = CoursePress_Data_Student::get_course_status( $course_id, $student, false );
 								if ( 'completed' === $atts['status'] ) {
 									$add = false;
@@ -1383,7 +1383,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 				$ids = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
 				foreach ( $ids as $course_id ) {
 					$status = CoursePress_Data_Student::get_course_status( $course_id, $user_id, false );
-					if ( 'certified' !==$status ) {
+					if ( 'certified' !== $status ) {
 						$include_ids[] = $course_id;
 					}
 				}

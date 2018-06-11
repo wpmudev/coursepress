@@ -1,20 +1,93 @@
+.archive {
+    .coursepress-wrap {
+        .page-header {
+            float: none;
+            width: 100%;
+        }
+        article {
+            border: 1px solid $grey_12;
+            padding: 14px;
+            margin-bottom: 30px;
+        }
+    }
+}
 .coursepress-wrap {
     display: block;
-    margin: 0;
+    margin: 0 auto;
     width: 100%;
-    max-width: 100%;
+    max-width: 1000px;
     @include clearfix;
     font-size: 100%;
     .container {
-        max-width: 1024px;
         margin: 0 auto;
         padding-bottom: 1em;
-        .page-title {
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 0 0 15px 0;
-            padding: 0;
+        .content-area {
+            float: none;
+            margin: 0;
+            width: 100%;
+            .page-header {
+                border: 0;
+                padding: 0;
+                margin: 0 0 1em 0;
+                float: none;
+                width: 100%;
+                .page-title {
+                    font-size: 2em;
+                    font-weight: 700;
+                    margin: 0;
+                    padding: 0;
+                    @media screen and (max-width: $width_3) {
+                        padding: 0 10px;
+
+                    }
+                }
+            }
+            article {
+                .course-info {
+                    width: 100%;
+                    display: flex;
+                    .thumbnail {
+                        padding-right: 30px;
+                        max-width: 30%;
+                        img {
+                            max-width: 100%;
+                        }
+                    }
+                    .course-entry-wrap {
+                        width: 100%;
+                        .entry-content,
+                        .entry-footer {
+                            float: none;
+                            width: 100%;
+                        }
+                        .entry-title {
+                            margin-bottom: 10px;
+                        }
+                        .entry-footer {
+                            width: 100%;
+                            .quick-course-info {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+                        }
+                    }
+                    .course-instructors {
+                        margin: 0 0 1em 0;
+                        border: 0;
+                        padding: 0;
+                        .label {
+                            display: inline;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+        }
+        .entry-content {
+            ol, ul {
+                margin-left: 1.25em;
+            }
         }
     }
     .course-unit-progress {
@@ -27,7 +100,6 @@
         background-color: rgba(255, 0, 0, 0.02);
         padding: 10px 15px;
         border: 1px solid rgba(255, 0, 0, 0.1);
-
         &:before {
             content: '\f06a';
             font-family: 'FontAwesome';
@@ -36,6 +108,22 @@
             vertical-align: baseline;
             margin-right: 8px;
             color: red;
+        }
+    }
+    .td-right {
+        text-align: right;
+    }
+}
+@media screen and (max-width: $width_3) {
+    .coursepress-student-dashboard {
+        .content-area,
+        .page-content {
+            padding: 0 10px;
+        }
+    }
+    .coursepress-workbook {
+        .coursepress-content-wrapper {
+            padding: 0 10px;
         }
     }
 }

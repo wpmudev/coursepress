@@ -297,7 +297,7 @@ function coursepress_get_course_description( $course_id = 0 ) {
  *
  * @return null|string
  */
-function coursepress_get_course_media( $course_id = 0, $width = 235, $height = 235 ) {
+function coursepress_get_course_media( $course_id = 0, $width = 220, $height = 220 ) {
 	$course = coursepress_get_course( $course_id );
 
 	if ( ! is_wp_error( $course ) ) {
@@ -670,15 +670,25 @@ function coursepress_get_course_submenu() {
  *
  * @since 3.0
  */
-function coursepress_get_current_course_cycle() {
+function coursepress_get_current_course_cycle( $args = array() ) {
 	/**
 	 * @var array $_course_module An array of current module data.
 	 * @var object $_course_step
 	 */
 	global $coursepress_virtualpage, $_course_module, $_course_step, $_coursepress_previous;
-
+	$args = wp_parse_args(
+		$args,
+		array(
+			'container_next' => 'div',
+			'container_previous' => 'div',
+			'navigation_tag' => 'div',
+			'navigation' => 'bottom',
+			'navigation_separator' => '',
+			'next' => __( 'Next', 'cp' ),
+			'previous' => __( 'Previous', 'cp' ),
+		)
+	);
 	$course = coursepress_get_course();
-
 	if ( is_wp_error( $course ) ) {
 		return null;
 	}
@@ -686,30 +696,23 @@ function coursepress_get_current_course_cycle() {
 	if ( ! $is_course_started ) {
 		return __( 'Course is not available yet', 'cp' );
 	}
-
 	$unit = coursepress_get_unit();
-
 	if ( is_wp_error( $unit ) ) {
 		return null;
 	}
-
 	if ( ! $coursepress_virtualpage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
-
 	$vp = $coursepress_virtualpage;
 	$vp_type = $vp->__get( 'type' );
 	$_coursepress_previous = $course->get_units_url();
 	$course_id = $course->__get( 'ID' );
 	$unit_id = $unit->__get( 'ID' );
 	$user = coursepress_get_user();
-
 	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ), true ) ) {
 		return null;
 	}
-
 	$view_mode = $course->get_view_mode();
-
 	$form_attr = array(
 		'method' => 'post',
 		'action' => admin_url( 'admin-ajax.php?action=coursepress_submit' ),
@@ -807,9 +810,9 @@ function coursepress_get_current_course_cycle() {
 	}
 
 	$previous = coursepress_create_html(
-		'div',
+		$args['container_previous'],
 		array( 'class' => 'course-previous-item' ),
-		coursepress_get_previous_course_cycle_link()
+		coursepress_get_previous_course_cycle_link( $args['previous'] )
 	);
 
 	$template .= coursepress_create_html(
@@ -830,9 +833,12 @@ function coursepress_get_current_course_cycle() {
 		)
 	);
 
+
+    $submit = '';
+
 	if ( $has_access['access'] ) {
 		$next = coursepress_create_html(
-			'div',
+			$args['container_next'],
 			array( 'class' => 'course-next-item' ),
 			coursepress_create_html(
 				'button',
@@ -842,9 +848,24 @@ function coursepress_get_current_course_cycle() {
 					'name'  => 'submit_module',
 					'value' => 1,
 				),
-				__( 'Next', 'cp' )
+				$args['next']
 			)
-		);
+        );
+        if ( $_course_step ) {
+            $is_answerable = $_course_step->is_answerable();
+            if ( $is_answerable ) {
+                $submit = coursepress_create_html(
+                    'button',
+                    array(
+                        'type'  => 'submit',
+                        'class' => 'button button-next coursepress-next-cycle',
+                        'name'  => 'submit_module',
+                        'value' => 1,
+                    ),
+                    __( 'Submit', 'cp' )
+                );
+            }
+        }
 	} else {
 		$next = '';
 		$template .= coursepress_create_html(
@@ -855,19 +876,24 @@ function coursepress_get_current_course_cycle() {
 			$has_access['message']
 		);
 	}
-
-	$template .= coursepress_create_html(
-		'div',
+	$navigation = coursepress_create_html(
+		$args['navigation_tag'],
 		array( 'class' => 'course-step-nav' ),
-		$previous . $next
+		$previous . $args['navigation_separator'] . $next
 	);
-
+	/**
+	 * Navigation position
+	 */
+	if ( 'top' === $args['navigation'] ) {
+		$template = $navigation.$template;
+	} else {
+		$template .= $navigation;
+    }
 	$template = coursepress_create_html(
 		'form',
 		$form_attr,
-		$template
+		$template.$submit
 	);
-
 	return $template;
 }
 
@@ -996,15 +1022,15 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 	$vp_type = $vp->__get( 'type' );
 	$with_modules = $course->is_with_modules();
 	$has_access = $user->has_access_at( $course->__get( 'ID' ) );
-	$module_id = !empty( $_course_module['id'] ) ? $_course_module['id'] : false;
-	$module_url = !empty( $_course_module['url'] ) ? $_course_module['url'] : false;
+	$module_id = ! empty( $_course_module['id'] ) ? $_course_module['id'] : false;
+	$module_url = ! empty( $_course_module['url'] ) ? $_course_module['url'] : false;
 	$steps = $unit->get_steps( ! $has_access, $with_modules, $module_id );
 	$link = '';
 
 	if ( 'previous' === $type ) {
 		$previous_unit = $unit->get_previous_unit();
 		$prev_module = $unit->get_previous_module( $module_id );
-		$prev_module_id = !empty( $prev_module['id'] ) ? $prev_module['id'] : false;
+		$prev_module_id = ! empty( $prev_module['id'] ) ? $prev_module['id'] : false;
 		$prev_step = $_course_step ? $_course_step->get_previous_step() : false;
 		if ( $prev_step ) {
 			$link = $prev_step->get_permalink();
@@ -1026,11 +1052,10 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 			if ( $prev_modules ) {
 				$last_module = array_pop( $prev_modules );
 				$link = $last_module['url'];
-				if ( !empty( $last_module['steps'] ) ) {
+				if ( ! empty( $last_module['steps'] ) ) {
 					$last_step = array_pop( $last_module['steps'] );
 					$link = $last_step->get_permalink();
 				}
-
 			} elseif ( $prev_steps ) {
 				$prev_step = array_pop( $prev_steps );
 				$link = $prev_step->get_permalink();
@@ -1923,14 +1948,11 @@ function coursepress_get_disscusions( $course ) {
 		$post->course_id = $post->post_parent;
 		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
 		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
-
 		$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
 		$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
 		$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
 		$post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
-
 		$post->url = $url.$post->post_name;
-
 		$data[] = $post;
 	}
 	return $data;
@@ -1952,7 +1974,7 @@ function coursepress_get_discussion() {
 		'post_status' => 'publish',
 		'posts_per_page' => 1,
 	) );
-	 if ( $posts ) {
+	if ( $posts ) {
 		$found_post = $posts[0];
 	}
 

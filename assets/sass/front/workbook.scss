@@ -1,18 +1,51 @@
 .coursepress-wrap {
-  .workbook-table {
-    width: 100%;
-    font-size: 97%;
-
-    td {
-      padding: 6px 15px;
+    .workbook-table,
+    .grades-table {
+        @include width;
+        background-color: $grey_12;
+        border: 0;
+        td, th {
+            border: 0;
+        }
+        td {
+            padding: 6px 15px;
+        }
+        .data-unit {
+            td {
+                padding: 6px 10px;
+            }
+        }
+        .data-module {
+            td {
+                padding: 6px 15px;
+            }
+        }
+        .row-unit {
+            td {
+                font: {
+                    size: 1.2em;
+                    weight: bold;
+                }
+            }
+        }
+        .row-elements {
+            td {
+                padding-bottom: 1em;
+            }
+        }
     }
-    .data-unit td {
-      background-color: $grey_5;
-      padding: 6px 10px;
+}
+.coursepress-grades,
+.coursepress-workbook {
+    .coursepress-wrap {
+        .container{
+            .content-area {
+                .page-header {
+                    .page-title {
+                        @include width;
+                    }
+                }
+            }
+        }
     }
-    .data-module td {
-      background-color: $grey_6;
-      padding: 6px 15px;
-    }
-  }
 }

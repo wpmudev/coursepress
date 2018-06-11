@@ -40,11 +40,12 @@ class CoursePress_Data_Forum {
 		if ( isset( $_POST['id'] ) && ! empty( $_POST['id'] ) ) {
 			$args['ID'] = $_POST['id'];
 		} else {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
 			/**
 			 * Check is post like this already added?
 			 */
-			$q = new WP_Query( $args );
-			if ( $q->have_posts() ) {
+			$exists = post_exists( $args['post_title'], $args['post_content'] );
+			if ( $exists ) {
 				return new WP_Error( 'forum_duplicate', __( 'Duplicate forum detected; it looks as though you&#8217;ve already said that!', 'cp' ) );
 			}
 		}

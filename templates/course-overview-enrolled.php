@@ -6,6 +6,17 @@
  * @package CoursePress
  */
 $course = coursepress_get_course(); ?>
+            <div class="content-area">
+<?php
+/**
+ * To override course submenu template to your theme or a child-theme,
+ * create a template `course-submenu.php` and it will be loaded instead.
+ *
+ * @since 3.0
+ */
+coursepress_get_template( 'course', 'submenu' );
+coursepress_breadcrumb();
+?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( '' ); ?>>
     <header class="entry-header">
         <h1 class="entry-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
@@ -62,31 +73,7 @@ if ( $show ) {
 		</p>
 <?php
 }
-	/**
-	 * price
-	 */
-	$show = coursepress_get_setting( 'general/details_show_price_free', 1 );
-	$is_paid = $course->is_paid_course();
-if ( $show || $is_paid ) {
-	$price = $course->get_course_cost();
-	if ( ! empty( $price ) ) {
 ?>
-			<p class="course-meta">
-				<span class="course-meta course-meta-price"><?php echo $price; ?></span>
-			</p>
-<?php
-	}
-}
-?>
-            <p class="course-button">
-                <?php echo do_shortcode( '[course_join_button ]' ); ?>
-            </p>
-
-				<div class="social-shares">
-					<?php echo do_shortcode( '[course_social_links course_id="' . $course->ID . '"]' ); ?>
-				</div>
-
-
 			</div>
 		</div>
 
@@ -101,10 +88,7 @@ if ( $show ) {
 	echo do_shortcode( '[course_instructors course_id="' . $course->ID . '"]' );
 }
 ?>
-		<div class="course-structure">
-			<h3 class="sub-title course-sub-title"><?php _e( 'Course Structure', 'cp' ); ?></h3>
-			<?php echo coursepress_get_course_structure(); ?>
-		</div>
 
 	</div>
 </article>
+</div>

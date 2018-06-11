@@ -101,8 +101,8 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 			'details_show_language' => true,
 			'details_show_price_free' => true,
 			'details_show_instructors' => true,
-			'image_height' => 235,
-			'image_width' => 235,
+			'image_height' => 220,
+			'image_width' => 220,
 			'listing_media_priority' => 'default',
 			'listing_media_type' => 'default',
 			'listing_show_language' => true,
@@ -407,12 +407,12 @@ function coursepress_user_have_comments( $student_id, $post_id ) {
  *
  * @return string
  */
-function coursepress_progress_wheel( $attr = array() ) {
+function coursepress_progress_display( $attr = array() ) {
 	global $coursepress_core;
 
 	$core = $coursepress_core;
 	$defaults = array(
-		'class'                     => '',
+		'class'                      => '',
 		'data-value'                 => 100,
 		'data-start-angle'           => '4.7',
 		'data-size'                  => 36,
@@ -430,20 +430,22 @@ function coursepress_progress_wheel( $attr = array() ) {
 		'data-knob-text-align'       => 'center',
 		'data-knob-text-denominator' => '4.5',
 	);
-
+	if ( isset( $attr['mode'] ) && 'text' === $attr['mode'] ) {
+		$attributes = array(
+			'class' => 'unit-progress-text',
+		);
+		$value = sprintf( '%d%%', $attr['data-value'] );
+		return $core->create_html( 'span', $attributes, $value );
+	}
 	$attr = wp_parse_args( $attr, $defaults );
 	$class = array( 'course-progress-disc' );
-
 	if ( ! empty( $attr['class'] ) ) {
 		$class[] = $attr['class'];
 	}
 	$value = $attr['data-value'];
-
 	$value = intval( $value ) / 100;
 	$attr['data-value'] = $value;
-
 	$attr['class'] = implode( ' ', $class );
-
 	return $core->create_html( 'div', $attr );
 }
 
@@ -454,30 +456,22 @@ function coursepress_progress_wheel( $attr = array() ) {
  */
 function coursepress_breadcrumb() {
 	global $coursepress_virtualpage;
-
 	if ( ! $coursepress_virtualpage instanceof CoursePress_VirtualPage ) {
 		return null;
 	}
-
 	$vp = $coursepress_virtualpage;
 	$items = $coursepress_virtualpage->__get( 'breadcrumb' );
-
 	if ( ! empty( $items ) ) {
 		$breadcrumb = '';
-
 		// Make the last item non-clickable
 		$last_item = array_pop( $items );
-
 		foreach ( $items as $item ) {
 			$attr = array( 'class' => 'course-item' );
 			$breadcrumb .= $vp->create_html( 'li', $attr, $item );
 		}
-
 		$breadcrumb .= $vp->create_html( 'li', array( 'class' => 'current' ), wp_strip_all_tags( $last_item ) );
-
 		echo $vp->create_html( 'ul', array( 'class' => 'course-breadcrumb' ), $breadcrumb );
 	}
-
 	return '';
 }
 

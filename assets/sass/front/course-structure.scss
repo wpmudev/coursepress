@@ -1,173 +1,279 @@
 .course-structure {
     display: block;
-    margin: 25px 0;
-    @include clearfix;
-    .tree {
-        margin: 0;
-        padding: 0;
-        list-style: none;
+    max-width: $width_7;
+    margin: 25px auto;
+}
+.single-course {
+    .course-structure {
         @include clearfix;
-    }
-    .unit {
-        padding-bottom: .5em;
-    }
-    @mixin preview {
-        background-color: #ffffff;
-        border: 1.5px solid $grey_3;
-        display: inline-block;
-        float: right;
-        font-size: 11px;
-        @include radius(3px);
-        @include transition(opacity 0.4s);
-        opacity: 0.3;
-        padding: 4px 12px;
-        text-transform: uppercase;
-        &:hover {
-            opacity: 1;
-            @include transition(opacity 0.4s);
+        @media screen and (max-width: $width_7) {
+            @include padding_width_7;
         }
-    }
-    .unit-tree {
-        .preview {
-            @include preview();
+        a {
+            text-decoration: none;
+            color: $dark_1;
+            box-shadow: none;
         }
-        .unit-description {
-            clear: both;
-            margin: 0 20px;
+        .tree {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            @include clearfix;
         }
-        .fold {
+        @mixin preview {
             display: inline-block;
-            width: 25px;
-            float: left;
-            height: 25px;
-            margin: .5em 0 0 0;
-            cursor: pointer;
-            position: relative;
-            z-index: 10000;
-            &:before {
-                content: '\f140';
-                font-family: Dashicons;
-                font-size: 20px;
-                line-height: 1.2;
-            }
-
-            &.folded:before {
-                content: '\f139';
-            }
-        }
-        .timer {
+            margin-right: 2em;
             float: right;
-            font-size: 10px;
-            line-height: 14px;
-            display: inline-block;
-            vertical-align: middle;
-            padding: 5px;
-
-            &:before {
-                content: '\f469';
-                font-family: 'Dashicons';
-                display: inline-block;
-                vertical-align: middle;
-                font-size: 14px;
-                margin: 0 5px;
-            }
-        }
-        .unit-title {
-            display: block;
-            padding: 5px 0 5px 15px;
-            color: $grey_1;
-
-            .unit-feature-image {
-                float: left;
-                margin-right: 15px;
-            }
-        }
-
-        .has-progress {
-            position: relative;
-
-            .unit-progress {
-                position: absolute;
-                top: 25px;
-                right: 25px;
-                height: 36px;
-                width: 36px;
-
-                span {
-                    position: absolute;
-                    font-size: 7px;
-                    text-align: center;
-                    height: 36px;
-                    width: 36px;
-                    line-height: 36px;
-                    left: 0;
-                }
-            }
-        }
-    }
-
-    .module-tree {
-        .module-title {
-            display: block;
-            font-size: 96%;
-            padding: 5px 0 5px 35px;
-            a {
-                box-shadow: none;
-            }
+            @include transition(opacity 0.4s);
+            opacity: 0.3;
+            font-weight: normal;
             &:hover {
-                .preview {
-                    opacity: 1;
-                    @include transition(opacity 0.4s);
-                }
+                opacity: 1;
+                @include transition(opacity 0.4s);
             }
+            &:before {
+                @include icon("\f06e");
+            }
+        }
+        .unit-tree {
             .preview {
                 @include preview();
             }
+            .unit-description {
+                clear: both;
+                margin: 0 20px;
+            }
+            .fold {
+                display: inline-block;
+                width: 25px;
+                float: left;
+                height: 25px;
+                margin: .5em 0 0 0;
+                cursor: pointer;
+                position: relative;
+                z-index: 10000;
+                &:before {
+                    content: '\f140';
+                    font-family: Dashicons;
+                    font-size: 20px;
+                    line-height: 1.2;
+                }
+
+                &.folded:before {
+                    content: '\f139';
+                }
+            }
+            .timer {
+                float: right;
+                font-size: 10px;
+                line-height: 14px;
+                display: inline-block;
+                vertical-align: middle;
+                padding: 5px;
+
+                &:before {
+                    content: '\f469';
+                    font-family: 'Dashicons';
+                    display: inline-block;
+                    vertical-align: middle;
+                    font-size: 14px;
+                    margin: 0 5px;
+                }
+            }
+            .unit-title {
+                display: block;
+                padding: 5px 0 5px 15px;
+                color: $grey_1;
+
+                .unit-feature-image {
+                    float: left;
+                    margin-right: 15px;
+                }
+            }
+            .unit {
+                &.has-progress {
+                    position: relative;
+                    .unit-progress {
+                        position: absolute;
+                        top: 25px;
+                        right: 25px;
+                        height: 36px;
+                        width: 36px;
+
+                        span {
+                            position: absolute;
+                            font-size: 7px;
+                            text-align: center;
+                            height: 36px;
+                            width: 36px;
+                            line-height: 36px;
+                            left: 0;
+                        }
+                    }
+                }
+                .unit-progress-text {
+                    display: inline-block;
+                    float: right;
+                    font-weight: normal;
+                    margin-right: 20px;
+                }
+            }
         }
-        .module {
-            &.has-preview {
-                .module-title {
-                    &:after {
-                        clear: both;
-                        content: ' ';
-                        display: block;
-                        height: 1px;
+
+        .module-tree {
+            .module-title {
+                display: block;
+                font: {
+                    size: 96%;
+                    weight: bold;
+                }
+                padding: 5px 0 5px 25px;
+                &:hover {
+                    .preview {
+                        opacity: 1;
+                        @include transition(opacity 0.4s);
+                    }
+                }
+                .preview {
+                    @include preview();
+                }
+            }
+            .module {
+                border-top: 1px solid $grey_12;
+                margin-top: 5px;
+                padding-top: 5px;
+                &.has-preview {
+                    .module-title {
+                        &:after {
+                            clear: both;
+                            content: ' ';
+                            display: block;
+                            height: 1px;
+                        }
+                    }
+                }
+            }
+            >li {
+                &:first-of-type {
+                    .module {
+                        margin: 0;
+                        padding: 0;
+                        border: 0;
                     }
                 }
             }
         }
-    }
 
-    .step-tree {
-        .course-step {
-            display: block;
-            font-size: 94%;
-            padding: 5px 0 5px 50px;
-            a {
-                box-shadow: none;
+        .step-tree {
+            .course-step {
+                display: block;
+                font-size: 94%;
+                padding: 5px 0 5px 25px;
+                a {
+                    box-shadow: none;
+                }
+                &.step-completed {
+                    &:after {
+                        float: right;
+                        @include icon("\f058");
+                        padding-right: 20px;
+                        font-size: 1.4em;
+                        margin-top: -1.5em;
+                    }
+                }
+                &.course-current-step {
+                    background-color: $dark_1;
+                    color: $white;
+                    a {
+                        color: $white;
+                    }
+                }
             }
         }
-    }
-
-    &.course-structure-nav {
-        margin: 0;
-
-        .module-tree {
-            border: 1px solid $grey_5;
+        &.course-structure-nav {
+            margin: 0;
+            .module-tree {
+            }
+            .module-title {
+                padding: 5px 10px;
+                font-size: 1.2em;
+            }
+            .course-step {
+                padding: 5px 12px;
+                background-color: $grey_6;
+                &.step-completed {
+                    &:after {
+                        content: none;
+                    }
+                }
+            }
+            .course-current-step {
+                font-weight: bolder;
+            }
+            display: none;
+            @media (max-width: $width_7) {
+                background-color: $dark_1;
+                color: $white;
+                padding: 0;
+                position: absolute;
+                z-index: 10;
+                .course-step {
+                    background-color: transparent;
+                    &.course-current-step {
+                        background-color: $grey_1;
+                    }
+                }
+                a {
+                    color: $white;
+                }
+            }
         }
-
-        .module-title {
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: $grey_5;
-        }
-
-        .course-step {
-            padding: 5px 12px;
-            background-color: $grey_6;
-        }
-        .course-current-step {
-            font-weight: bolder;
+        ul {
+            &.units-archive-list {
+                margin: 0;
+                ul, ol {
+                    margin: 0;
+                }
+                ul {
+                    &.tree {
+                        border: {
+                            top: 1px solid $grey_12;
+                        }
+                    }
+                }
+                .unit-archive-single {
+                    border: 1px solid $grey_12;
+                    margin-bottom: 10px;
+                    .unit-title {
+                        font-weight: bold;
+                        background: {
+                            color: $grey_9;
+                        }
+                    }
+                }
+            }
+            li {
+                .course-step {
+                    &:before {
+                        float: left;
+                        @include icon("\f15c");
+                    }
+                    &.course-step-audio:before        { content: "\f1c7"; }
+                    &.course-step-discussion:before   { content: "\f086"; }
+                    &.course-step-download:before     { content: "\f019"; }
+                    &.course-step-image:before        { content: "\f1c5"; }
+                    &.course-step-input-quiz:before   { content: "\f0ca"; }
+                    &.course-step-input-upload:before { content: "\f093"; }
+                    &.course-step-quiz:before         { content: "\f0ca"; }
+                    &.course-step-video:before        { content: "\f1c8"; }
+                    &.course-step-zipped:before       { content: "\f1c6"; }
+                    a,
+                    span {
+                        display: block;
+                        padding-left: 1.6em;
+                    }
+                }
+            }
         }
     }
 }

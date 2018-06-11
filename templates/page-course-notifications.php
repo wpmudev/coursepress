@@ -13,44 +13,60 @@ get_header(); ?>
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
-                    <h1 class="page-title"><?php _e( 'Notifications', 'cp' ); ?></h1>
-                    <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
+<?php
+/**
+ * To override course submenu template to your theme or a child-theme,
+ * create a template `course-submenu.php` and it will be loaded instead.
+ *
+ * @since 3.0
+ */
+coursepress_get_template( 'course', 'submenu' );
+coursepress_breadcrumb();
+?>
+                    <h1 class="page-title"><?php _e( 'Course Notifications', 'cp' ); ?></h1>
                 </header>
-					<?php
-					/**
-					 * To override course submenu template to your theme or a child-theme,
-					 * create a template `course-submenu.php` and it will be loaded instead.
-					 *
-					 * @since 3.0
-					 */
-					coursepress_get_template( 'course', 'submenu' );
-					if ( empty( $notifications ) ) :
-						echo '<p>';
-							_e( 'There is no notifications yet.', 'cp' );
-						echo '</p>';
-					else :
+                <div class="notifications-content">
+<?php
+if ( empty( $notifications ) ) {
+	echo '<p>';
+	_e( 'There is no notifications yet.', 'cp' );
+	echo '</p>';
+} else {
+	$date = 0;
+	$today_start = strtotime( date( 'Y-m-d',  time() ) );
+	$format = get_option( 'date_format' );
+	$time_format = get_option( 'time_format' );
 					?>
                     <ul class="notification-archive-list">
-                        <?php foreach ( $notifications as $notification ) : ?>
-                            <li>
-                                <div class="notification-archive-single-meta">
-                                    <div class="notification-date">
-                                        <span class="month"><?php echo get_the_date( 'M', $notification ); ?></span>
-                                        <span class="day"><?php echo get_the_date( 'd', $notification ); ?></span>
-                                        <span class="year"><?php echo get_the_date( 'Y', $notification ); ?></span>
-                                    </div>
-                                    <div class="notification-time"><?php echo get_the_time( 'h:ia', $notification ); ?></div>
-                                </div>
-                                <?php $author = sprintf( __( 'by <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ); ?>
-                                <div class="notification-archive-single">
-                                    <h3 class="notification-title"><?php echo esc_html( $notification->post_title ); ?></h3>
-                                    <div class="notification_author"><?php echo $author; ?></div>
-                                    <div class="notification-content"><?php echo CoursePress_Utility::filter_content( $notification->post_content ); ?></div>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
+<?php
+foreach ( $notifications as $notification ) {
+	$timestamp = strtotime( $notification->post_date );
+	$d = strtotime( date( 'Y-m-d', $timestamp ) );
+	$diff = $today_start - $timestamp;
+	$show = date_i18n( $format, $d );
+	if ( 2 * DAY_IN_SECONDS > $diff ) {
+		$d = __( 'Yesterday', 'cp' );
+		if ( $today_start < $timestamp ) {
+			$d = __( 'Today', 'cp' );
+		}
+		$show = $d;
+	}
+	if ( $date !== $d ) {
+		printf( '<li class="date"><span>%s</span></li>', $show );
+		$date = $d;
+	}
+	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
+
+?>
+<li>
+<h3 class="notification-title"><?php echo esc_html( $notification->post_title ); ?></h3>
+<div class="notification-meta"><?php echo $author; ?> | <?php echo date_i18n( $time_format, $timestamp ); ?></div>
+<div class="notification-content"><?php echo CoursePress_Utility::filter_content( $notification->post_content ); ?></div>
+</li>
+<?php } ?>
                     </ul>
-                <?php endif; ?>
+<?php } ?>
+                </div>
             </div>
         </div>
     </div>

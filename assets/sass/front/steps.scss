@@ -1,155 +1,172 @@
 .course-module-step-template {
-  position: relative;
-  display: block;
-  margin: 0 0 25px 0;
-  @include clearfix;
-
-  .required {
-    display: block;
-    text-align: right;
-
-    span {
-      color: red;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-  }
-
-  .module-step-title {
-    margin-top: 0;
-  }
-
-  .question {
-    font-weight: 700;
-  }
-
-  ul, ol {
-    margin: 0 0 25px 0;
-    padding: 0;
-    list-style-type: none;
-
-    label {
-      font-weight: 200;
-    }
-  }
-
-  &.step-template-image {
-    p {
-      margin: 0;
-      text-align: center;
-      font-size: 98%;
-    }
-  }
-  &.step-template-audio {
-    /* Audio: Remove big play button (leave only the button in controls). */
-    .video-js.vjs-audio .vjs-big-play-button {
-      display: none;
-    }
-    /* Audio: Make the controlbar visible by default */
-    .video-js.vjs-audio .vjs-control-bar {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-    }
-    /* Make player height minimum to the controls height so when we hide video/poster area the controls are displayed correctly. */
-    .video-js.vjs-audio {
-      min-height: 3em;
-    }
-  }
-  &.step-template-video {
     position: relative;
     display: block;
-    clear: both;
-    min-height: 330px;
+    margin: 0 0 25px 0;
+    @include clearfix;
 
-    .video-js {
-      background-color: transparent;
-    }
-    .vjs-vimeo {
-      position: relative;
-      padding: 0;
-      margin-bottom: 60.7%;
-      .vjs-big-play-button {
-        margin-top: 56.7%;
-      }
-    }
-    video {
-      display: block;
-      height: 280px;
-      width: 100%;
-    }
-  }
+    .required {
+        display: block;
+        text-align: right;
 
-  .user-answers {
-    p {
-      margin: 0;
-      font-weight: 200;
-    }
-  }
-  .question {
-    margin-bottom: 15px;
-    font-weight: 400;
-  }
-  .chosen-answer {
-    &:before {
-      content: '';
-      display: inline-block;
-      font-family: 'FontAwesome';
-      margin-right: 8px;
-    }
-    &.correct:before {
-      content: '\f00c';
-      color: green;
-    }
-    &.wrong:before {
-      content: '\f00d';
-      color: red;
-    }
-  }
-
-  &.module-step-seen {
-    .step-status {
-      float: right;
-      padding: 5px 15px;
-      text-transform: uppercase;
-      font-size: 12px;
-      @include radius(20px);
-
-      &.step-status-pending {
-        background-color: $grey_6;
-      }
-      &.step-status-pass {
-        background-color: rgba(0, 255, 0, 0.2);
-      }
-      &.step-status-failed {
-        background-color: rgba(255, 0, 0, 0.2);
-      }
+        span {
+            color: red;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
     }
 
-    .cp-button-retry {
-      @include reset();
-      float: right;
-      padding: 5px 15px;
-      background-color: $grey_5;
-      margin: 0 15px;
-      text-transform: uppercase;
-      font-size: 13px;
-      @include radius(5px);
+    .module-step-title {
+        margin-top: 0;
+        font-size: 1.3em;
+        margin-right: 5em;
     }
 
-    .course-module-step-question {
-      display: none;
+    .question {
+        font-weight: 700;
     }
-  }
+
+    ul, ol {
+        margin: 0 0 25px 0;
+        padding: 0;
+        list-style-type: none;
+
+        label {
+            font-weight: 200;
+        }
+    }
+
+    &.step-template-image {
+        p {
+            margin: 0;
+            text-align: center;
+            font-size: 98%;
+        }
+    }
+    &.step-template-audio {
+        /* Audio: Remove big play button (leave only the button in controls). */
+        .video-js.vjs-audio .vjs-big-play-button {
+            display: none;
+        }
+        /* Audio: Make the controlbar visible by default */
+        .video-js.vjs-audio .vjs-control-bar {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        /* Make player height minimum to the controls height so when we hide video/poster area the controls are displayed correctly. */
+        .video-js.vjs-audio {
+            min-height: 3em;
+        }
+    }
+    &.step-template-video {
+        position: relative;
+        display: block;
+        clear: both;
+        min-height: 330px;
+
+        .video-js {
+            background-color: transparent;
+        }
+        .vjs-vimeo {
+            position: relative;
+            padding: 0;
+            margin-bottom: 60.7%;
+            .vjs-big-play-button {
+                margin-top: 56.7%;
+            }
+        }
+        video {
+            display: block;
+            height: 280px;
+            width: 100%;
+        }
+    }
+
+    .user-answers {
+        p {
+            margin: 0;
+            font-weight: 200;
+        }
+    }
+    .question {
+        margin-bottom: 15px;
+        font-weight: 400;
+    }
+    .chosen-answer {
+        &:before {
+            content: '';
+            display: inline-block;
+            font-family: 'FontAwesome';
+            margin-right: 8px;
+        }
+        &.correct:before {
+            content: '\f00c';
+            color: green;
+        }
+        &.wrong:before {
+            content: '\f00d';
+            color: red;
+        }
+    }
+
+    &.module-step-seen {
+        .step-status {
+            float: right;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            font-size: 12px;
+            @include radius(20px);
+
+            &.step-status-pending {
+                background-color: $grey_6;
+            }
+            &.step-status-pass {
+                background-color: rgba(0, 255, 0, 0.2);
+            }
+            &.step-status-failed {
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+        }
+
+        .cp-button-retry {
+            @include reset();
+            float: right;
+            padding: 5px 15px;
+            background-color: $grey_5;
+            margin: 0 15px;
+            text-transform: uppercase;
+            font-size: 13px;
+            @include radius(5px);
+        }
+
+        .course-module-step-question {
+            display: none;
+        }
+    }
 }
-
-.course-step-nav {
-    display: block;
-    margin: 15px 0;
-    text-align: right;
-    .coursepress-previous-cycle {
-        float: left;
+.course-content {
+    form {
+        position: relative;
+        padding: 30px;
+        background-color: $grey_9;
+    }
+    .course-step-nav {
+        display: block;
+        position: absolute;
+        right: 30px;
+        top: 30px;
+        text-align: right;
+        z-index: 1;
+        a, button {
+            display: inline;
+            @include reset;
+        }
+        .course-next-item {
+            &:before {
+                content: " | ";
+            }
+        }
     }
 }
 

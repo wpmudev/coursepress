@@ -47,35 +47,6 @@
             }
         }
     }
-    .units-archive-list {
-        li {
-            background-color: transparent;
-        }
-        .preview {
-            background-color: #ffffff;
-            border: 1.5px solid $grey_3;
-            display: inline-block;
-            float: right;
-            font-size: 11px;
-            @include radius(3px);
-            @include transition(opacity 0.4s);
-            opacity: 0.3;
-            padding: 4px 12px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            &:hover {
-                opacity: 1;
-                @include transition(opacity 0.4s);
-            }
-        }
-        .unit-description,
-        .module {
-            @include clearfix;
-        }
-        .unit-progress {
-            float: right;
-        }
-    }
     .page-header {
         padding-bottom: 0;
     }
@@ -89,24 +60,13 @@
             .entry-content {
                 float: none;
                 width: 100%;
+                padding: 0 10px;
             }
         }
     }
     .course-details {
         .apply-button {
-            background: #1a1a1a;
-            border-radius: 2px;
-            border: 0;
-            color: #fff;
-            display: block;
-            font-weight: 700;
-            line-height: 1;
-            margin-top: 1em;
-            padding: 0.84375em 0.875em;
-            text: {
-                transform: uppercase;
-                align: center;
-            }
+            @include button();
         }
     }
     @media screen and (min-width: 44.375em) {
@@ -116,6 +76,16 @@
                 .entry-header {
                     margin: 0 7%;
                     width: 86%;
+                }
+            }
+        }
+    }
+    @media screen and (max-width: $width_7) {
+        .coursepress-wrap {
+            .course {
+                .entry-content,
+                .entry-header {
+                    @include padding_width_7;
                 }
             }
         }

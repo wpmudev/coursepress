@@ -2,26 +2,13 @@
     display: block;
     margin-bottom: 25px;
     @include clearfix;
-    .course-entry-header,
-    .course-description {
-        text-align: center;
-    }
     .course-metas {
         margin: 15px 0;
         span {
             display: block;
         }
     }
-    .course-meta {
-        flex: 1;
-    }
     .course-info {
-        transform-style: preserve-3d;
-        overflow: hidden;
-        clear: both;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        background-color: #FFF;
-        padding: 15px 15px 15px 25px;
         .course-listing-image {
             border: 1px solid rgba(0, 0, 0, 0.04);
             padding: 8px;
@@ -41,60 +28,45 @@
         }
         .quick-course-info {
             font-size: 1rem;
-            span {
+            line-height: 2em;
+            > span {
                 display: block;
-                padding: {
-                    left: 1.5em;
-                    bottom: .5em;
-                }
-                position: relative;
+                padding: 0 2em 0 0;
                 &:before {
-                    font-family: 'Dashicons';
-                    vertical-align: bottom;
-                    position: absolute;
-                    left: 0;
-                    top: 1px;
+                    @include font_awesome();
+                    font-size: 1.5em;
+                    padding-right: 10px;
+                    display: block;
+                    float: left;
                 }
             }
             .course-time {
                 &:before {
-                    content: '\f469';
+                    content: '\f017';
                 }
             }
             .course-lang {
                 &:before {
-                    content: '\f319';
+                    content: '\f0ac';
+                }
+            }
+            .course-category {
+                &:before {
+                    content: '\f02b';
                 }
             }
             .course-cost {
+                font-weight: bold;
                 span {
-                    &:before {
-                        content: '\f0d6';
-                        font-family: fontawesome;
-                    }
+                    padding: 0;
+                    text-align: right;
+                    font-size: 1.5em;
                 }
             }
-        }
-    }
-
-    @media screen {
-        @media (min-width: 768px) {
-            display: flex;
-
-            .course-entry-header,
-            .course-description {
-                text-align: left;
-            }
-
-            .course-feature-image-container {
-                flex: 1;
-            }
-            .course-info {
-                flex: 2;
-                padding-left: 15px;
-            }
-            .course-title {
-                margin-top: 0;
+            @media screen and (max-width: $width_3) {
+                .apply-button {
+                    display: none;
+                }
             }
         }
     }

@@ -1,34 +1,42 @@
 .course-submenu-container {
-    display: block;
-    margin: 0 0 25px 0;
-    border-bottom: 1px solid $grey_4;
+    background-color: $dark_1;
     @include clearfix;
+    margin: 0 0 10px 0;
     .course-submenu {
-        margin: 0;
+        display: flex;
         padding: 0;
+        margin: 0;
         list-style: none;
+        justify-content: center;
+        color: $white;
         .menu-item {
-            display: inline-block;
-            padding: 4px 12px;
             text-decoration: none;
             outline: 0;
             border: 0;
             box-shadow: none;
             font-size: 22px;
             a {
-              color: $grey_3;
+                color: $white;
+                display: block;
+                padding: 4px 12px;
+                margin-bottom: 1px;
+                border-bottom: 2px solid transparent;
+                &:hover {
+                    border-bottom-color: $white;
+                }
             }
             &.submenu-active {
 
             }
         }
         .current-menu-item {
-          a {
-            color: $blue_6;
-          }
-          &:before {
-            opacity: 0.6;
-          }
+            font-weight: bold;
+            a {
+                border-bottom-color: $white;
+            }
+            &:before {
+                opacity: 0.6;
+            }
         }
     }
 }

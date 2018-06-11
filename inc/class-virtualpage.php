@@ -78,11 +78,11 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	public function check_exists() {
 		$is_404 = false;
 		$type = $this->__get( 'type' );
-		$course_id = !empty( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : get_the_ID();
+		$course_id = ! empty( $_REQUEST['course_id'] ) ? $_REQUEST['course_id'] : get_the_ID();
 
 		if (
 			'single-course' === $type
-			&& !empty( $course_id )
+			&& ! empty( $course_id )
 			&& isset( $_REQUEST['action'] )
 			&& 'coursepress_enroll' === $_REQUEST['action']
 		) {
@@ -186,6 +186,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		$template = $cp_coursepress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
 		$with_modules = $coursepress_course instanceof CoursePress_Course ? $coursepress_course->is_with_modules() : false;
+
 		switch ( $type ) {
 			case 'instructor':
 				$instructor = $wp_query->get( 'instructor' );
@@ -258,11 +259,10 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
 				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Units', 'cp' ), $coursepress_course->get_units_url() );
 				break;
 			case 'grades':
-			case 'forum':
-			case 'forum-new':
-			case 'forum-single':
 			case 'workbook':
 			case 'unit-archive':
 				if ( ! is_user_logged_in() ) {
@@ -274,6 +274,44 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				if ( ! $is_enrolled ) {
 					wp_safe_redirect( $coursepress_course->get_permalink() );
 					exit;
+				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				switch ( $type ) {
+					case 'grades':
+						$this->add_breadcrumb( __( 'Grades', 'cp' ), $coursepress_course->get_grades_url() );
+					break;
+					case 'workbook':
+						$this->add_breadcrumb( __( 'Workbook', 'cp' ), $coursepress_course->get_workbook_url() );
+					break;
+				}
+				break;
+			case 'notifications':
+				// Check if user is logged in
+				if ( ! is_user_logged_in() ) {
+					// Redirect back to course overview
+					wp_safe_redirect( $coursepress_course->get_permalink() );
+					exit;
+				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Notifications', 'cp' ), $coursepress_course->get_notifications_url() );
+				break;
+			case 'forum':
+			case 'forum-new':
+			case 'forum-single':
+				// Check if user is logged in
+				if ( ! is_user_logged_in() ) {
+					// Redirect back to course overview
+					wp_safe_redirect( $coursepress_course->get_permalink() );
+					exit;
+				}
+				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+				$this->add_breadcrumb( __( 'Discussions', 'cp' ), $coursepress_course->get_discussion_url() );
+				break;
+
+			case 'single-course':
+				if ( is_user_logged_in() ) {
+					$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
+					$this->add_breadcrumb( __( 'Course Details', 'cp' ), $coursepress_course->get_permalink() );
 				}
 				break;
 		}
