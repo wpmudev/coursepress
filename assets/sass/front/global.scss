@@ -1,5 +1,9 @@
 .archive {
     .coursepress-wrap {
+        .page-header {
+            float: none;
+            width: 100%;
+        }
         article {
             border: 1px solid $grey_12;
             padding: 14px;
@@ -32,6 +36,10 @@
                     font-weight: 700;
                     margin: 0;
                     padding: 0;
+                    @media screen and (max-width: $width_3) {
+                        padding: 0 10px;
+
+                    }
                 }
             }
             article {
@@ -60,6 +68,7 @@
                             .quick-course-info {
                                 display: flex;
                                 justify-content: space-between;
+                                align-items: center;
                             }
                         }
                     }
@@ -103,5 +112,18 @@
     }
     .td-right {
         text-align: right;
+    }
+}
+@media screen and (max-width: $width_3) {
+    .coursepress-student-dashboard {
+        .content-area,
+        .page-content {
+            padding: 0 10px;
+        }
+    }
+    .coursepress-workbook {
+        .coursepress-content-wrapper {
+            padding: 0 10px;
+        }
     }
 }
