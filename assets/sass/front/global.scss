@@ -1,5 +1,9 @@
 .archive {
     .coursepress-wrap {
+        .page-header {
+            float: none;
+            width: 100%;
+        }
         article {
             border: 1px solid $grey_12;
             padding: 14px;
