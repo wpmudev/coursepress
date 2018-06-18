@@ -4,6 +4,9 @@
     margin: 0;
     list-style: none;
     @include clearfix;
+    @media screen and (max-width: $width_3) {
+        padding: 0 10px;
+    }
     li {
         display: inline;
         margin-bottom: 10px;

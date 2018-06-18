@@ -3,9 +3,14 @@
         position: relative;
         margin: 0;
     }
-    h2.course-title {
-        margin: 25px 0 0;
-        @include clearfix;
+    h2 {
+        &.course-title {
+            margin: 25px 0 0;
+            @include clearfix;
+            @media screen and (max-width: $width_3) {
+                @include padding_width_7;
+            }
+        }
     }
     .course-after-title {
         @include clearfix;
@@ -16,23 +21,40 @@
         right: 0;
     }
 }
-
+.coursepress-wrap {
+    .toggle {
+        display: none;
+    }
+}
 .course-content-template {
     display: block;
     margin: 25px 0;
+    @media (max-width: $width_7) {
+        @include padding_width_7;
+    }
     @include clearfix;
-
-    .course-structure-nav {
+    .toggle {
         display: none;
+        cursor: pointer;
+        &:before {
+            @include icon("\f0ca");
+        }
+        &.open {
+            &:before {
+                content: "\f00d";
+            }
+        }
+        @media (max-width: $width_7) {
+            display: block;
+        }
     }
     .unit-description {
         margin-top: 2em;
     }
 
     @media screen {
-        @media (min-width: 800px) {
+        @media (min-width: $width_7) {
             display: flex;
-
             .course-structure-nav {
                 display: block;
                 width: 25%;

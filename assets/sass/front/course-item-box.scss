@@ -63,6 +63,11 @@
                     font-size: 1.5em;
                 }
             }
+            @media screen and (max-width: $width_3) {
+                .apply-button {
+                    display: none;
+                }
+            }
         }
     }
 }

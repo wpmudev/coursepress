@@ -1,11 +1,14 @@
 .course-structure {
     display: block;
-    max-width: $width_a;
+    max-width: $width_7;
     margin: 25px auto;
 }
 .single-course {
     .course-structure {
         @include clearfix;
+        @media screen and (max-width: $width_7) {
+            @include padding_width_7;
+        }
         a {
             text-decoration: none;
             color: $dark_1;
@@ -206,6 +209,23 @@
             }
             .course-current-step {
                 font-weight: bolder;
+            }
+            display: none;
+            @media (max-width: $width_7) {
+                background-color: $dark_1;
+                color: $white;
+                padding: 0;
+                position: absolute;
+                z-index: 10;
+                .course-step {
+                    background-color: transparent;
+                    &.course-current-step {
+                        background-color: $grey_1;
+                    }
+                }
+                a {
+                    color: $white;
+                }
             }
         }
         ul {

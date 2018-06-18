@@ -28,7 +28,7 @@
             }
 
             @media screen {
-                @media (min-width: 800px) {
+                @media (min-width: $width_9) {
                     display: flex;
 
                     .course-media {
@@ -100,6 +100,7 @@
                 padding-right: 15px;
                 img {
                     max-width: initial;
+                    @include radius(50%);
                 }
             }
             .description {
@@ -118,6 +119,14 @@
             }
         }
     }
+    &.coursepress-completion-status {
+        .content-area,
+        .page-content {
+            @media screen and (max-width: $width_3) {
+                padding: 0 10px;
+            }
+        }
+    }
 }
 .coursepress-unit-archive {
     .coursepress-wrap {
@@ -126,8 +135,11 @@
                 .page-header {
                     .page-title {
                         margin-top: 45px;
-                        max-width: $width_a;
+                        max-width: $width_7;
                         margin: 25px auto;
+                        @media screen and (max-width: $width_7) {
+                            @include padding_width_7;
+                        }
                     }
                 }
             }
