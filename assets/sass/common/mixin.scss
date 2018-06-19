@@ -10,8 +10,9 @@ $color_1: #dedede;
 $color_2: #fbfbfb;
 $color_3: #51b9e8;
 
-$dark_1: #333;
-$dark_2: #555;
+$dark_2: #222;
+$dark_3: #333;
+$dark_5: #555;
 
 $grey_1: #5e5e5e;
 $grey_2: #757575;
@@ -137,18 +138,24 @@ $code_font: Consolas, Monaco, monospace;
     }
 }
 
+@mixin font( $size, $lh, $weight ) {
+    font: {
+        size: $size;
+        weight: $weight;
+    }
+    line-height: $lh;
+}
+
 @mixin button {
-    background: #1a1a1a;
-    border-radius: 2px;
+    background: $dark_2;
+    @include radius( 3px );
+    @include font( 16px, 19px, 600 );
     border: 0;
     color: $white;
     display: inline-block;
-    font-weight: 700;
     line-height: 1;
-    margin-top: 1em;
-    padding: 20px 80px;
+    padding: 16px 92px;
     text: {
-        transform: uppercase;
         align: center;
     }
     &:hover {
@@ -180,3 +187,4 @@ $code_font: Consolas, Monaco, monospace;
         right: 10px;
     }
 }
+

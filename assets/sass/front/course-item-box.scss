@@ -21,9 +21,11 @@
                 width: 1px 0;
             }
             padding: 8px 0;
-            h3.label {
-                margin-right: 15px;
-                font-size: 16px;
+            h3 {
+                &.label {
+                    margin-right: 15px;
+                    font-size: 16px;
+                }
             }
         }
         .quick-course-info {
@@ -56,15 +58,19 @@
                 }
             }
             .course-cost {
-                font-weight: bold;
+                 @include font( 32px, 39px, 600 );
                 span {
                     padding: 0;
                     text-align: right;
-                    font-size: 1.5em;
                 }
             }
             @media screen and (max-width: $width_3) {
                 .apply-button {
+                    display: none;
+                }
+            }
+            button {
+                &.apply-button-details {
                     display: none;
                 }
             }

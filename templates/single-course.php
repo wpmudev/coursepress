@@ -11,7 +11,6 @@ global $coursepress_course;
 $user = coursepress_get_user();
 $is_enrolled = $user->is_enrolled_at( $coursepress_course->ID );
 ?>
-
 	<div class="coursepress-wrap">
 		<div class="container">
 			<div class="content-area"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope' ); ?>>
@@ -22,7 +21,6 @@ $is_enrolled = $user->is_enrolled_at( $coursepress_course->ID );
 				 *
 				 * @since 3.0
 				 */
-
 				$slug = 'overview';
 				if ( $is_enrolled ) {
 					$slug .= '-enrolled';

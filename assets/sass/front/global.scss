@@ -12,6 +12,7 @@
     }
 }
 .coursepress-wrap {
+    font-family: "Libre Franklin", sans-serif;
     display: block;
     margin: 0 auto;
     width: 100%;
@@ -31,9 +32,8 @@
                 margin: 0 0 1em 0;
                 float: none;
                 width: 100%;
-                .page-title {
-                    font-size: 2em;
-                    font-weight: 700;
+                .cp-page-title {
+                    @include font( 24px, 29px, bold );
                     margin: 0;
                     padding: 0;
                     @media screen and (max-width: $width_3) {
@@ -60,8 +60,10 @@
                             float: none;
                             width: 100%;
                         }
-                        .entry-title {
-                            margin-bottom: 10px;
+                        .course-title {
+                            margin-bottom: 5px;
+                            @include font( 32px, 39px, 500 );
+                            color: $dark_3;
                         }
                         .entry-footer {
                             width: 100%;
@@ -71,10 +73,13 @@
                                 align-items: center;
                             }
                         }
+                        .course-summary {
+                            margin-top: 1em;
+                        }
                     }
                     .course-instructors {
-                        margin: 0 0 1em 0;
-                        border: 0;
+                        color: $dark_3;
+                        margin: 0;
                         padding: 0;
                         .label {
                             display: inline;

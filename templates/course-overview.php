@@ -8,7 +8,7 @@
 $course = coursepress_get_course(); ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( '' ); ?>>
     <header class="entry-header">
-        <h1 class="entry-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
+        <h1 class="entry-title course-title"><?php echo apply_filters( 'coursepress_schema', coursepress_get_course_title(), 'title' ); ?></h1>
 	    <?php echo do_shortcode( '[course_category label="" no_category_show="hide"]' ); ?>
     </header>
     <div class="entry-content">

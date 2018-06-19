@@ -6,12 +6,14 @@
 .single-course {
     .course-structure {
         @include clearfix;
+        @include font( 16px, 19px, 400 );
+        color: $dark_3;
         @media screen and (max-width: $width_7) {
             @include padding_width_7;
         }
         a {
             text-decoration: none;
-            color: $dark_1;
+            color: $dark_3;
             box-shadow: none;
         }
         .tree {
@@ -26,7 +28,8 @@
             float: right;
             @include transition(opacity 0.4s);
             opacity: 0.3;
-            font-weight: normal;
+            @include font( 16px, inherit, 600 );
+            color: $grey_1;
             &:hover {
                 opacity: 1;
                 @include transition(opacity 0.4s);
@@ -45,17 +48,17 @@
             }
             .fold {
                 display: inline-block;
-                width: 25px;
+                width: 32px;
                 float: left;
-                height: 25px;
-                margin: .5em 0 0 0;
+                height: 32px;
+                margin: 8px 0 0 10px;
                 cursor: pointer;
                 position: relative;
                 z-index: 10000;
                 &:before {
                     content: '\f140';
                     font-family: Dashicons;
-                    font-size: 20px;
+                    font-size: 32px;
                     line-height: 1.2;
                 }
 
@@ -82,7 +85,6 @@
             }
             .unit-title {
                 display: block;
-                padding: 5px 0 5px 15px;
                 color: $grey_1;
 
                 .unit-feature-image {
@@ -124,10 +126,9 @@
             .module-title {
                 display: block;
                 font: {
-                    size: 96%;
-                    weight: bold;
+                    weight: 500;
                 }
-                padding: 5px 0 5px 25px;
+                padding: 16px 0 16px 57px;
                 &:hover {
                     .preview {
                         opacity: 1;
@@ -167,8 +168,7 @@
         .step-tree {
             .course-step {
                 display: block;
-                font-size: 94%;
-                padding: 5px 0 5px 25px;
+                padding: 16px 0 16px 57px;
                 a {
                     box-shadow: none;
                 }
@@ -182,7 +182,7 @@
                     }
                 }
                 &.course-current-step {
-                    background-color: $dark_1;
+                    background-color: $dark_3;
                     color: $white;
                     a {
                         color: $white;
@@ -212,7 +212,7 @@
             }
             display: none;
             @media (max-width: $width_7) {
-                background-color: $dark_1;
+                background-color: $dark_3;
                 color: $white;
                 padding: 0;
                 position: absolute;
@@ -245,7 +245,8 @@
                     border: 1px solid $grey_12;
                     margin-bottom: 10px;
                     .unit-title {
-                        font-weight: bold;
+                        @include font( 20px, 24px, 600 );
+                        padding: 14px 0 14px 56px;
                         background: {
                             color: $grey_9;
                         }
@@ -257,6 +258,8 @@
                     &:before {
                         float: left;
                         @include icon("\f15c");
+                        width: 34px;
+                        font-size: 24px;
                     }
                     &.course-step-audio:before        { content: "\f1c7"; }
                     &.course-step-discussion:before   { content: "\f086"; }

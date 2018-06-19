@@ -60,7 +60,6 @@
             .entry-content {
                 float: none;
                 width: 100%;
-                padding: 0 10px;
             }
         }
     }
@@ -87,6 +86,20 @@
                 .entry-header {
                     @include padding_width_7;
                 }
+            }
+        }
+    }
+    article {
+        &.course {
+            .course-title {
+                @include font( 32px, 39px, 500 );
+                span {
+                    font-size: 1em;
+                }
+            }
+            .course-sub-title {
+                @include font( 24px, 29px, 700 );
+                display: block;
             }
         }
     }

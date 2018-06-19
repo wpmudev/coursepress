@@ -70,6 +70,9 @@
         .content-area {
             article {
                 @include width;
+                .course-title {
+                    font-weight: 600;
+                }
             }
         }
     }
@@ -90,8 +93,7 @@
                 font-weight: bold;
             }
             .course-meta-price {
-                font-weight: bold;
-                font-size: 1.4em;
+                @include font( 32px, 39px, 600 );
             }
         }
         .instructor {
@@ -110,7 +112,8 @@
                 a {
                     &.instructor {
                         text-decoration: underline;
-                        color: black;
+                        font-weight: 600;
+                        color: $dark_2;
                     }
                 }
                 p {
