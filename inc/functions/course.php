@@ -646,6 +646,9 @@ function coursepress_get_course_submenu() {
 		'url' => esc_url( $course->get_permalink() ),
 		'classes' => array( 'submenu-info' ),
 	);
+	if ( empty( $current ) ) {
+		$menus['course-details']['classes'][] = 'current-menu-item';
+	}
 	/**
 	 * fill class if empty
 	 */
@@ -833,8 +836,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 		)
 	);
 
-
-    $submit = '';
+	$submit = '';
 
 	if ( $has_access['access'] ) {
 		$next = coursepress_create_html(
@@ -850,22 +852,22 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 				),
 				$args['next']
 			)
-        );
-        if ( $_course_step ) {
-            $is_answerable = $_course_step->is_answerable();
-            if ( $is_answerable ) {
-                $submit = coursepress_create_html(
-                    'button',
-                    array(
-                        'type'  => 'submit',
-                        'class' => 'button button-next coursepress-next-cycle',
-                        'name'  => 'submit_module',
-                        'value' => 1,
-                    ),
-                    __( 'Submit', 'cp' )
-                );
-            }
-        }
+		);
+		if ( $_course_step ) {
+			$is_answerable = $_course_step->is_answerable();
+			if ( $is_answerable ) {
+				$submit = coursepress_create_html(
+					'button',
+					array(
+						'type'  => 'submit',
+						'class' => 'button button-next coursepress-next-cycle',
+						'name'  => 'submit_module',
+						'value' => 1,
+					),
+					__( 'Submit', 'cp' )
+				);
+			}
+		}
 	} else {
 		$next = '';
 		$template .= coursepress_create_html(
@@ -888,7 +890,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 		$template = $navigation.$template;
 	} else {
 		$template .= $navigation;
-    }
+	}
 	$template = coursepress_create_html(
 		'form',
 		$form_attr,

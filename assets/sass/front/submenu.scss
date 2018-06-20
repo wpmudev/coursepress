@@ -5,20 +5,20 @@
     .course-submenu {
         display: flex;
         padding: 0;
-        margin: 0;
         list-style: none;
-        justify-content: center;
+        justify-content: space-between;
+        @include width0;
         color: $white;
         .menu-item {
             text-decoration: none;
             outline: 0;
             border: 0;
             box-shadow: none;
-            font-size: 22px;
+            @include font( 16px, 19px, 700 );
             a {
                 color: $white;
                 display: block;
-                padding: 4px 12px;
+                padding: 20px 12px 19px 12px;
                 margin-bottom: 1px;
                 border-bottom: 2px solid transparent;
                 &:hover {

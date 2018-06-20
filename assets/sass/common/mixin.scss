@@ -180,6 +180,10 @@ $code_font: Consolas, Monaco, monospace;
     max-width: $width_7;
     margin: 25px auto;
 }
+@mixin width0 {
+    max-width: $width_7;
+    margin: 0 auto;
+}
 
 @mixin padding_width_7 {
     padding: {
