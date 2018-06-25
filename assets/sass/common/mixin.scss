@@ -1,6 +1,7 @@
 $width: 100%;
 $width_3: 1000px;
-$width_7: 750px;
+$width_7: 768px;
+$width_8: 600px;
 $width_9: 400px;
 
 $white: #fff;
@@ -140,10 +141,18 @@ $code_font: Consolas, Monaco, monospace;
 
 @mixin font( $size, $lh, $weight ) {
     font: {
-        size: $size;
+        @if type-of( $size ) == 'number' {
+            size:  #{$size}px;
+        } @else {
+            size:  $size;
+        }
         weight: $weight;
     }
-    line-height: $lh;
+    @if type-of( $lh ) == 'number' {
+        line-height: #{$lh}px;
+    } @else {
+        line-height: $lh;
+    }
 }
 
 @mixin button {
@@ -183,12 +192,15 @@ $code_font: Consolas, Monaco, monospace;
 @mixin width0 {
     max-width: $width_7;
     margin: 0 auto;
+    @media screen and (min-width: 48em) {
+        max-width: 1000px;
+    }
 }
 
 @mixin padding_width_7 {
     padding: {
-        left: 10px;
-        right: 10px;
+        left: 15px;
+        right: 15px;
     }
 }
 

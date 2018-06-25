@@ -92,13 +92,13 @@
     article {
         &.course {
             .course-title {
-                @include font( 32px, 39px, 500 );
+                @include font( 32, 39, 500 );
                 span {
                     font-size: 1em;
                 }
             }
             .course-sub-title {
-                @include font( 24px, 29px, 700 );
+                @include font( 24, 29, 700 );
                 display: block;
             }
         }

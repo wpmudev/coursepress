@@ -1,4 +1,7 @@
 .coursepress-wrap {
+    .grades {
+        @include padding_width_7;
+    }
     .workbook-table,
     .grades-table {
         @include width;
@@ -43,6 +46,7 @@
                 .page-header {
                     .page-title {
                         @include width;
+                        @include padding_width_7;
                     }
                 }
             }

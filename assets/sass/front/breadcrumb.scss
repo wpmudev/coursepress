@@ -5,7 +5,7 @@
     @include width0;
     @include clearfix;
     @media screen and (max-width: $width_3) {
-        padding: 0 10px;
+        padding: 0 15px;
     }
     li {
         display: inline;
@@ -20,6 +20,9 @@
             &:before {
                 display: none;
             }
+        }
+        &.course-item {
+            font-weight: 600;
         }
     }
     a {

@@ -73,6 +73,9 @@
                 .course-title {
                     font-weight: 600;
                 }
+                .course-category {
+                    @include font( 16, 19, 400 );
+                }
             }
         }
     }
@@ -93,7 +96,7 @@
                 font-weight: bold;
             }
             .course-meta-price {
-                @include font( 32px, 39px, 600 );
+                @include font( 32, 39, 600 );
             }
         }
         .instructor {
@@ -140,9 +143,7 @@
                         margin-top: 45px;
                         max-width: $width_7;
                         margin: 25px auto;
-                        @media screen and (max-width: $width_7) {
-                            @include padding_width_7;
-                        }
+                        @include padding_width_7;
                     }
                 }
             }

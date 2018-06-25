@@ -14,7 +14,7 @@
             outline: 0;
             border: 0;
             box-shadow: none;
-            @include font( 16px, 19px, 700 );
+            @include font( 16, 19, 700 );
             a {
                 color: $white;
                 display: block;
@@ -37,6 +37,54 @@
             &:before {
                 opacity: 0.6;
             }
+        }
+        @media screen and ( max-width: $width_8 ) {
+            display: block;
+            .menu-item {
+                @include font( 14, 16, 600 );
+                display: none;
+                text-align: center;
+                &.current-menu-item {
+                    display: block;
+                }
+                a {
+                    padding: 12px 0;
+                    border: 0;
+                }
+            }
+        }
+    }
+    &.toggled-on {
+        .course-submenu {
+            @media screen and ( max-width: $width_8 ) {
+                .menu-item {
+                    display: block;
+                }
+            }
+        }
+    }
+    .course-submenu-toggle {
+        display: none;
+    }
+    @media screen and ( max-width: $width_8 ) {
+        margin: {
+            left: 15px;
+            right: 15px;
+        }
+        .menu-item {
+            margin-right: 40px;
+        }
+        .course-submenu-toggle {
+            background-color: $dark_3;
+            color: $white;
+            display: block;
+            float: right;
+            height: 40px;
+            @include radius(0);
+            line-height: 40px;
+            padding: 0;
+            text-align: center;
+            width: 40px;
         }
     }
 }

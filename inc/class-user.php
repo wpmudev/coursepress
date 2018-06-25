@@ -67,6 +67,17 @@ class CoursePress_User extends CoursePress_Utility {
 		 */
 		add_action( 'deleted_user', array( $this, 'clear_student_data' ) );
 		add_action( 'remove_user_from_blog', array( $this, 'clear_student_data' ) );
+		/**
+ *
+ */
+		add_filter( 'post_class', array( $this, 'add_student_related_classes' ), 10, 3 );
+	}
+
+	public function add_student_related_classes( $classes, $class, $post_id ) {
+		if ( $this->is_enrolled_at( $post_id ) ) {
+			$classes[] = 'course-is-enrolled';
+		}
+		return $classes;
 	}
 
 	/**

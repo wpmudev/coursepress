@@ -6,7 +6,7 @@
 .single-course {
     .course-structure {
         @include clearfix;
-        @include font( 16px, 19px, 400 );
+        @include font( 16, 19, 400 );
         color: $dark_3;
         @media screen and (max-width: $width_7) {
             @include padding_width_7;
@@ -28,7 +28,7 @@
             float: right;
             @include transition(opacity 0.4s);
             opacity: 0.3;
-            @include font( 16px, inherit, 600 );
+            @include font( 16, inherit, 600 );
             color: $grey_1;
             &:hover {
                 opacity: 1;
@@ -245,7 +245,7 @@
                     border: 1px solid $grey_12;
                     margin-bottom: 10px;
                     .unit-title {
-                        @include font( 20px, 24px, 600 );
+                        @include font( 20, 24, 600 );
                         padding: 14px 0 14px 56px;
                         background: {
                             color: $grey_9;

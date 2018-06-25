@@ -9,11 +9,6 @@
         }
     }
     .course-info {
-        .course-listing-image {
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            padding: 8px;
-            background-color: $grey_9;
-        }
         .course-instructors {
             display: block;
             margin: 15px 0;
@@ -58,20 +53,47 @@
                 }
             }
             .course-cost {
-                 @include font( 32px, 39px, 600 );
+                 @include font( 32, 39, 600 );
                 span {
                     padding: 0;
                     text-align: right;
                 }
             }
-            @media screen and (max-width: $width_3) {
-                .apply-button {
-                    display: none;
-                }
-            }
             button {
                 &.apply-button-details {
                     display: none;
+                    @media screen and (max-width: $width_8) {
+                        margin-top: 15px;
+                        width: 100%;
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+.archive {
+    .course-is-enrolled {
+        .course-info {
+            .quick-course-info {
+                button {
+                    &.apply-button-details {
+                        display: block;
+                    }
+                }
+                .course-cost {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+.single-course {
+    .course-info {
+        .quick-course-info {
+            button {
+                &.apply-button-details {
+                    display: block;
                 }
             }
         }

@@ -1,5 +1,7 @@
-.archive {
+.archive,
+.coursepress-student-dashboard {
     .coursepress-wrap {
+        max-width: 1140px;
         .page-header {
             float: none;
             width: 100%;
@@ -8,6 +10,15 @@
             border: 1px solid $grey_12;
             padding: 14px;
             margin-bottom: 30px;
+            @media screen and ( max-width: $width_8 ) {
+                margin: 15px;
+                .entry-content {
+                    display: none;
+                }
+            }
+            .entry-footer {
+                border: 0;
+            }
         }
     }
 }
@@ -32,12 +43,11 @@
                 float: none;
                 width: 100%;
                 .cp-page-title {
-                    @include font( 24px, 29px, bold );
+                    @include font( 24, 29, 600 );
                     margin: 0;
                     padding: 0;
                     @media screen and (max-width: $width_3) {
                         padding: 0 10px;
-
                     }
                 }
             }
@@ -45,10 +55,17 @@
                 .course-info {
                     width: 100%;
                     display: flex;
+                    @media screen and ( max-width: $width_8 ) {
+                        display: block;
+                    }
                     .thumbnail {
                         padding-right: 30px;
-                        max-width: 30%;
+                        max-width: 220px;
                         img {
+                            max-width: 100%;
+                        }
+                        @media screen and ( max-width: $width_8 ) {
+                            padding: 0;
                             max-width: 100%;
                         }
                     }
@@ -61,15 +78,34 @@
                         }
                         .course-title {
                             margin-bottom: 5px;
-                            @include font( 32px, 39px, 500 );
+                            @include font( 32, 39, 500 );
                             color: $dark_3;
+                            @media screen and ( max-width: $width_8 ) {
+                                @include font( 16, 19, 600 );
+                            }
                         }
                         .entry-footer {
                             width: 100%;
+                            @media screen and ( max-width: $width_8 ) {
+                                padding: 0;
+                                margin: 0;
+                            }
                             .quick-course-info {
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: center;
+                                @media screen and ( max-width: $width_8 ) {
+                                    @include font( 12, 15, 400 );
+                                    flex-wrap: wrap;
+                                    span {
+                                            padding-top: 10px;
+                                        min-width: 50%;
+                                        &.course-cost {
+                                            min-width: 100%;
+                                            @include font( 20, 24, 600 );
+                                        }
+                                    }
+                                }
                             }
                         }
                         .course-summary {
@@ -83,6 +119,12 @@
                         .label {
                             display: inline;
                             margin-right: 0;
+                        }
+                        @media screen and ( max-width: $width_8 ) {
+                            @include font( 12, 15, 400 );
+                            .label {
+                                @include font( 12, 15, 600 );
+                            }
                         }
                     }
                 }
@@ -131,3 +173,12 @@
         }
     }
 }
+.coursepress-student-login {
+    .coursepress-wrap {
+        .content-area {
+            width: 320px;
+            margin: 0 auto;
+        }
+    }
+}
+

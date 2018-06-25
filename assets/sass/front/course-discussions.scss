@@ -2,12 +2,14 @@
 .coursepress-notifications {
     .notifications-content {
         @include width;
+        @include padding_width_7;
     }
 }
 .coursepress-forum {
     .discussions-content,
     .course-discussion-content {
         @include width;
+        @include padding_width_7;
     }
 }
 
@@ -228,6 +230,7 @@
             .page-header {
                 .page-title {
                     @include width;
+                    @include padding_width_7;
                 }
             }
         }

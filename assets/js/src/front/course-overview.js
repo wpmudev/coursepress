@@ -56,4 +56,24 @@
             UnitProgress = new UnitProgress();
         });
     });
+
+
+    /**
+     * submenu toggle
+     */
+
+    CoursePress.Define( 'CourseSubmenuToggle', function( $ ) {
+        var submenu = $('.course-submenu-toggle' );
+        if ( submenu.length ) {
+            $('body').on( 'click', '.course-submenu-toggle', function() {
+                $(this).parent().toggleClass( 'toggled-on' );
+                if ( $(this).parent().hasClass( 'toggled-on' ) ) {
+                    $(this).html( $(this).data('toggle-on' ) );
+                } else {
+                    $(this).html( $(this).data('toggle-off' ) );
+                }
+            });
+        }
+    });
+
 })();
