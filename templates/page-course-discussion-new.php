@@ -22,7 +22,7 @@ get_header(); ?>
 coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
-					<h1 class="page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
+					<h1 class="cp-page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
                 </header>
 <div class="discussions-content">
 				<?php

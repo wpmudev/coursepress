@@ -38,18 +38,3 @@
         }
     }
 }
-.coursepress-grades,
-.coursepress-workbook {
-    .coursepress-wrap {
-        .container{
-            .content-area {
-                .page-header {
-                    .page-title {
-                        @include width;
-                        @include padding_width_7;
-                    }
-                }
-            }
-        }
-    }
-}

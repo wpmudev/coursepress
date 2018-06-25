@@ -225,14 +225,4 @@
             }
         }
     }
-    .coursepress-wrap {
-        .content-area {
-            .page-header {
-                .page-title {
-                    @include width;
-                    @include padding_width_7;
-                }
-            }
-        }
-    }
 }

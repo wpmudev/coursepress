@@ -65,10 +65,14 @@
     CoursePress.Define( 'CourseSubmenuToggle', function( $ ) {
         var submenu = $('.course-submenu-toggle' );
         if ( submenu.length ) {
+            var submenuParent = submenu.parent();
             $('body').on( 'click', '.course-submenu-toggle', function() {
-                $(this).parent().toggleClass( 'toggled-on' );
-                if ( $(this).parent().hasClass( 'toggled-on' ) ) {
+                $( '.course-item-clone', submenuParent ).detach();
+                submenuParent.toggleClass( 'toggled-on' );
+                if ( submenuParent.hasClass( 'toggled-on' ) ) {
+                    var item = $( '.current-menu-item', submenuParent );
                     $(this).html( $(this).data('toggle-on' ) );
+                    $( '.submenu', submenuParent ).prepend( '<li class="course-item-clone ' + item.attr('class') + '">'+item.html() + '</li>');
                 } else {
                     $(this).html( $(this).data('toggle-off' ) );
                 }

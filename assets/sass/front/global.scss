@@ -49,6 +49,7 @@
                     @media screen and (max-width: $width_3) {
                         padding: 0 10px;
                     }
+                    @include padding_width_7;
                 }
             }
             article {

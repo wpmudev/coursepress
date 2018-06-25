@@ -12,7 +12,7 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php echo coursepress_get_course_title(); ?></h1>
+					<h1 class="cp-page-title"><?php echo coursepress_get_course_title(); ?></h1>
 					<h2 class="entry-title"><?php echo $completion['title']; ?></h2>
 				</header>
 			</div>

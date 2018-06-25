@@ -61,6 +61,28 @@
                     display: block;
                 }
             }
+            .menu-item {
+                background-color: $white;
+                border: 1px solid $grey_12;
+                border-width: 0 1px;
+                &.current-menu-item {
+                    border-left: 4px solid $dark_3;
+                }
+                a {
+                    color: $dark_2;
+                    margin: 0;
+                }
+                &.course-item-clone {
+                    background-color: $dark_3;
+                    a {
+                        color: $white;
+                    }
+                }
+                &:last-child {
+                    border-bottom-width: 1px;
+                }
+            }
+
         }
     }
     .course-submenu-toggle {
@@ -72,7 +94,11 @@
             right: 15px;
         }
         .menu-item {
-            margin-right: 40px;
+            padding-right: 40px;
+            border-left: 4px solid $white;
+            &.current-menu-item {
+                border-left: 4px solid $dark_3;
+            }
         }
         .course-submenu-toggle {
             background-color: $dark_3;

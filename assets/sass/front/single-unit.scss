@@ -7,9 +7,7 @@
         &.course-title {
             margin: 25px 0 0;
             @include clearfix;
-            @media screen and (max-width: $width_3) {
-                @include padding_width_7;
-            }
+            @include padding_width_7;
         }
     }
     .course-after-title {
@@ -29,9 +27,7 @@
 .course-content-template {
     display: block;
     margin: 25px 0;
-    @media (max-width: $width_7) {
-        @include padding_width_7;
-    }
+    @include padding_width_7;
     @include clearfix;
     .toggle {
         display: none;

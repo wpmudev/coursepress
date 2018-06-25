@@ -22,7 +22,7 @@ coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
                 <header class="page-header">
-                    <h1 class="page-title"><?php _e( 'My Grades', 'cp' ); ?></h1>
+                    <h1 class="cp-page-title"><?php _e( 'My Grades', 'cp' ); ?></h1>
                 </header>
                 <div class="cp-student-grades">
 <?php

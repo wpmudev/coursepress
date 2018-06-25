@@ -198,9 +198,11 @@ $code_font: Consolas, Monaco, monospace;
 }
 
 @mixin padding_width_7 {
-    padding: {
-        left: 15px;
-        right: 15px;
+    @media screen and (max-width: $width_7) {
+        padding: {
+            left: 15px;
+            right: 15px;
+        }
     }
 }
 

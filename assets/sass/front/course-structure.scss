@@ -8,9 +8,7 @@
         @include clearfix;
         @include font( 16, 19, 400 );
         color: $dark_3;
-        @media screen and (max-width: $width_7) {
-            @include padding_width_7;
-        }
+        @include padding_width_7;
         a {
             text-decoration: none;
             color: $dark_3;

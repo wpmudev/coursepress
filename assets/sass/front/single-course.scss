@@ -139,11 +139,8 @@
         .container {
             .content-area {
                 .page-header {
-                    .page-title {
+                    .cp-page-title {
                         margin-top: 45px;
-                        max-width: $width_7;
-                        margin: 25px auto;
-                        @include padding_width_7;
                     }
                 }
             }
