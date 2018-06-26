@@ -5,7 +5,29 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
-= 2.1.6 =
+= 3.0.0 =
+-------------------------------------------------
+
+== Smoother Admin Interfaces ==
+
+- Implement new look for whole admin CoursePress area.
+- Implement better UX.
+- Remove steps during course create - now the whole process is simpler than before, split only into two tabs, first with basic course settings and second for advance course settings.
+- Improved Instructors & Facilitators management - now you can see sent invitation too.
+- Complete redesign unit editor to allow better and simpler edit process.
+- Moved "Import" submenu into "Settings" section.
+- Moved "Export" submenu into "Settings" section.
+
+== Under the Hood ==
+
+- Selective refresh in admin area - more settings are saved using AJAX, instead of regular requests.
+- Better Templates - Implemented backbone templates to the easiest development process.
+- Script Loader Improvements - Better JavaScripts and Styles files handling.
+- Rewritten frontend templating to easier replacement.
+- Full implementation of SASS for all styles.
+- Better translation implementation.
+
+= 2.2.0 =
 -------------------------------------------------
 - Fixed: Ability to duplicate a course for an instructor.
 - Fixed: Compatibility with plugins/themes which use login form.
@@ -18,6 +40,9 @@ CHANGELOG
 - Fixed: Problem with the single instructor template.
 - Fixed: Showing a unit description.
 - Fixed: Turn off autocompletion for a unit.
+- GDPR: Added ability to erase user personal data.
+- GDPR: Added ability to export user personal data.
+- GDPR: Added plugin information to default "Private Policy" page during auto-creation of this page.
 
 = 2.1.5 =
 -------------------------------------------------
