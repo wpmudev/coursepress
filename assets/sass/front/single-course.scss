@@ -1,26 +1,42 @@
 .single-course {
     .coursepress-wrap {
+        p {
+            font-size: 1em;
+        }
+        .container {
+            .content-area {
+                .page-header {
+                    .cp-page-title,
+                    .course-title {
+                        @include font(32, 39, 600 );
+                        @include width;
+                    }
+                    .course-title {
+                        color: $dark_3;
+                    }
+                }
+                .course-content-template {
+                    @include width_2;
+                }
+            }
+        }
         .course-details {
             margin-bottom: 25px;
-
             .course-instructors {
                 display: block;
                 margin: 15px 0;
                 border: 1px solid rgba(0, 0, 0, 0.04);
                 border-width: 1px 0;
                 padding: 15px 0;
-
                 h3.label {
                     display: none;
                 }
-
                 .instructor-coursepress {
                     border: 1px solid rgba(0, 0, 0, 0.04);
                     display: inline-block;
                     text-align: center;
                     padding: 10px;
                     background-color: #FFF;
-
                     a[href] {
                         box-shadow: none;
                     }
@@ -34,15 +50,13 @@
                     .course-media {
                         width: 50%;
                         padding-right: 15px;
+                        img {
+                            @include radius(10px);
+                        }
                     }
                     .course-metas {
                         width: 50%;
                         padding-left: 15px;
-
-                        .course-meta {
-                            margin: 0;
-                        }
-
                     }
 
                     .coursepress-course-share {
@@ -85,15 +99,26 @@
             margin-bottom: 10px;
         }
         .course-category {
+            position: relative;
+            padding-left: 29px;
             &:before {
                 @include icon("\f02b");
+                font-size: 24px;
+                position: absolute;
+                bottom: -2px;
+                left: 0;
             }
         }
     }
     .entry-content {
         .course-metas {
+            @include font( 16, 19, 400 );
+            .course-meta {
+                font-size: 1em;
+                margin-bottom: .5em;
+            }
             .meta-title {
-                font-weight: bold;
+                font-weight: 600;
             }
             .course-meta-price {
                 @include font( 32, 39, 600 );
@@ -109,19 +134,28 @@
                 }
             }
             .description {
+                @include font( 16, 24, 400 );
                 .instructor-name {
                     font-weight: bold;
                 }
                 a {
                     &.instructor {
                         text-decoration: underline;
-                        font-weight: 600;
                         color: $dark_2;
+                        @include font( 16, 19, 600 );
                     }
                 }
                 p {
                     margin-bottom: .6em;
+                    color: $dark_3;
                 }
+            }
+        }
+        .course-description {
+            @include font( 16, 24, 400 );
+            color: $dark_3;
+            p {
+                color: $dark_3;
             }
         }
     }

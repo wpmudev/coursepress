@@ -17,8 +17,12 @@
 
     .module-step-title {
         margin-top: 0;
-        font-size: 1.3em;
         margin-right: 5em;
+        @include font( 24, 24, 700 );
+    }
+    .course-module-step-description {
+        @include font( 16, 24, 400 );
+        color: $grey_1;
     }
 
     .question {
@@ -144,28 +148,60 @@
             display: none;
         }
     }
+    &.step-template-download {
+        .course-module-step-download {
+            a {
+                &.cp-download {
+                    &:before {
+                        float: left;
+                        @include icon("\f019");
+                    }
+                }
+            }
+        }
+    }
+    .course-module-step-question {
+        label {
+            @include font( 16, 24, 400 );
+            color: $grey_1;
+        }
+        p {
+            &.question {
+                @include font( 16, 19, 600 );
+                color: $dark_3;
+            }
+        }
+    }
 }
 .course-content {
     form {
         position: relative;
         padding: 30px;
         background-color: $grey_9;
-    }
-    .course-step-nav {
-        display: block;
-        position: absolute;
-        right: 30px;
-        top: 30px;
-        text-align: right;
-        z-index: 1;
-        a, button {
-            display: inline;
-            @include reset;
-        }
-        .course-next-item {
-            &:before {
-                content: " | ";
+        .course-step-nav {
+            display: block;
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            text-align: right;
+            z-index: 1;
+            a, button {
+                @include reset;
+                display: inline;
+                @include font( 16, 24, 700 );
             }
+            .course-next-item {
+                &:before {
+                    content: " | ";
+                }
+            }
+        }
+        h3 {
+            @include font( 24, 24, 700 );
+            color: $dark_3;
+        }
+        .coursepress-buttons {
+            text-align: right;
         }
     }
 }

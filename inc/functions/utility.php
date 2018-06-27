@@ -429,7 +429,7 @@ function coursepress_progress_display( $attr = array() ) {
 		'data-knob-text-color'       => '#222222',
 		'data-knob-text-align'       => 'center',
 		'data-knob-text-denominator' => '4.5',
-	);
+    );
 	if ( isset( $attr['mode'] ) && 'text' === $attr['mode'] ) {
 		$attributes = array(
 			'class' => 'unit-progress-text',

@@ -24,15 +24,30 @@
             }
         }
         .quick-course-info {
-            font-size: 1rem;
-            line-height: 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            @include font( 16, 19, 400 );
+            color: $dark_3;
+            @media screen and ( max-width: $width_8 ) {
+                @include font( 12, 15, 400 );
+                flex-wrap: wrap;
+                span {
+                    padding-top: 10px;
+                    min-width: 50%;
+                    &.course-cost {
+                        min-width: 100%;
+                        @include font( 20, 24, 600 );
+                    }
+                }
+            }
             > span {
                 display: block;
                 padding: 0 2em 0 0;
                 &:before {
                     @include font_awesome();
-                    font-size: 1.5em;
-                    padding-right: 10px;
+                    font-size: 24px;
+                    padding-right: 5px;
                     display: block;
                     float: left;
                 }

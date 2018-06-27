@@ -877,7 +877,16 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 			),
 			$has_access['message']
 		);
-	}
+    }
+    if ( ! empty( $submit ) ) {
+        $submit = coursepress_create_html(
+            'div',
+            array(
+                'class' => 'coursepress-buttons',
+            ),
+            $submit
+        );
+    }
 	$navigation = coursepress_create_html(
 		$args['navigation_tag'],
 		array( 'class' => 'course-step-nav' ),

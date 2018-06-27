@@ -86,40 +86,27 @@
                             }
                         }
                         .entry-footer {
+                            margin: 0;
                             width: 100%;
                             @media screen and ( max-width: $width_8 ) {
                                 padding: 0;
-                                margin: 0;
-                            }
-                            .quick-course-info {
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                @media screen and ( max-width: $width_8 ) {
-                                    @include font( 12, 15, 400 );
-                                    flex-wrap: wrap;
-                                    span {
-                                            padding-top: 10px;
-                                        min-width: 50%;
-                                        &.course-cost {
-                                            min-width: 100%;
-                                            @include font( 20, 24, 600 );
-                                        }
-                                    }
-                                }
                             }
                         }
                         .course-summary {
                             margin-top: 1em;
+                            @include font( 16, 19, 400 );
+                            color: $grey_1;
                         }
                     }
                     .course-instructors {
+                        @include font( 16, 19, 400 );
                         color: $dark_3;
                         margin: 0;
                         padding: 0;
                         .label {
                             display: inline;
                             margin-right: 0;
+                            @include font( 16, 19, 600 );
                         }
                         @media screen and ( max-width: $width_8 ) {
                             @include font( 12, 15, 400 );
@@ -148,9 +135,7 @@
         padding: 10px 15px;
         border: 1px solid rgba(255, 0, 0, 0.1);
         &:before {
-            content: '\f06a';
-            font-family: 'FontAwesome';
-            display: inline-block;
+            @include icon( '\f06a' );
             font-size: 16px;
             vertical-align: baseline;
             margin-right: 8px;

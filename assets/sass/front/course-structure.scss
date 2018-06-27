@@ -123,9 +123,7 @@
         .module-tree {
             .module-title {
                 display: block;
-                font: {
-                    weight: 500;
-                }
+                @include font(20, 24, 600);
                 padding: 16px 0 16px 57px;
                 &:hover {
                     .preview {
@@ -193,11 +191,11 @@
             .module-tree {
             }
             .module-title {
-                padding: 5px 10px;
-                font-size: 1.2em;
+                padding: 30px 20px 15px 20px;
             }
             .course-step {
-                padding: 5px 12px;
+                @include font( 16, 24, 500 );
+                padding: 17px 20px;
                 background-color: $grey_6;
                 &.step-completed {
                     &:after {
@@ -208,7 +206,6 @@
             .course-current-step {
                 font-weight: bolder;
             }
-            display: none;
             @media (max-width: $width_7) {
                 background-color: $dark_3;
                 color: $white;
@@ -256,7 +253,7 @@
                     &:before {
                         float: left;
                         @include icon("\f15c");
-                        width: 34px;
+                        width: 29px;
                         font-size: 24px;
                     }
                     &.course-step-audio:before        { content: "\f1c7"; }

@@ -55,7 +55,7 @@ foreach ( $notifications as $notification ) {
 		printf( '<li class="date"><span>%s</span></li>', $show );
 		$date = $d;
 	}
-	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
+	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By<span>: %s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
 
 ?>
 <li>

@@ -1,4 +1,5 @@
 $width: 100%;
+$width_2: 1140px;
 $width_3: 1000px;
 $width_7: 768px;
 $width_8: 600px;
@@ -204,5 +205,14 @@ $code_font: Consolas, Monaco, monospace;
             right: 15px;
         }
     }
+}
+
+@mixin width_2 {
+    margin: {
+        left: auto;
+        right: auto;
+    }
+    max-width: $width_2;
+    @include padding_width_7;
 }
 
