@@ -5,7 +5,7 @@
     .workbook-table,
     .grades-table {
         @include width;
-        background-color: $grey_12;
+        background-color: $grey_9;
         border: 0;
         td, th {
             border: 0;
@@ -34,6 +34,26 @@
         .row-elements {
             td {
                 padding-bottom: 1em;
+            }
+        }
+    }
+    .grades-table {
+        tbody {
+            tr {
+                &:last-child {
+                    td {
+                        border-bottom: 1px solid $grey_12;
+                    }
+                }
+            }
+            &:last-child {
+                tr {
+                    &:last-child {
+                        td {
+                            border: 0;
+                        }
+                    }
+                }
             }
         }
     }

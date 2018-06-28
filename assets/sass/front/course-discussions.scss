@@ -274,6 +274,17 @@
                     padding: 0;
                 }
             }
+            .comment-respond {
+                .comment-reply-title {
+                    @include font( 20, 24, 600 );
+                }
+                .comment-form {
+                    label {
+                        @include font( 12, 15, 600 );
+                        margin-bottom: 6px;
+                    }
+                }
+            }
         }
     }
 
