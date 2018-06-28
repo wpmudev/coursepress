@@ -1,6 +1,8 @@
 $width: 100%;
+$width_2: 1140px;
 $width_3: 1000px;
-$width_7: 750px;
+$width_7: 768px;
+$width_8: 600px;
 $width_9: 400px;
 
 $white: #fff;
@@ -10,8 +12,9 @@ $color_1: #dedede;
 $color_2: #fbfbfb;
 $color_3: #51b9e8;
 
-$dark_1: #333;
-$dark_2: #555;
+$dark_2: #222;
+$dark_3: #333;
+$dark_5: #555;
 
 $grey_1: #5e5e5e;
 $grey_2: #757575;
@@ -137,18 +140,32 @@ $code_font: Consolas, Monaco, monospace;
     }
 }
 
+@mixin font( $size, $lh, $weight ) {
+    font: {
+        @if type-of( $size ) == 'number' {
+            size:  #{$size}px;
+        } @else {
+            size:  $size;
+        }
+        weight: $weight;
+    }
+    @if type-of( $lh ) == 'number' {
+        line-height: #{$lh}px;
+    } @else {
+        line-height: $lh;
+    }
+}
+
 @mixin button {
-    background: #1a1a1a;
-    border-radius: 2px;
+    background: $dark_2;
+    @include radius( 3px );
+    @include font( 16px, 19px, 600 );
     border: 0;
     color: $white;
     display: inline-block;
-    font-weight: 700;
     line-height: 1;
-    margin-top: 1em;
-    padding: 20px 80px;
+    padding: 16px 92px;
     text: {
-        transform: uppercase;
         align: center;
     }
     &:hover {
@@ -173,10 +190,29 @@ $code_font: Consolas, Monaco, monospace;
     max-width: $width_7;
     margin: 25px auto;
 }
-
-@mixin padding_width_7 {
-    padding: {
-        left: 10px;
-        right: 10px;
+@mixin width0 {
+    max-width: $width_7;
+    margin: 0 auto;
+    @media screen and (min-width: 48em) {
+        max-width: 1000px;
     }
 }
+
+@mixin padding_width_7 {
+    @media screen and (max-width: $width_7) {
+        padding: {
+            left: 15px;
+            right: 15px;
+        }
+    }
+}
+
+@mixin width_2 {
+    margin: {
+        left: auto;
+        right: auto;
+    }
+    max-width: $width_2;
+    @include padding_width_7;
+}
+

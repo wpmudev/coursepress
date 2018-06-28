@@ -2,20 +2,22 @@
 .coursepress-notifications {
     .notifications-content {
         @include width;
+        @include padding_width_7;
     }
 }
 .coursepress-forum {
     .discussions-content,
     .course-discussion-content {
         @include width;
+        @include padding_width_7;
     }
 }
 
 .coursepress-notifications,
 .coursepress-forum {
-    color: $dark_1;
+    color: $dark_3;
     a {
-        color: $dark_1;
+        color: $dark_3;
     }
     .course-discussion-wrapper {
         .button {
@@ -62,9 +64,11 @@
                     }
                 }
                 .notification-title {
-                    font-size: 1.5em;
+                    @include font( 24, 24, 700 );
+                    color: $dark_3;
                 }
                 .notification-meta {
+                    @include font( 16, 19, 400 );
                     strong {
                         span {
                             font-weight: normal;
@@ -74,6 +78,21 @@
                 .notification-content {
                     margin-top: 1em;
                 }
+            }
+        }
+        &.discussion-archive-list {
+            li {
+                margin-bottom: 0;
+                border-bottom: 1px solid $dark_3;
+            }
+        }
+        &.notification-archive-list {
+            padding-top: 0;
+            margin-top: 25px;
+            background: {
+                image: url('data:image/gif;base64,R0lGODdhAgACAIABAO7u7v///ywAAAAAAgACAAACAoRRADs=');
+                repeat: repeat-y;
+                position: 73px 0;
             }
         }
     }
@@ -89,6 +108,7 @@
         font-weight: bold;
         span {
             display: block;
+            margin-bottom: 13px;
         }
         .discussion-comment {
             padding: 0;
@@ -118,7 +138,7 @@
             padding: 0;
             vertical-align: top;
             width: 100%;
-            font-size: 1.5em;
+            @include font(20, 24, 600 );
         }
     }
 
@@ -171,6 +191,9 @@
         .form-submit {
             text-align: right;
         }
+        #comments {
+            padding-top: 0;
+        }
         .comments-area {
             @include width;
             form {
@@ -186,6 +209,80 @@
                 font-weight: bold;
                 &:before {
                     @include icon("\f3e5");
+                }
+            }
+            .comments-title {
+                @include font( 20, 24, 600 );
+                color: $dark_3;
+            }
+            .comment-list {
+                background-color: $grey_7;
+                padding: 30px 20px;
+                article {
+                    margin-top: 0;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    footer {
+                        display: flex;
+                    }
+                }
+                .comment-author {
+                    @include font( 16, 50, 600 );
+                    .avatar {
+                        position: static;
+                        float: left;
+                        @include radius( 50% );
+                        width: 50px;
+                        height: 50px;
+                    }
+                    b {
+                        padding: 0 10px 0 20px;
+                    }
+                }
+                .comment-metadata {
+                    &:before {
+                        content: "|";
+                        padding-right: 8px;
+                    }
+                    @include font( 16, 50, 600 );
+                    letter-spacing: initial;
+                    a {
+                        box-shadow: none;
+                        color: $dark_3;
+                    }
+                }
+                .comment-content {
+                    @include font( 16, 23, 400 );
+                }
+                .comment-content,
+                .reply,
+                .children {
+                    margin-left: 70px;
+                }
+                .children {
+                    padding-left: 0;
+                    .children {
+                        .children {
+                            margin-left: 0;
+                        }
+                    }
+                }
+                /* Twenty Seventeen hack */
+                .bypostauthor > .comment-body > .comment-meta > .comment-author .avatar {
+                    border: 0;
+                    padding: 0;
+                }
+            }
+            .comment-respond {
+                .comment-reply-title {
+                    @include font( 20, 24, 600 );
+                }
+                .comment-form {
+                    label {
+                        @include font( 12, 15, 600 );
+                        margin-bottom: 6px;
+                    }
                 }
             }
         }
@@ -216,20 +313,18 @@
         textarea {
             min-height: 200px;
         }
-        label {
-            font: {
-                size: .9em;
-                weight: bold;
-            }
+        select,
+        textarea,
+        input[type=text] {
+            width: 100%;
+            @include font( 16, 24, 400 );
+            background-color: $white;
+            padding: 14px 15px;
+            @include radius( 5px );
+
         }
-    }
-    .coursepress-wrap {
-        .content-area {
-            .page-header {
-                .page-title {
-                    @include width;
-                }
-            }
+        label {
+            @include font( 12, 16, 600 );
         }
     }
 }

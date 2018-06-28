@@ -1,67 +1,76 @@
-.course-unit {
-    .page-header {
-        position: relative;
-        margin: 0;
-    }
-    h2 {
-        &.course-title {
-            margin: 25px 0 0;
-            @include clearfix;
-            @media screen and (max-width: $width_3) {
+.single-course {
+    .course-unit {
+        h2 {
+            &.course-title {
+                margin: 25px 0 0;
+                @include clearfix;
                 @include padding_width_7;
             }
         }
+        .course-after-title {
+            @include clearfix;
+        }
+        .course-unit-progress {
+            position: absolute;
+            top: 10px;
+            right: 0;
+        }
     }
-    .course-after-title {
-        @include clearfix;
+    .coursepress-wrap {
+        .toggle {
+            display: none;
+        }
+        &.course-unit {
+            .container {
+                .content-area {
+                    .page-header {
+                        position: relative;
+                        margin: 0;
+                        .course-title,
+                        .course-breadcrumb,
+                        .course-submenu {
+                            @include width_2;
+                        }
+                    }
+                }
+            }
+        }
     }
-    .course-unit-progress {
-        position: absolute;
-        top: 10px;
-        right: 0;
-    }
-}
-.coursepress-wrap {
-    .toggle {
-        display: none;
-    }
-}
-.course-content-template {
-    display: block;
-    margin: 25px 0;
-    @media (max-width: $width_7) {
+    .course-content-template {
+        display: block;
+        margin: 25px 0;
         @include padding_width_7;
-    }
-    @include clearfix;
-    .toggle {
-        display: none;
-        cursor: pointer;
-        &:before {
-            @include icon("\f0ca");
-        }
-        &.open {
+        @include clearfix;
+        .toggle {
+            display: none;
+            cursor: pointer;
             &:before {
-                content: "\f00d";
+                @include icon("\f0ca");
             }
-        }
-        @media (max-width: $width_7) {
-            display: block;
-        }
-    }
-    .unit-description {
-        margin-top: 2em;
-    }
-
-    @media screen {
-        @media (min-width: $width_7) {
-            display: flex;
-            .course-structure-nav {
+            &.open {
+                &:before {
+                    content: "\f00d";
+                }
+            }
+            @media (max-width: $width_7) {
                 display: block;
-                width: 25%;
             }
-            .course-content {
-                width: 75%;
-                padding-left: 25px;
+        }
+        .unit-description {
+            margin-top: 2em;
+        }
+
+        @media screen {
+            @media (min-width: $width_7) {
+                display: flex;
+                .course-structure-nav {
+                    display: block;
+                    width: 25%;
+                }
+                .course-content {
+                    width: 75%;
+                    padding-left: 25px;
+                }
             }
         }
     }

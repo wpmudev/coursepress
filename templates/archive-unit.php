@@ -25,7 +25,7 @@ coursepress_get_template( 'course', 'submenu' );
  */
 coursepress_breadcrumb();
 ?>
-                    <h1 class="page-title"><?php _e( 'Course Units', 'cp' ); ?></h1>
+                    <h1 class="cp-page-title"><?php _e( 'Course Units', 'cp' ); ?></h1>
                 </header>
                 <div class="course-structure">
                     <?php echo coursepress_get_course_structure(); ?>

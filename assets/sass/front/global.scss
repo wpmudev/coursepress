@@ -1,5 +1,7 @@
-.archive {
+.archive,
+.coursepress-student-dashboard {
     .coursepress-wrap {
+        max-width: 1140px;
         .page-header {
             float: none;
             width: 100%;
@@ -8,14 +10,23 @@
             border: 1px solid $grey_12;
             padding: 14px;
             margin-bottom: 30px;
+            @media screen and ( max-width: $width_8 ) {
+                margin: 15px;
+                .entry-content {
+                    display: none;
+                }
+            }
+            .entry-footer {
+                border: 0;
+            }
         }
     }
 }
 .coursepress-wrap {
+    font-family: "Libre Franklin", sans-serif;
     display: block;
     margin: 0 auto;
     width: 100%;
-    max-width: 1000px;
     @include clearfix;
     font-size: 100%;
     .container {
@@ -31,25 +42,31 @@
                 margin: 0 0 1em 0;
                 float: none;
                 width: 100%;
-                .page-title {
-                    font-size: 2em;
-                    font-weight: 700;
+                .cp-page-title {
+                    @include font( 24, 29, 600 );
                     margin: 0;
                     padding: 0;
                     @media screen and (max-width: $width_3) {
                         padding: 0 10px;
-
                     }
+                    @include padding_width_7;
                 }
             }
             article {
                 .course-info {
                     width: 100%;
                     display: flex;
+                    @media screen and ( max-width: $width_8 ) {
+                        display: block;
+                    }
                     .thumbnail {
                         padding-right: 30px;
-                        max-width: 30%;
+                        max-width: 220px;
                         img {
+                            max-width: 100%;
+                        }
+                        @media screen and ( max-width: $width_8 ) {
+                            padding: 0;
                             max-width: 100%;
                         }
                     }
@@ -60,25 +77,42 @@
                             float: none;
                             width: 100%;
                         }
-                        .entry-title {
-                            margin-bottom: 10px;
+                        .course-title {
+                            margin-bottom: 5px;
+                            @include font( 32, 39, 500 );
+                            color: $dark_3;
+                            @media screen and ( max-width: $width_8 ) {
+                                @include font( 16, 19, 600 );
+                            }
                         }
                         .entry-footer {
+                            margin: 0;
                             width: 100%;
-                            .quick-course-info {
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
+                            @media screen and ( max-width: $width_8 ) {
+                                padding: 0;
                             }
+                        }
+                        .course-summary {
+                            margin-top: 1em;
+                            @include font( 16, 19, 400 );
+                            color: $grey_1;
                         }
                     }
                     .course-instructors {
-                        margin: 0 0 1em 0;
-                        border: 0;
+                        @include font( 16, 19, 400 );
+                        color: $dark_3;
+                        margin: 0;
                         padding: 0;
                         .label {
                             display: inline;
                             margin-right: 0;
+                            @include font( 16, 19, 600 );
+                        }
+                        @media screen and ( max-width: $width_8 ) {
+                            @include font( 12, 15, 400 );
+                            .label {
+                                @include font( 12, 15, 600 );
+                            }
                         }
                     }
                 }
@@ -101,9 +135,7 @@
         padding: 10px 15px;
         border: 1px solid rgba(255, 0, 0, 0.1);
         &:before {
-            content: '\f06a';
-            font-family: 'FontAwesome';
-            display: inline-block;
+            @include icon( '\f06a' );
             font-size: 16px;
             vertical-align: baseline;
             margin-right: 8px;
@@ -127,3 +159,12 @@
         }
     }
 }
+.coursepress-student-login {
+    .coursepress-wrap {
+        .content-area {
+            width: 320px;
+            margin: 0 auto;
+        }
+    }
+}
+

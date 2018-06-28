@@ -272,6 +272,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 	public function get_course_summary( $atts ) {
 		$atts = shortcode_atts( array(
 			'course_id' => coursepress_get_course_id(),
+			'length' => -1,
 		), $atts, 'course_summary' );
 		/**
 		 * Check course ID
@@ -299,7 +300,11 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( apply_filters( 'coursepress_schema', false, 'description' ) ) {
 			$args['itemprop'] = 'description';
 		}
-		return $this->create_html( 'div', $args, $course->post_excerpt );
+		$text = $course->post_excerpt;
+		if ( 0 < $atts['length'] ) {
+			$text = wp_trim_words( $text, $atts['length'] );
+		}
+		return $this->create_html( 'div', $args, $text );
 	}
 
 	/**

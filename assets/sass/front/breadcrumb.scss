@@ -1,28 +1,30 @@
 .course-breadcrumb {
     display: block;
     padding: 0;
-    margin: 0;
     list-style: none;
+    @include width0;
     @include clearfix;
+    @include font( 12, 15, 600 );
     @media screen and (max-width: $width_3) {
-        padding: 0 10px;
+        padding: 0 15px;
     }
     li {
         display: inline;
         margin-bottom: 10px;
-        font-size: 0.9em;
         &:before {
             @include icon( "\f105" );
             padding: 0 .5em;
-            font-weight: bold;
         }
         &:first-of-type{
             &:before {
                 display: none;
             }
         }
+        &.current {
+            font-weight: 400;
+        }
     }
     a {
-        color: $dark_1;
+        color: $dark_3;
     }
 }

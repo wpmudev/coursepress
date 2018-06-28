@@ -22,7 +22,7 @@ get_header(); ?>
 coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
-                    <h1 class="page-title"><?php _e( 'Discussion:', 'cp' ); ?> <?php echo coursepress_get_course_title(); ?></h1>
+                    <h1 class="cp-page-title"><?php _e( 'Discussion:', 'cp' ); ?> <?php echo coursepress_get_course_title(); ?></h1>
 				</header>
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );

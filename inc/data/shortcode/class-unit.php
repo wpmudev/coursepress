@@ -116,8 +116,13 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 
 		$course = coursepress_get_course( $course_id );
 		$subpage = CoursePress_Data_Course::$last_course_subpage;
-
 		$content = '<div class="submenu-main-container course-submenu-container">';
+		$content .= sprintf(
+			'<button class="course-submenu-toggle" aria-controls="submenu-main" aria-expanded="false" data-toggle-off="%s" data-toggle-on="%s">s</button>',
+			esc_attr_x( '&#x25bc;', 'bottom arrow for course submenu', 'cp' ),
+			esc_attr_x( '&#x25bc;', 'down arrow for course submenu', 'cp' ),
+			esc_attr_x( '&#x25b2;', 'up arrow for course submenu', 'cp' )
+		);
 		$content .= '<ul id="submenu-main" class="submenu course-submenu">';
 		$content .= '<li class="submenu-item menu-item submenu-units ' . ( 'units' === $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url( $course->get_units_url() ) . '" class="course-units-link">' . esc_html__( 'Units', 'cp' ) . '</a></li>';
 

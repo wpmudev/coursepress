@@ -11,7 +11,7 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php _e( 'Courses', 'cp' ); ?></h1>
+					<h1 class="cp-page-title"><?php _e( 'Courses', 'cp' ); ?></h1>
 				</header>
 
 				<?php

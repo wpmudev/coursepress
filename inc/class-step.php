@@ -342,7 +342,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		}
 		$question = $this->get_question();
 		if ( ! empty( $question ) ) {
-			$attr = array( 'class' => 'course-module-step-question' );
+			$attr = array( 'class' => 'course-module-step-question course-module-step-'.$module_type );
 			$template .= $this->create_html( 'div', $attr, $question );
 		}
 		$response = $this->get_user_response( $user->ID );

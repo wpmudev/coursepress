@@ -27,6 +27,8 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		 * add forum class
 		 */
 		new CoursePress_Data_Forum();
+
+		add_action( 'wp_head', array( $this, 'fonts' ) );
 	}
 
 	public function remove_cookies() {
@@ -143,6 +145,21 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$this->set_js( 'coursepress-front-js', 'coursepress-front.min.js', $deps );
 		// Set localize vars
 		$this->set_local_vars();
+
+	}
+
+	/**
+	 * Include google fonts
+	 */
+	public function fonts() {
+		$src = add_query_arg(
+			array(
+				'family' => 'Libre+Franklin:400,400i,500,500i,600,600i,700,700i',
+				'subset' => 'latin-ext',
+			),
+			'https://fonts.googleapis.com/css'
+		);
+		printf( '<link href="%s" rel="stylesheet" />', $src );
 	}
 
 	private function set_local_vars() {

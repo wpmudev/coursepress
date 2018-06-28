@@ -23,7 +23,7 @@ get_header(); ?>
 coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
-                    <h1 class="page-title"><?php _e( 'Course Notifications', 'cp' ); ?></h1>
+                    <h1 class="cp-page-title"><?php _e( 'Course Notifications', 'cp' ); ?></h1>
                 </header>
                 <div class="notifications-content">
 <?php
@@ -55,7 +55,7 @@ foreach ( $notifications as $notification ) {
 		printf( '<li class="date"><span>%s</span></li>', $show );
 		$date = $d;
 	}
-	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By <span>%s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
+	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By<span>: %s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
 
 ?>
 <li>

@@ -41,7 +41,7 @@ echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
 <div class="entry-content <?php echo $extended_class; ?>">
 <?php
 // Course summary/excerpt
-echo do_shortcode( '[course_summary length="50" class="' . $extended_class . '"]' );
+echo do_shortcode( '[course_summary length="20" class="' . $extended_class . '"]' );
 wp_link_pages(
 	array(
 		'before' => '<div class="page-links">' . __( 'Pages:', 'cp' ),
