@@ -25,14 +25,13 @@
         }
         .row-unit {
             td {
-                font: {
-                    size: 1.2em;
-                    weight: bold;
-                }
+                @include font( 20, 24, 600 );
             }
         }
         .row-elements {
             td {
+                @include font( 16, 24, 400 );
+                color: $grey_1;
                 padding-bottom: 1em;
             }
         }
@@ -57,4 +56,10 @@
             }
         }
     }
+    .cp-total-grade {
+        @include width;
+        @include font( 24, 24, 700 );
+        text-align: right;
+    }
 }
+

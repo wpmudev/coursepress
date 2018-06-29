@@ -43,13 +43,13 @@
             }
             > span {
                 display: block;
-                padding: 0 2em 0 0;
+                padding: 0 2em 0 30px;
                 &:before {
                     @include font_awesome();
                     font-size: 24px;
-                    padding-right: 5px;
                     display: block;
                     float: left;
+                    margin-left: -25px;
                 }
             }
             .course-time {
@@ -82,6 +82,10 @@
                         width: 100%;
                         display: block;
                     }
+                }
+                @media screen and ( max-width: $width_7 ) {
+                    @include font( 16, 19, 600 );
+                    padding: 13px 15px;
                 }
             }
         }

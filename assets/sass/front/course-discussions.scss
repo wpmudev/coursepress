@@ -45,7 +45,7 @@
                 box-sizing: border-box;
             }
             li {
-                background-color: $grey_12;
+                background-color: $grey_9;
                 margin-bottom: 1em;
                 padding: 30px;
                 &.date {
@@ -83,7 +83,7 @@
         &.discussion-archive-list {
             li {
                 margin-bottom: 0;
-                border-bottom: 1px solid $dark_3;
+                border-bottom: 1px solid $grey_12;
             }
         }
         &.notification-archive-list {
@@ -97,7 +97,7 @@
         }
     }
 
-    .discussion-archive-single-meta {
+    .discussion-responces {
         clear: both;
         display: inline-block;
         float: right;
@@ -105,7 +105,7 @@
         vertical-align: top;
         width: 13%;
         text-align: center;
-        font-weight: bold;
+        @include font( 16, 19, 600 );
         span {
             display: block;
             margin-bottom: 13px;
@@ -193,6 +193,7 @@
         }
         #comments {
             padding-top: 0;
+            @include padding_width_7;
         }
         .comments-area {
             @include width;

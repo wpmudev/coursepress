@@ -188,10 +188,12 @@
         }
         &.course-structure-nav {
             margin: 0;
-            .module-tree {
-            }
             .module-title {
                 padding: 30px 20px 15px 20px;
+                padding: {
+                    top: 14px;
+                    bottom: 14px;
+                }
             }
             .course-step {
                 @include font( 16, 24, 500 );
@@ -207,11 +209,13 @@
                 font-weight: bolder;
             }
             @media (max-width: $width_7) {
+                display: none;
                 background-color: $dark_3;
                 color: $white;
                 padding: 0;
                 position: absolute;
                 z-index: 10;
+                @include font( 16, 24, 400 );
                 .course-step {
                     background-color: transparent;
                     &.course-current-step {

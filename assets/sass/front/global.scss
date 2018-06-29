@@ -1,7 +1,7 @@
 .archive,
 .coursepress-student-dashboard {
     .coursepress-wrap {
-        max-width: 1140px;
+        max-width: $width_2;
         .page-header {
             float: none;
             width: 100%;
@@ -18,6 +18,13 @@
             }
             .entry-footer {
                 border: 0;
+            }
+        }
+        @media screen and ( max-width: $width_2 ) {
+            width: 100%;
+            padding: {
+                left: 15px;
+                right: 15px;
             }
         }
     }
@@ -46,9 +53,6 @@
                     @include font( 24, 29, 600 );
                     margin: 0;
                     padding: 0;
-                    @media screen and (max-width: $width_3) {
-                        padding: 0 10px;
-                    }
                     @include padding_width_7;
                 }
             }
@@ -65,6 +69,13 @@
                         img {
                             max-width: 100%;
                         }
+                        @media screen and ( max-width: $width_7 ) {
+                            width: 176px;
+                            min-width: 176px;
+                            img {
+                                width: 146px;
+                            }
+                        }
                         @media screen and ( max-width: $width_8 ) {
                             padding: 0;
                             max-width: 100%;
@@ -72,6 +83,9 @@
                     }
                     .course-entry-wrap {
                         width: 100%;
+                        @media screen and ( max-width: $width_7 ) {
+                            width: auto;
+                        }
                         .entry-content,
                         .entry-footer {
                             float: none;
@@ -81,6 +95,9 @@
                             margin-bottom: 5px;
                             @include font( 32, 39, 500 );
                             color: $dark_3;
+                            @media screen and ( max-width: $width_7 ) {
+                                @include font( 24, 29, 700 );
+                            }
                             @media screen and ( max-width: $width_8 ) {
                                 @include font( 16, 19, 600 );
                             }
@@ -89,6 +106,7 @@
                             margin: 0;
                             width: 100%;
                             @media screen and ( max-width: $width_8 ) {
+                                margin-left: 0;
                                 padding: 0;
                             }
                         }

@@ -35,9 +35,9 @@ else :
 					</div>
 			';
 
-		echo '<div class="discussion-archive-single-meta">';
+		echo '<div class="discussion-responces">';
 		if ( 0 == $comments_count->approved ) {
-			_e( '0 responces', 'coursepress' );
+			_e( '0 Responces', 'coursepress' );
 		} else {
 			$c = sprintf( '<span>%d</span>', $comments_count->approved );
 			printf(

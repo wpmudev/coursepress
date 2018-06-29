@@ -30,11 +30,11 @@ $course    = coursepress_get_course();
 $shortcode = sprintf( '[student_grades_table course_id="%d"]', $course->ID );
 echo do_shortcode( $shortcode );
 ?>
-                  <div class="total_grade pull-right">
+                  <div class="cp-total-grade">
 <?php
 $shortcode = sprintf( '[course_progress course_id="%d"]', $course->ID );
-echo apply_filters( 'coursepress_grade_caption', __( 'Total:', 'cp' ) );
-printf( ' %1$s%', do_shortcode( $shortcode ) );
+echo apply_filters( 'coursepress_grade_caption', __( 'Total Progress:', 'cp' ) );
+printf( ' %1$s%%%', do_shortcode( $shortcode ) );
 ?>
                   </div>
                 </div>

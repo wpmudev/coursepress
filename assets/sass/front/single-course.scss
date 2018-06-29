@@ -122,6 +122,9 @@
             }
             .course-meta-price {
                 @include font( 32, 39, 600 );
+                @media screen and ( max-width: $width_7 ) {
+                    @include font( 24, 29, 600 );
+                }
             }
         }
         .instructor {

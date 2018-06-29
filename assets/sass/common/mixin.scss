@@ -159,7 +159,7 @@ $code_font: Consolas, Monaco, monospace;
 @mixin button {
     background: $dark_2;
     @include radius( 3px );
-    @include font( 16px, 19px, 600 );
+    @include font( 16, 19, 600 );
     border: 0;
     color: $white;
     display: inline-block;
