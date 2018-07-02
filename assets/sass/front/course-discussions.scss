@@ -77,6 +77,9 @@
                 }
                 .notification-content {
                     margin-top: 1em;
+                    @media screen and ( max-width: $width_7 ) {
+                        @include font( 16, 24, 400 );
+                    }
                 }
             }
         }
@@ -217,7 +220,7 @@
                 color: $dark_3;
             }
             .comment-list {
-                background-color: $grey_7;
+                background-color: $grey_9;
                 padding: 30px 20px;
                 article {
                     margin-top: 0;
@@ -284,6 +287,11 @@
                         @include font( 12, 15, 600 );
                         margin-bottom: 6px;
                     }
+                }
+            }
+            .comment-meta {
+                @media screen and ( max-width: $width_7 ) {
+                    margin-bottom: 0;
                 }
             }
         }

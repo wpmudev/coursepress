@@ -1,3 +1,10 @@
+.course-content-template {
+    @media screen and ( max-width: $width_7 ) {
+        background-color: $grey_9;
+        padding: 36px 30px;
+        position: relative;
+    }
+}
 .course-module-step-template {
     position: relative;
     display: block;
@@ -171,6 +178,11 @@
                 color: $dark_3;
             }
         }
+        &.course-module-step-image {
+            img {
+                @include radius( 10px );
+            }
+        }
     }
 }
 .course-content {
@@ -194,6 +206,9 @@
                 &:before {
                     content: " | ";
                 }
+            }
+            @media screen and ( max-width: $width_7 ) {
+                top: -30px;
             }
         }
         h3 {

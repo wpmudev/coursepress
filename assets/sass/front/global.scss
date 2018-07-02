@@ -57,6 +57,12 @@
                 }
             }
             article {
+                @media screen and ( max-width: $width_8 ) {
+                    margin: {
+                        left: 0;
+                        right: 0;
+                    }
+                }
                 .course-info {
                     width: 100%;
                     display: flex;
@@ -79,6 +85,11 @@
                         @media screen and ( max-width: $width_8 ) {
                             padding: 0;
                             max-width: 100%;
+                            display: block;
+                            margin: {
+                                left: auto;
+                                right: auto;
+                            }
                         }
                     }
                     .course-entry-wrap {

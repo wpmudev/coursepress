@@ -1,6 +1,12 @@
 .coursepress-wrap {
     .grades {
-        @include padding_width_7;
+        @media screen and (max-width: $width_7) {
+            background-color: $grey_9;
+            padding: 24px 15px;
+            .grades-table {
+                margin: 0;
+            }
+        }
     }
     .workbook-table,
     .grades-table {
@@ -35,6 +41,9 @@
                 padding-bottom: 1em;
             }
         }
+        .cp-progress {
+            white-space: nowrap;
+        }
     }
     .grades-table {
         tbody {
@@ -60,6 +69,11 @@
         @include width;
         @include font( 24, 24, 700 );
         text-align: right;
+        background-color: $grey_9;
+        @media screen and (max-width: $width_7) {
+            padding-right: 30px;
+            margin-top: 0;
+        }
     }
 }
 

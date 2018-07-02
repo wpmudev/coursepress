@@ -20,11 +20,11 @@ if ( ! empty( $workbook_data ) ) : ?>
 				endif;
 				?>
 			</td>
-			<td align="right">
+			<td align="right" class="cp-progress">
 				<?php
 				//if ( 'module' !==$data['type'] ) :
-					if ( 'unit' === $data['type'] ) :
-						_e( 'Progress: ', 'cp' );
+				if ( 'unit' === $data['type'] ) :
+					_e( 'Progress: ', 'cp' );
 					endif;
 					echo $data['progress'] . '%';
 				//endif;
