@@ -587,10 +587,12 @@ function coursepress_get_course_submenu() {
 			'classes' => array( 'submenu-units' ),
 		),
 	);
-	if ( 'unit-archive' === $current || 'step' === $current ) {
-		$menus['units']['classes'][] = 'current-menu-item';
+	switch ( $current ) {
+		case 'unit-archive':
+		case 'step':
+		case 'module':
+			$menus['units']['classes'][] = 'current-menu-item';
 	}
-
 	// Course Notifications.
 	$menus['notifications'] = array(
 		'label' => __( 'Notifications', 'cp' ),
@@ -839,6 +841,11 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 	$submit = '';
 
 	if ( $has_access['access'] ) {
+		$label = coursepress_create_html(
+			'span',
+			array( 'class' => 'label' ),
+			$args['next']
+		);
 		$next = coursepress_create_html(
 			$args['container_next'],
 			array( 'class' => 'course-next-item' ),
@@ -850,7 +857,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 					'name'  => 'submit_module',
 					'value' => 1,
 				),
-				$args['next']
+				$label
 			)
 		);
 		if ( $_course_step ) {
@@ -877,16 +884,16 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 			),
 			$has_access['message']
 		);
-    }
-    if ( ! empty( $submit ) ) {
-        $submit = coursepress_create_html(
-            'div',
-            array(
-                'class' => 'coursepress-buttons',
-            ),
-            $submit
-        );
-    }
+	}
+	if ( ! empty( $submit ) ) {
+		$submit = coursepress_create_html(
+			'div',
+			array(
+				'class' => 'coursepress-buttons',
+			),
+			$submit
+		);
+	}
 	$navigation = coursepress_create_html(
 		$args['navigation_tag'],
 		array( 'class' => 'course-step-nav' ),
@@ -1120,6 +1127,14 @@ function coursepress_get_previous_course_cycle_link( $label = '' ) {
 	if ( empty( $label ) ) {
 		$label = __( 'Previous', 'cp' );
 	}
+
+	$label = coursepress_create_html(
+		'span',
+		array(
+			'class' => 'label',
+		),
+		$label
+	);
 
 	$link = coursepress_get_link_cycle( 'previous' );
 

@@ -118,23 +118,29 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 					$description = sprintf( '<span class="instructor-name">%s</span>', $instructor_name );
 				}
 				if ( $atts['summary_length'] && isset( $instructor->description ) && $instructor->description ) {
+					$description .= '<span class="cp-more">';
 					if ( ! empty( $description ) ) {
 						$description .= ', ';
 					}
 					$description .= wp_trim_words( $instructor->description, $atts['summary_length'] );
+					$description .= '</span>';
+
 					if ( $link_all ) {
 						$attr = array( 'href' => esc_url( $link ) );
 						$description = $this->create_html( 'a', $attr, $description );
 					} else if ( 'block' === $atts['style'] ) {
-						$description .= PHP_EOL.PHP_EOL.$this->create_html( 'a', $attr, $atts['link_text'] );
+						$link = $this->create_html( 'a', $attr, $atts['link_text'] );
+						$link = $this->create_html( 'p', array( 'class' => 'cp-link-profile' ), $link );
+						$description .= $link;
 					}
 					$description = wpautop( $description );
 				} else {
 					if ( 'block' === $atts['style'] ) {
-						$description .= PHP_EOL.PHP_EOL.$this->create_html( 'a', $attr, $atts['link_text'] );
+						$link = $this->create_html( 'a', $attr, $atts['link_text'] );
+						$link = $this->create_html( 'p', array( 'class' => 'cp-link-profile' ), $link );
+						$description .= $link;
 					}
 					$description = wpautop( $description );
-
 				}
 				if ( ! empty( $description ) ) {
 					$template .= $this->create_html( 'div', array( 'class' => 'description profile-description' ), $description );

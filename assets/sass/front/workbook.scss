@@ -32,6 +32,9 @@
         .row-unit {
             td {
                 @include font( 20, 24, 600 );
+                @media screen and ( max-width: $width_8 ) {
+                    @include font( 16, 19, 600 );
+                }
             }
         }
         .row-elements {
@@ -39,6 +42,9 @@
                 @include font( 16, 24, 400 );
                 color: $grey_1;
                 padding-bottom: 1em;
+                @media screen and ( max-width: $width_8 ) {
+                    @include font( 14, 24, 400 );
+                }
             }
         }
         .cp-progress {
@@ -73,6 +79,9 @@
         @media screen and (max-width: $width_7) {
             padding-right: 30px;
             margin-top: 0;
+        }
+        @media screen and ( max-width: $width_8 ) {
+            @include font( 20, 24, 600 );
         }
     }
 }

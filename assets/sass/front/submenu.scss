@@ -25,9 +25,6 @@
                     border-bottom-color: $white;
                 }
             }
-            &.submenu-active {
-
-            }
         }
         .current-menu-item {
             font-weight: bold;
@@ -90,8 +87,8 @@
     }
     @media screen and ( max-width: $width_8 ) {
         margin: {
-            left: 15px;
             right: 15px;
+            left: 15px;
         }
         .menu-item {
             padding-right: 40px;

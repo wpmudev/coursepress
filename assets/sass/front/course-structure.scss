@@ -84,7 +84,6 @@
             .unit-title {
                 display: block;
                 color: $grey_1;
-
                 .unit-feature-image {
                     float: left;
                     margin-right: 15px;
@@ -134,6 +133,9 @@
                 .preview {
                     @include preview();
                 }
+                @media screen and (max-width: $width_8) {
+                    @include font( 16, 19, 600 );
+                }
             }
             .module {
                 border-top: 1px solid $grey_12;
@@ -165,6 +167,12 @@
             .course-step {
                 display: block;
                 padding: 16px 0 16px 57px;
+                @media screen and (max-width: $width_8) {
+                    padding: {
+                        top: 10px;
+                        bottom: 10px;
+                    }
+                }
                 a {
                     box-shadow: none;
                 }
@@ -208,7 +216,7 @@
             .course-current-step {
                 font-weight: bolder;
             }
-            @media (max-width: $width_7) {
+            @media screen and (max-width: $width_7) {
                 display: none;
                 background-color: $dark_3;
                 color: $white;
@@ -249,6 +257,9 @@
                         background: {
                             color: $grey_9;
                         }
+                        @media screen and (max-width: $width_8) {
+                            @include font( 16, 19, 600 );
+                        }
                     }
                 }
             }
@@ -259,6 +270,10 @@
                         @include icon("\f15c");
                         width: 29px;
                         font-size: 24px;
+                        @media screen and (max-width: $width_8) {
+                            width: 25px;
+                            font-size: 20px;
+                        }
                     }
                     &.course-step-audio:before        { content: "\f1c7"; }
                     &.course-step-discussion:before   { content: "\f086"; }

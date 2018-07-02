@@ -197,6 +197,27 @@
             top: 30px;
             text-align: right;
             z-index: 1;
+            @media screen and ( max-width: $width_8 ) {
+                .previous-button,
+                .button-next {
+                    &:before {
+                        display: inline-block;
+                        content: "<";
+                        background-color: $dark_3;
+                        color: $white;
+                        padding: 0 6px;
+                    }
+                    .label {
+                        display: none;
+                    }
+                }
+                .button-next {
+                    &:before {
+                        margin-left: 17px;
+                        content: ">";
+                    }
+                }
+            }
             a, button {
                 @include reset;
                 display: inline;
@@ -205,6 +226,9 @@
             .course-next-item {
                 &:before {
                     content: " | ";
+                    @media screen and ( max-width: $width_8 ) {
+                        display: none;
+                    }
                 }
             }
             @media screen and ( max-width: $width_7 ) {

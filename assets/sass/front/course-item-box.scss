@@ -38,18 +38,29 @@
                     &.course-cost {
                         min-width: 100%;
                         @include font( 20, 24, 600 );
+                        padding: {
+                            top: 5px;
+                            left: 0;
+                            right: 0;
+                        }
                     }
                 }
             }
             > span {
                 display: block;
                 padding: 0 2em 0 30px;
+                @media screen and ( max-width: $width_8 ) {
+                    padding-bottom: 6px;
+                }
                 &:before {
                     @include font_awesome();
                     font-size: 24px;
                     display: block;
                     float: left;
                     margin-left: -25px;
+                    @media screen and ( max-width: $width_8 ) {
+                        font-size: 16px;
+                    }
                 }
             }
             .course-time {

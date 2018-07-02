@@ -31,6 +31,9 @@
                         .course-submenu {
                             @include width_2;
                         }
+                        .course-submenu {
+                            padding: 0;
+                        }
                     }
                 }
             }

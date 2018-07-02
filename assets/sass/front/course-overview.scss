@@ -46,6 +46,24 @@
                 text-decoration: none;
             }
         }
+        @media screen and (max-width: $width_8) {
+            .profile-avatar {
+                img {
+                    width: 50px;
+                }
+            }
+            .profile-description {
+                .instructor-name {
+                    display: table-cell;
+                    height: 50px;
+                    vertical-align: middle;;
+                }
+            }
+            hr, .cp-more, .cp-link-profile {
+                display: none;
+            }
+
+        }
     }
     .page-header {
         padding-bottom: 0;
@@ -100,6 +118,9 @@
             .course-sub-title {
                 @include font( 24, 29, 700 );
                 display: block;
+                @media screen and ( max-width: $width_8 ) {
+                    @include font( 18, 21, 600 );
+                }
             }
         }
     }

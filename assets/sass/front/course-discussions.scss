@@ -10,6 +10,11 @@
     .course-discussion-content {
         @include width;
         @include padding_width_7;
+        .course-discussion-title {
+            @media screen and ( max-width: $width_8 ) {
+                @include font( 20, 24, 600 );
+            }
+        }
     }
 }
 
@@ -30,6 +35,9 @@
         text-align: right;
         .button {
             @include button;
+            @media screen and ( max-width: $width_8 ) {
+                width: 100%;
+            }
         }
     }
     ul {
@@ -48,6 +56,9 @@
                 background-color: $grey_9;
                 margin-bottom: 1em;
                 padding: 30px;
+                @media screen and ( max-width: $width_8 ) {
+                    padding: 15px 15px 45px 15px;
+                }
                 &.date {
                     padding: 0 0 30px 0;
                     background-color: transparent;
@@ -61,17 +72,26 @@
                         &:hover {
                             box-shadow: none;
                         }
+                        @media screen and ( max-width: $width_8 ) {
+                            @include font( 14, 38, 400 );
+                        }
                     }
                 }
                 .notification-title {
                     @include font( 24, 24, 700 );
                     color: $dark_3;
+                    @media screen and ( max-width: $width_8 ) {
+                        @include font( 18, 21, 600 );
+                    }
                 }
                 .notification-meta {
                     @include font( 16, 19, 400 );
+                    @media screen and ( max-width: $width_8 ) {
+                        @include font( 12, 15, 400 );
+                    }
                     strong {
                         span {
-                            font-weight: normal;
+                            font-weight: 400;
                         }
                     }
                 }
@@ -117,7 +137,6 @@
             padding: 0;
             transform-style: preserve-3d;
             position: relative;
-
             .comment {
                 font-size: 1.3em;
                 margin: 0;
@@ -125,6 +144,16 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%) scale(1.2, 1);
+            }
+        }
+        @media screen and ( max-width: $width_8 ) {
+            padding-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 0;
+            span {
+                display: inline;
             }
         }
     }
@@ -141,7 +170,13 @@
             padding: 0;
             vertical-align: top;
             width: 100%;
-            @include font(20, 24, 600 );
+            @include font( 20, 24, 600 );
+            @media screen and ( max-width: $width_8 ) {
+                @include font( 16, 19, 600 );
+            }
+        }
+        @media screen and ( max-width: $width_8 ) {
+            width: 100%;
         }
     }
 
@@ -150,6 +185,9 @@
             margin-top: 1em;
             span {
                 font-weight: bold;
+            }
+            @media screen and ( max-width: $width_8 ) {
+                display: none;
             }
         }
     }
@@ -204,9 +242,6 @@
                 margin-top: 1em;
                 background-color: $grey_12;
                 padding: 20px;
-            }
-            .comment-reply-title {
-                border: 0;
             }
             .comment-reply-link {
                 @include reset;
@@ -263,6 +298,9 @@
                 .reply,
                 .children {
                     margin-left: 70px;
+                    @media screen and ( max-width: $width_8 ) {
+                        margin-left: 0;
+                    }
                 }
                 .children {
                     padding-left: 0;
@@ -281,6 +319,10 @@
             .comment-respond {
                 .comment-reply-title {
                     @include font( 20, 24, 600 );
+                    border: 0;
+                    @media screen and ( max-width: $width_8 ) {
+                        @include font( 18, 21, 600 );
+                    }
                 }
                 .comment-form {
                     label {

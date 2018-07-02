@@ -10,6 +10,9 @@
                     .course-title {
                         @include font(32, 39, 600 );
                         @include width;
+                        @media screen and ( max-width: $width_8 ) {
+                            @include font( 20, 24, 600 );
+                        }
                     }
                     .course-title {
                         color: $dark_3;
@@ -44,21 +47,21 @@
             }
 
             @media screen {
-                @media (min-width: $width_9) {
+                .course-media {
+                    img {
+                        @include radius(10px);
+                    }
+                }
+                @media (min-width: $width_8) {
                     display: flex;
-
                     .course-media {
                         width: 50%;
                         padding-right: 15px;
-                        img {
-                            @include radius(10px);
-                        }
                     }
                     .course-metas {
                         width: 50%;
                         padding-left: 15px;
                     }
-
                     .coursepress-course-share {
                         display: block;
                         margin: 15px 0;
@@ -113,6 +116,7 @@
     .entry-content {
         .course-metas {
             @include font( 16, 19, 400 );
+            color: $dark_3;
             .course-meta {
                 font-size: 1em;
                 margin-bottom: .5em;
@@ -159,6 +163,11 @@
             color: $dark_3;
             p {
                 color: $dark_3;
+            }
+            @media screen and ( max-width: $width_8 ) {
+                .sub-title {
+                    @include font( 18, 21, 600 );
+                }
             }
         }
     }
