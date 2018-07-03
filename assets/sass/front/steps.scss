@@ -163,6 +163,9 @@
                         float: left;
                         @include icon("\f019");
                     }
+                    @media screen and ( max-width: $width_8 ) {
+                        font-weight: 600;
+                    }
                 }
             }
         }
@@ -187,9 +190,15 @@
 }
 .course-content {
     form {
-        position: relative;
-        padding: 30px;
         background-color: $grey_9;
+        padding: 30px;
+        position: relative;
+        @media screen and ( max-width: $width_8 ) {
+            padding: {
+                left: 0;
+                right: 0;
+            }
+        }
         .course-step-nav {
             display: block;
             position: absolute;

@@ -120,6 +120,7 @@
             .course-meta {
                 font-size: 1em;
                 margin-bottom: .5em;
+                color: $dark_3;
             }
             .meta-title {
                 font-weight: 600;
@@ -128,6 +129,14 @@
                 @include font( 32, 39, 600 );
                 @media screen and ( max-width: $width_7 ) {
                     @include font( 24, 29, 600 );
+                }
+            }
+            .course-button {
+                @media screen and ( max-width: $width_7 ) {
+                    a {
+                        width: 100%;
+                        padding: 12px;
+                    }
                 }
             }
         }
