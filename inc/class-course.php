@@ -29,7 +29,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 			$course = get_post( (int) $course );
 		}
-		if ( ! $course instanceof WP_Post || 'course' !==$course->post_type ) {
+		if ( ! $course instanceof WP_Post || 'course' !== $course->post_type ) {
 			$this->is_error = true;
 			return $this->wp_error();
 		}
@@ -298,42 +298,42 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return null|string
 	 */
-    public function get_feature_image( $size = null ) {
-        $id = $this->__get( 'ID' );
-        if ( empty( $size ) ) {
-            $size = array(
-                coursepress_get_setting( 'course/image_width', 220 ),
-                coursepress_get_setting( 'course/image_height', 220 ),
-            );
-        }
-        $classes = 'attachment-post-thumbnail size-post-thumbnail wp-post-image';
-        $listing_image_id = $this->get_feature_image_id();
-        // Try post-thumbnail
-        if ( ! empty( $listing_image_id ) ) {
-            $image = get_the_post_thumbnail( $id, $size, array( 'class' => $classes.' course-feature-image' ) );
-            if ( ! empty( $image ) ) {
-                return $image;
-            }
-        }
-        $listing_image = $this->get_feature_image_url();
-        if ( empty( $listing_image ) ) {
-            return $listing_image;
-        }
-        $args = array(
-            'src' => esc_url( $listing_image ),
-            'class' => $classes.' course-listing-image',
-        );
-        if ( is_array( $size ) && 1 < count( $size ) ) {
-            $args['width'] = $size[0];
-            $args['height'] = $size[1];
-        }
-        // Add microdata to image.
-        if ( apply_filters( 'coursepress_schema', false, 'image' ) ) {
-            $args['itemprop'] = 'image';
-        }
-        $listing_image = $this->create_html( 'img', $args );
-        return $listing_image;
-    }
+	public function get_feature_image( $size = null ) {
+		$id = $this->__get( 'ID' );
+		if ( empty( $size ) ) {
+			$size = array(
+				coursepress_get_setting( 'course/image_width', 220 ),
+				coursepress_get_setting( 'course/image_height', 220 ),
+			);
+		}
+		$classes = 'attachment-post-thumbnail size-post-thumbnail wp-post-image';
+		$listing_image_id = $this->get_feature_image_id();
+		// Try post-thumbnail
+		if ( ! empty( $listing_image_id ) ) {
+			$image = get_the_post_thumbnail( $id, $size, array( 'class' => $classes.' course-feature-image' ) );
+			if ( ! empty( $image ) ) {
+				return $image;
+			}
+		}
+		$listing_image = $this->get_feature_image_url();
+		if ( empty( $listing_image ) ) {
+			return $listing_image;
+		}
+		$args = array(
+			'src' => esc_url( $listing_image ),
+			'class' => $classes.' course-listing-image',
+		);
+		if ( is_array( $size ) && 1 < count( $size ) ) {
+			$args['width'] = $size[0];
+			$args['height'] = $size[1];
+		}
+		// Add microdata to image.
+		if ( apply_filters( 'coursepress_schema', false, 'image' ) ) {
+			$args['itemprop'] = 'image';
+		}
+		$listing_image = $this->create_html( 'img', $args );
+		return $listing_image;
+	}
 
 	public function get_feature_video_url() {
 		return $this->__get( 'featured_video' );
@@ -353,16 +353,21 @@ class CoursePress_Course extends CoursePress_Utility {
 				'class' => 'video-js vjs-default-skin vjs-big-play-centered course-feature-video',
 				'width' => $width,
 				'height' => $height,
-				'controls' => true,
 				'data-setup' => $this->create_video_js_setup_data( $feature_video ),
 			);
+			if ( is_singular() ) {
+				$attr['controls'] = 1;
+			}
 			return $this->create_html( 'video', $attr );
 		}
 		return null;
 	}
 
 	public function get_media( $width = 220, $height = 220 ) {
-		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
+		$media_type = coursepress_get_setting( 'course/listing_media_type', 'image' );
+		if ( is_singular() ) {
+			$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
+		}
 		$image = $this->get_feature_image( array( $width, $height ) );
 		if ( ( 'image' === $media_type || 'default' === $media_type ) && ! empty( $image ) ) {
 			return $image;

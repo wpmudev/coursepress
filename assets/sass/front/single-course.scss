@@ -48,8 +48,34 @@
 
             @media screen {
                 .course-media {
-                    img {
+                    img,
+                    video {
                         @include radius(10px);
+                        overflow: hidden;
+                    }
+                    .video-js {
+                        background: transparent;
+                        $vjs_width: 58px;
+                        .vjs-big-play-button {
+                            @include radius( 50% );
+                            background-color: $dark_2;
+                            border: 0;
+                            width: 58px;
+                            height: 58px;
+                            line-height: 58px;
+                            font-size: 35px;
+                            margin: {
+                                left: -$vjs_width/2;
+                                top: -$vjs_width/2;
+                            }
+                        }
+                        .vjs-control-bar {
+                            @include radius( 0 0 10px 10px );
+                            overflow: hidden;
+                            .vjs-play-control {
+                                @include radius( 0 0 0 10px );
+                            }
+                        }
                     }
                 }
                 @media (min-width: $width_8) {

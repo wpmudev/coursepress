@@ -125,6 +125,14 @@ abstract class CoursePress_Utility {
 	}
 
 	public function create_html( $tag, $attributes = array(), $content = '' ) {
+		/**
+		 * Filter create_html attributes.
+		 *
+		 * @param array $attributes Array of atributes for output html.
+		 * @param string $tag HTML tag.
+		 * @param string $content Content of the HTML tag.
+		 */
+		$attributes = apply_filters( 'coursepress_create_html_attributes', $attributes, $tag, $content );
 		$html = '<' . $tag;
 		if ( ! empty( $attributes ) ) {
 			$html .= ' ' . $this->setAttributes( $attributes );

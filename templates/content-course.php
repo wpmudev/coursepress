@@ -9,7 +9,7 @@
  */
 global $post;
 $course         = coursepress_get_course( $post );
-$thumbnail      = $course->get_feature_image( 'course-thumbnail' );
+$thumbnail      = $course->get_media();
 $course_media   = do_shortcode( '[course_media wrapper="figure" list_page="yes"]' );
 $extended_class = $course_media ? '' : 'quick-course-info-extended';
 ?>
