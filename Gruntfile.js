@@ -357,7 +357,9 @@ module.exports = function(grunt) {
 				options: {
 					'sourcemap=none': true, // 'sourcemap': 'none' does not work...
 					unixNewlines: true,
-					style: 'expanded'
+					style: 'expanded',
+					sourcemap: 'file',
+					trace: true
 				},
 				files: conf.css_files_compile
 			}
