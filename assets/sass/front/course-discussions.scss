@@ -247,7 +247,7 @@
                 @include reset;
                 font-weight: bold;
                 &:before {
-                    @include icon("\f3e5");
+                    @include icon( '\f112' );
                 }
             }
             .comments-title {
