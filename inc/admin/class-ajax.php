@@ -987,6 +987,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		return array( 'success' => true );
 	}
 
+	/**
+	 * Handle user answers
+	 */
 	public function validate_submission() {
 		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
 		$unit_id = filter_input( INPUT_POST, 'unit_id', FILTER_VALIDATE_INT );
@@ -996,7 +999,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$user_id = get_current_user_id();
 		$referer = filter_input( INPUT_POST, 'referer_url' );
 		$redirect_url = filter_input( INPUT_POST, 'redirect_url' );
-		$response = filter_input( INPUT_POST, 'module' );
+		$response = isset( $_POST['module'] ) && is_array( $_POST['module'] )? $_POST['module']:null;
 		$user = coursepress_get_user( $user_id );
 		if ( ! $user->is_enrolled_at( $course_id ) ) {
 			// If user is not enrolled, don't validate
@@ -1384,7 +1387,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function remove_instructor_invite( $request ) {
 
 		$success = false;
-		if ( ! empty( $request->course_id ) && !empty( $request->code ) ) {
+		if ( ! empty( $request->course_id ) && ! empty( $request->code ) ) {
 			// Continue only if user can withdraw student.
 			if ( ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove instructor invitation.', 'cp' ) ) );
@@ -1395,7 +1398,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $success ) {
 			wp_send_json_success( array( 'code' => $request->code ) );
 		}
-		wp_send_json_error(  array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
 	}
 
 	/**
@@ -1406,7 +1409,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function remove_facilitator_invite( $request ) {
 
 		$success = false;
-		if ( ! empty( $request->course_id ) && !empty( $request->code ) ) {
+		if ( ! empty( $request->course_id ) && ! empty( $request->code ) ) {
 			// Continue only if user can withdraw student.
 			if ( ! CoursePress_Data_Capabilities::can_assign_course_instructor( $request->course_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to remove facilitator invitation.', 'cp' ) ) );
@@ -1417,7 +1420,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( $success ) {
 			wp_send_json_success( array( 'code' => $request->code ) );
 		}
-		wp_send_json_error(  array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Something went wrong.', 'cp' ) ) );
 	}
 
 	public function search_students( $request ) {
