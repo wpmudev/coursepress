@@ -79,6 +79,7 @@
         }
     }
     .grades-table {
+        margin-bottom: 0;
         tbody {
             tr {
                 &:last-child {
@@ -103,6 +104,13 @@
         @include font( 24, 24, 700 );
         text-align: right;
         background-color: $grey_9;
+        border: 1px solid $grey_12;
+        border-top: 0;
+        margin: {
+            top: 0;
+            bottom: 0;
+        }
+        padding: 25px 15px;
         @media screen and (max-width: $width_7) {
             padding-right: 30px;
             margin-top: 0;
