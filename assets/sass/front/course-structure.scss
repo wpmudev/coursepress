@@ -13,7 +13,6 @@
         font-size: 20px;
     }
 }
-
 .single-course {
     .course-structure {
         @include clearfix;
@@ -219,6 +218,7 @@
                 padding: 17px 20px;
                 background-color: $grey_6;
                 &.step-completed {
+                    padding-right: 20px;
                     &:after {
                         content: none;
                     }
@@ -232,7 +232,7 @@
                 background-color: $dark_3;
                 color: $white;
                 padding: 0;
-                position: absolute;
+                margin-bottom: 40px;
                 z-index: 10;
                 @include font( 16, 24, 400 );
                 .course-step {
@@ -292,6 +292,19 @@
                     a,
                     span {
                         display: block;
+                    }
+                }
+            }
+        }
+    }
+    .course-content-template {
+        .course-structure {
+            .step-tree {
+                .course-step {
+                    padding-left: 54px;
+                    &:before {
+                        left: 20px;
+                        font-size: 20px;
                     }
                 }
             }
