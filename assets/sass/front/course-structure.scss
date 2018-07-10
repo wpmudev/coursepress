@@ -3,6 +3,17 @@
     max-width: $width_7;
     margin: 25px auto;
 }
+
+@mixin cp_structure_icon( $icon ) {
+    @include icon( $icon );
+    font-size: 24px;
+    position: absolute;
+    top: 15px;
+    @media screen and (max-width: $width_8) {
+        font-size: 20px;
+    }
+}
+
 .single-course {
     .course-structure {
         @include clearfix;
@@ -167,7 +178,8 @@
         .step-tree {
             .course-step {
                 display: block;
-                padding: 16px 0 16px 57px;
+                position: relative;
+                padding: 16px 74px 16px 90px;
                 @media screen and (max-width: $width_8) {
                     padding: {
                         top: 10px;
@@ -178,12 +190,10 @@
                     box-shadow: none;
                 }
                 &.step-completed {
+                    padding-right: 60px;
                     &:after {
-                        float: right;
-                        @include icon("\f058");
-                        padding-right: 20px;
-                        font-size: 1.4em;
-                        margin-top: -1.5em;
+                        @include cp_structure_icon( "\f058" );
+                        right: 20px;
                     }
                 }
                 &.course-current-step {
@@ -267,14 +277,8 @@
             li {
                 .course-step {
                     &:before {
-                        float: left;
-                        @include icon("\f15c");
-                        width: 29px;
-                        font-size: 24px;
-                        @media screen and (max-width: $width_8) {
-                            width: 25px;
-                            font-size: 20px;
-                        }
+                        @include cp_structure_icon("\f15c");
+                        left: 56px;
                     }
                     &.course-step-audio:before        { content: "\f1c7"; }
                     &.course-step-discussion:before   { content: "\f086"; }
@@ -288,7 +292,6 @@
                     a,
                     span {
                         display: block;
-                        padding-left: 1.6em;
                     }
                 }
             }
