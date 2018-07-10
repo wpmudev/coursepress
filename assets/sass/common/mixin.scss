@@ -98,6 +98,10 @@ $code_font: Consolas, Monaco, monospace;
     font-family: FontAwesome, sans-serif;
     padding-right: 5px;
 }
+@mixin dash($icon) {
+    @include icon( $icon );
+    font-family: dashicons;
+}
 @mixin hide {
     opacity: 0;
     @include transition(opacity 0.4s);

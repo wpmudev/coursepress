@@ -13,7 +13,7 @@
         @include width;
         background-color: $grey_9;
         border: 0;
-        td, th {
+        tr, td, th {
             border: 0;
         }
         td {
@@ -49,6 +49,33 @@
         }
         .cp-progress {
             white-space: nowrap;
+        }
+        tbody {
+            border: 1px solid $grey_12;
+            &.separator {
+                border: 0;
+            }
+        }
+    }
+    .workbook-table {
+        tbody {
+            .row-unit {
+                span {
+                    display: inline-block;
+                    &.fold {
+                        cursor: pointer;
+                        &:before {
+                            @include dash( '\f142' );
+                            padding-right: 10px;
+                        }
+                        &.folded {
+                            &:before {
+                                content: '\f140';
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     .grades-table {

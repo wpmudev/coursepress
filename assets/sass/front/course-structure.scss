@@ -9,6 +9,7 @@
         @include font( 16, 19, 400 );
         color: $dark_3;
         @include padding_width_7;
+        min-width: 200px;
         a {
             text-decoration: none;
             color: $dark_3;

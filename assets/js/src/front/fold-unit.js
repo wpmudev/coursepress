@@ -3,7 +3,7 @@
 (function() {
     'use strict';
     CoursePress.Define( 'FoldCourseUnits', function( $, doc ) {
-        var foldMenu,foldButton,target, toggleButton, toggleMenu;
+        var foldMenu,foldButton,target, toggleButton, toggleMenu, foldWorkbookButton, foldWorkbook;
         /**
          * fold
          */
@@ -17,7 +17,23 @@
                 target.slideDown();
             }
         };
-        $(doc).on( 'click', '.fold', foldMenu );
+        $(doc).on( 'click', '.course-structure .fold', foldMenu );
+        /**
+         * fold workbook
+         */
+        foldWorkbookButton = $( '<span class="fold"></span>' ).insertBefore( $('tr.row-unit td span') );
+        foldWorkbook = function() {
+            target = $(this).closest( 'tbody' );
+            target = $('tr.row-module, tr.row-step', target );
+            $(this).toggleClass('folded');
+            if ($(this).is( '.folded' )) {
+                target.slideUp();
+            } else {
+                target.slideDown();
+            }
+        };
+        $(doc).on( 'click', '.workbook-table .fold', foldWorkbook );
+
         /**
          * toggle
          */
