@@ -37,11 +37,11 @@ else :
 
 		echo '<div class="discussion-responces">';
 		if ( 0 == $comments_count->approved ) {
-			_e( '0 Responces', 'coursepress' );
+			_e( '0 Responses', 'coursepress' );
 		} else {
 			$c = sprintf( '<span>%d</span>', $comments_count->approved );
 			printf(
-				_n( '%s Responce', '%s Responces', $comments_count->approved, 'coursepress' ),
+				_n( '%s Responce', '%s Responses', $comments_count->approved, 'coursepress' ),
 				$c
 			);
 		}
