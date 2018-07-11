@@ -53,7 +53,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	        'use_description' => false,
 		);
 		$date_format = _x( 'F d, Y', 'Date format for date field. We recomend do not change this.', 'cp' );
-		$time_now = current_time( 'timestamp' );
+		$time_now = current_time( 'timestamp', 1 );
 		foreach ( $defaults as $key => $default_value ) {
 			$value = get_post_meta( $id, $key, true );
 			$value = maybe_unserialize( $value );
@@ -188,7 +188,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 	public function is_available() {
 		$availability = $this->__get( 'unit_availability' );
-		$time_now = current_time( 'timestamp' );
+		$time_now = current_time( 'timestamp', 1 );
 		$available = false;
 		if ( 'instant' === $availability ) {
 			$available = true;

@@ -83,7 +83,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$old_feedback     = ! empty( $feedback['feedback'] ) ? $feedback['feedback'] : '';
 		$draft_feedback   = ! empty( $feedback['draft'] );
 		$current_user_id  = get_current_user_id();
-		$date             = current_time( 'mysql' );
+		$date             = current_time( 'mysql', 1 );
 
 		$response          = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $step_id );
 		$response['grade'] = $grade;
@@ -153,7 +153,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$student_progress = $student->get_completion_data( $course_id );
 		$response         = coursepress_get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $step_id );
 		$current_user_id  = get_current_user_id();
-		$date             = current_time( 'mysql' );
+		$date             = current_time( 'mysql', 1 );
 
 		$response['feedback'][] = array(
 			'feedback_by' => $current_user_id,

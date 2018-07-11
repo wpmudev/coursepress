@@ -1154,7 +1154,7 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	public function record_response( $course_id, $unit_id, $step_id, $response, $graded_by = 'auto' ) {
-		$date = current_time( 'mysql' );
+		$date = current_time( 'mysql', 1 );
 		$response['date'] = $date;
 		$response['graded_by'] = $graded_by;
 		$progress = $this->get_completion_data( $course_id );

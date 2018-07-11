@@ -1867,7 +1867,7 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	);
 	$email_data = wp_parse_args( $email_data, $args );
 	$email_class->sendEmail( $email_type, $email_data );
-	$student_data['date'] = $course->date( current_time( 'mysql' ) );
+	$student_data['date'] = $course->date( current_time( 'mysql', 1 ) );
 	$student_data['timestamp'] = time();
 	$invited_students = $course->__get( 'invited_students' );
 	if ( ! $invited_students ) {
@@ -1894,13 +1894,11 @@ function coursepress_invite_student( $course_id, $student_data ) {
  * @return bool
  */
 function coursepress_remove_student_invite( $course_id, $email ) {
-
 	// Get the course object.
 	$course = coursepress_get_course( $course_id );
 	if ( is_wp_error( $course ) ) {
 		return false;
 	}
-
 	// Get list of invited students.
 	$invited_students = $course->__get( 'invited_students' );
 	// Make sure given email is there in invited list.
@@ -1909,10 +1907,8 @@ function coursepress_remove_student_invite( $course_id, $email ) {
 		unset( $invited_students->{$email} );
 		// Update course data.
 		$course->update_setting( 'invited_students', $invited_students );
-
 		return array( 'email' => $email );
 	}
-
 	return false;
 }
 
