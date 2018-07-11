@@ -25,13 +25,19 @@ if ( ! empty( $thumbnail ) ) {
 <div class="course-entry-wrap">
 <header class="entry-header course-entry-header">
 	<?php $title = apply_filters( 'coursepress_schema', get_the_title(), 'title' ); ?>
-	<h3 class="entry-title course-title"><a href="<?php echo esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
+    <h3 class="entry-title course-title"><a href="<?php echo esc_url( $course->get_permalink() ); ?>" rel="bookmark"><?php echo $title; ?></a></h3>
+<?php
+$show = coursepress_get_setting( 'general/details_show_instructors', 1 );
+if ( $show  ) {
+?>
+
     <div class="instructors-content"<?php echo apply_filters( 'coursepress_schema', '', 'itemscope-person' ); ?>>
 <?php
 // Flat hyperlinked list of instructors
 echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
 ?>
     </div>
+<?php } ?>
 </header>
 <?php if ( is_search() ) : // Only display Excerpts for Search ?>
 <div class="entry-summary">
