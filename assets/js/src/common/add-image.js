@@ -40,30 +40,30 @@
             },
             render: function() {
                 var html, data, thumbnail_id, value, src;
-
                 thumbnail_id = this.input.data('thumbnail');
-                value = src = this.input.val();
-
+                value = src = this.input.attr('src');
                 if ( ! value ) {
-                    value = '';
+                    value = src = this.input.val();
                 }
-
+                if ( ! value ) {
+                    value = src = '';
+                }
                 data = {
                     name: this.input.attr('name'),
                     thumbnail_id: thumbnail_id,
                     value: value
                 };
                 html = _._getTemplate(this.template_id, data);
-
                 this.setElement(html);
                 this.$el.insertAfter(this.input);
                 this.thumbnail_box = this.$('.cp-thumbnail');
-
+                /**
+                 * image_id_input
+                 */
                 this.image_id_input = this.$('.cp-thumbnail-id');
                 this.image_id_input.off('change'); // Disable hooked change event
                 this.image_id_input.on('change', this.input.prop('change'));
                 this.image_url_input = this.$('.cp-image-url');
-
                 if ( thumbnail_id ) {
                     this.image_id_input.val(thumbnail_id);
                 }
@@ -108,12 +108,12 @@
             },
             openMediaFrame: function() {
             },
-	        updatePreview: function (ev) {
-		        var sender;
+            updatePreview: function (ev) {
+                var sender;
 
-		        sender = this.$(ev.target);
-		        this.setThumbnail(sender.val());
-	        },
+                sender = this.$(ev.target);
+                this.setThumbnail(sender.val());
+            },
             setSelectedImage: function() {
                 var selected, thumbnail, id, url;
 

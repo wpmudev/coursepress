@@ -7,11 +7,11 @@
         var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
-           var sender = $(ev.target);
-           if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
-               iris.iris('hide');
-               iris = false;
-           }
+            var sender = $(ev.target);
+            if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
+                iris.iris('hide');
+                iris = false;
+            }
         });
 
         CertificatePreview = CoursePress.View.extend({
@@ -85,9 +85,9 @@
             },
             updateModel: function(ev) {
                 var sender = $(ev.currentTarget),
-                    name = sender.data('name'),
-                    value = sender.val(),
-                    first, model;
+                name = sender.data('name'),
+                value = sender.val(),
+                first, model;
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
                 }
@@ -97,18 +97,14 @@
                 if ( 'undefined' === typeof name ) {
                     name = sender.attr('name');
                 }
-                if ( undefined === typeof name || 'undefined' === name ) {
+                if ( 'undefined' === typeof name || 'undefined' === name ) {
                     return;
                 }
                 name = name.split('.');
                 first = name.shift();
                 model = this.model[first];
-
-window.console.log(model);
-
                 if (name.length) {
                     _.each(name, function (t) {
-window.console.log(t);
                         model[t] = value;
                     }, this);
                     this.model[first] = model;
