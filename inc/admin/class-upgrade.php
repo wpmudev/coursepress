@@ -438,7 +438,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 										$q_data['order'] = $q_id;
 										$q_data['type'] = 'written';
 										$q_data['word_limit'] = 0;
-										$q_data['question'] = '';
+										$q_data['question'] = isset( $q_data['question'] ) ? $q_data['question'] : '';
 										$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
 										$new_step['meta_input']['questions'] = array( (object) $q_data );
 										wp_insert_post( $new_step );
