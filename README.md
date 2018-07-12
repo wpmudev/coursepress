@@ -4,6 +4,16 @@ DEVELOPMENT GUIDE
 -
 ## Working with the branches
 
+CoursePress 3+ has only one development branch `development` and when you
+start work on a ticket you should create new branch from `development` branch
+in this schema:
+- `bug/<task name>` for bugs
+- `new/<task name>` for new stuff, improvrments, etc.
+
+When you end and fix a bug, or implement new, please create a pull request,
+paste PR link to asana task and mark asana ticket with `Waiting for Merge`
+tag.
+
 ### Cloning
 
 CoursePress uses submodules, so use the `--recursive` flag if you clone from command line:
@@ -96,3 +106,21 @@ Visite **/docs/class.md**
 
 #### Action and Filter Hooks
 -
+
+# RELEASING #
+
+#### Versioning  
+
+Before running any Grunt tasks to build the releases, please update the CoursePress version in `package.json` file - it will be used during build process to replace PLUGIN_VERSION placeholder.
+
+
+#### Changelog  
+
+Please update changelog.txt.
+
+#### Languages
+
+CoursePress PRO should have included translation files. Before release build
+you neeed to update `languages/*po` files from:
+
+https://premium.wpmudev.org/translate/projects/cp/
