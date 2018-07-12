@@ -39,7 +39,7 @@ abstract class CoursePress_Utility {
 	 */
 	public function date_time_now( $hour = '00:00:01' ) {
 		$time_now = current_time( 'timestamp', 1 );
-		$date_now = date( 'c', $date_now );
+		$date_now = date( 'c', $time_now );
 		if ( ! is_string( $hour ) || ! preg_match( '/^\d\d:\d\d:\d\d$/', $hour ) ) {
 			$hour = '00:00:01';
 		}

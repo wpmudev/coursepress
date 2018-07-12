@@ -4,7 +4,12 @@
             &.course-title {
                 margin: 25px 0 0;
                 @include clearfix;
-                @include padding_width_7;
+                @media screen and (max-width: $width_3) {
+                    padding: {
+                        left: 15px;
+                        right: 15px;
+                    }
+                }
             }
         }
         .course-after-title {
