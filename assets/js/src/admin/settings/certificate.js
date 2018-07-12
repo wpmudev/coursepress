@@ -34,7 +34,8 @@
                 'change [name]': 'updateModel',
                 'change [name="use_cp_default"]': 'toggleCertificateSettings',
                 'change [name="enabled"]': 'toggleCertificateSettings',
-                'click [name="preview_certificate"]': 'previewCertificate'
+                'click [name="preview_certificate"]': 'previewCertificate',
+                'change #coursepress-logo-img': 'setLogo',
             },
             initialize: function( model ) {
                 this.model = ! model ? {} : model;
@@ -55,6 +56,7 @@
                         self.model.cert_text_color = self.color.iris('color');
                     }
                 });
+                self.model.cert_text_color = this.color.iris('color');
                 this.visualEditor({
                     container: this.$('.content_certificate_editor'),
                     content: this.model.content,
@@ -132,6 +134,11 @@
                     previewButton.prop('disabled', false);
                 });
                 model.save();
+            },
+            setLogo: function( ev ) {
+var img = this.$(ev.currentTarget);
+                this.model.certificate_logo = img.val();
+                window.console.log(img);
             }
         });
     });
