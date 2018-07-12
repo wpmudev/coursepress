@@ -7,11 +7,11 @@
         var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
-           var sender = $(ev.target);
-           if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
-               iris.iris('hide');
-               iris = false;
-           }
+            var sender = $(ev.target);
+            if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
+                iris.iris('hide');
+                iris = false;
+            }
         });
 
         CertificatePreview = CoursePress.View.extend({
@@ -55,6 +55,7 @@
                         self.model.cert_text_color = self.color.iris('color');
                     }
                 });
+                self.model.cert_text_color = this.color.iris('color');
                 this.visualEditor({
                     container: this.$('.content_certificate_editor'),
                     content: this.model.content,
@@ -84,14 +85,20 @@
             },
             updateModel: function(ev) {
                 var sender = $(ev.currentTarget),
-                    name = sender.data('name'),
-                    value = sender.val(),
-                    first, model;
+                name = sender.data('name'),
+                value = sender.val(),
+                first, model;
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
                 }
-                if( 'undefined' === typeof name ) {
+                if ( ! name ) {
                     name = sender.attr('name');
+                }
+                if ( 'undefined' === typeof name ) {
+                    name = sender.attr('name');
+                }
+                if ( 'undefined' === typeof name || 'undefined' === name ) {
+                    return;
                 }
                 name = name.split('.');
                 first = name.shift();

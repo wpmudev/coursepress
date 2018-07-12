@@ -1,24 +1,27 @@
 .coursepress-wrap {
-  .cp-content-box {
-    &:last-of-type {
-      border: 0;
+    .cp-content-box {
+        &:last-of-type {
+            border: 0;
+        }
     }
-  }
-  .option {
-    margin-bottom: 15px;
-    display: block;
-  }
-
-  .cp-box-header {
-    padding-top: 20px;
-  }
-
-  .cp-input-group {
-    margin-bottom: 25px;
-    li {
-      cursor: pointer;
+    .option {
+        margin-bottom: 15px;
+        display: block;
+        &.option-hidden {
+            margin: 0;
+        }
     }
-  }
+
+    .cp-box-header {
+        padding-top: 20px;
+    }
+
+    .cp-input-group {
+        margin-bottom: 25px;
+        li {
+            cursor: pointer;
+        }
+    }
 }
 
 .coursepress-settings {

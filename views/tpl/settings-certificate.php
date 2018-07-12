@@ -2,11 +2,9 @@
 	<div class="cp-box-heading">
 		<h2 class="box-heading-title"><?php _e( 'Certificate', 'cp' ); ?></h2>
 	</div>
-
 	<div class="cp-content">
         <?php
 		global $cp_coursepress, $editor_styles;
-
 		$config = array();
 		$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 		/**
@@ -38,7 +36,6 @@
 		$tokens = $cert_class->get_tokens();
 		$token_info = sprintf( '<p>%s</p>', __( 'These codes will be replaced with actual data:', 'cp' ) );
 		$token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
-
 		$config['custom-certificate'] = array(
 			'title'  => __( 'Custom Certificate', 'cp' ),
 			'description' => __( 'Use the editor below to create the layout of your certificate. These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER.', 'cp' ),
@@ -56,18 +53,18 @@
 			'title' => __( 'Background Image', 'cp' ),
 			'fields' => array(
 				'background_image' => array(
-					'type' => 'text',
+					'type' => 'image',
 					'class' => 'cp-add-image-input',
 					'id' => 'coursepress-cert-bg',
 					'value' => coursepress_get_setting( 'basic_certificate/background_image' ),
 					'data' => array(
 						'title' => __( 'Select Certificate Background', 'cp' ),
 						'thumbnail' => coursepress_get_setting( 'basic_certificate/background_image_thumbnail_id' ),
+						'name' => 'background_image',
 					),
 				),
 			),
 		);
-
 		$config['content_margin'] = array(
 			'title' => __( 'Content Margin', 'cp' ),
 			'description' => __( ' ', 'cp' ),
@@ -108,18 +105,18 @@
 			'title'  => __( 'Logo Image', 'cp' ),
 			'fields' => array(
 				'certificate_logo' => array(
-					'type'  => 'text',
+					'type'  => 'image',
 					'class' => 'cp-add-image-input',
 					'id'    => 'coursepress-logo-img',
 					'value' => coursepress_get_setting( 'basic_certificate/certificate_logo' ),
 					'data'  => array(
 						'title'     => __( 'Select Logo Image', 'cp' ),
 						'thumbnail' => coursepress_get_setting( 'basic_certificate/certificate_logo_thumbnail_id' ),
+						'name' => 'certificate_logo',
 					),
 				),
 			),
 		);
-
 		$config['certificate_logo_position'] = array(
 			'title'       => __( 'Logo Position', 'cp' ),
 			'description' => __( ' ', 'cp' ),
@@ -195,29 +192,24 @@
 				),
 			),
 		);
-
 		/**
 		 * Fire to allow changing basic certificate options
 		 *
 		 * @since 3.0
 		 */
 		$options = apply_filters( 'coursepress_basic_certificate', $config );
-
 		if ( empty( $options ) ) {
 			$options = array();
 		}
-
 		/**
 		 * print options
 		 */
 		foreach ( $options as $option_key => $option ) {
 			$classes = 'box-inner-content';
 			$option_class = $option_key;
-
 			if ( 'certificate-options' !== $option_key ) {
 				$option_class .= ' box-cert-settings';
 			}
-
 			printf( '<div class="cp-box-content cp-box-%s">', esc_attr( $option_class ) );
 			if ( ! empty( $option['title'] ) || ! empty( $option['description'] ) ) {
 				echo '<div class="box-label-area">';
@@ -263,9 +255,7 @@
 					printf( '<h3 class="label">%s</h3>', $data['label'] );
 				}
 				$data['name'] = $key;
-
 				lib3()->html->element( $data );
-
 				echo '</div>';
 			}
 			/**
@@ -281,7 +271,6 @@
         <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
 	</div>
 </script>
-
 <script type="text/template" id="coursepress-cert-preview">
     <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Close Preview', 'cp' ); ?></button>
     <h2><?php _e( 'Course Certificate Preview', 'cp' ); ?></h2>
