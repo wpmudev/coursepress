@@ -42,8 +42,6 @@
 					media.pause();
 					showError();
 				}
-				//win.console.log('Attempts: ' + attempts);
-				//win.console.log('Allowed attempts: ' + allowedAttempts);
 			};
 			stopIfAttemptsConsumedDeBounced = _.debounce(stopIfAttemptsConsumed, 1000);
 			updateAttempts = function (event) {
@@ -57,7 +55,6 @@
 				request = new CoursePress.Request();
 				request.set(_.extend({'action': 'record_media_response'}, formValues));
 				request.save();
-				//win.console.log('Attempts updated to: ' + attempts);
 			};
 			updateAttemptsDeBounced = _.debounce(updateAttempts, 1000);
 			onTimeUpdate = function (event) {
