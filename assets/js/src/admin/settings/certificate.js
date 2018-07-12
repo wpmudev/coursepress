@@ -34,8 +34,7 @@
                 'change [name]': 'updateModel',
                 'change [name="use_cp_default"]': 'toggleCertificateSettings',
                 'change [name="enabled"]': 'toggleCertificateSettings',
-                'click [name="preview_certificate"]': 'previewCertificate',
-                'change #coursepress-logo-img': 'setLogo',
+                'click [name="preview_certificate"]': 'previewCertificate'
             },
             initialize: function( model ) {
                 this.model = ! model ? {} : model;
@@ -92,6 +91,15 @@
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
                 }
+                if ( ! name ) {
+                    name = sender.attr('name');
+                }
+                if ( undefined === typeof name ) {
+                    name = sender.attr('name');
+                }
+                if ( undefined === typeof name || 'undefined' === name ) {
+                    return;
+                }
                 name = name.split('.');
                 first = name.shift();
                 model = this.model[first];
@@ -134,11 +142,6 @@
                     previewButton.prop('disabled', false);
                 });
                 model.save();
-            },
-            setLogo: function( ev ) {
-var img = this.$(ev.currentTarget);
-                this.model.certificate_logo = img.val();
-                window.console.log(img);
             }
         });
     });

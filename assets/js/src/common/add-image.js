@@ -26,14 +26,15 @@
             },
             initialize: function(input) {
                 this.input = input.hide();
-
                 if ( this.input.data('title') ) {
                     this.data.title = this.input.data('title');
+                }
+                if ( this.input.data('name') ) {
+                    this.data.name = this.input.data('name')+'_id';
                 }
                 if ( this.input.data('size') ) {
                     this.data.size = this.input.data('size');
                 }
-
                 this.thumbnail_id = this.input.attr('thumbnail');
                 this.render();
             },
@@ -47,7 +48,11 @@
                     value = '';
                 }
 
-                data = {name: this.input.attr('name'), thumbnail_id: thumbnail_id, value: value};
+                data = {
+                    name: this.input.attr('name'),
+                    thumbnail_id: thumbnail_id,
+                    value: value
+                };
                 html = _._getTemplate(this.template_id, data);
 
                 this.setElement(html);
