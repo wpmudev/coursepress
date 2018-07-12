@@ -94,7 +94,7 @@
                 if ( ! name ) {
                     name = sender.attr('name');
                 }
-                if ( undefined === typeof name ) {
+                if ( 'undefined' === typeof name ) {
                     name = sender.attr('name');
                 }
                 if ( undefined === typeof name || 'undefined' === name ) {
@@ -103,8 +103,12 @@
                 name = name.split('.');
                 first = name.shift();
                 model = this.model[first];
-                if ( name.length ) {
+
+window.console.log(model);
+
+                if (name.length) {
                     _.each(name, function (t) {
+window.console.log(t);
                         model[t] = value;
                     }, this);
                     this.model[first] = model;
