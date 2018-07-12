@@ -699,7 +699,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 	}
 	$is_course_started = $course->is_course_started();
 	if ( ! $is_course_started ) {
-		return __( 'Course is not available yet', 'cp' );
+		return __( 'Course is not available yet.', 'cp' );
 	}
 	$unit = coursepress_get_unit();
 	if ( is_wp_error( $unit ) ) {

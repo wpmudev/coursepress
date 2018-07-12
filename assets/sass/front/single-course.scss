@@ -10,12 +10,10 @@
                     .course-title {
                         @include font(32, 39, 600 );
                         @include width;
+                        color: $dark_3;
                         @media screen and ( max-width: $width_8 ) {
                             @include font( 20, 24, 600 );
                         }
-                    }
-                    .course-title {
-                        color: $dark_3;
                     }
                 }
                 .course-content-template {

@@ -4,6 +4,17 @@ DEVELOPMENT GUIDE
 -
 ## Working with the branches
 
+CoursePress 3+ has only one development branch `development` and when you
+start work on a ticket you should create new branch from `development` branch
+in this schema:
+
+- `bug/<task name>` for bugs
+- `new/<task name>` for new stuff, improvrments, etc.
+
+When you end and fix a bug, or implement new, please create a pull request,
+paste PR link to asana task and mark asana ticket with `Waiting for Merge`
+tag.
+
 ### Cloning
 
 CoursePress uses submodules, so use the `--recursive` flag if you clone from command line:
@@ -96,3 +107,57 @@ Visite **/docs/class.md**
 
 #### Action and Filter Hooks
 -
+
+# RELEASING #
+
+#### Versioning  
+
+Before running any Grunt tasks to build the releases, please update the
+CoursePress version in `package.json` file - it will be used during build
+process to replace PLUGIN_VERSION placeholder.
+
+
+#### Changelog  
+
+Please update changelog.txt.
+
+#### Languages
+
+CoursePress PRO should have included translation files. Before release build
+you neeed to update `languages/*po` files from:
+
+https://premium.wpmudev.org/translate/projects/cp/
+
+
+#### Grunt Task Runner  
+
+**ALWAYS** use Grunt to build CoursePress release branches. Use the following commands:
+
+*Release* grunt command create directory `release` in plugins directory.
+
+`grunt release:pro` - This builds zip file for release on WPMU DEV.
+
+`grunt build:free` - This builds zip file branch for release on WordPress.org.
+
+### Other
+
+#### Installing NPM and Grunt
+
+The easiest way to get `npm` is to install Node.js from: <http://nodejs.org/>  
+
+Once Node.js is installed you can check that you have `npm` and update it to the latest version.  
+
+    npm -v  
+	npm install -g npm
+
+Next step is to install grunt-cli via npm:  
+
+    npm install -g grunt-cli  
+
+#### Specifying i18 tools location  
+
+If `makepot` is not available in your system path you can set your i18 tools path in a private config.json file (excluded by .gitignore). Create config.json and add the following to it:  
+
+	{
+	    "i18nToolsPath": "/path/to/i18n-tools/"
+	}
