@@ -90,10 +90,13 @@
                 if ( sender.is('[type="checkbox"],[type="radio"]') ) {
                     value = sender.is(':checked') ? value : false;
                 }
+                if( 'undefined' === typeof name ) {
+                    name = sender.attr('name');
+                }
                 name = name.split('.');
                 first = name.shift();
                 model = this.model[first];
-                if ( name.length ) {
+                if (name.length) {
                     _.each(name, function (t) {
                         model[t] = value;
                     }, this);
