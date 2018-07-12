@@ -51,7 +51,13 @@ class CoursePress_Certificate extends CoursePress_Utility {
 				'left' => 0,
 				'right' => 0,
 			),
+			'certificate_logo_position' => array(
+				'x' => 0,
+				'y' => 0,
+				'w' => 0,
+			),
 			'background_image' => '',
+			'certificate_logo' => '',
 			'orientation' => 'L',
 		);
 		return $settings;
