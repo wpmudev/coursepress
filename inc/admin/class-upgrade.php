@@ -150,7 +150,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			if ( isset( $settings['basic_certificate']['logo'] ) ) {
 				$settings['basic_certificate']['certificate_logo_position']      = $settings['basic_certificate']['logo'];
 				$keys = array( 'x', 'y', 'width' );
-				foreach ( $key as $key ) {
+				foreach ( $keys as $key ) {
 					if ( isset( $settings['basic_certificate']['logo'][ $key ] ) ) {
 						$settings['basic_certificate']['certificate_logo_position'][ $key ] = $settings['basic_certificate']['logo'][ $key ];
 					}
