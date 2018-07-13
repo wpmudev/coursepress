@@ -407,18 +407,29 @@ class CoursePress_Certificate extends CoursePress_Utility {
 			$orientation = coursepress_get_array_val( $settings, 'orientation', 'L' );
 			$margins = (array) coursepress_get_array_val( $settings, 'margin' );
 			$filename = $this->get_pdf_file_name( $course_id, $student_id, 'no-base-dir' );
-			$logo = array();
+			/**
+			 * certificate logo
+			 */
+			$logo = array(
+				'file' => coursepress_get_setting( 'certificate_logo', false ),
+				'w' => coursepress_get_setting( 'certificate_logo_position-w', 100 ),
+				'x' => coursepress_get_setting( 'certificate_logo_position-x',  95 ),
+				'y' => coursepress_get_setting( 'certificate_logo_position-y',  15 ),
+			);
+			/**
+			 * text
+			 */
 			$text_color = coursepress_get_setting( 'basic_certificate/text_color', array() );
 			$text_color = coursepress_convert_hex_color_to_rgb( $text_color, array() );
 			/**
 			 * Is certificate overrided?
 			 */
 			if ( $is_override ) {
-				$margins = $course->__get( 'cert_margin', array() );
+				$margins = (array) $course->__get( 'cert_margin', array() );
 				$orientation = $course->__get( 'page_orientation' );
 				$background = $course->__get( 'certificate_background' );
 				$logo_image = $course->__get( 'certificate_logo' );
-				$logo_position = $course->__get( 'certificate_logo_position' );
+				$logo_position = (array) $course->__get( 'certificate_logo_position' );
 				$text_color = $course->__get( 'cert_text_color' );
 				$text_color = coursepress_convert_hex_color_to_rgb( $text_color, array() );
 				$logo = array_merge(
