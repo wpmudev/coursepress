@@ -408,6 +408,15 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 							$args['meta_input']['questions'] = $q;
 						}
 					break;
+
+					case 'input-text':
+					case 'input-textarea':
+						$new_step = $this->create_new_step_with_written_question( $step, array(
+							'placeholder' => ! empty( $step->placeholder_text ) ? $step->placeholder_text : ''
+						) );
+						$args = wp_parse_args( $new_step, $args );
+						break;
+
 					case 'input-form':
 						if ( isset( $step->questions ) ) {
 							$q = array();
@@ -416,31 +425,8 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 								switch ( $q_data['type'] ) {
 									case 'short':
 									case 'long':
-										$new_step = array();
-										$new_step['post_type'] = 'module';
-										$new_step['post_content'] = $step->post_content;
-										$new_step['post_status'] = 'publish';
-										$new_step['post_parent'] = $step->post_parent;
-										$new_step['post_title'] = $step->post_title;
-										$new_step['meta_input'] = array(
-											'allow_retries' => $step->allow_retries,
-											'retry_attempts' => $step->retry_attempts,
-											'minimum_grade' => $step->minimum_grade,
-											'module_type' => 'input-written',
-											'module_page' => $step->module_page,
-											'unit_id' => $step->unit_id,
-											'unit_id' => $step->unit_id,
-											'assessable' => $step->assessable,
-											'show_title' => $step->show_title,
-											'course_id' => $step->course_id,
-										);
-										$q_data['title'] = __( 'Untitled', 'cp' );
 										$q_data['order'] = $q_id;
-										$q_data['type'] = 'written';
-										$q_data['word_limit'] = 0;
-										$q_data['question'] = isset( $q_data['question'] ) ? $q_data['question'] : '';
-										$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
-										$new_step['meta_input']['questions'] = array( (object) $q_data );
+										$new_step = $this->create_new_step_with_written_question( $step, $q_data );
 										wp_insert_post( $new_step );
 										break;
 									default:
@@ -624,5 +610,39 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			update_post_meta( $course->ID, 'coursepress_version', $cp_coursepress->version );
 		}
 		return $result;
+	}
+
+	private function create_new_step_with_written_question( $step, $q_data = array() ) {
+		$new_step = array();
+		$new_step['post_type'] = 'module';
+		$new_step['post_content'] = $step->post_content;
+		$new_step['post_status'] = 'publish';
+		$new_step['post_parent'] = $step->post_parent;
+		$new_step['post_title'] = $step->post_title;
+		$new_step['meta_input'] = array(
+			'allow_retries'  => $step->allow_retries,
+			'retry_attempts' => $step->retry_attempts,
+			'minimum_grade'  => $step->minimum_grade,
+			'module_type'    => 'input-written',
+			'module_page'    => $step->module_page,
+			'unit_id'        => $step->unit_id,
+			'assessable'     => $step->assessable,
+			'show_title'     => $step->show_title,
+			'course_id'      => $step->course_id,
+		);
+		if ( ! isset( $q_data['order'] ) ) {
+			$q_data['order'] = 1;
+		}
+		$q_data['title'] = __( 'Untitled', 'cp' );
+		$q_data['type'] = 'written';
+		$q_data['word_limit'] = 0;
+		if ( ! isset( $q_data['question'] ) ) {
+			$q_data['question'] = $step->post_content;
+		}
+		$q_data['placeholder_text'] = isset( $q_data['placeholder'] ) ? $q_data['placeholder'] : '';
+
+		$new_step['meta_input']['questions'] = array( (object) $q_data );
+
+		return $new_step;
 	}
 }
