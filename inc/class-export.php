@@ -129,7 +129,7 @@ class CoursePress_Export extends CoursePress_Utility {
 			$this->data['units'][ $unit_id ]->meta = $meta;
 		}
 		// Get unit modules.
-		if($this->is_with_modules) {
+		if ( $this->is_with_modules ) {
 			$modules = $unit->get_modules_with_steps( false );
 			foreach ( $modules as $module_id => $module ) {
 				// Get module meta.
@@ -156,9 +156,8 @@ class CoursePress_Export extends CoursePress_Utility {
 					}
 				}
 			}
-		}
-		else {
-			$this->data['units'][ $unit_id ]->steps = $unit->get_steps(false);
+		} else {
+			$this->data['units'][ $unit_id ]->steps = $unit->get_steps( false );
 		}
 	}
 

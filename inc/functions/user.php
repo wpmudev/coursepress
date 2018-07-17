@@ -709,7 +709,7 @@ function coursepress_get_students_ids( $course_id = 0, $page = 0, $per_page = 0 
 	$where = '';
 	if ( ! empty( $course_id ) ) {
 		// Get students of specific course.
-		$where = $wpdb->prepare( " WHERE `course_id` = %d", $course_id );
+		$where = $wpdb->prepare( ' WHERE `course_id` = %d', $course_id );
 	}
 
 	// Get students.

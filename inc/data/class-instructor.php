@@ -74,7 +74,7 @@ class CoursePress_Data_Instructor {
 	public static function verify_invitation_code( $course_id, $code ) {
 		$invitation_data = (array) get_post_meta( $course_id, 'instructor_invites', true );
 
-		return !empty( $invitation_data[ $code ] ) ? $invitation_data[ $code ] : false;
+		return ! empty( $invitation_data[ $code ] ) ? $invitation_data[ $code ] : false;
 	}
 
 	public static function add_from_invitation( $course_id, $instructor_id, $invitation_code ) {
@@ -122,7 +122,7 @@ class CoursePress_Data_Instructor {
 	 **/
 	public static function instructor_verification() {
 		$course_invite = self::is_course_invite();
-		if ( !$course_invite ) {
+		if ( ! $course_invite ) {
 			return;
 		}
 
@@ -144,7 +144,7 @@ class CoursePress_Data_Instructor {
 			);
 		} elseif ( $is_verified ) {
 			$user = get_user_by( 'email', $is_verified['email'] );
-			$user_id = !empty( $user->ID) ? $user->ID : '';
+			$user_id = ! empty( $user->ID ) ? $user->ID : '';
 
 			$is_added = self::add_from_invitation( $course_invite['course_id'], $user_id, $course_invite['code'] );
 
@@ -155,7 +155,7 @@ class CoursePress_Data_Instructor {
 			} else {
 				$messages = apply_filters( 'coursepress_instructor_invitation_message_wrong_email',
 					array(
-						esc_html__( 'This invitation link is not associated with your email address.', 'cp' ) ,
+						esc_html__( 'This invitation link is not associated with your email address.', 'cp' ),
 						esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ),
 					)
 				);

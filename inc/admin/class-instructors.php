@@ -48,7 +48,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		global $wpdb;
 
 		return coursepress_user_meta_prefix_required()
-			? sprintf('%s%s', $wpdb->prefix, $meta_key)
+			? sprintf( '%s%s', $wpdb->prefix, $meta_key )
 			: $meta_key;
 	}
 
@@ -77,9 +77,9 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			'offset' => ( $current_page - 1 ) * $per_page,
 			'meta_query' => array(
 				array(
-					'key'   => $this->get_meta_key_prefix('role_ins'),
-					'value' => 'instructor'
-				)
+					'key'   => $this->get_meta_key_prefix( 'role_ins' ),
+					'value' => 'instructor',
+				),
 			),
 			'fields' => 'all_with_meta',
 			'search' => $usersearch,
@@ -89,8 +89,8 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			// Show only students of current course
 			$course_id = (int) $_GET['course_id'];
 			$args['meta_query'][] = array(
-				'key'   => $this->get_meta_key_prefix('course_' . $course_id),
-				'value' => $course_id
+				'key'   => $this->get_meta_key_prefix( 'course_' . $course_id ),
+				'value' => $course_id,
 			);
 		}
 
@@ -143,7 +143,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$count = get_user_meta( $instructor_id, 'cp_instructor_course_count', true );
 		if ( ! $count || $refresh ) {
 			global $wpdb;
-			$meta_key_keyword = $this->get_meta_key_prefix('course_%%');
+			$meta_key_keyword = $this->get_meta_key_prefix( 'course_%%' );
 
 			$meta_keys = $wpdb->get_results(
 				$wpdb->prepare( "

@@ -232,7 +232,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			return $forum_id;
 		}
 		// Check capabilities.
-		if( ! empty( $forum_id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $forum_id ) ) {
+		if ( ! empty( $forum_id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $forum_id ) ) {
 			// If user is no allowed to updated dicussion we need to check if user have course discussion access.
 			if ( ! empty( $_POST['course_id'] ) && ! CoursePress_Data_Capabilities::can_add_discussion( (int) $_POST['course_id'] ) ) {
 				return $forum_id;

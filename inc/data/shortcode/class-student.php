@@ -174,22 +174,22 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 										$answers = $attributes['answers'];
 										$selected = (array) $attributes['answers_selected'];
 										$display = '';
-										if ( empty( $response ) ) {
-											$response_display = '&ndash;';
-										} else {
-											foreach ( $answers as $key => $answer ) {
-												$the_answer = in_array( $key, $selected );
-												$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
-												if ( 'input-radio' === $attributes['module_type'] ) {
-													$student_answer = $response_display == $key;
-												}
-												if ( $student_answer ) {
-													$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
-													$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
-												}
-											}
-											$response_display = $display;
+								if ( empty( $response ) ) {
+									$response_display = '&ndash;';
+								} else {
+									foreach ( $answers as $key => $answer ) {
+										$the_answer = in_array( $key, $selected );
+										$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+										if ( 'input-radio' === $attributes['module_type'] ) {
+											$student_answer = $response_display == $key;
 										}
+										if ( $student_answer ) {
+											$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
+											$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
+										}
+									}
+									$response_display = $display;
+								}
 								break;
 							case 'input-upload':
 								if ( $response ) {
@@ -479,11 +479,11 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 									if ( 'multiple' === $question['type'] && ! empty( $response_display[ $q_index ] ) ) {
 										$answers = $response_display[ $q_index ];
 										foreach ( $answers as $a_index => $answer ) {
-												if ( $answer === $options['checked'][ $a_index ] ) {
-													$add = true;
-												}
+											if ( $answer === $options['checked'][ $a_index ] ) {
+												$add = true;
+											}
 										}
-									} elseif( in_array( $question['type'], array( 'single', 'select' ), true ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
+									} elseif ( in_array( $question['type'], array( 'single', 'select' ), true ) && isset( $response_display[ $q_index ] ) && ! is_null( $response_display[ $q_index ] ) ) {
 										if ( $options['checked'][ $response_display[ $q_index ] ] ) {
 											$add = true;
 										}
@@ -494,9 +494,9 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 								}
 								break;
 							case 'input-written':
-									if ( ! empty( $response_display ) && $auto_grade ) {
-										$module_done++;
-									}
+								if ( ! empty( $response_display ) && $auto_grade ) {
+									$module_done++;
+								}
 								break;
 						}
 					}

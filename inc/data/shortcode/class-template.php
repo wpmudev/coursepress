@@ -58,7 +58,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			add_shortcode( 'course_signup', array( $this, 'course_signup' ) );
 		}
 		add_filter( 'term_link', array( $this, 'term_link' ), 10, 3 );
-		add_action('coursepress_after_signup_email', array( 'CoursePress_Data_Helper_UI', 'password_strength_meter') );
+		add_action( 'coursepress_after_signup_email', array( 'CoursePress_Data_Helper_UI', 'password_strength_meter' ) );
 	}
 
 	/**
@@ -92,8 +92,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'meta_key' => 'course_start_date',
 			'orderby' => 'meta_value_num',
 			'order' => 'ASC',
-            'suppress_filters' => true,
-            'fields' => 'ids',
+			'suppress_filters' => true,
+			'fields' => 'ids',
 		);
 		// Add category filter
 		if ( $category && 'all' !== $category ) {
@@ -109,12 +109,12 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			$query = CoursePress_Data_Course::current_and_upcoming_courses( $post_args );
 		} else {
 			$query = new WP_Query( $post_args );
-        }
+		}
 		$content = '';
 		$template = trim( '[course_list_box course_id="%d"]' );
 		$template = apply_filters( 'coursepress_template_course_archive', $template, $atts );
-        foreach ( $query->posts as $post_id ) {
-            $shortcode = sprintf( $template, $post_id );
+		foreach ( $query->posts as $post_id ) {
+			$shortcode = sprintf( $template, $post_id );
 			$content .= do_shortcode( $shortcode );
 		}
 		// Pager.
@@ -195,8 +195,8 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			'override_button_link' => '',
 			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
-            'show_withdraw_link' => false,
-            'class' => '',
+			'show_withdraw_link' => false,
+			'class' => '',
 		), $atts, 'course_list_box' );
 		$course_id = (int) $atts['course_id'];
 		$class = sanitize_text_field( $atts['class'] );
@@ -507,7 +507,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		switch ( $type ) {
 			case 'section':
 				if ( $is_enrolled ) {
-					$student->add_visited_step(  $course_id, $unit_id, $page );
+					$student->add_visited_step( $course_id, $unit_id, $page );
 				}
 				$breadcrumb_trail .= '<span class="breadcrumb-leaf">' . $bcs . '<span class="breadcrumb-course-unit-section crumb end">' . esc_html( $page_info['title'] ) . '</span></span>';
 				$content = '<div class="focus-wrapper">';
@@ -548,13 +548,13 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				}
 				$content .= '</div>'; // .focus-wrapper
 				$template = $content;
-                break;
-                /**
-                 * module
-                 */
+				break;
+				/**
+				 * module
+				 */
 			case 'module':
 				if ( $is_enrolled ) {
-					$student->add_visited_step(  $course_id, $unit_id, $page );
+					$student->add_visited_step( $course_id, $unit_id, $page );
 				}
 				// Title retrieved below
 				$breadcrumb_trail .= $bcs . '<a href="' . esc_url( $u_link_url ) . '/page/' . $page . '" class="breadcrumb-course-unit-section crumb" data-id="' . $page . '">' . $page_info['title'] . '</a>';
@@ -785,18 +785,18 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 		$module_id = (int) $atts['module_id'];
 		$student_id = (int) $atts['student_id'];
 		$echo = coursepress_is_true( $atts['echo'] );
-        if ( empty( $course_id ) ) {
-            return '';
-        }
-        if ( empty( $unit_id ) ) {
-            return '';
-        }
-        if ( empty( $module_id ) ) {
-            return '';
-        }
-        if ( empty( $student_id ) ) {
-            return '';
-        }
+		if ( empty( $course_id ) ) {
+			return '';
+		}
+		if ( empty( $unit_id ) ) {
+			return '';
+		}
+		if ( empty( $module_id ) ) {
+			return '';
+		}
+		if ( empty( $student_id ) ) {
+			return '';
+		}
 		$template = CoursePress_Data_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id );
 		$template = apply_filters( 'coursepress_template_quiz_results_shortcode', $template, $atts );
 		$content = do_shortcode( $template );
@@ -815,10 +815,10 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	 *
 	 * @return string Shortcode output.
 	 */
-    public function cp_pages( $atts ) {
-        ob_start();
-        $atts = shortcode_atts( array( 'page' => '' ), $atts );
-        switch ( $atts['page'] ) {
+	public function cp_pages( $atts ) {
+		ob_start();
+		$atts = shortcode_atts( array( 'page' => '' ), $atts );
+		switch ( $atts['page'] ) {
 			case 'enrollment_process':
 				$args = array( 'course_id' => coursepress_get_course_id() );
 				$shortcode = new CoursePress_Data_Shortcode_Student();
@@ -844,10 +844,10 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 				break;
 			default:
 				_e( 'Page cannot be found', 'cp' );
-        }
-        $content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
-        return $content;
-    }
+		}
+		$content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
+		return $content;
+	}
 
 	/**
 	 * CoursePress course signup form and login form.
@@ -1106,14 +1106,14 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 	/**
 	 * Helper function to load registration process/validation if user is not logged-in.
 	 **/
-    public function process_registration_form() {
-        if ( ! is_user_logged_in() ) {
-            $user_login = new CoursePress_UserLogin();
-            $user_login->process_registration_form();
+	public function process_registration_form() {
+		if ( ! is_user_logged_in() ) {
+			$user_login = new CoursePress_UserLogin();
+			$user_login->process_registration_form();
 						$this->form_message       = $user_login->form_message;
 						$this->form_message_class = $user_login->form_message_class;
-        }
-    }
+		}
+	}
 
 	/**
 	 * CoursePress course signup.
@@ -1129,7 +1129,7 @@ class CoursePress_Data_Shortcode_Template extends CoursePress_Utility {
 			return __( 'You are already logged in.', 'cp' );
 		}
 		$allowed = array( 'signup', 'login' );
-		$atts =	shortcode_atts( array(
+		$atts = shortcode_atts( array(
 			'failed_login_class' => 'red',
 			'failed_login_text' => __( 'Invalid username or password.', 'cp' ),
 			'login_tag' => 'h3',

@@ -14,16 +14,16 @@ if ( ! function_exists( 'coursepress_is_admin' ) ) :
 	function coursepress_is_admin() {
 		global $coursepress_admin_page;
 
-		if ( ! $coursepress_admin_page instanceof CoursePress_Admin_Page )
-			return false;
+		if ( ! $coursepress_admin_page instanceof CoursePress_Admin_Page ) {
+			return false; }
 
 		$screen_id = get_current_screen()->id;
 
 		$pttrn = '%toplevel_page_|coursepress-pro_page_|coursepress-base_page_|coursepress_page%';
 		$id = preg_replace( $pttrn, '', $screen_id );
 
-		if ( in_array( $screen_id, $coursepress_admin_page->__get( 'screens' ) ) )
-			return $id;
+		if ( in_array( $screen_id, $coursepress_admin_page->__get( 'screens' ) ) ) {
+			return $id; }
 
 		return false;
 	}
@@ -66,8 +66,8 @@ if ( ! function_exists( 'coursepress_get_categories' ) ) :
 		$cats = array();
 
 		if ( ! empty( $terms ) ) {
-			foreach ( $terms as $term )
-				$cats[ $term->term_id ] = $term->name;
+			foreach ( $terms as $term ) {
+				$cats[ $term->term_id ] = $term->name; }
 		}
 
 		return $cats;

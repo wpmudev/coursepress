@@ -14,7 +14,7 @@ class CoursePress_Step_InputText extends CoursePress_Step_Written {
 				'question' => strip_tags( $question ),
 				'placeholder_text' => $this->__get( 'placeholder_text' ),
 				'word_limit' => 0,
-			)
+			),
 		);
 		$this->__set( 'questions', $questions );
 		$this->__set( 'module_type', 'input-written' );

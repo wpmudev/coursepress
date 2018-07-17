@@ -34,8 +34,8 @@ class CoursePress_Step_Checkbox extends CoursePress_Step_Quiz {
 				'options' => array(
 					'answers' => $answers,
 					'checked' => $checked,
-				)
-			)
+				),
+			),
 		);
 	}
 }

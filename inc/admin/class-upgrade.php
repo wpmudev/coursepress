@@ -412,7 +412,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 					case 'input-text':
 					case 'input-textarea':
 						$new_step = $this->create_new_step_with_written_question( $step, array(
-							'placeholder' => ! empty( $step->placeholder_text ) ? $step->placeholder_text : ''
+							'placeholder' => ! empty( $step->placeholder_text ) ? $step->placeholder_text : '',
 						) );
 						$args = wp_parse_args( $new_step, $args );
 						break;

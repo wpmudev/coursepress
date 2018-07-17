@@ -124,7 +124,7 @@ class CoursePress_Data_Module {
 			'mode' => $input ? 'input' : 'output',
 		);
 
-		if ( 'section' !==$module_type ) {
+		if ( 'section' !== $module_type ) {
 			$attributes = array_merge( $attributes, array(
 				'duration' => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
 				'show_title' => coursepress_is_true( $meta['show_title'][0] ),

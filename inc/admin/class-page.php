@@ -350,7 +350,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 					'invite' => array(
 						'remove' => __( 'Please confirm that you want to remove this invite from this course.', 'cp' ),
-					)
+					),
 				),
 				'course' => array(
 					'students' => array(

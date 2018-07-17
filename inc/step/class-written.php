@@ -8,7 +8,7 @@
 class CoursePress_Step_Written extends CoursePress_Step {
 	protected $type = 'written';
 
-	protected function  get_keys() {
+	protected function get_keys() {
 		$keys = parent::get_keys();
 		array_push( $keys, 'questions', 'placeholder_text', 'options' );
 

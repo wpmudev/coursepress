@@ -529,7 +529,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$orientation = $request->meta_page_orientation;
 			$text_color = $request->meta_cert_text_color;
 			$logo_image = $request->meta_certificate_logo;
-			$logo_positions = !empty( $request->meta_certificate_logo_position ) ? get_object_vars( $request->meta_certificate_logo_position ) : array();
+			$logo_positions = ! empty( $request->meta_certificate_logo_position ) ? get_object_vars( $request->meta_certificate_logo_position ) : array();
 		} else {
 			$content = $request->content;
 			$background = isset( $request->background_image )? $request->background_image : false;
@@ -537,7 +537,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$text_color = $request->cert_text_color;
 			$orientation = $request->orientation;
 			$logo_image = isset( $request->certificate_logo )?  $request->certificate_logo : false;
-			$logo_positions = !empty( $request->certificate_logo_position ) ? get_object_vars( $request->certificate_logo_position ) : array();
+			$logo_positions = ! empty( $request->certificate_logo_position ) ? get_object_vars( $request->certificate_logo_position ) : array();
 		}
 		$logo = array_merge(
 			array( 'file' => $logo_image ),

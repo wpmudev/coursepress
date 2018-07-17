@@ -130,7 +130,7 @@ class CoursePress_Discussion extends CoursePress_Utility {
 			'must_log_in' => '',
 			'logged_in_as' => '',
 			'class_submit' => 'submit cp-comment-submit',
-			'comment_field' => $this->create_html( 'p', array( 'class' => 'comment-form-comment' ), $comment_field )
+			'comment_field' => $this->create_html( 'p', array( 'class' => 'comment-form-comment' ), $comment_field ),
 			                   . $redirect_to
 		);
 

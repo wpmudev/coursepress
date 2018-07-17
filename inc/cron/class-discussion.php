@@ -73,7 +73,6 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		$comments[] = $comment_id;
 		update_option( $this->option_name, $comments, false );
 
-
 		$this->schedule();
 	}
 

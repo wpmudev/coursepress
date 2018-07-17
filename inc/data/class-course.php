@@ -1650,12 +1650,12 @@ final class CoursePress_Data_Course {
 	}
 
 	private static function uasort_modules( $a, $b ) {
-	 		if ( $a->module_order == $b->module_order ) {
-	 			return 0;
-	 		} elseif ( $a->module_order > $b->module_order ) {
-	 			return 1;
-	 		} else {
-	 			return -1;
-	 		}
-	 	}
+		if ( $a->module_order == $b->module_order ) {
+			return 0;
+		} elseif ( $a->module_order > $b->module_order ) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
 }

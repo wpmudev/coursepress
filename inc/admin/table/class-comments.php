@@ -31,18 +31,18 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		global $post_id, $comment_status, $search, $comment_type, $coursepress_core;
 
 		$course_id = ( isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
-		if ( !empty( $course_id ) ) {
+		if ( ! empty( $course_id ) ) {
 
 			$discussions = get_posts( array(
 				'fields' => 'ids',
 				'meta_query' => array(
-					array(
+				array(
 						'key' => 'course_id',
 						'value' => $course_id,
 					),
 				),
 				'post_type'	=> $coursepress_core->step_post_type,
-				'posts_per_page' => -1
+				'posts_per_page' => -1,
 			));
 			if ( empty( $discussions ) ) {
 				return;
@@ -51,7 +51,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 			$discussions = get_posts( array(
 				'fields' => 'ids',
 				'post_type'	=> $coursepress_core->step_post_type,
-				'posts_per_page' => -1
+				'posts_per_page' => -1,
 			));
 			if ( empty( $discussions ) ) {
 				return;

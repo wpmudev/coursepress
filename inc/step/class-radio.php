@@ -32,8 +32,8 @@ class CoursePress_Step_Radio extends CoursePress_Step_Quiz {
 				'options' => array(
 					'answers' => $answers,
 					'checked' => $checked,
-				)
-			)
+				),
+			),
 		);
 	}
 }

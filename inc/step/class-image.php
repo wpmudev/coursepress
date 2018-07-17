@@ -48,7 +48,7 @@ class CoursePress_Step_Image extends CoursePress_Step {
 					$caption = coursepress_create_html(
 						'p',
 						array(
-							'class' => 'image-caption image-description'
+							'class' => 'image-caption image-description',
 						),
 						$caption
 					);

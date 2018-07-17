@@ -179,7 +179,7 @@ class CoursePress_Extension_MarketPress {
 		$course = get_post( $course_id );
 		if ( $course ) {
 			foreach ( $course as $key => $value ) {
-				if ( 'post_type' !==$key && 'ID' !==$key ) {
+				if ( 'post_type' !== $key && 'ID' !== $key ) {
 					$product->{$key} = $value;
 				}
 			}
@@ -368,7 +368,7 @@ class CoursePress_Extension_MarketPress {
 			return $content;
 		}
 		// Change button only when when really need to do it.
-		if ( 'enroll' !==$button_option ) {
+		if ( 'enroll' !== $button_option ) {
 			return $content;
 		}
 		// If already purchased, then return too

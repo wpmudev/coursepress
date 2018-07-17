@@ -28,8 +28,8 @@ class CoursePress_Step_FileDownload extends CoursePress_Step {
 			}
 			$download = coursepress_create_html(
 				'a',
-                array(
-                    'class' => 'cp-download',
+				array(
+					'class' => 'cp-download',
 					'href' => $file_url,
 					'alt' => basename( $file_url ),
 				),

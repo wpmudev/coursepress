@@ -304,10 +304,10 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					exit;
 				}
 				$this->add_breadcrumb( $coursepress_course->get_the_title(), $coursepress_course->get_permalink() );
-                $this->add_breadcrumb( __( 'Forum', 'cp' ), $coursepress_course->get_discussion_url() );
-                if ( 'forum-new' === $type ) {
-                    $this->add_breadcrumb( __( 'Start a new Discussion', 'cp' ) );
-                }
+				$this->add_breadcrumb( __( 'Forum', 'cp' ), $coursepress_course->get_discussion_url() );
+				if ( 'forum-new' === $type ) {
+					$this->add_breadcrumb( __( 'Start a new Discussion', 'cp' ) );
+				}
 				break;
 
 			case 'single-course':

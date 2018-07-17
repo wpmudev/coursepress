@@ -303,7 +303,7 @@ class CoursePress_Extension_WooCommerce {
 		 * check post type
 		 */
 		$post_type = get_post_type( $product_id );
-		if ( 'product' !==$post_type ) {
+		if ( 'product' !== $post_type ) {
 			return;
 		}
 		/**
@@ -613,7 +613,7 @@ class CoursePress_Extension_WooCommerce {
 			the_post();
 			$product_id = get_the_ID();
 			$product_status = get_post_meta( $product_id, '_stock_status', true );
-			if ( 'instock' !==$product_status ) {
+			if ( 'instock' !== $product_status ) {
 				continue;
 			}
 			$course_id = get_post_meta( $product_id, 'cp_course_id', true );
@@ -728,7 +728,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( 'product' !==$post->post_type ) {
+		if ( 'product' !== $post->post_type ) {
 			return $url;
 		}
 		/**
@@ -758,7 +758,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		/* If its not a product, exit
 		 */
-		if ( ! $post || 'product' !==$post->post_type ) {
+		if ( ! $post || 'product' !== $post->post_type ) {
 			return;
 		}
 		/**
