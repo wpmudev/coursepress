@@ -628,7 +628,9 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			'show_title'     => $step->show_title,
 			'course_id'      => $step->course_id,
 		);
-		$q_data['order'] = $q_data;
+		if ( ! isset( $q_data['order'] ) ) {
+			$q_data['order'] = 1;
+		}
 		$q_data['title'] = __( 'Untitled', 'cp' );
 		$q_data['type'] = 'written';
 		$q_data['word_limit'] = 0;
