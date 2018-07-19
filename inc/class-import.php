@@ -132,12 +132,12 @@ class CoursePress_Import extends CoursePress_Utility {
 						}
 					}
 				}
+				/**
+				 * revert course ID
+				 */
+				$this->course->ID = $this->course_imported_id;
+				return;
 			}
-			/**
-			 * revert course ID
-			 */
-			$this->course->ID = $this->course_imported_id;
-			return;
 		}
 		/**
 		 * if not replace, just insert this course.
