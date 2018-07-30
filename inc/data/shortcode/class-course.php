@@ -300,7 +300,7 @@ class CoursePress_Data_Shortcode_Course extends CoursePress_Utility {
 		if ( apply_filters( 'coursepress_schema', false, 'description' ) ) {
 			$args['itemprop'] = 'description';
 		}
-		$text = $course->post_excerpt;
+		$text = do_shortcode( $course->post_excerpt );
 		if ( 0 < $atts['length'] ) {
 			$text = wp_trim_words( $text, $atts['length'] );
 		}
