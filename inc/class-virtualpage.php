@@ -68,6 +68,36 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		 * check course, unit, module
 		 */
 		add_action( 'wp', array( $this, 'check_exists' ) );
+		/**
+		 * add title
+		 */
+		add_filter( 'document_title_parts', array( $this, 'add_title_parts' ) );
+	}
+
+	/**
+	 * Add title parts
+	 *
+	 * @since 3.0.0
+	 */
+	public function add_title_parts( $title ) {
+		global $wp_query;
+		$type = $this->__get( 'type' );
+		switch ( $type ) {
+			case 'instructor':
+				$instructor = $wp_query->get( 'instructor' );
+				$user = get_user_by( 'login', $instructor );
+				if ( empty( $user ) ) {
+					$user = CoursePress_Data_Instructor::instructor_by_hash( $instructor );
+				}
+				if ( $user ) {
+					$coursepress_instructor = new CoursePress_User( $user );
+					if ( is_a( $coursepress_instructor, 'CoursePress_User' ) ) {
+						$title['title'] = $coursepress_instructor->display_name;
+					}
+				}
+				break;
+		}
+		return $title;
 	}
 
 	/**
@@ -174,7 +204,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 	private function get_template( $type ) {
 		global $cp_coursepress, $coursepress_instructor, $wp_query, $coursepress_course, $coursepress_unit,
-			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now;
+			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now, $wp_query;
 		$course = false;
 		if ( $this->__get( 'course' ) || 'single-course' === $type ) {
 			$coursepress_course = coursepress_get_course();
@@ -195,6 +225,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				}
 				if ( $user ) {
 					$coursepress_instructor = new CoursePress_User( $user );
+					if ( is_a( $coursepress_instructor, 'CoursePress_User' ) ) {
+						$wp_query->is_404 = false;
+					}
 				}
 				break;
 			case 'unit':
