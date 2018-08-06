@@ -442,10 +442,11 @@
         font-size: 26px;
       }
       .cp-answer-box {
-        position: relative;
-        background-color: #F4F4F4;
-        padding: 8px;
-        font-style: italic;
+          position: relative;
+          background-color: #F4F4F4;
+          padding: 8px;
+          font-style: italic;
+          white-space: pre;
       }
       .button, .button-primary {
           font-size: 12px;
