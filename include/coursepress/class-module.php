@@ -509,7 +509,7 @@ class CoursePress_Module {
 					'type' => $type,
 					'is_reload' => $reload,
 				);
-				$json_data = array( 'success' => true, 'data' => $json_data );
+				$json_data = apply_filters( 'coursepress_module_submit_atts',  array( 'success' => true, 'data' => $json_data ) );
 
 				header('Content-type: text/plain');
 				echo json_encode( $json_data );
