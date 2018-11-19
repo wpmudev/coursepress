@@ -195,10 +195,14 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		return $post_id;
 	}
 
-	private function add_breadcrumb( $title, $url ) {
+	private function add_breadcrumb( $title, $url = null ) {
 		$breadcrumbs = $this->__get( 'breadcrumb' );
-		$attr = array( 'href' => esc_url( $url ) );
-		$breadcrumbs[] = $this->create_html( 'a', $attr, $title );
+		if ( empty( $url ) ) {
+			$breadcrumbs[] = $this->create_html( 'span', array(), $title );
+		} else {
+			$attr = array( 'href' => esc_url( $url ) );
+			$breadcrumbs[] = $this->create_html( 'a', $attr, $title );
+		}
 		$this->__set( 'breadcrumb', $breadcrumbs );
 	}
 
