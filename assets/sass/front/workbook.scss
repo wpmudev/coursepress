@@ -37,6 +37,17 @@
                 }
             }
         }
+        .row-module {
+            td {
+                font-weight: bold;
+            }
+        }
+        .row-module,
+        .row-step {
+            td {
+                background-color: $white;
+            }
+        }
         .row-elements {
             td {
                 @include font( 16, 24, 400 );
@@ -54,6 +65,9 @@
             border: 1px solid $grey_12;
             &.separator {
                 border: 0;
+                td {
+                    background-color: $white;
+                }
             }
         }
     }
