@@ -3,19 +3,16 @@
 	<div class="course-discussion-page course-discussion-content">
 <?php
 if ( empty( $discussion ) ) {
-    printf(
-        '<h3 class="title course-discussion-title">%s</h3>',
-        esc_html__( 'Missing discussion', 'cp' )
-    );
-    printf(
-        '<p class="message error">%s</p>',
-        esc_html__( 'Something went wrong, please back to previous page.', 'cp' )
-    );
+	printf(
+		'<h3 class="title course-discussion-title">%s</h3>',
+		esc_html__( 'Missing discussion', 'cp' )
+	);
+	printf(
+		'<p class="message error">%s</p>',
+		esc_html__( 'Something went wrong, please back to previous page.', 'cp' )
+	);
 } else {
-?>
-        <h3 class="title course-discussion-title"><?php esc_html_e( 'Discussion', 'cp' ); ?>: <?php echo esc_html( $discussion->post_title ); ?></h3>
-<?php echo $discussion->post_content; ?>
-<?php
+	echo $discussion->post_content;
 }
 ?>
     </div>

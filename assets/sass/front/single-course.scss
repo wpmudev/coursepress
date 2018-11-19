@@ -15,6 +15,13 @@
                             @include font( 20, 24, 600 );
                         }
                     }
+                    .cp-page-title-discussion {
+                        margin-bottom: 0;
+                    }
+                    .cp-page-meta {
+                        @include width;
+                        margin-top: 0;
+                    }
                 }
                 .course-content-template {
                     @include width_2;
