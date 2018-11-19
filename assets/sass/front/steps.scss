@@ -199,13 +199,12 @@
                 right: 0;
             }
         }
-        .course-step-nav {
+        .course-step-nav-top {
+            text-align: right;
             display: block;
             position: absolute;
             right: 30px;
             top: 30px;
-            text-align: right;
-            z-index: 1;
             @media screen and ( max-width: $width_8 ) {
                 .previous-button,
                 .button-next {
@@ -227,6 +226,25 @@
                     }
                 }
             }
+        }
+        .course-step-nav-bottom {
+            display: none;
+            @media screen and ( max-width: $width_8 ) {
+                display: flex;
+                justify-content: space-between;
+                align-items: stretch;
+                .previous-button,
+                .button-next {
+                    background-color: $dark_3;
+                    color: $white;
+                    padding: 11px 29px;
+                    line-height: 1;
+                    @include radius( 3px );
+                }
+            }
+        }
+        .course-step-nav {
+            z-index: 1;
             a, button {
                 @include reset;
                 display: inline;

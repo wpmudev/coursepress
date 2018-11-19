@@ -839,6 +839,7 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 	);
 
 	$submit = '';
+	$is_answerable = false;
 
 	if ( $has_access['access'] ) {
 		$label = coursepress_create_html(
@@ -894,17 +895,27 @@ function coursepress_get_current_course_cycle( $args = array() ) {
 			$submit
 		);
 	}
-	$navigation = coursepress_create_html(
-		$args['navigation_tag'],
-		array( 'class' => 'course-step-nav' ),
-		$previous . $args['navigation_separator'] . $next
-	);
 	/**
 	 * Navigation position
 	 */
-	if ( 'top' === $args['navigation'] ) {
+	if ( preg_match( '/^(top|both)$/', $args['navigation'] )  ) {
+		$navigation = coursepress_create_html(
+			$args['navigation_tag'],
+			array( 'class' => 'course-step-nav course-step-nav-top' ),
+			$previous . $args['navigation_separator'] . $next
+		);
 		$template = $navigation.$template;
-	} else {
+	}
+	if (
+		preg_match( '/^(bottom|both)$/', $args['navigation'] )
+		&& empty( $submit )
+		&& ! $is_answerable
+	) {
+		$navigation = coursepress_create_html(
+			$args['navigation_tag'],
+			array( 'class' => 'course-step-nav course-step-nav-bottom' ),
+			$previous . $args['navigation_separator'] . $next
+		);
 		$template .= $navigation;
 	}
 	$template = coursepress_create_html(

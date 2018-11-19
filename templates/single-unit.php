@@ -36,7 +36,7 @@ coursepress_breadcrumb();
                     <div class="course-content">
 <?php
 $args = array(
-	'navigation' => 'top',
+	'navigation' => 'both',
 	'container_next' => 'span',
 	'container_previous' => 'span',
 	'navigation_separator' => '',
