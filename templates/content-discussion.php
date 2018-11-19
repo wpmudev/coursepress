@@ -41,7 +41,7 @@ else :
 		} else {
 			$c = sprintf( '<span>%d</span>', $comments_count->approved );
 			printf(
-				_n( '%s Responce', '%s Responses', $comments_count->approved, 'coursepress' ),
+				_n( '%s Response', '%s Responses', $comments_count->approved, 'coursepress' ),
 				$c
 			);
 		}
