@@ -22,6 +22,7 @@
                     .cp-page-meta {
                         @include width;
                         margin-top: 0;
+                        @include padding_width_7;
                     }
                 }
                 .course-content-template {
