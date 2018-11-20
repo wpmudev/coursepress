@@ -55,6 +55,15 @@
             });
             UnitProgress = new UnitProgress();
         });
+
+        /**
+         * Show full notification
+         */
+        $('.cp-notification-more-link' ).on( 'click', function() {
+            $('.cp-screen', $(this).closest('.notification-content') ).removeClass( 'cp-screen' );
+            $(this).detach();
+            return false;
+        });
     });
 
 

@@ -100,6 +100,14 @@
                     @media screen and ( max-width: $width_7 ) {
                         @include font( 16, 24, 400 );
                     }
+                    .cp-notification-more-link {
+                        margin-top: 10px;
+                        @include font( 12, 19, 600 );
+                        &:before {
+                            @include font( 16, 16, 400 );
+                            @include icon( '\f107' );
+                        }
+                    }
                 }
             }
         }

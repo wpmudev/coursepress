@@ -57,11 +57,20 @@ foreach ( $notifications as $notification ) {
 	}
 	$author = sprintf( '<strong>%s</strong>', sprintf( __( 'By<span>: %s</span>', 'cp' ), CoursePress_Utility::get_user_name( $notification->post_author ) ) );
 
+	$content = CoursePress_Utility::filter_content( $notification->post_content );
+	$parts = explode( '<!--more-->', $content );
+	if ( 1 < sizeof( $parts ) ) {
+		$content = array_shift( $parts );
+		$content .= sprintf( '<a href="#" class="cp-notification-more-link cp-mobile">%s</a>', __( 'Show more', 'cp' ) );
+		$content .= '<div class="cp-screen">';
+		$content .= implode( ' ', $parts );
+		$content .= '</div>';
+	}
 ?>
 <li>
 <h3 class="notification-title"><?php echo esc_html( $notification->post_title ); ?></h3>
 <div class="notification-meta"><?php echo $author; ?> | <?php echo date_i18n( $time_format, $timestamp ); ?></div>
-<div class="notification-content"><?php echo CoursePress_Utility::filter_content( $notification->post_content ); ?></div>
+<div class="notification-content"><?php echo $content; ?></div>
 </li>
 <?php } ?>
                     </ul>
