@@ -194,9 +194,9 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * MarketPress plugin status
 		 */
-		$MarketPress = $cp_coursepress->get_class( 'CoursePress_Extension_MarketPress' );
-		$settings['mp_is_instaled'] = $MarketPress->installed();
-		$settings['mp_is_activated'] = $MarketPress->activated();
+		$market_press = $cp_coursepress->get_class( 'CoursePress_Extension_MarketPress' );
+		$settings['mp_is_instaled'] = $market_press->installed();
+		$settings['mp_is_activated'] = $market_press->activated();
 		return $settings;
 	}
 
@@ -364,9 +364,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	public function get_media( $width = 220, $height = 220 ) {
-		$media_type = coursepress_get_setting( 'course/listing_media_type', 'image' );
+		$media_type = coursepress_get_setting( 'course/listing_media_priority', 'image' );
 		if ( is_singular() ) {
-			$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
+			$media_type = coursepress_get_setting( 'course/details_media_priority', 'image' );
 		}
 		$image = $this->get_feature_image( array( $width, $height ) );
 		if ( ( 'image' === $media_type || 'default' === $media_type ) && ! empty( $image ) ) {
@@ -535,9 +535,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function is_course_started() {
 		$time_now = $this->date_time_now();
-		$openEnded = $this->__get( 'course_open_ended' );
+		$open_ended = $this->__get( 'course_open_ended' );
 		$start_date = $this->__get( 'course_start_date_timestamp' );
-		if ( empty( $openEnded )
+		if ( empty( $open_ended )
 			&& $start_date > 0
 			&& $start_date > $time_now ) {
 			return false;
@@ -555,9 +555,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function has_course_ended() {
 		$time_now = $this->date_time_now();
-		$openEnded = $this->__get( 'course_open_ended' );
+		$open_ended = $this->__get( 'course_open_ended' );
 		$end_date = $this->__get( 'course_end_date_timestamp' );
-		if ( empty( $openEnded )
+		if ( empty( $open_ended )
 			&& $end_date > 0
 			&& $end_date < $time_now ) {
 			return true;
@@ -1060,8 +1060,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$results = $this->_get_units( $published, false );
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $unit ) {
-				$unitClass = new CoursePress_Unit( $unit, $this );
-				$units[] = $unitClass;
+				$unit_class_object = new CoursePress_Unit( $unit, $this );
+				$units[] = $unit_class_object;
 			}
 		}
 		$this->__set( 'current_units', $units );
