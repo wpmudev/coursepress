@@ -789,7 +789,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 							$completed_class .= ' module-completed';
 						}
 						$info = __( 'You need to completed all the REQUIRED modules before this module.', 'cp' );
-						$data_title = __( 'Preview', 'cp' );
+						$data_title = sprintf( '<span class="cp-screen">%s</span>', __( 'Preview', 'cp' ) );
 						if ( ! $clickable ) {
 							$seen_class = 'module-locked';
 							$completed_class = '';
@@ -945,7 +945,7 @@ class CoursePress_Data_Shortcode_CourseTemplate extends CoursePress_Utility {
 		if ( is_wp_error( $course ) ) {
 			return '';
 		}
-		$free_text = sanitize_text_field( $atts['free_text'] );
+		$free_text = sprintf( '<span class="cp-screen">%s</span>', sanitize_text_field( $atts['free_text'] ) );
 		$show_title = coursepress_is_true( sanitize_text_field( $atts['show_title'] ) );
 		$show_label = coursepress_is_true( sanitize_text_field( $atts['show_label'] ) );
 		$free_show = coursepress_is_true( sanitize_text_field( $atts['free_show'] ) );

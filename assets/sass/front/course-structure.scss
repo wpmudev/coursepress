@@ -45,6 +45,10 @@
             }
             &:before {
                 @include icon("\f06e");
+                color: $grey_1;
+            }
+            @media screen and (max-width: $width_8) {
+                margin-right: 16px;
             }
         }
         .unit-tree {

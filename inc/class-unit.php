@@ -551,7 +551,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 				'class'  => 'preview',
 				'target' => '_blank',
 			);
-			$unit_suffix .= $this->create_html( 'a', $attr, __( 'Preview', 'cp' ) );
+			$data_title = sprintf( '<span class="cp-screen">%s</span>', __( 'Preview', 'cp' ) );
+			$unit_suffix .= $this->create_html( 'a', $attr, $data_title );
 		}
 		if ( ! empty( $unit_duration ) && ( ! $has_access || ! $is_student ) ) {
 			$unit_suffix = $this->create_html( 'span', array( 'class' => 'timer' ), $unit_duration ) . $unit_suffix;
@@ -628,7 +629,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 					'href' => add_query_arg( 'preview', true, $module_url ),
 					'class' => 'preview',
 				);
-				$module_suffix .= $this->create_html( 'a', $attr, __( 'Preview' ) );
+                $data_title = sprintf( '<span class="cp-screen">%s</span>', __( 'Preview', 'cp' ) );
+				$module_suffix .= $this->create_html( 'a', $attr, $data_title);
 			}
 		}
 		$module_title = $this->create_course_menu_title( 'div', array( 'class' => 'module-title' ), $module_title . $module_suffix, $module_url );
@@ -685,7 +687,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 				}
 			} elseif ( $step->__get( 'preview' ) ) {
 				$attr = array( 'href' => add_query_arg( 'preview', 1, $step_url ), 'class' => 'preview' );
-				$step_suffix .= $this->create_html( 'a', $attr, __( 'Preview', 'cp' ) );
+				$data_title = sprintf( '<span class="cp-screen">%s</span>', __( 'Preview', 'cp' ) );
+				$step_suffix .= $this->create_html( 'a', $attr, $data_title );
 			}
 						$attr = array( 'class' => implode( ' ', $step_class ) );
 						$steps_structure .= $this->create_course_menu_title( 'li', $attr, $step_title . $step_suffix, $step_url );
