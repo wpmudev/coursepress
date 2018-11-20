@@ -16,7 +16,7 @@
         tr, td, th {
             border: 0;
         }
-        td {
+        td, th {
             padding: 6px 15px;
         }
         .data-unit {
@@ -68,6 +68,12 @@
                 td {
                     background-color: $white;
                 }
+            }
+        }
+        thead {
+            th {
+                @include font( 18, 21, 600 );
+                padding-bottom: 26px;
             }
         }
     }

@@ -138,14 +138,16 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		}
 		$content .= '<div class="workbook">';
 		$content .= '<table class="workbook-table ' . $table_class . '">';
+		$content .= $this->get_mobile_head();
 		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
+		$progress_text = sprintf( '<span class="cp-screen">%s </span>',  __( 'Progress:', 'cp' ) );
 		foreach ( $unit_list as $unit_id => $unit ) {
 			if ( ! array_key_exists( $unit_id, $student_progress_units ) ) {
 				continue;
 			}
 			$progress = $student->get_unit_progress( $course_id, $unit_id );
-			$format = '<tr class="row-unit"><th colspan="2" class="workbook-unit unit-%s">%s</th><th class="td-right">%s: %s</th></tr>';
-			$content .= sprintf( $format, $unit_id, $unit['unit']->post_title, __( 'Progress', 'cp' ), $progress . '%' );
+			$format = '<tr class="row-unit"><th colspan="2" class="workbook-unit unit-%s">%s</th><th class="td-right">%s%s%%</th></tr>';
+			$content .= sprintf( $format, $unit_id, $unit['unit']->post_title, $progress_text, $progress );
 			$module_count = 0;
 			if ( isset( $unit['pages'] ) ) {
 				foreach ( $unit['pages'] as $page ) {
@@ -435,12 +437,14 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 		$unit_list = $this->sort_on_key( $unit_list, 'order' );
 		$content .= '<div class="grades">';
 		$content .= '<table class="grades-table">';
+		$content .= $this->get_mobile_head();
+		$progress_text = sprintf( '<span class="cp-screen">%s </span>',  __( 'Progress:', 'cp' ) );
 		foreach ( $unit_list as $unit_id => $unit ) {
 			$progress = $user->get_unit_progress( $course_id, $unit_id, $student_progress );
 			$content .= '<tbody>';
 			$content .= '<tr class="row-unit">';
 			$content .= sprintf( '<td class="workbook-unit unit-%s">%s</td>', esc_attr( $unit_id ), $unit['unit']->post_title );
-			$content .= sprintf( '<td class="td-right">%s: %d%%</td>', __( 'Progress', 'cp' ), $progress );
+			$content .= sprintf( '<td class="td-right">%s%d%%</td>', $progress_text, $progress );
 			$content .= '</tr>';
 			$module_count = 0;
 			$module_done = 0;
@@ -689,5 +693,16 @@ class CoursePress_Data_Shortcode_Student extends CoursePress_Utility {
 	 */
 	public function log_normal_student_visit( $course_id, $unit_id, $page_number ) {
 		CoursePress_Data_Student::log_visited_course( $course_id, $unit_id, $page_number );
+	}
+
+	private function get_mobile_head() {
+		$content = '';
+		$content .= '<thead class="cp-mobile">';
+		$content .= '<tr>';
+		$content .= sprintf( '<th>%s</th>', __( 'Unit Title', 'cp' ) );
+		$content .= sprintf( '<th class="td-right">%s</th>', __( 'Progress', 'cp' ) );
+		$content .= '</tr>';
+		$content .= '</thead>';
+		return $content;
 	}
 }

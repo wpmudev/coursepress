@@ -232,6 +232,10 @@ $code_font: Consolas, Monaco, monospace;
         .cp-mobile {
             display: block;
         }
+        thead.cp-mobile {
+            display: table-header-group;
+            color: $grey_3;
+        }
     }
 }
 
