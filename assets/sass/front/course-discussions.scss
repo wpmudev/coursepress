@@ -156,6 +156,7 @@
                 display: inline;
             }
         }
+        @include cp_mobile_screen;
     }
 
     .cp-discussion-archive-single,

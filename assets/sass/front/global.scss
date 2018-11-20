@@ -183,6 +183,7 @@
     .td-right {
         text-align: right;
     }
+    @include cp_mobile_screen;
 }
 @media screen and (max-width: $width_3) {
     .coursepress-student-dashboard {

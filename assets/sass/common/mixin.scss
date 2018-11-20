@@ -220,3 +220,18 @@ $code_font: Consolas, Monaco, monospace;
     @include padding_width_7;
 }
 
+@mixin cp_mobile_screen {
+    .cp-mobile {
+        display: none;
+    }
+    @media screen and ( max-width: $width_8 ) {
+        .cp-screen {
+            @include random_border_color;
+            display: none;
+        }
+        .cp-mobile {
+            display: block;
+        }
+    }
+}
+
