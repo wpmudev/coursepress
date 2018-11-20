@@ -8,6 +8,9 @@
     @media screen and (max-width: $width_3) {
         padding: 0 15px;
     }
+    @media screen and (max-width: $width_8) {
+        display: none;
+    }
     li {
         display: inline;
         margin-bottom: 10px;

@@ -30,7 +30,8 @@
                 .content-area {
                     .page-header {
                         position: relative;
-                        margin: 0;
+                        @include width;
+                        margin: 0 auto;
                         .course-title,
                         .course-breadcrumb,
                         .course-submenu {
@@ -40,6 +41,12 @@
                             padding: 0;
                         }
                     }
+                }
+                .cp-discussion-new-question,
+                .cp-discussion-section,
+                .cp-discussion-new {
+                    @include width;
+                    margin: 0 auto;
                 }
             }
         }

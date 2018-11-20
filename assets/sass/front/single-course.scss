@@ -13,6 +13,7 @@
                         color: $dark_3;
                         @media screen and ( max-width: $width_8 ) {
                             @include font( 20, 24, 600 );
+                            margin-bottom: 0;
                         }
                     }
                     .cp-page-title-discussion {

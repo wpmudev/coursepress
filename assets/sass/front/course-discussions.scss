@@ -6,7 +6,7 @@
     }
 }
 .coursepress-forum {
-    .discussions-content,
+    .cp-discussions-content,
     .course-discussion-content {
         @include width;
         @include padding_width_7;
@@ -29,7 +29,7 @@
             @include button;
         }
     }
-    .discussion-new {
+    .cp-discussion-new {
         display: block;
         margin: 15px 0 25px 0;
         text-align: right;
@@ -41,7 +41,7 @@
         }
     }
     ul {
-        &.discussion-archive-list,
+        &.cp-discussion-archive-list,
         &.notification-archive-list {
             list-style: none;
             margin-left: 0;
@@ -103,7 +103,7 @@
                 }
             }
         }
-        &.discussion-archive-list {
+        &.cp-discussion-archive-list {
             li {
                 margin-bottom: 0;
                 border-bottom: 1px solid $grey_12;
@@ -120,7 +120,7 @@
         }
     }
 
-    .discussion-responces {
+    .cp-discussion-responces {
         clear: both;
         display: inline-block;
         float: right;
@@ -133,7 +133,7 @@
             display: block;
             margin-bottom: 13px;
         }
-        .discussion-comment {
+        .cp-discussion-comment {
             padding: 0;
             transform-style: preserve-3d;
             position: relative;
@@ -158,7 +158,7 @@
         }
     }
 
-    .discussion-archive-single,
+    .cp-discussion-archive-single,
     .notification-archive-single {
         display: inline-block;
         margin: 0;
@@ -180,7 +180,7 @@
         }
     }
 
-    .discussion-archive-single {
+    .cp-discussion-archive-single {
         .meta {
             margin-top: 1em;
             span {
@@ -197,7 +197,7 @@
         font-style: italic;
     }
 
-    .discussion-archive-single {
+    .cp-discussion-archive-single {
         hr {
             border: none;
             border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
@@ -217,15 +217,26 @@
                 textarea {
                     min-height: 400px;
                 }
-                .button-links {
-                    text-align: right;
-                    margin: 10px 0 0 0;
-                    padding: 0;
-                    a {
-                        cursor: pointer;
-                        margin-left: 20px;
-                    }
-
+            }
+        }
+        .cp-button-links {
+            text-align: right;
+            margin: 10px 0 0 0;
+            padding: 0;
+            a {
+                cursor: pointer;
+                margin-left: 20px;
+            }
+            @media screen and ( max-width: $width_8 ) {
+                align-items: center;
+                display: flex;
+                flex-direction: column-reverse;
+                justify-content: space-between;
+                input, a {
+                    display: block;
+                    margin: 0 0 20px 0;
+                    text-align: center;
+                    width: 100%;
                 }
             }
         }
@@ -340,14 +351,14 @@
     }
 
     .course-discussion {
-        .discussion-section {
+        .cp-discussion-section {
             padding: 1em 0;
             p {
                 margin: 0;
             }
         }
-        .discussion-title,
-        .discussion-content {
+        .cp-discussion-title,
+        .cp-discussion-content {
             margin-bottom: 1em;
         }
         .button-links {

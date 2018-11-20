@@ -8,10 +8,10 @@
 $user   = coursepress_get_user();
 $course = coursepress_get_course();
 get_header(); ?>
-	<div class="coursepress-wrap course-unit">
-		<div class="container">
-			<div class="content-area">
-				<header class="page-header">
+<div class="coursepress-wrap course-unit">
+	<div class="container">
+		<div class="content-area">
+			<header class="page-header">
 <?php
 /**
  * To override course submenu template to your theme or a child-theme,
@@ -22,24 +22,24 @@ get_header(); ?>
 coursepress_get_template( 'course', 'submenu' );
 coursepress_breadcrumb();
 ?>
-					<h1 class="cp-page-title"><?php _e( 'Start a new Discussion', 'cp' ); ?></h1>
-                </header>
-<div class="discussions-content">
-				<?php
-				$allowed = $course->__get( 'allow_discussion' );
-				if ( ! $allowed ) :
-					coursepress_render( 'templates/content-discussion-off' );
-				else :
-					coursepress_render( 'templates/content-discussion-form', array(
-						'course' => $course,
-						'id' => 0,
-						'section' => 0,
-					) );
-				endif;
-				?>
+				<h1 class="cp-page-title"><?php _e( 'Start a new Discussion', 'cp' ); ?></h1>
+			</header>
+			<div class="cp-discussions-content">
+<?php
+$allowed = $course->__get( 'allow_discussion' );
+if ( ! $allowed ) :
+	coursepress_render( 'templates/content-discussion-off' );
+else :
+	coursepress_render( 'templates/content-discussion-form', array(
+		'course' => $course,
+		'id' => 0,
+		'section' => 0,
+	) );
+endif;
+?>
 			</div>
 		</div>
-		</div>
 	</div>
+</div>
 <?php
 get_footer();

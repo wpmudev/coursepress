@@ -10,7 +10,7 @@ if ( empty( $data ) ) :
 		__( 'This course does not have any discussions.', 'cp' )
 	);
 else :
-	echo '<ul class="discussion-archive-list">';
+	echo '<ul class="cp-discussion-archive-list">';
 	foreach ( $data as $discussion ) :
 		echo '<li>';
 		$comments_count = wp_count_comments( $discussion->ID );
@@ -26,16 +26,16 @@ else :
 		$date = get_the_date( get_option( 'date_format' ), $discussion );
 
 		echo '
-					<div class="discussion-archive-single">
-						<h3 class="discussion-title"><a href="' . esc_url( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
-						<div class="discussion-content">
+					<div class="cp-discussion-archive-single">
+						<h3 class="cp-discussion-title"><a href="' . esc_url( $discussion->url ) . '">' . esc_html( $discussion->post_title ) . '</a></h3>
+						<div class="cp-discussion-content">
 							' . $discussion->post_content . '
 						</div>
 						<div class="meta"><span>' .__( 'Started by: ', 'coursepress' ). '</span>' .esc_html( $author ) . ' | ' . esc_html( $date ) . ' | <span>' . esc_html__( 'Applies to:', 'cp' ) . '</span> ' . $applies_to . '</div>
 					</div>
 			';
 
-		echo '<div class="discussion-responces">';
+		echo '<div class="cp-discussion-responces">';
 		if ( 0 == $comments_count->approved ) {
 			_e( '0 Responses', 'coursepress' );
 		} else {

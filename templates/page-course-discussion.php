@@ -25,7 +25,7 @@ coursepress_breadcrumb();
 ?>
 					<h1 class="cp-page-title"><?php _e( 'Discussions', 'cp' ); ?></h1>
 				</header>
-                <div class="discussions-content">
+                <div class="cp-discussions-content">
 				<?php
 				$allowed = $course->__get( 'allow_discussion' );
 				if ( ! $allowed ) :
@@ -33,7 +33,7 @@ coursepress_breadcrumb();
 				else :
 					$url = $course->get_discussion_new_url();
 				?>
-				<div class="discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
+				<div class="cp-discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
 				<?php
 				coursepress_render( 'templates/content-discussion', array(
 					'user_id' => 0,
