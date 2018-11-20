@@ -77,14 +77,9 @@
 
         @media screen {
             @media (min-width: $width_7) {
-                display: flex;
                 .course-structure-nav {
+                    position: absolute;
                     display: block;
-                    width: 25%;
-                }
-                .course-content {
-                    width: 75%;
-                    padding-left: 25px;
                 }
             }
         }
