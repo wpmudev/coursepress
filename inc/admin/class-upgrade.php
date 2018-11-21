@@ -458,7 +458,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
 					$meta_name = sprintf( 'course_%d_progress', $course_id );
-					// $progress = get_user_meta( $student_id, $meta_name, true );
+					$progress = get_user_meta( $student_id, $meta_name, true );
 					$progress = get_user_option( $meta_name, $student_id );
 					if ( isset( $progress['completion'] ) ) {
 						foreach ( $progress['completion'] as $unit_id => $data ) {
