@@ -1,15 +1,73 @@
-.wpmu-footer-text {
-  text-align: center;
-  @include clearfix;
-  margin: 50px 0 25px 0;
-  color: $grey_4;
-
-  a {
-    text-decoration: none;
+.cp-admin-footer {
     color: $grey_4;
-
-    &:hover {
-      color: $blue_4;
+    a {
+        text-decoration: none;
+        color: $grey_4;
+        &:hover {
+            color: $blue_4;
+        }
     }
-  }
+    .wpmu-footer-text {
+        text-align: center;
+        @include clearfix;
+        margin: 50px 0 25px 0;
+    }
+    .sui-footer-nav,
+    .sui-footer-social {
+        margin-top: 30px;
+        padding: 0;
+        border: 0;
+        list-style: none;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: center;
+        justify-content: center;
+        margin: 20px 0 0;
+        text-align: center;
+        font-variant-ligatures: none;
+        -webkit-font-variant-ligatures: none;
+        text-rendering: optimizeLegibility;
+        -moz-osx-font-smoothing: grayscale;
+        font-smoothing: antialiased;
+        -webkit-font-smoothing: antialiased;
+        text-shadow: rgba(0,0,0,.01) 0 0 1px;
+        li {
+            padding: 0;
+            border: 0;
+            list-style: none;
+            box-sizing: border-box;
+            font-variant-ligatures: none;
+            -webkit-font-variant-ligatures: none;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-smoothing: antialiased;
+            -webkit-font-smoothing: antialiased;
+            text-shadow: rgba(0,0,0,.01) 0 0 1px;
+        }
+    }
+    .sui-footer-nav {
+        a {
+            display: block;
+            transition: all .3s ease;
+        }
+        li:not(:last-child) {
+            a:after {
+                content: "/";
+                margin-right: 6px;
+                margin-left: 6px;
+            }
+        }
+    }
+    .sui-footer-social {
+        li {
+            margin: 0 5px;
+            a {
+                outline: none;
+                box-shadow: none;
+                .sui-screen-reader-text {
+                    display: none;
+                }
+            }
+        }
+    }
 }
