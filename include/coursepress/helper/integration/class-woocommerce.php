@@ -112,7 +112,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param arrat $atts Configuration array.
+		 * @param array $atts Configuration array.
 		 *
 		 */
 		add_action(
@@ -272,7 +272,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 		$args = array(
 			'posts_per_page' => 1,
 			'post_type'		 => self::$product_ctp,
-			'post_parent'	 => $course_id,
 			'post_status'	 => 'any',
 			'fields'		 => 'ids',
 		);
@@ -304,7 +303,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 			'post_status'  => $course->post_status,
 			'post_title'   => CoursePress_Helper_Utility::filter_content( $course->post_title, true ),
 			'post_type'    => self::$product_ctp,
-			'post_parent'  => $course_id,
 			'post_content' => CoursePress_Helper_Utility::filter_content( $course->post_content, true ),
 		);
 
@@ -477,7 +475,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		global $post;
 		if ( isset( $post->ID ) ) {
 ?>
-            <input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
+            <input type="text" name="parent_course" value="<?php echo esc_attr( self::get_course_id_by_product( $post->ID ) ); ?>" />
 <?php
 		}
 	}
@@ -488,12 +486,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return;
 		}
 		if ( isset( $_POST['parent_course'] ) && ! empty( $_POST['parent_course'] ) ) {
-			wp_update_post( array( 'ID' => $post->ID, 'post_parent' => (int) $_POST['parent_course'] ) );
+			update_post_meta( $post->ID, 'cp_course_id', (int) $_POST['parent_course'] );
 		}
 		/**
 		 * Set or update thumbnail.
 		 */
-		self::update_product_thumbnail( $product->ID );
+		self::update_product_thumbnail( $post->ID );
 	}
 
 	public static function update_course_from_product( $product_id, $post, $before_update ) {
@@ -536,24 +534,23 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function show_course_message_woocommerce_order_details_after_order_table( $order ) {
-
-		$order_details		 = new WC_Order( $order->id );
+		$order_id = $order->get_id();
+		$order_details		 = new WC_Order( $order_id );
 		$order_items		 = $order_details->get_items();
 		$purchased_course	 = false;
-
 		foreach ( $order_items as $order_item ) {
-			$course_id = wp_get_post_parent_id( $order_item['product_id'] );
+			$course_id = self::get_course_id_by_product( $order_item['product_id'] );
 			if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 				$purchased_course = true;
 			}
 		}
-
 		if ( ! $purchased_course ) {
 			return;
 		}
+		$order_status = $order->get_status();
 		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'coursepress' ) );
 		printf( '<p class="cp_woo_thanks">%s</p>', esc_html__( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'coursepress' ) );
-		if ( is_user_logged_in() && 'wc-completed' == $order->post_status ) {
+		if ( is_user_logged_in() && 'wc-completed' == $order_status ) {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
 				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'coursepress' ),
@@ -564,7 +561,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
-		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
+		$course_id = self::get_course_id_by_product( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
 		}
@@ -580,7 +577,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			$product_id = $item->get_product_id();
 		}
 		if ( is_numeric( $product_id ) ) {
-			$course_id = wp_get_post_parent_id( $product_id );
+			$course_id = self::get_course_id_by_product( $product_id );
 			if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 				return get_the_title( $course_id );
 			}
@@ -661,15 +658,19 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( empty( $product_id ) ) {
 			return '';
 		}
-		$cart_data = WC()->cart->get_cart();
+		$cart = WC()->cart;
+		$cart_data = array();
+		if ( method_exists( $cart, 'get_cart' ) ) {
+			$cart_data = $cart->get_cart();
+		}
 		foreach ( $cart_data as $cart_item_key => $values ) {
 			$_product = $values['data'];
-			if ( $product_id == $_product->id ) {
+			$_product_id = $_product->get_id();
+			if ( $product_id == $_product_id ) {
 				$content = __( 'This course is already in the cart.', 'coursepress' );
-				global $woocommerce;
 				$content .= sprintf(
 					' <button data-link="%s" class="single_show_cart_button button">%s</button>',
-					esc_url( $woocommerce->cart->get_cart_url() ),
+					esc_url( wc_get_cart_url( $_product_id ) ),
 					esc_html__( 'Show cart', 'coursepress' )
 				);
 				return wpautop( $content );
@@ -682,12 +683,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
 			return '';
 		}
-
+		$woocommerce_product_id = $product->get_id();
 		ob_start();
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
         <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $woocommerce_product_id ); ?>" />
         <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
         <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
         </form>
@@ -725,7 +726,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param arrat $atts Configuration array.
+	 * @param array $atts Configuration array.
 	 */
 	public static function add_to_cart_template( $atts ) {
 		/**
@@ -915,7 +916,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/**
 		 * Check is set course?
 		 */
-		$course_id = wp_get_post_parent_id( $product_id );
+		$course_id = self::get_course_id_by_product( $product_id );
 		if ( empty( $course_id ) ) {
 			return;
 		}
@@ -1037,7 +1038,8 @@ class CoursePress_Helper_Integration_WooCommerce {
 		$cart_data = WC()->cart->get_cart();
 		foreach ( $cart_data as $cart_item_key => $values ) {
 			$_product = $values['data'];
-			if ( CoursePress_Data_Course::is_course( $_product->post->post_parent ) ) {
+			$course_id = self::get_course_id_by_product( $_product->post->ID );
+			if ( CoursePress_Data_Course::is_course( $course_id ) ) {
 				return 'no';
 			}
 		}
