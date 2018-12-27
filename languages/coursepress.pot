@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2018-05-28 06:39:29+00:00\n"
+"POT-Creation-Date: 2018-12-27 13:17:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -72,6 +72,7 @@ msgstr ""
 #: 2.0/include/coursepress/helper/class-javascript.php:254
 #: 2.0/include/coursepress/helper/class-javascript.php:500
 #: 2.0/include/coursepress/template/class-communication.php:278
+#: themes/coursepress/page-add-new-discussion.php:82
 msgid "Cancel"
 msgstr ""
 
@@ -243,7 +244,8 @@ msgid "CoursePress Comments"
 msgstr ""
 
 #: 2.0/admin/class-comments.php:21 2.0/admin/table/class-forums.php:128
-#: 2.0/admin/view/comments.php:2
+#: 2.0/admin/view/comments.php:2 themes/coursepress/archive-discussions.php:103
+#: themes/coursepress/content-discussion.php:33
 msgid "Comments"
 msgstr ""
 
@@ -285,6 +287,7 @@ msgstr ""
 #: 2.0/include/coursepress/helper/class-setting.php:388
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:119
 #: 2.0/include/coursepress/view/front/class-course.php:1228
+#: themes/coursepress/archive-unit.php:15
 msgid "Units"
 msgstr ""
 
@@ -351,6 +354,14 @@ msgstr ""
 #: 2.0/include/coursepress/template/class-communication.php:205
 #: 2.0/include/coursepress/view/admin/course/class-student.php:213
 #: 2.0/include/coursepress/view/admin/student/class-workbook.php:40
+#: themes/coursepress/content-course-overview.php:144
+#: themes/coursepress/content-discussion.php:54
+#: themes/coursepress/content-page.php:27
+#: themes/coursepress/content-single.php:69 themes/coursepress/content.php:85
+#: themes/coursepress/inc/template-tags.php:133
+#: themes/coursepress/inc/template-tags.php:176
+#: themes/coursepress/inc/template-tags.php:234
+#: themes/coursepress/inc/template-tags.php:273
 msgid "Edit"
 msgstr ""
 
@@ -838,6 +849,7 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/class-instructor.php:12
 #: 2.0/include/coursepress/view/admin/setting/class-capabilities.php:123
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:217
+#: themes/coursepress/content-course-overview.php:79
 msgid "Instructors"
 msgstr ""
 
@@ -1515,7 +1527,7 @@ msgstr ""
 #: 2.0/admin/table/class-notifications.php:146 2.0/admin/view/export.php:66
 #: 2.0/admin/view/instructor-courses.php:23
 #: 2.0/include/coursepress/data/class-course.php:24
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:554
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:551
 #: 2.0/include/coursepress/template/class-communication.php:254
 #: 2.0/include/coursepress/template/class-course.php:38
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:74
@@ -1573,6 +1585,7 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/student/class-workbook.php:30
 #: 2.0/include/coursepress/view/front/class-course.php:1307
 #: 2.0/include/coursepress/view/front/class-general.php:42
+#: themes/coursepress/single-instructor.php:32
 msgid "Courses"
 msgstr ""
 
@@ -1983,6 +1996,7 @@ msgstr ""
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:170
 #: 2.0/include/coursepress/view/admin/setting/class-shortcodes.php:1633
 #: 2.0/include/coursepress/widget/class-structure.php:19
+#: themes/coursepress/content-course-overview.php:64
 msgid "Course Structure"
 msgstr ""
 
@@ -2415,6 +2429,7 @@ msgstr ""
 
 #: 2.0/admin/view/steps/step-7.php:95
 #: 2.0/include/coursepress/view/admin/setting/class-basiccertificate.php:190
+#: themes/coursepress/inc/customizer.php:118
 msgid "Logo"
 msgstr ""
 
@@ -2579,6 +2594,7 @@ msgstr ""
 
 #: 2.0/include/coursepress/class-email.php:140
 #: 2.0/include/coursepress/view/admin/setting/class-email.php:83
+#: themes/coursepress/part-contact.php:78
 msgid "Subject"
 msgstr ""
 
@@ -2666,6 +2682,7 @@ msgstr ""
 #: 2.0/include/coursepress/template/class-student.php:176
 #: 2.0/include/coursepress/view/front/class-enrollmentpopup.php:467
 #: 2.0/include/coursepress/view/front/class-student.php:237
+#: themes/coursepress/part-contact.php:20
 msgid "E-mail address is not valid."
 msgstr ""
 
@@ -2697,6 +2714,7 @@ msgstr ""
 
 #: 2.0/include/coursepress/class-userlogin.php:80
 #: 2.0/include/coursepress/helper/class-javascript.php:475
+#: themes/coursepress/part-contact.php:17
 msgid "All fields are required."
 msgstr ""
 
@@ -2763,6 +2781,7 @@ msgid "Search Courses"
 msgstr ""
 
 #: 2.0/include/coursepress/data/class-course.php:32
+#: themes/coursepress/content-none.php:13
 msgid "No Courses Found"
 msgstr ""
 
@@ -3355,6 +3374,7 @@ msgid "Anyone"
 msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-course.php:888
+#: themes/coursepress/content-course-overview.php:36
 msgid "Who can Enroll: "
 msgstr ""
 
@@ -3637,6 +3657,7 @@ msgstr ""
 
 #: 2.0/include/coursepress/data/shortcode/class-coursetemplate.php:2010
 #: 2.0/include/coursepress/view/admin/course/class-student.php:156
+#: themes/coursepress/part-contact.php:87
 msgid "Send"
 msgstr ""
 
@@ -4857,12 +4878,12 @@ msgid "Order Confirmation"
 msgstr ""
 
 #: 2.0/include/coursepress/helper/integration/class-marketpress.php:1048
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:741
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:742
 msgid "Add Course to cart."
 msgstr ""
 
 #: 2.0/include/coursepress/helper/integration/class-marketpress.php:1052
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:746
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:747
 msgid "You can now add this course to cart."
 msgstr ""
 
@@ -4902,23 +4923,23 @@ msgstr ""
 msgid "Edit WooCommerce Product"
 msgstr ""
 
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:473
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:471
 msgid "Parent Course"
 msgstr ""
 
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:555
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:552
 msgid "Thank you for signing up for the course. We hope you enjoy your experience."
 msgstr ""
 
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:559
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:556
 msgid "You can find the course in your <a href=\"%s\">Dashboard</a>"
 msgstr ""
 
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:668
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:670
 msgid "This course is already in the cart."
 msgstr ""
 
-#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:673
+#: 2.0/include/coursepress/helper/integration/class-woocommerce.php:674
 msgid "Show cart"
 msgstr ""
 
@@ -6234,6 +6255,7 @@ msgid ""
 msgstr ""
 
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:447
+#: themes/coursepress/inc/extras.php:69
 msgid "Page %s"
 msgstr ""
 
@@ -8841,112 +8863,494 @@ msgstr ""
 msgid "Displays a selected course structure"
 msgstr ""
 
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:223
-msgid "install"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:230
-msgid ""
-"Important updates are available for <strong>%s</strong>. Install the free "
-"WPMU DEV Dashboard plugin now for updates and support!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:232
-msgid ""
-"<strong>%s</strong> is almost ready - install the free WPMU DEV Dashboard "
-"plugin for updates and support!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:236
-msgid ""
-"Important updates are available for your WPMU DEV plugins/themes. Install "
-"the free WPMU DEV Dashboard plugin now for updates and support!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:238
-msgid ""
-"Almost ready - install the free WPMU DEV Dashboard plugin for updates and "
-"support!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:244
-msgid "Install Plugin"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:247
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:288
-msgid "Saving..."
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:248
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:289
-msgid "Dismiss"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:264
-msgid "activate"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:271
-msgid ""
-"Important updates are available for <strong>%s</strong>. Activate the WPMU "
-"DEV Dashboard to update now!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:273
-msgid "Just one more step to enable updates and support for <strong>%s</strong>!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:277
-msgid ""
-"Important updates are available for your WPMU DEV plugins/themes. Activate "
-"the WPMU DEV Dashboard to update now!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:279
-msgid ""
-"Just one more step - activate the WPMU DEV Dashboard plugin and you're all "
-"done!"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:285
-msgid "Activate WPMU DEV Dashboard"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:952
-msgid "We did not find any data for this plugin or theme..."
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1131
-msgid "%s changelog"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1161
-msgid "Current"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1167
-msgid "New"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1184
-msgid "Version %s"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1202
-msgid "Show all changes"
-msgstr ""
-
-#: 2.0/premium/external/dashboard/wpmudev-dash-notification.php:1203
-msgid "Hide details"
-msgstr ""
-
 #: 2.0/test/php/test-settings.php:134
 msgid "Test Tabs"
 msgstr ""
 
 #: coursepress.php:168
 msgid "Error loading %s v%s plugin!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:223
+msgid "install"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:230
+msgid ""
+"Important updates are available for <strong>%s</strong>. Install the free "
+"WPMU DEV Dashboard plugin now for updates and support!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:232
+msgid ""
+"<strong>%s</strong> is almost ready - install the free WPMU DEV Dashboard "
+"plugin for updates and support!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:236
+msgid ""
+"Important updates are available for your WPMU DEV plugins/themes. Install "
+"the free WPMU DEV Dashboard plugin now for updates and support!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:238
+msgid ""
+"Almost ready - install the free WPMU DEV Dashboard plugin for updates and "
+"support!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:244
+msgid "Install Plugin"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:247
+#: premium/external/dashboard/wpmudev-dash-notification.php:288
+msgid "Saving..."
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:248
+#: premium/external/dashboard/wpmudev-dash-notification.php:289
+msgid "Dismiss"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:264
+msgid "activate"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:271
+msgid ""
+"Important updates are available for <strong>%s</strong>. Activate the WPMU "
+"DEV Dashboard to update now!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:273
+msgid "Just one more step to enable updates and support for <strong>%s</strong>!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:277
+msgid ""
+"Important updates are available for your WPMU DEV plugins/themes. Activate "
+"the WPMU DEV Dashboard to update now!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:279
+msgid ""
+"Just one more step - activate the WPMU DEV Dashboard plugin and you're all "
+"done!"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:285
+msgid "Activate WPMU DEV Dashboard"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:952
+msgid "We did not find any data for this plugin or theme..."
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1131
+msgid "%s changelog"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1161
+msgid "Current"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1167
+msgid "New"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1184
+msgid "Version %s"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1202
+msgid "Show all changes"
+msgstr ""
+
+#: premium/external/dashboard/wpmudev-dash-notification.php:1203
+msgid "Hide details"
+msgstr ""
+
+#: themes/coursepress/404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr ""
+
+#: themes/coursepress/404.php:23
+msgid ""
+"It looks like nothing was found at this location. Maybe try one of the "
+"links below or a search?"
+msgstr ""
+
+#: themes/coursepress/404.php:34
+msgid "Most Used Categories"
+msgstr ""
+
+#: themes/coursepress/404.php:56
+#. Translators: %1$s: smiley.
+msgid "Try looking in the monthly archives. %1$s"
+msgstr ""
+
+#: themes/coursepress/archive-discussions.php:36
+msgid "Ask a Question"
+msgstr ""
+
+#: themes/coursepress/archive-discussions.php:115
+msgid "This course has no discussions yet. Start one, ask a question!"
+msgstr ""
+
+#: themes/coursepress/archive-notifications.php:84
+msgid "This course has no notifications yet. Please check back later."
+msgstr ""
+
+#: themes/coursepress/archive-unit-grades.php:36
+msgid "Total"
+msgstr ""
+
+#: themes/coursepress/archive-unit-grades.php:42
+msgid "This course has no units yet. Please check back later."
+msgstr ""
+
+#: themes/coursepress/archive-unit-workbook.php:26
+#: themes/coursepress/archive-unit-workbook.php:70
+msgid "completed"
+msgstr ""
+
+#: themes/coursepress/archive-unit-workbook.php:44
+msgid "Course Complete"
+msgstr ""
+
+#: themes/coursepress/archive-unit-workbook.php:83
+msgid "0 Units in the course"
+msgstr ""
+
+#: themes/coursepress/archive.php:32
+msgid "Author: %s"
+msgstr ""
+
+#: themes/coursepress/archive.php:40
+msgid "Day: %s"
+msgstr ""
+
+#: themes/coursepress/archive.php:43
+msgid "Month: %s"
+msgstr ""
+
+#: themes/coursepress/archive.php:46
+msgid "Year: %s"
+msgstr ""
+
+#: themes/coursepress/archive.php:49
+msgid "Asides"
+msgstr ""
+
+#: themes/coursepress/archive.php:52
+msgid "Images"
+msgstr ""
+
+#: themes/coursepress/archive.php:55
+msgid "Videos"
+msgstr ""
+
+#: themes/coursepress/archive.php:58
+msgid "Quotes"
+msgstr ""
+
+#: themes/coursepress/archive.php:61
+msgid "Links"
+msgstr ""
+
+#: themes/coursepress/archive.php:64 themes/coursepress/sidebar.php:17
+msgid "Archives"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:29
+#: themes/coursepress/comments-discussion.php:50
+#: themes/coursepress/comments.php:46 themes/coursepress/comments.php:67
+msgid "Comment navigation"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:30
+#: themes/coursepress/comments-discussion.php:51
+#: themes/coursepress/comments.php:47 themes/coursepress/comments.php:68
+msgid "&larr; Older Comments"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:31
+#: themes/coursepress/comments-discussion.php:52
+#: themes/coursepress/comments.php:48 themes/coursepress/comments.php:69
+msgid "Newer Comments &rarr;"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:62
+#: themes/coursepress/comments.php:79
+msgid "Comments are closed."
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:71
+#: themes/coursepress/comments-discussion.php:74
+msgid "Answer the Question"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:72
+msgid "Leave a Reply to %s"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:73
+msgid "Cancel Reply"
+msgstr ""
+
+#: themes/coursepress/comments-discussion.php:76
+msgid "Write a response"
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:50
+msgid "SHARE"
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:61
+msgid "About the Course"
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:70
+#: themes/coursepress/content-page.php:19
+#: themes/coursepress/content-single.php:29 themes/coursepress/content.php:39
+msgid "Pages:"
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:109
+#: themes/coursepress/content-single.php:40
+#: themes/coursepress/content-single.php:43 themes/coursepress/content.php:51
+#: themes/coursepress/content.php:61
+#. Translators: Used between list items, there is a space after the comma.
+#. translators: Used between list items, there is a space after the comma.
+#. translators: Used between list items, there is a space after the comma.
+msgid ", "
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:114
+#: themes/coursepress/content-single.php:50
+msgid "Bookmark the <a href=\"%3$s\" rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:121
+#: themes/coursepress/content-single.php:48
+msgid ""
+"This entry was tagged %2$s. Bookmark the <a href=\"%3$s\" "
+"rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:128
+#: themes/coursepress/content-single.php:55
+msgid ""
+"This entry was posted in %1$s and tagged %2$s. Bookmark the <a "
+"href=\"%3$s\" rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: themes/coursepress/content-course-overview.php:130
+#: themes/coursepress/content-single.php:57
+msgid ""
+"This entry was posted in %1$s. Bookmark the <a href=\"%3$s\" "
+"rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: themes/coursepress/content-discussion.php:44
+msgid "Comments are disabled"
+msgstr ""
+
+#: themes/coursepress/content-none.php:21
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: themes/coursepress/content-none.php:29
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: themes/coursepress/content-none.php:36
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: themes/coursepress/content.php:35
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: themes/coursepress/content.php:55
+msgid "Posted in %1$s"
+msgstr ""
+
+#: themes/coursepress/content.php:65
+msgid "Tagged %1$s"
+msgstr ""
+
+#: themes/coursepress/content.php:75
+msgid "Leave a comment"
+msgstr ""
+
+#: themes/coursepress/content.php:76
+msgid "1 comment"
+msgstr ""
+
+#: themes/coursepress/content.php:77
+msgid "% comments"
+msgstr ""
+
+#: themes/coursepress/functions.php:54
+msgid "Primary Menu"
+msgstr ""
+
+#: themes/coursepress/functions.php:55
+msgid "Footer Menu"
+msgstr ""
+
+#: themes/coursepress/functions.php:144
+msgid "Sidebar"
+msgstr ""
+
+#: themes/coursepress/functions.php:155
+msgid "Footer"
+msgstr ""
+
+#: themes/coursepress/header.php:70
+msgid "Skip to content"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:21
+msgid "Body Text Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:27
+msgid "Content Text Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:33
+msgid "Content Header Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:39
+msgid "Content Links Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:45
+msgid "Content Links Hover Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:51
+msgid "Main Navigation Links Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:57
+msgid "Main Navigation Links Hover Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:63
+msgid "Footer Background Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:69
+msgid "Footer Links Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:75
+msgid "Footer Links Hover Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:81
+msgid "Widgets Title Color"
+msgstr ""
+
+#: themes/coursepress/inc/customizer.php:137
+msgid "Upload a logo"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:25
+msgid "Posts navigation"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:33
+msgid "%s&larr;%s Older posts"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:47
+msgid "Newer posts %s&rarr;%s"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:86
+msgid "Post navigation"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:130
+#: themes/coursepress/inc/template-tags.php:231
+msgid "Pingback:"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:153
+msgid "%s says:"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:185
+#: themes/coursepress/inc/template-tags.php:250
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:322
+msgid ""
+"<span class=\"posted-on\">Posted on %1$s</span><span class=\"byline\"> by "
+"%2$s</span>"
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:17
+msgid "Question title is required."
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:20
+msgid "Question description is required."
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:62
+msgid "Course General"
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:69
+msgid "Title of your question"
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:72
+msgid "Question description..."
+msgstr ""
+
+#: themes/coursepress/page-add-new-discussion.php:76
+msgid "Ask this Question"
+msgstr ""
+
+#: themes/coursepress/part-contact.php:46
+msgid "E-mail sent successfully! We will respond as soon as possible."
+msgstr ""
+
+#: themes/coursepress/part-contact.php:49
+msgid "An error occured while trying to send the e-mail. Please try again later."
+msgstr ""
+
+#: themes/coursepress/part-contact.php:68
+msgid "Your Name"
+msgstr ""
+
+#: themes/coursepress/part-contact.php:73
+msgid "Your E-mail"
+msgstr ""
+
+#: themes/coursepress/part-contact.php:83
+msgid "Message"
+msgstr ""
+
+#: themes/coursepress/search.php:20
+msgid "Search Results for: %s"
+msgstr ""
+
+#: themes/coursepress/sidebar.php:24
+msgid "Meta"
 msgstr ""
 
 #: upgrade/class-helper-upgrade.php:118
@@ -9136,4 +9540,56 @@ msgstr ""
 #: 2.0/include/coursepress/template/class-communication.php:197
 msgctxt "separator between \"Discussion\" text and title"
 msgid ": "
+msgstr ""
+
+#: themes/coursepress/archive.php:43
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr ""
+
+#: themes/coursepress/archive.php:46
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr ""
+
+#: themes/coursepress/comments.php:30
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#: themes/coursepress/inc/template-tags.php:93
+msgctxt "Previous post link"
+msgid "%s&larr;%s %%title"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:101
+msgctxt "Next post link"
+msgid "%%title %s&rarr;%s"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:167
+msgctxt "1: date, 2: time"
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: themes/coursepress/inc/template-tags.php:261
+msgctxt "1: author, 2: time of comment"
+msgid "%1$s, %2$s ago"
+msgstr ""
+
+#: themes/coursepress/searchform.php:10
+msgctxt "label"
+msgid "Search for:"
+msgstr ""
+
+#: themes/coursepress/searchform.php:11
+msgctxt "placeholder"
+msgid "Search &hellip;"
+msgstr ""
+
+#: themes/coursepress/searchform.php:13
+msgctxt "submit button"
+msgid "Search"
 msgstr ""
