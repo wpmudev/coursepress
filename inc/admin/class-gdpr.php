@@ -38,7 +38,7 @@ class CoursePress_Admin_GDPR {
 	 * Get plugin friendly name
 	 */
 	private function get_plugin_friendly_name() {
-		$name = _x( 'CoursePress Plugin', 'Plugin name in personal data exporter.', 'coursepress' );
+		$name = _x( 'CoursePress Plugin', 'Plugin name in personal data exporter.', 'cp' );
 		return $name;
 	}
 
@@ -48,7 +48,7 @@ class CoursePress_Admin_GDPR {
 	 * @since 2.2.0
 	 */
 	public function register_plugin_exporter( $exporters ) {
-		$exporters['coursepress'] = array(
+		$exporters['cp'] = array(
 			'exporter_friendly_name' => $this->get_plugin_friendly_name(),
 			'callback' => array( $this, 'plugin_exporter' ),
 		);
@@ -63,18 +63,18 @@ class CoursePress_Admin_GDPR {
 	private function get_cp_user_by_email( $email ) {
 		$user = get_user_by( 'email', $email );
 		if ( ! is_a( $user, 'WP_User' ) ) {
-			return new WP_Error( 'error', __( 'User does not exists.', 'coursepress' ) );
+			return new WP_Error( 'error', __( 'User does not exists.', 'cp' ) );
 		}
 		$cp_user = new CoursePress_User( $user );
 		if ( is_wp_error( $cp_user ) ) {
-			return new WP_Error( 'error', __( 'User is not a CoursePress user.', 'coursepress' ) );
+			return new WP_Error( 'error', __( 'User is not a CoursePress user.', 'cp' ) );
 		}
 		/**
 		 * check is student
 		 */
 		$is_student = $cp_user->is_student();
 		if ( ! $is_student ) {
-			return new WP_Error( 'error', __( 'User is not a student.', 'coursepress' ) );
+			return new WP_Error( 'error', __( 'User is not a student.', 'cp' ) );
 		}
 		return $cp_user;
 	}
@@ -103,16 +103,16 @@ class CoursePress_Admin_GDPR {
 		if ( count( $courses ) ) {
 			foreach ( $courses as $course_id ) {
 				$item = array(
-					'group_id' => 'coursepress',
+					'group_id' => 'cp',
 					'group_label' => $this->get_plugin_friendly_name(),
 					'item_id' => 'coursepress-'.$course_id,
 					'data' => array(
 						array(
-							'name' => __( 'Name', 'coursepress' ),
+							'name' => __( 'Name', 'cp' ),
 							'value' => get_the_title( $course_id ),
 						),
 						array(
-							'name' => __( 'Date Enrollment', 'coursepress' ),
+							'name' => __( 'Date Enrollment', 'cp' ),
 							'value' => $cp_user->get_date_enrolled( $course_id ),
 						),
 					),
@@ -121,7 +121,7 @@ class CoursePress_Admin_GDPR {
 					$is_completed = $cp_user->is_course_completed( $course_id );
 					if ( $is_completed ) {
 						$item['data'][] = array(
-							'name' => __( 'Certificate', 'coursepress' ),
+							'name' => __( 'Certificate', 'cp' ),
 							'value' => $this->certificate->get_pdf_file_url( $course_id, $cp_user->ID ),
 						);
 					}
@@ -151,7 +151,7 @@ class CoursePress_Admin_GDPR {
 	 * @since 2.2.0
 	 */
 	public function register_plugin_eraser( $erasers ) {
-		$erasers['coursepress'] = array(
+		$erasers['cp'] = array(
 			'eraser_friendly_name' => $this->get_plugin_friendly_name(),
 			'callback'             => array( $this, 'plugin_eraser' ),
 		);
@@ -173,7 +173,7 @@ class CoursePress_Admin_GDPR {
 				'items_removed' => 0,
 				'items_retained' => 0,
 				'messages' => array(
-					__( 'This email has no courses.', 'coursepress' ),
+					__( 'This email has no courses.', 'cp' ),
 				),
 				'done' => true,
 			);
@@ -202,7 +202,7 @@ class CoursePress_Admin_GDPR {
 	 * @since 2.2.0
 	 */
 	public function add_policy( $content ) {
-		$content .= '<h2>' . __( 'Plugin: CoursePress', 'coursepress' ) . '</h2>';
+		$content .= '<h2>' . __( 'Plugin: CoursePress', 'cp' ) . '</h2>';
 		$content .= $this->get_privacy_message();
 		return $content;
 	}
@@ -252,7 +252,7 @@ Our team members have access to this information to help fulfill orders, process
 <h4>Payments</h4>
 We accept payments through PayPal. When processing payments, some of your data will be passed to PayPal, including information required to process or support the payment, such as the purchase total and billing information.
 Please see the <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">PayPal Privacy Policy</a> for more details.
-', 'coursepress' ) ) ) );
+', 'cp' ) ) ) );
 		return $content;
 	}
 }

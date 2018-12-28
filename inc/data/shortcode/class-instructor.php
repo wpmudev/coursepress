@@ -85,7 +85,7 @@ class CoursePress_Data_Shortcode_Instructor extends CoursePress_Utility {
 			$templates .= $this->create_html(
 				$atts['label_tag'],
 				array( 'class' => 'label course-sub-title' ),
-				_n( $atts['label'], $atts['label_plural'], $count ) . $atts['label_delimiter']
+				_n( $atts['label'], $atts['label_plural'], $count, 'cp' ) . $atts['label_delimiter']
 			);
 		}
 		$instructors_template = array();

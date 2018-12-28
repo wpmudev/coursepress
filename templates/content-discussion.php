@@ -27,24 +27,24 @@ if ( empty( $data ) ) {
                         <div class="cp-discussion-content">
                             ' . $discussion->post_content . '
                         </div>
-                        <div class="meta"><span>' .__( 'Started by: ', 'coursepress' ). '</span>' .esc_html( $author ) . ' | ' . esc_html( $date ) . ' | <span>' . esc_html__( 'Applies to:', 'cp' ) . '</span> ' . $applies_to . '</div>
+                        <div class="meta"><span>' .__( 'Started by: ', 'cp' ). '</span>' .esc_html( $author ) . ' | ' . esc_html( $date ) . ' | <span>' . esc_html__( 'Applies to:', 'cp' ) . '</span> ' . $applies_to . '</div>
                     </div>
             ';
 		echo '<div class="cp-discussion-responces">';
 		echo '<span class="cp-screen">';
 		if ( 0 == $comments_count->approved ) {
-			_e( '0 Responses', 'coursepress' );
+			_e( '0 Responses', 'cp' );
 		} else {
 			$c = sprintf( '<span>%d</span>', $comments_count->approved );
 			printf(
-				_n( '%s Response', '%s Responses', $comments_count->approved, 'coursepress' ),
+				_n( '%s Response', '%s Responses', $comments_count->approved, 'cp' ),
 				$c
 			);
 		}
 		echo '</span>';
 		echo '<span class="cp-mobile">';
 		printf(
-			__( 'Responses (%d)', 'coursepress' ),
+			__( 'Responses (%d)', 'cp' ),
 			$comments_count->approved
 		);
 		echo '</span>';

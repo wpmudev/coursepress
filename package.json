@@ -1,50 +1,51 @@
 {
-  "name": "coursepress",
-  "version": "3.0.0-beta.5",
-  "title": "CoursePress",
-  "description": "CoursePress WordPress Plugin",
-  "homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:incsub/coursepress.git"
-  },
-  "author": "WPMUDev",
-  "contributors": [
-    {
-      "name": "Irene Mitchell",
-      "email": "irene@incsub.com"
+    "name": "coursepress",
+    "version": "3.0.0-beta.5",
+    "title": "CoursePress",
+    "description": "CoursePress WordPress Plugin",
+    "homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
+    "repository": {
+        "type": "git",
+        "url": "git@bitbucket.org:incsub/coursepress.git"
     },
-    {
-      "name": "Marcin Pietrzak",
-      "email": "marcin@incsub.com"
+    "author": "WPMUDev",
+    "contributors": [
+        {
+            "name": "Irene Mitchell",
+            "email": "irene@incsub.com"
+        },
+        {
+            "name": "Marcin Pietrzak",
+            "email": "marcin@incsub.com"
+        }
+    ],
+    "license": "GPL-2.0",
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-autoprefixer": "~0.7.2",
+        "grunt-checktextdomain": "^1",
+        "grunt-clear": "^0.2.1",
+        "grunt-contrib-clean": "^0.6.0",
+        "grunt-contrib-compress": "~0.5.2",
+        "grunt-contrib-concat": "~0.1.2",
+        "grunt-contrib-copy": "~0.8.2",
+        "grunt-contrib-cssmin": "~0.10.0",
+        "grunt-contrib-jshint": "~1.0.0",
+        "grunt-contrib-sass": "^1.0.0",
+        "grunt-contrib-uglify": "~0.5.1",
+        "grunt-contrib-watch": "~0.6.1",
+        "grunt-git": "^0.3.5",
+        "grunt-jsvalidate": "~0.2.2",
+        "grunt-phpcs": "~0.4.0",
+        "grunt-phplint": "~0.0.8",
+        "grunt-phpunit": "~0.3.5",
+        "grunt-replace": "^0.11.0",
+        "grunt-wp-i18n": "^0.4.9",
+        "load-grunt-tasks": "~0.2.0",
+        "time-grunt": "~0.2.3"
+    },
+    "dependencies": {
+        "grunt-sass": "^2.1.0",
+        "node-sass": "^4.7.2"
     }
-  ],
-  "license": "GPL-2.0",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-autoprefixer": "~0.7.2",
-    "grunt-clear": "^0.2.1",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-compress": "~0.5.2",
-    "grunt-contrib-concat": "~0.1.2",
-    "grunt-contrib-copy": "~0.8.2",
-    "grunt-contrib-cssmin": "~0.10.0",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-contrib-sass": "^1.0.0",
-    "grunt-contrib-uglify": "~0.5.1",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-git": "^0.3.5",
-    "grunt-jsvalidate": "~0.2.2",
-    "grunt-phpcs": "~0.4.0",
-    "grunt-phplint": "~0.0.8",
-    "grunt-phpunit": "~0.3.5",
-    "grunt-replace": "^0.11.0",
-    "grunt-wp-i18n": "^0.4.9",
-    "load-grunt-tasks": "~0.2.0",
-    "time-grunt": "~0.2.3"
-  },
-  "dependencies": {
-    "grunt-sass": "^2.1.0",
-    "node-sass": "^4.7.2"
-  }
 }

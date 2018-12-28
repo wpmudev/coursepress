@@ -599,7 +599,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function import_file( $files, $request ) {
 		// Check permission before importing.
 		if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.' ) ) );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.', 'cp' ) ) );
 		}
 		$import = wp_import_handle_upload();
 		if ( ! empty( $import['id'] ) ) {
@@ -644,7 +644,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function import_course( $request ) {
 		// Check permission first.
 		if ( ! CoursePress_Data_Capabilities::can_create_course() ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.' ) ) );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to import courses.', 'cp' ) ) );
 		}
 		$import_id = $request->import_id;
 		// Let's import the course one at a time to avoid over caps

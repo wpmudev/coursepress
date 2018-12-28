@@ -119,7 +119,7 @@ if ( empty( $assessments ) ) {
 					<td colspan="4" class="cp-tr-expanded">
 						<ul class="cp-assessments-units-expanded">
 							<?php foreach ( $assessments['units'] as $unit ) : ?>
-								<?php if ( empty( $unit->is_answerable ) ) continue; ?>
+								<?php if ( empty( $unit->is_answerable ) ) { continue; } ?>
 								<li>
 									<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<?php if ( $unit->is_graded ) : ?>
@@ -136,7 +136,7 @@ if ( empty( $assessments ) ) {
 														<?php $step_count = 0; ?>
 														<?php if ( ! empty( $module['steps'] ) ) : ?>
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																<?php if ( !$step_count ) : ?>
+																<?php if ( ! $step_count ) : ?>
 																	<tr>
 																		<th colspan="3"><?php echo $module['title']; ?></th>
 																	</tr>
@@ -148,14 +148,14 @@ if ( empty( $assessments ) ) {
 																		<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
 																		<?php
 																			// No need to show grade if not entered by instructor -->
-																			if ( 'fileupload' !== $step->type || ( ! empty( $grade ) && 'pending' !== $grade ) ) :
+																		if ( 'fileupload' !== $step->type || ( ! empty( $grade ) && 'pending' !== $grade ) ) :
 																		?>
-																				<span class="cp-title cp-module-grade-info">
-																					<span class="cp-current-grade"><?php echo round( $grade ); ?>%</span>
-																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-																					<span class="<?php echo 'pass' === $step_status ? 'cp-green' : 'cp-red'; ?> cp-check"><?php echo $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ); ?></span>
-																				</span>
-																			<?php endif; ?>
+																			<span class="cp-title cp-module-grade-info">
+																				<span class="cp-current-grade"><?php echo round( $grade ); ?>%</span>
+																				<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																				<span class="<?php echo 'pass' === $step_status ? 'cp-green' : 'cp-red'; ?> cp-check"><?php echo $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ); ?></span>
+																			</span>
+																		<?php endif; ?>
 																				<?php
 																				$is_assessable = ! empty( $step->assessable ) && coursepress_is_true( $step->assessable );
 																				// Will only allow feedback for 'written','fileupload'.
@@ -239,7 +239,7 @@ if ( empty( $assessments ) ) {
 																						<?php if ( $written_answer ) : ?>
 																							<?php echo stripslashes( $written_answer ); ?>
 																						<?php else : ?>
-																							<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																							<span class="cp-no-answer"><?php _e( 'No answer!', 'cp' ); ?></span>
 																						<?php endif; ?>
 																				<?php else : ?>
 																				<?php if ( isset( $response[ $qkey ] ) ) : ?>
@@ -260,7 +260,7 @@ if ( empty( $assessments ) ) {
 																					</ul>
 																				<?php else : ?>
 																					<ul class="cp-assessments-answers">
-																						<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																						<li><span class="cp-no-answer"><?php _e( 'No answer!', 'cp' ); ?></span</li>
 																					</ul>
 																				<?php endif; ?>
 																				<?php endif; ?>
@@ -288,7 +288,7 @@ if ( empty( $assessments ) ) {
 																			<?php if ( $uploaded_files && isset( $uploaded_files['url'] ) ) : ?>
 																				<a href="<?php echo $uploaded_files['url']; ?>"><?php _e( 'Uploaded File', 'cp' ); ?></a>
 																			<?php else : ?>
-																				<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																				<span class="cp-no-answer"><?php _e( 'No answer!', 'cp' ); ?></span>
 																			<?php endif; ?>
 																		</td>
 																	</tr>
@@ -296,7 +296,7 @@ if ( empty( $assessments ) ) {
 																<tr>
 																	<td colspan="3">
 																		<ul class="cp-assessments-answers">
-																			<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																			<li><span class="cp-no-answer"><?php _e( 'No answer!', 'cp' ); ?></span</li>
 																		</ul>
 																	</td>
 																</tr>

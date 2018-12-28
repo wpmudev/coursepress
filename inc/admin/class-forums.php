@@ -48,7 +48,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	private function render_error() {
-		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Forums' ) ) );
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Forums', 'cp' ) ) );
 	}
 
 	private function get_page_list() {

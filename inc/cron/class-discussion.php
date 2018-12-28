@@ -35,7 +35,7 @@ class CoursePress_Cron_Discussion extends CoursePress_Utility {
 		 */
 		$schedules[ $this->recurrance ] = array(
 			'interval' => 900,
-			'display'  => esc_html__( 'Every quarter of an hour' ),
+			'display'  => esc_html__( 'Every quarter of an hour', 'cp' ),
 		);
 
 		return $schedules;

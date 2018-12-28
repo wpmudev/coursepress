@@ -58,7 +58,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	private function render_error() {
-		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Assessments' ) ) );
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Assessments', 'cp' ) ) );
 	}
 
 	/**

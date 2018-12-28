@@ -70,7 +70,7 @@ foreach ( $bulk_actions as $value => $label ) {
                             <?php echo $column_label; ?>
                         </th>
                     <?php endforeach; ?>
-<?php if ( 'trash' !==$current_status ) { ?>
+<?php if ( 'trash' !== $current_status ) { ?>
                     <th class="column-status"><?php _e( 'Active?', 'cp' ); ?></th>
 <?php } ?>
                 </tr>
@@ -107,8 +107,8 @@ foreach ( $bulk_actions as $value => $label ) {
 											$count = $course->count_units( false );
 
 											printf( _n( '%d Unit', '%d Units', $count, 'cp' ), $count );
-											echo ", ";
-											printf( _n( '%d Published', '%d Published', $count_published ), $count_published );
+											echo ', ';
+											printf( _n( '%d Published', '%d Published', $count_published, 'cp' ), $count_published );
 											break;
 										case 'students' :
 											echo $course->count_students();
@@ -154,7 +154,7 @@ foreach ( $bulk_actions as $value => $label ) {
 									?>
                                 </td>
                             <?php endforeach; ?>
-<?php if ( 'trash' !==$current_status ) { ?>
+<?php if ( 'trash' !== $current_status ) { ?>
                             <td class="column-status">
                                 <label>
                                     <?php $active = ( isset( $course->post_status ) && 'publish' === $course->post_status ); ?>
@@ -168,7 +168,7 @@ foreach ( $bulk_actions as $value => $label ) {
                             <td scope="row" class="check-column"></td>
                             <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo esc_attr( $course->ID ); ?>">
                                 <div class="cp-row-actions">
-                                    <?php if ( 'trash' !==$current_status ) { ?>
+                                    <?php if ( 'trash' !== $current_status ) { ?>
                                         <?php $can_update = CoursePress_Data_Capabilities::can_update_course( $course->ID ); ?>
                                         <?php if ( $can_update ) : ?>
                                             <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |

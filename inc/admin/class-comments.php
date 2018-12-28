@@ -82,7 +82,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	 * @since 3.0.0
 	 */
 	private function render_error() {
-		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Comments' ) ) );
+		coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Comments', 'cp' ) ) );
 	}
 
 	/**

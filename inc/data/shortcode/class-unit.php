@@ -262,7 +262,7 @@ class CoursePress_Data_Shortcode_Unit extends CoursePress_Utility {
 			// Remove "Text or HTML to be displayed after the set of comment fields".
 			'comment_notes_after' => '',
 			// Redefine your own textarea (the comment body).
-			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun', 'cp' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
 		);
 
 		ob_start();

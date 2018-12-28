@@ -34,9 +34,9 @@
 		$cancel_link = $course->get_discussion_url();
 	?>
 	<div class="cp-discussion-new-question">
-		<label><?php esc_html_e( 'Title', 'coursepress' ); ?></label>
+		<label><?php esc_html_e( 'Title', 'cp' ); ?></label>
 		<input class="cp-discussion-title" name="title" type="text" placeholder="<?php esc_attr_e( 'Title of the discussion', 'cp' ); ?>" value=""/>
-		<label><?php esc_html_e( 'Discussion', 'coursepress' ); ?></label>
+		<label><?php esc_html_e( 'Discussion', 'cp' ); ?></label>
 		<textarea class="cp-discussion-content" name="content" placeholder="<?php esc_attr_e( 'Type your discussion or question here…', 'cp' ); ?>"></textarea>
 		<div class="cp-button-links">
 			<a href="<?php echo esc_url( $cancel_link ); ?>" class="button_cancel"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
