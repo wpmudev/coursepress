@@ -2,7 +2,7 @@
 
 class CP_Course_Calendar extends WP_Widget {
 
-    function CP_Course_Calendar() {
+    function __construct() {
         $widget_ops = array( 'classname' => 'cp_course_calendar_widget', 'description' => __('Displays the course calendar.', 'cp') );
         $this->WP_Widget('CP_Course_Calendar', __('Course Calendar', 'cp'), $widget_ops);
     }
