@@ -2,7 +2,7 @@
 
 class CP_Latest_Courses extends WP_Widget {
 
-	function CP_Latest_Courses() {
+	function __construct() {
 		$widget_ops = array( 'classname'   => 'cp_latest_courses_widget',
 		                     'description' => __( 'Displays latest courses', 'cp' )
 		);

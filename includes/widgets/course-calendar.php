@@ -4,7 +4,7 @@ class CP_Course_Calendar extends WP_Widget {
 
 	private $date_indicator = array();
 
-	function CP_Course_Calendar() {
+	function __construct() {
 		$widget_ops = array( 'classname'   => 'cp_course_calendar_widget',
 		                     'description' => __( 'Displays the course calendar.', 'cp' )
 		);
