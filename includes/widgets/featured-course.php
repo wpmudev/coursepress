@@ -4,7 +4,7 @@ class CP_Featured_Course extends WP_Widget {
 
     function __construct() {
         $widget_ops = array( 'classname' => 'cp_featured_widget', 'description' => __('Displays a selected course as featured', 'cp') );
-        $this->WP_Widget('CP_Featured_Course', __('Featured Course', 'cp'), $widget_ops);
+        parent::__construct('CP_Featured_Course', __('Featured Course', 'cp'), $widget_ops);
     }
 
     function form( $instance ) {
