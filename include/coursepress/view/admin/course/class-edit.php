@@ -844,15 +844,13 @@ class CoursePress_View_Admin_Course_Edit {
 
 	private static function render_setup_step_6() {
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-
 		// Payment can be disabled using the COURSEPRESS_DISABLE_PAYMENT constant or hooking the filter
 		$disable_payment = defined( 'COURSEPRESS_DISABLE_PAYMENT' ) && true == COURSEPRESS_DISABLE_PAYMENT;
 		$disable_payment = apply_filters( 'coursepress_disable_course_payments', $disable_payment, $course_id );
-
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_6', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
 
-		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', 'coursepress' ) : '';
+		$payment_tagline = ! $disable_payment ? __( ' & sssCourse Cost', 'coursepress' ) : '';
 
 		$content = '
 			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 – Enrollment%s', 'coursepress' ), $payment_tagline ) ) . '
@@ -925,7 +923,12 @@ class CoursePress_View_Admin_Course_Edit {
 			';
 
 		$paid_checked = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'payment_paid_course', false ) );
+
+		l( $paid_checked );
+
 		$is_paid = ! empty( $paid_checked );
+
+		l( $is_paid );
 
 		if ( ! $disable_payment ) {
 			$content .= '
@@ -937,7 +940,7 @@ class CoursePress_View_Admin_Course_Edit {
 					<p class="description">' . esc_html__( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'coursepress' ) . '</p>
 					<label class="checkbox narrow">
 						<input type="checkbox" name="meta_payment_paid_course" ' . $paid_checked . ' />
-						<span>' . esc_html__( 'This is a paid course', 'coursepress' ) . '</span>
+						<span>' . esc_html__( 'aThis is a paid course', 'coursepress' ) . '</span>
 					</label>
 				</div>';
 		}
@@ -966,15 +969,15 @@ class CoursePress_View_Admin_Course_Edit {
 
 			/**
 			 * Hook this filter to get rid of the payment message
-             */
-            $message = sprintf(
-                '<div class="payment-message %%s"><h3>%s</h3>%%s%%s<p>%s</p></div>',
-                esc_html__( 'Sell your courses online with MarketPress.', 'coursepress' ),
-                esc_html__( 'Other supported plugins: WooCommerce', 'coursepress' )
-            );
-            $payment_message = apply_filters( 'coursepress_course_payment_message',
-                sprintf( $message, $class, $version_message, $install_message ), $course_id
-            );
+			 */
+			$message = sprintf(
+				'<div class="payment-message %%s"><h3>%s</h3>%%s%%s<p>%s</p></div>',
+				esc_html__( 'Sell your courses online with MarketPress.', 'coursepress' ),
+				esc_html__( 'Other supported plugins: WooCommerce', 'coursepress' )
+			);
+			$payment_message = apply_filters( 'coursepress_course_payment_message',
+				sprintf( $message, $class, $version_message, $install_message ), $course_id
+			);
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
 

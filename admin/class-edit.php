@@ -577,10 +577,27 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		public static function step_6() {
 			$setup_class = self::$settings['setup_step_6'];
 			$setup_class = 5 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
+			$disable_payment = true;
+			/**
+			 * Check payment Availability (integrations)
+			 */
+			$is_payment_available = false;
+			$filters_to_check = array(
+				'coursepress_is_marketpress_active',
+				'coursepress_is_woocommerce_active',
+			);
+			foreach ( $filters_to_check as $filter ) {
+				if ( $is_payment_available ) {
+					continue;
+				}
+				$is_payment_available = apply_filters( 'coursepress_is_marketpress_active', $is_payment_available );
+			}
+			if ( ! $is_payment_available ) {
+				$disable_payment = false;
+			}
 			$disable_payment = defined( 'COURSEPRESS_DISABLE_PAYMENT' ) && true == COURSEPRESS_DISABLE_PAYMENT;
 			$disable_payment = apply_filters( 'coursepress_disable_course_payments', $disable_payment, self::$course_id );
 			$is_paid_course = ! empty( self::$settings['payment_paid_course'] );
-
 			//$data_course = new CoursePress_Data_Course();
 			$data_instructor = new CoursePress_Data_Instructor();
 			$mp_class = new Coursepress_Helper_Extension_MarketPress();

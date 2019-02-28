@@ -38,6 +38,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 		self::$is_active = true;
 
+		add_filter( 'coursepress_is_woocommerce_active', '__return_true' );
 		add_filter( 'coursepress_payment_supported', array( __CLASS__, 'is_payment_supported' ), 10, 2 );
 
 		// Add additional fields to Course Setup Step 6 if paid is checked
@@ -227,7 +228,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				<label class="normal">
 					<span> ' . esc_html__( 'Course SKU:', 'coursepress' ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'coursepress' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'coursepress' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'woo/sku', '' ) . '" /><br >
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
 					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'coursepress' ) . '</span>
@@ -269,25 +270,16 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 */
 	public static function get_product_id( $course_id = false ) {
-		$args = array(
-			'posts_per_page' => 1,
-			'post_type'		 => self::$product_ctp,
-			'post_status'	 => 'any',
-			'fields'		 => 'ids',
-		);
-
-		$products = get_posts( $args );
-
-		if ( isset( $products[0] ) ) {
-			return (int) $products[0];
-		} else {
-			return false;
-		}
-		// copmare to this value!:
-		//CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id' );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
+		/**
+		 * Check if the corresponding product exists, if not, set product ID
+		 * to false. This happens if the product "accidentally" got deleted.
+		 */
+		return  $product_id && get_post_status( $product_id ) ? $product_id : false;
 	}
 
 	public static function update_product( $course_id, $settings ) {
+
 		$automatic_sku_number = 'CP-' . $course_id;
 
 		if ( ! self::$is_active ) {
@@ -329,8 +321,11 @@ class CoursePress_Helper_Integration_WooCommerce {
 				$sku[0] = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sku'] ) ? $settings['mp_sku'] : '' ), true );
 			}
 
+			l( $sku );
+
 			if ( self::$is_active ) {
 				CoursePress_Data_Course::update_setting( $course_id, 'woo/product_id', $post_id );
+				CoursePress_Data_Course::update_setting( $course_id, 'woo/sku', $sku[0] );
 
 				$price	  = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_product_price'] ) ? $settings['mp_product_price'] : 0 ), true );
 				$sale_price = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_product_sale_price'] ) ? $settings['mp_product_sale_price'] : 0 ), true );
