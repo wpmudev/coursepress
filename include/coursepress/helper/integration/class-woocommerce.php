@@ -1030,7 +1030,11 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( 'no' == $enable_guest_checkout ) {
 			return $enable_guest_checkout;
 		}
-		$cart_data = WC()->cart->get_cart();
+		$cart = WC()->cart;
+		$cart_data = array();
+		if ( method_exists( $cart, 'get_cart' ) ) {
+			$cart_data = $cart->get_cart();
+		}
 		foreach ( $cart_data as $cart_item_key => $values ) {
 			$_product = $values['data'];
 			$course_id = self::get_course_id_by_product( $_product->post->ID );
