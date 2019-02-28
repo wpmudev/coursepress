@@ -1,6 +1,6 @@
-/*! CoursePress - v2.2.0
+/*! CoursePress - v2.2.1-beta.2
  * https://premium.wpmudev.org/project/coursepress-pro/
- * Copyright (c) 2018; * Licensed GPLv2+ */
+ * Copyright (c) 2019; * Licensed GPLv2+ */
 +(function($){
 	CoursePress = CoursePress || {};
 	CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );

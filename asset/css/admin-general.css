@@ -2123,6 +2123,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   background-color: #F4F4F4;
   padding: 8px;
   font-style: italic;
+  white-space: pre;
 }
 .cp-content .cp-unit-div .cp-modules .button, .cp-content .cp-unit-div .cp-modules .button-primary {
   font-size: 12px;

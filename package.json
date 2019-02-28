@@ -1,13 +1,13 @@
 {
 	"name": "coursepress",
-	"version": "2.2.0",
+	"version": "2.2.1-beta.2",
 	"description": "CoursePress WordPress Plugin",
 	"homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
 	"repository": {
 		"type": "git",
 		"url": "git@bitbucket.org:incsub/coursepress.git"
 	},
-  "title": "CoursePress",
+	"title": "CoursePress",
 	"author": "WPMUDev",
 	"contributors": [
 		{
@@ -56,7 +56,6 @@
 	"scripts": {
 		"test-php": "phpunit -c test/php/lib/phpunit.xml --coverage-text=/tmp/coverage.txt",
 		"test-js": "node_modules/.bin/mocha test/js",
-		"test": "npm run test-php && npm run test-js",
 		"test": "npm run test-php"
 	}
 }
