@@ -28,7 +28,7 @@ if ( ! empty( $discussion ) ) {
 ?>
     <h1 class="cp-page-title cp-page-title-discussion"><?php _e( 'Discussion:', 'cp' ); ?> <?php echo esc_html( $discussion->post_title ); ?></h1>
     <div class="cp-page-meta">
-        <b><?php esc_html_e( 'Started by:', 'cp' ); ?></b> <?php echo get_the_author_meta( $discussion->post_author, 'display_name' ); ?>
+        <b><?php esc_html_e( 'Started by:', 'cp' ); ?></b> <?php echo get_the_author_meta( 'display_name', $discussion->post_author ); ?>
         | <?php echo get_the_date( '', $discussion->ID ); ?>
         | <b><?php esc_html_e( 'Applies to:', 'cp' ); ?></b> <?php echo coursepress_get_course_title(); ?>
     </div>
