@@ -202,9 +202,9 @@ name="meta_course_category">
 						<tr>
 							<th><?php esc_html_e( 'Instructor Name', 'cp' ); ?></th>
 							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
-							<?php if ( $can_assign_instructor ) : ?>
+							<?php if ( $can_assign_instructor ) { ?>
 								<th></th>
-							<?php endif; ?>
+							<?php } ?>
 						</tr>
 					</thead>
 					<tbody id="invited-instructor-list">
@@ -221,9 +221,9 @@ name="meta_course_category">
 						<tr>
 							<th><?php esc_html_e( 'Facilitator Name', 'cp' ); ?></th>
 							<th><?php esc_html_e( 'Email', 'cp' ); ?></th>
-							<?php if ( $can_assign_facilitator ) : ?>
+							<?php if ( $can_assign_facilitator ) { ?>
 								<th></th>
-							<?php endif; ?>
+							<?php } ?>
 						</tr>
 					</thead>
 					<tbody id="invited-facilitator-list">

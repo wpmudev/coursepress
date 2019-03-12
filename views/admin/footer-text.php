@@ -9,14 +9,13 @@
         <a href="https://premium.wpmudev.org/">WPMU DEV</a>
     </div>
 <?php
-$is_member = false;
+$hide_footer = $is_member = false;
 if ( function_exists( 'is_wpmudev_member' ) ) {
 	$is_member = is_wpmudev_member();
 }
 
 if ( $is_member ) {
 	$hide_footer = apply_filters( 'wpmudev_coursepress_change_footer', $hide_footer );
-	$footer_text = apply_filters( 'wpmudev_coursepress_footer_text', $footer_text );
 	if ( ! $hide_footer ) {
 ?>
                     <ul class="sui-footer-nav">
