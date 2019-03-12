@@ -703,7 +703,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$sample_courses = array(
 			'introduction-to-upfront' => array(
 				'title' => __( 'Introduction to Upfront', 'cp' ),
-				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.introduction-to-upfront-4.json',
+				'file' => 'introduction-to-upfront.json',
 			),
 			'wordpress-multisite-masterclass' => array(
 				'title' => __( 'WordPress Multisite Master Class', 'cp' ),
