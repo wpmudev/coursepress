@@ -39,6 +39,14 @@
                 width: 100%;
             }
         }
+        @media screen and ( max-width: $width_7 ) {
+            padding: 15px;
+            background-color: $grey_9;
+            @include boxshadow( 0 2px 2px 0 #e0e6eb );
+            .button {
+                padding: 10px;
+            }
+        }
     }
     ul {
         &.cp-discussion-archive-list,
@@ -56,8 +64,9 @@
                 background-color: $grey_9;
                 margin-bottom: 1em;
                 padding: 30px;
-                @media screen and ( max-width: $width_8 ) {
+                @media screen and ( max-width: $width_7 ) {
                     padding: 15px 15px 45px 15px;
+                    margin-bottom: 15px;
                 }
                 &.date {
                     padding: 0 0 30px 0;
@@ -115,6 +124,9 @@
             li {
                 margin-bottom: 0;
                 border-bottom: 1px solid $grey_12;
+                @media screen and ( max-width: $width_7 ) {
+                    margin-bottom: 15px;
+                }
             }
         }
         &.notification-archive-list {
@@ -180,8 +192,16 @@
             vertical-align: top;
             width: 100%;
             @include font( 20, 24, 600 );
+            @media screen and ( max-width: $width_7 ) {
+                margin-bottom: 15px;
+            }
             @media screen and ( max-width: $width_8 ) {
                 @include font( 16, 19, 600 );
+            }
+        }
+        .cp-discussion-content {
+            @media screen and ( max-width: $width_7 ) {
+                margin-bottom: 15px;
             }
         }
         @media screen and ( max-width: $width_8 ) {
