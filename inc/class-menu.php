@@ -5,6 +5,8 @@
 class CoursePress_Menu extends CoursePress_Utility {
 	var $menu_location = 'primary';
 
+	private $current = null;
+
 	public function __construct() {
 
 		// Only assign our custom menu if it is enabled.
@@ -64,7 +66,28 @@ class CoursePress_Menu extends CoursePress_Utility {
 		return $menu;
 	}
 
-	function maybe_setup_menu( $menu_items, $args ) {
+	/**
+	 * Check current menu and set $current property.
+	 *
+	 * @since 3.0.0
+	 */
+	private function compare_url( $url ) {
+		if ( empty( $this->current ) ) {
+			global $wp;
+			$this->current = home_url( $wp->request );
+		}
+		if ( $url === $this->current ) {
+			return true;
+		}
+		$url = trim( $url, '/' );
+		if ( $url === $this->current ) {
+			return true;
+		}
+		return false;
+	}
+
+	public function maybe_setup_menu( $menu_items, $args ) {
+		global $wp;
 		if ( $args->theme_location != $this->menu_location ) {
 			return $menu_items;
 		}
@@ -74,51 +97,61 @@ class CoursePress_Menu extends CoursePress_Utility {
 		$menu->title = __( 'Courses', 'cp' );
 		$menu->url = coursepress_get_main_courses_url();
 		$menu->ID = 'cp-courses';
-
+		$menu->current = $this->compare_url( $menu->url );
 		array_push( $menu_items, $menu );
-
+		$parent_id = time();
 		// If current user is logged in, set dashboard
 		if ( is_user_logged_in() ) {
+			/**
+			 * Dashboard
+			 */
 			$dashboard_menu = $this->get_menu_object();
 			$dashboard_menu->title = __( 'Dashboard', 'cp' );
 			$dashboard_menu->ID = 'cp-dashboard';
-			$dashboard_menu->db_id = 9998;
+			$dashboard_menu->db_id = $parent_id;
 			$dashboard_menu->url = coursepress_get_dashboard_url();
-
+			$dashboard_menu->current = $this->compare_url( $dashboard_menu->url );
 			array_push( $menu_items, $dashboard_menu );
-
+			/**
+			 * My Dashboard
+			 */
 			$my_dashboard = $this->get_menu_object();
 			$my_dashboard->title = __( 'My Dashboard', 'cp' );
 			$my_dashboard->ID = 'cp-my-dashboard';
 			$my_dashboard->url = $dashboard_menu->url;
-			$my_dashboard->menu_item_parent = 9998;
-
+			$my_dashboard->menu_item_parent = $parent_id;
+			$my_dashboard->current = $this->compare_url( $dashboard_menu->url );
 			array_push( $menu_items, $my_dashboard );
-
+			/**
+			 * My Profile
+			 */
 			$student_menu = $this->get_menu_object();
 			$student_menu->title = __( 'My Profile', 'cp' );
 			$student_menu->ID = 'cp-settings';
-			$student_menu->menu_item_parent = 9998;
+			$student_menu->menu_item_parent = $parent_id;
 			$student_menu->url = coursepress_get_student_settings_url();
-
+			$student_menu->current = $this->compare_url( $student_menu->url );
 			array_push( $menu_items, $student_menu );
-
-			// Logout
+			/**
+			 *  Logout
+			 */
 			$logout_menu = $this->get_menu_object();
 			$logout_menu->title = __( 'Logout', 'cp' );
 			$logout_menu->ID = 'cp-logout';
 			$logout_menu->url = wp_logout_url( $menu->url );
+			$logout_menu->current = $this->compare_url( $logout_menu->url );
 			array_push( $menu_items, $logout_menu );
 		} else {
-			// Add login menu
+			/**
+			 * Add login menu
+			 */
 			$login_menu = $this->get_menu_object();
 			$login_menu->title = __( 'Log In', 'cp' );
 			$login_menu->ID = 'cp-login';
 			$login_menu->url = coursepress_get_student_login_url( $menu->url );
-
+			$login_menu->current = $this->compare_url( $login_menu->url );
 			array_push( $menu_items, $login_menu );
 		}
-
 		return $menu_items;
 	}
 }
