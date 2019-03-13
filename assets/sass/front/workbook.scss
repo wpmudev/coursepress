@@ -1,10 +1,31 @@
 .coursepress-wrap {
     .grades {
         @media screen and (max-width: $width_7) {
+            margin: 15px 15px 0 15px;
             background-color: $grey_9;
-            padding: 24px 15px;
+            padding: 15px;
             .grades-table {
                 margin: 0;
+                border: 0;
+                tbody {
+                    border-width: 1px 0 0 0;
+                }
+                td, th {
+                    padding: 6px 0;
+                }
+                th {
+                    padding-bottom: 15px;
+                }
+                .row-unit {
+                    td {
+                        padding-bottom: 0;
+                    }
+                }
+                .row-elements {
+                    td {
+                        padding-top: 0;
+                    }
+                }
             }
         }
     }
@@ -73,7 +94,9 @@
         thead {
             th {
                 @include font( 18, 21, 600 );
+                @media screen and ( min-width: $width_7 ) {
                 padding-bottom: 26px;
+                }
             }
         }
     }
@@ -133,7 +156,8 @@
         padding: 25px 15px;
         @media screen and (max-width: $width_7) {
             padding-right: 30px;
-            margin-top: 0;
+            margin: 0 15px;
+            border-top: 1px solid $grey_12;
         }
         @media screen and ( max-width: $width_8 ) {
             @include font( 20, 24, 600 );
