@@ -348,17 +348,14 @@ class CoursePress_Course extends CoursePress_Utility {
 			$height = coursepress_get_setting( 'course/image_height', 220 );
 		}
 		if ( ! empty( $feature_video ) ) {
-			$attr = array(
-				'src' => esc_url( $feature_video ),
-				'class' => 'video-js vjs-default-skin vjs-big-play-centered course-feature-video',
-				'width' => $width,
-				'height' => $height,
-				'data-setup' => $this->create_video_js_setup_data( $feature_video ),
+
+			$shortcode = sprintf(
+				'[embed width="%d" height="%d"]%s[/embed]',
+				$width,
+				$height,
+				esc_url( $feature_video )
 			);
-			if ( is_singular() ) {
-				$attr['controls'] = 1;
-			}
-			return $this->create_html( 'video', $attr );
+			return $GLOBALS['wp_embed']->run_shortcode( $shortcode );
 		}
 		return null;
 	}
