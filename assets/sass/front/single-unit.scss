@@ -30,7 +30,6 @@
                 .content-area {
                     .page-header {
                         position: relative;
-                        @include width;
                         margin: 0 auto;
                         .course-title,
                         .course-breadcrumb,
@@ -52,11 +51,13 @@
         }
     }
     .course-content-template {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
         margin: 25px 0;
         @include padding_width_7;
         @include clearfix;
         .toggle {
+            flex-basis: 100%;
             display: none;
             cursor: pointer;
             &:before {
@@ -74,12 +75,16 @@
         .unit-description {
             margin-top: 2em;
         }
+        .course-content {
+            flex: 1;
+        }
 
         @media screen {
-            @media (min-width: $width_7) {
+            @media (max-width: $width_7) {
                 .course-structure-nav {
                     position: absolute;
-                    display: block;
+                    display: none;
+                    top: 4em;
                 }
             }
         }
