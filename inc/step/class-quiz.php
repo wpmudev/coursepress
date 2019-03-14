@@ -101,9 +101,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		$course_id         = $this->__get( 'course_id' );
 		$unit_id           = $this->__get( 'unit_id' );
 		$step_id           = $this->__get( 'ID' );
-
 		$status = $user->get_step_grade_status( $course_id, $unit_id, $step_id );
-
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
 			$progress = $user->get_completion_data( $this->__get( 'course_id' ) );
@@ -143,8 +141,8 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 											if ( isset( $user_response[ $answer_pos ] ) ) {
 												$user_ans = intval( $user_response[ $answer_pos ] );
 												if (
-												$checked[ $answer_pos ]
-												&& $user_ans === $checked[ $answer_pos ]
+													$checked[ $answer_pos ]
+													&& $user_ans === intval( $checked[ $answer_pos ] )
 												) {
 													$correct++;
 												} else {
