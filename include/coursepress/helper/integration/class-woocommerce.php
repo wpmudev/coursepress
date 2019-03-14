@@ -24,7 +24,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @since  2.0.0
 	 */
 	public static function init() {
-
 		/**
 		 * Always setup _coursepress javasctipt object.
 		 */
@@ -32,22 +31,18 @@ class CoursePress_Helper_Integration_WooCommerce {
 			'coursepress_localize_object',
 			array( __CLASS__, 'add_settings_to_js_coursepress' )
 		);
-
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
 		self::$is_active = true;
-
 		add_filter( 'coursepress_is_woocommerce_active', '__return_true' );
 		add_filter( 'coursepress_payment_supported', array( __CLASS__, 'is_payment_supported' ), 10, 2 );
-
 		// Add additional fields to Course Setup Step 6 if paid is checked
 		add_filter(
 			'coursepress_course_setup_step_6_paid',
 			array( __CLASS__, 'product_settings' ),
 			10, 2
 		);
-
 		/**
 		 * This filter allow to set that the user bought the course.
 		 *
@@ -62,52 +57,43 @@ class CoursePress_Helper_Integration_WooCommerce {
 			array( __CLASS__, 'is_user_purchased_course' ),
 			10, 3
 		);
-
 		add_action(
 			'coursepress_course_updated',
 			array( __CLASS__, 'update_product' ),
 			10, 2
 		);
-
 		add_action(
 			'before_delete_post',
 			array( __CLASS__, 'update_product_when_deleting_course' )
 		);
-
 		add_action(
 			'before_delete_post',
 			array( __CLASS__, 'update_course_when_deleting_product' )
 		);
-
 		add_action(
 			'add_meta_boxes',
 			array( __CLASS__, 'add_post_parent_metabox' )
 		);
-
 		add_action(
 			'post_updated',
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-
 		add_action( 'woocommerce_process_product_meta_simple', array( __CLASS__, 'woo_save_post' ), 999 );
 		add_action( 'woocommerce_order_details_after_order_table', array( __CLASS__, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 		add_filter( 'woocommerce_cart_item_name', array( __CLASS__, 'change_cp_item_name' ), 10, 3 );
 		add_filter( 'woocommerce_order_item_name', array( __CLASS__, 'change_cp_order_item_name' ), 10, 2 );
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'change_order_status' ), 10, 3 );
-
 		add_filter(
 			'coursepress_enroll_button',
 			array( __CLASS__, 'enroll_button' ),
 			10, 4
 		);
-
 		add_filter(
 			'coursepress_shortcode_course_cost',
 			array( __CLASS__, 'get_course_cost_html' ),
 			10, 2
 		);
-
 		/**
 		 * Allow to add step template.
 		 *
@@ -121,14 +107,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			array( __CLASS__, 'add_to_cart_template' ),
 			10, 1
 		);
-
 		/** This filter is documented in include/coursepress/data/class-course.php */
 		add_filter(
 			'coursepress_enroll_student',
 			array( __CLASS__, 'allow_student_to_enroll' ),
 			10, 3
 		);
-
 		/**
 		 * redirect product to course
 		 */
@@ -137,7 +121,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 			'template_redirect',
 			array( __CLASS__, 'redirect_to_product' )
 		);
-
 		/**
 		 * replace product link to course link
 		 */
@@ -147,22 +130,18 @@ class CoursePress_Helper_Integration_WooCommerce {
 			array( __CLASS__, 'change_product_link_to_course_link' ),
 			10, 2
 		);
-
 		/**
 		 * Change product status if course is not available.
 		 */
 		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'woocommerce_before_main_content' ) );
-
 		/**
 		 * WooCommerce change order status
 		 */
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'woocommerce_order_status_changed' ), 21, 3 );
-
 		/**
 		 * check cart before allow to proceder. Courses can not be buy by guests.
 		 */
 		add_filter( 'pre_option_woocommerce_enable_guest_checkout', array( __CLASS__, 'check_cart_and_user_login' ) );
-
 		/**
 		 * WooCommerce payment complete -> CoursePress enroll student.
 		 */
@@ -208,7 +187,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 					esc_html__( 'WooCommerce Product Settings', 'coursepress' ) .
 					'</label>
 				<p class="description">' . esc_html__( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings below.', 'coursepress' ) . '</p>
-
 				<label class="normal required">
 					' . esc_html__( 'Full Price', 'coursepress' ) . '
 				</label>
@@ -320,32 +298,24 @@ class CoursePress_Helper_Integration_WooCommerce {
 			} else {
 				$sku[0] = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sku'] ) ? $settings['mp_sku'] : '' ), true );
 			}
-
-			l( $sku );
-
 			if ( self::$is_active ) {
 				CoursePress_Data_Course::update_setting( $course_id, 'woo/product_id', $post_id );
 				CoursePress_Data_Course::update_setting( $course_id, 'woo/sku', $sku[0] );
-
 				$price	  = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_product_price'] ) ? $settings['mp_product_price'] : 0 ), true );
 				$sale_price = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_product_sale_price'] ) ? $settings['mp_product_sale_price'] : 0 ), true );
-
 				update_post_meta( $post_id, '_virtual', 'yes' );
 				update_post_meta( $post_id, '_sold_individually', 'yes' );
 				update_post_meta( $post_id, '_sku', $sku[0] );
 				update_post_meta( $post_id, '_regular_price', $price );
 				update_post_meta( $post_id, '_visibility', 'visible' );
-
 				if ( ! empty( $settings['mp_sale_price_enabled'] ) ) {
 					update_post_meta( $post_id, '_sale_price', $sale_price );
 					update_post_meta( $post_id, '_price', $sale_price );
 				} else {
 					update_post_meta( $post_id, '_price', $price );
 				}
-
 				update_post_meta( $post_id, 'mp_sale_price_enabled', CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sale_price_enabled'] ) ? $settings['mp_sale_price_enabled'] : '' ), true ) );
 				update_post_meta( $post_id, 'cp_course_id', $course_id );
-
 				// Resave product meta
 				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_price', $price );
 				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_sale_price', $sale_price );
@@ -379,7 +349,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 				}
 			}
 		}
-
 	}
 
 	/**
