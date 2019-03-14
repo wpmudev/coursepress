@@ -106,8 +106,12 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 	 * @param  array $settings Settings.
 	 */
 	public function migrate_settings( $settings ) {
-		// Migrate general settings.
-		$settings['general'] = wp_parse_args( $settings['course'], $settings['general'] );
+		/**
+		 * Migrate general settings.
+		 */
+		if ( isset( $settings['course'] ) ) {
+			$settings['general'] = wp_parse_args( $settings['course'], $settings['general'] );
+		}
 		if ( ! empty( $settings['course']['enrollment_type_default'] ) ) {
 			$enrollment_type_default                        = ( 'anyone' === $settings['course']['enrollment_type_default'] ) ? 'registered' : $settings['course']['enrollment_type_default'];
 			$settings['general']['enrollment_type_default'] = $enrollment_type_default;
@@ -119,28 +123,40 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 			$settings['general']['instructor_show_username'] = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : 0;
 			$settings['instructor_show_username']            = ( 'on' === $settings['instructor']['show_username'] ) ? 1 : '';
 		}
-
-		// Migrate pages.
-		$settings['slugs']['pages'] = wp_parse_args( $settings['pages'], $settings['slugs']['pages'] );
-
+		/**
+		 * Migrate pages.
+		 */
+		if ( isset( $settings['pages'] ) ) {
+			$settings['slugs']['pages'] = wp_parse_args( $settings['pages'], $settings['slugs']['pages'] );
+		}
 		// Migrate Emails.
 		if ( ! empty( $settings['email']['instructor_module_feedback'] ) ) {
 			$settings['email']['instructor_feedback'] = $settings['email']['instructor_module_feedback'];
 		}
-		foreach ( $settings['email'] as $key => $email ) {
-			$value = '';
-			if ( ! isset( $settings['email'][ $key ] ) ) {
-				$settings['email'][ $key ] = array();
+		if ( isset( $settings['email'] ) && is_array( $settings['email'] ) ) {
+			foreach ( $settings['email'] as $key => $email ) {
+				$value = '';
+				if ( ! isset( $settings['email'][ $key ] ) ) {
+					$settings['email'][ $key ] = array();
+				}
+				if ( isset( $settings['email'][ $key ]['enabled'] ) && $settings['email'][ $key ]['enabled'] ) {
+					$value = 1;
+				}
+				$settings['email'][ $key ]['enabled'] = $value;
 			}
-			if ( isset( $settings['email'][ $key ]['enabled'] ) && $settings['email'][ $key ]['enabled'] ) {
-				$value = 1;
-			}
-			$settings['email'][ $key ]['enabled'] = $value;
 		}
-
-		// Migrate caps.
-		$settings['capabilities']['instructor']                                = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor'] );
-		$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
+		/**
+		 * Migrate caps.
+		 */
+		if (
+			isset( $settings['instructor'] )
+			&& isset( $settings['instructor']['capabilities'] )
+		) {
+			$settings['capabilities']['instructor'] = wp_parse_args( $settings['instructor']['capabilities'], $settings['capabilities']['instructor'] );
+			if ( isset( $settings['instructor']['capabilities']['coursepress_assessments_cap'] ) ) {
+				$settings['capabilities']['instructor']['coursepress_assessments_cap'] = $settings['instructor']['capabilities']['coursepress_assessment_cap'];
+			}
+		}
 
 		// Migrate certificate.
 		if ( isset( $settings['basic_certificate'] ) ) {
@@ -458,7 +474,7 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 				if ( $student->add_course_student( $course, false ) ) {
 					$result['students']['added']++;
 					$meta_name = sprintf( 'course_%d_progress', $course_id );
-					$progress = get_user_meta( $student_id, $meta_name, true );
+					// $progress = get_user_meta( $student_id, $meta_name, true );
 					$progress = get_user_option( $meta_name, $student_id );
 					if ( isset( $progress['completion'] ) ) {
 						foreach ( $progress['completion'] as $unit_id => $data ) {
@@ -516,7 +532,6 @@ class CoursePress_Admin_Upgrade  extends CoursePress_Admin_Page {
 												$response_key = array_shift( $question_key );
 											}
 										}
-
 										$progress = coursepress_set_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id, $response );
 										if ( count( $question ) <= 1 ) {
 											$fixed_response = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/responses/'.$step_id.'/response' );

@@ -292,10 +292,19 @@
 																				<td>
 																					<?php if ( isset( $response[ $qkey ] ) ) : ?>
 																						<ul class="cp-assessments-answers">
-																							<?php if ( in_array( $question['type'], array( 'single', 'select' ), true ) ) : ?>
+<?php if ( in_array( $question['type'], array( 'single', 'select' ), true ) ) :
+	$single_response = $response[ $qkey ];
+	if ( is_array( $response[ $qkey ] ) ) {
+		foreach ( $response[ $qkey ] as $response_qkey_id => $response_qkey_value ) {
+			if ( $response_qkey_value ) {
+				$single_response = $response_qkey_id;
+			}
+		}
+	}
+?>
 																								<li>
-																									<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? '' : 'cp-right-answer'; ?>
-																									<span class="<?php echo $ans_span_class; ?>"><?php echo $question['options']['answers'][ $response[ $qkey ] ]; ?></span>
+																									<?php $ans_span_class = empty( $question['options']['checked'][ $single_response ] ) ? '' : 'cp-right-answer'; ?>
+																									<span class="<?php echo $ans_span_class; ?>"><?php echo $question['options']['answers'][ $single_response ]; ?></span>
 																								</li>
 																							<?php elseif ( 'multiple' === $question['type'] ) : ?>
 																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>

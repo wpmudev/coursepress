@@ -247,7 +247,7 @@ class CoursePress_User extends CoursePress_Utility {
 	/************************************************
 	 * USER AS STUDENT
 	 ***********************************************/
-	private function get_student_id( $course_id ) {
+	private function get_student_progress_id( $course_id ) {
 		global $wpdb;
 		$id = $this->__get( 'ID' );
 		if ( ! $id ) {
@@ -328,7 +328,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id ) {
 			return false;
 		}
-		$student_id = $this->get_student_id( $course_id );
+		$student_id = $this->get_student_progress_id( $course_id );
 		return (int) $student_id > 0;
 	}
 
@@ -349,7 +349,6 @@ class CoursePress_User extends CoursePress_Utility {
 		 * Check passcode
 		 */
 		if ( $check_passcode ) {
-
 			$passcode = filter_input( INPUT_POST, 'course_passcode' );
 			$course_passcode = coursepress_course_get_setting( $course_id, 'enrollment_passcode', '' );
 			if ( $course_passcode != trim( $passcode ) && ! CoursePress_Data_Capabilities::can_add_course_student( $course_id )  ) {
@@ -376,12 +375,12 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id ) {
 			return false;
 		}
-		$student_id = $this->get_student_id( $course_id );
+		$student_id = $this->get_student_progress_id( $course_id );
 		if ( (int) $student_id > 0 ) {
 			// Delete as student
 			$wpdb->delete( $this->student_table, array( 'ID' => $student_id ), array( '%d' ) );
 			// Delete student progress
-			$progress_id = $this->get_progress_id( $student_id );
+			$progress_id = $this->get_progress_id( $id );
 			if ( $progress_id > 0 ) {
 				$wpdb->delete( $this->progress_table, array( 'ID' => $progress_id ), array( '%d' ) );
 			}
@@ -404,15 +403,14 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( empty( $course_id ) || empty( $progress ) || ! $id ) {
 			return false;
 		}
-		$student_id = $this->get_student_id( $course_id );
-		if ( (int) $student_id > 0 ) {
+		if ( (int) $id > 0 ) {
 			$progress = maybe_serialize( $progress );
 			$param = array(
 				'course_id' => $course_id,
-				'student_id' => $student_id,
+				'student_id' => $id,
 				'progress' => $progress,
 			);
-			$progress_id = $this->get_progress_id( $student_id );
+			$progress_id = $this->get_progress_id( $id );
 			if ( (int) 0 === $progress_id ) {
 				$wpdb->insert( $this->progress_table, $param );
 			} else {
@@ -434,8 +432,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $this->is_enrolled_at( $course_id ) ) {
 			return null;
 		}
-		$student_id = $this->get_student_id( $course_id );
-		$progress_id = $this->get_progress_id( $student_id );
+		$progress_id = $this->get_progress_id( $id );
 		// Get from cache if exist.
 		$progress = wp_cache_get( 'course_progress_data_' . $id, 'cp_course_' . $course_id );
 		if ( (int) $progress_id > 0 && false === $progress ) {
