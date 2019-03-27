@@ -254,7 +254,7 @@ class CoursePress {
 	 **/
 	private static function register_cp_theme_directory() {
 		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-				dirname( self::$path ) . '/themes'
+				self::$path . 'themes'
 			)
 		);
 		foreach ( $theme_directories as $theme_directory ) {
