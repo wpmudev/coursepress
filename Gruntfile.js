@@ -86,12 +86,16 @@ module.exports = function(grunt) {
 				'../release/1.x/excludes/external/dashboard/'
 			],
 			exclude_2_free: [
-				'../release/2.0/test',
+				'../release/2.0/license.txt',
 				'../release/2.0/campus',
 				'../release/2.0/changelog.txt',
+				'../release/2.0/composer.json',
+				'../release/2.0/package-lock.json',
 				'../release/2.0/premium/',
-				'../release/languages/*po',
+				'../release/2.0/test',
+				'../release/changelog.txt',
 				'../release/languages/*mo',
+				'../release/languages/*po',
 			],
 			base: 'coursepress/2.0-release',
 			pro: 'coursepress/2.0-release-pro',
