@@ -5,6 +5,10 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.2.2 =
+-------------------------------------------------
+- Fixed: problem CoursePress Theme directory.
+
 = 2.2.1 =
 -------------------------------------------------
 - Fixed: problem with saving course.
