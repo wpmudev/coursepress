@@ -2441,6 +2441,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 							switch_to_blog( $blog_id );
 							$instructors = get_post_meta( $course_id, 'instructors', true );
 
+							if(!is_array($instructors)) {
+								$instructors = array();
+							}
 							// User is not yet an instructor
 							if ( ! in_array( $user_id, $instructors ) ) {
 								$instructors[] = $user_id;
