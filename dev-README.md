@@ -1,10 +1,10 @@
 **CoursePress 3.0 Readme:**
 
-https://bitbucket.org/incsub/coursepress/src/27834d5ef2b02fbf7c3bb8c40353d56666f14e80/?at=development
+https://github.com/wpmudev/coursepress/src/27834d5ef2b02fbf7c3bb8c40353d56666f14e80/?at=development
 
 **CoursePress 2.0 Readme:**
 
-https://bitbucket.org/incsub/coursepress/src/493fe75d6a198f29439848aa837d32cbd3905b18?at=coursepress/2.0-dev
+https://github.com/wpmudev/coursepress/src/493fe75d6a198f29439848aa837d32cbd3905b18?at=coursepress/2.0-dev
 
 -----
 
