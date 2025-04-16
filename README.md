@@ -104,7 +104,7 @@ CoursePress Pro lets you create custom styled, personalized printable completion
 
 ### To Get Started:
 
-Start by reading [Installing plugins](https://wpmudev.com/docs/using-wordpress/installing-wordpress-plugins/) section in our comprehensive [WordPress and WordPress Multisite Manual](https://premium.wpmudev.org/wpmu-manual/) if you are new to WordPress.
+Start by reading [Installing plugins](https://wpmudev.com/docs/using-wordpress/installing-wordpress-plugins/) section in our comprehensive [WordPress and WordPress Multisite Manual](https://wpmudev.com/docs/using-wordpress/wordpress-multisite/) if you are new to WordPress.
 
 Login to your admin panel for WordPress or Multisite and activate the plugin:
 
